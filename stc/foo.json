@@ -1,0 +1,537 @@
+{
+    "factions": {
+        "alchemists": {
+            "BON6": 1, 
+            "C": 9, 
+            "D": 7, 
+            "EARTH": 0, 
+            "FIRE": 1, 
+            "P": 0, 
+            "P1": 5, 
+            "P2": 3, 
+            "P3": 0, 
+            "SA": 1, 
+            "SH": 1, 
+            "TE": 3, 
+            "TP": 3, 
+            "VP": 18, 
+            "W": 8, 
+            "WATER": 1, 
+            "WIND": 0
+        }, 
+        "auren": {
+            "BON2": 1, 
+            "C": 10, 
+            "D": 7, 
+            "EARTH": 0, 
+            "FAV6": 1, 
+            "FIRE": 2, 
+            "P": 0, 
+            "P1": 4, 
+            "P2": 8, 
+            "P3": 0, 
+            "SA": 1, 
+            "SH": 0, 
+            "TE": 3, 
+            "TP": 4, 
+            "VP": 25, 
+            "W": 0, 
+            "WATER": 3, 
+            "WIND": 1
+        }, 
+        "engineers": {
+            "BON1": 1, 
+            "C": 10, 
+            "D": 4, 
+            "EARTH": 0, 
+            "FIRE": 0, 
+            "P": 0, 
+            "P1": 5, 
+            "P2": 3, 
+            "P3": 0, 
+            "SA": 1, 
+            "SH": 1, 
+            "TE": 3, 
+            "TP": 4, 
+            "VP": 20, 
+            "W": 2, 
+            "WATER": 0, 
+            "WIND": 0
+        }, 
+        "nomads": {
+            "BON5": 1, 
+            "C": 13, 
+            "D": 6, 
+            "EARTH": 1, 
+            "FIRE": 1, 
+            "P": 0, 
+            "P1": 4, 
+            "P2": 4, 
+            "P3": 0, 
+            "SA": 1, 
+            "SH": 0, 
+            "TE": 3, 
+            "TP": 4, 
+            "VP": 24, 
+            "W": 1, 
+            "WATER": 0, 
+            "WIND": 0
+        }, 
+        "swarmlings": {
+            "BON8": 1, 
+            "C": 13, 
+            "D": 6, 
+            "EARTH": 1, 
+            "FIRE": 4, 
+            "P": 0, 
+            "P1": 0, 
+            "P2": 9, 
+            "P3": 3, 
+            "SA": 1, 
+            "SH": 1, 
+            "TE": 3, 
+            "TP": 3, 
+            "VP": 17, 
+            "W": 1, 
+            "WATER": 1, 
+            "WIND": 1
+        }
+    }, 
+    "map": {
+        "A1": {
+            "col": 0, 
+            "color": "brown", 
+            "row": 0
+        }, 
+        "A10": {
+            "col": 9, 
+            "color": "green", 
+            "row": 0
+        }, 
+        "A11": {
+            "col": 10, 
+            "color": "blue", 
+            "row": 0
+        }, 
+        "A12": {
+            "col": 11, 
+            "color": "red", 
+            "row": 0
+        }, 
+        "A13": {
+            "col": 12, 
+            "color": "black", 
+            "row": 0
+        }, 
+        "A2": {
+            "col": 1, 
+            "color": "gray", 
+            "row": 0
+        }, 
+        "A3": {
+            "col": 2, 
+            "color": "green", 
+            "row": 0
+        }, 
+        "A4": {
+            "col": 3, 
+            "color": "blue", 
+            "row": 0
+        }, 
+        "A5": {
+            "building": "SA", 
+            "col": 4, 
+            "color": "yellow", 
+            "row": 0
+        }, 
+        "A6": {
+            "col": 5, 
+            "color": "red", 
+            "row": 0
+        }, 
+        "A7": {
+            "col": 6, 
+            "color": "brown", 
+            "row": 0
+        }, 
+        "A8": {
+            "col": 7, 
+            "color": "black", 
+            "row": 0
+        }, 
+        "A9": {
+            "col": 8, 
+            "color": "red", 
+            "row": 0
+        }, 
+        "B1": {
+            "col": 0, 
+            "color": "yellow", 
+            "row": 1
+        }, 
+        "B2": {
+            "col": 3, 
+            "color": "brown", 
+            "row": 1
+        }, 
+        "B3": {
+            "col": 4, 
+            "color": "black", 
+            "row": 1
+        }, 
+        "B4": {
+            "building": "D", 
+            "col": 7, 
+            "color": "yellow", 
+            "row": 1
+        }, 
+        "B5": {
+            "col": 8, 
+            "color": "black", 
+            "row": 1
+        }, 
+        "B6": {
+            "col": 11, 
+            "color": "yellow", 
+            "row": 1
+        }, 
+        "C1": {
+            "col": 2, 
+            "color": "black", 
+            "row": 2
+        }, 
+        "C2": {
+            "col": 4, 
+            "color": "gray", 
+            "row": 2
+        }, 
+        "C3": {
+            "col": 6, 
+            "color": "green", 
+            "row": 2
+        }, 
+        "C4": {
+            "col": 8, 
+            "color": "green", 
+            "row": 2
+        }, 
+        "C5": {
+            "building": "D", 
+            "col": 10, 
+            "color": "gray", 
+            "row": 2
+        }, 
+        "D1": {
+            "col": 0, 
+            "color": "green", 
+            "row": 3
+        }, 
+        "D2": {
+            "col": 1, 
+            "color": "blue", 
+            "row": 3
+        }, 
+        "D3": {
+            "col": 2, 
+            "color": "yellow", 
+            "row": 3
+        }, 
+        "D4": {
+            "col": 5, 
+            "color": "red", 
+            "row": 3
+        }, 
+        "D5": {
+            "col": 6, 
+            "color": "blue", 
+            "row": 3
+        }, 
+        "D6": {
+            "col": 8, 
+            "color": "red", 
+            "row": 3
+        }, 
+        "D7": {
+            "building": "D", 
+            "col": 10, 
+            "color": "gray", 
+            "row": 3
+        }, 
+        "D8": {
+            "col": 11, 
+            "color": "brown", 
+            "row": 3
+        }, 
+        "E1": {
+            "col": 0, 
+            "color": "black", 
+            "row": 4
+        }, 
+        "E10": {
+            "building": "TP", 
+            "col": 11, 
+            "color": "black", 
+            "row": 4
+        }, 
+        "E11": {
+            "col": 12, 
+            "color": "blue", 
+            "row": 4
+        }, 
+        "E2": {
+            "col": 1, 
+            "color": "brown", 
+            "row": 4
+        }, 
+        "E3": {
+            "col": 2, 
+            "color": "red", 
+            "row": 4
+        }, 
+        "E4": {
+            "col": 3, 
+            "color": "blue", 
+            "row": 4
+        }, 
+        "E5": {
+            "building": "D", 
+            "col": 4, 
+            "color": "black", 
+            "row": 4
+        }, 
+        "E6": {
+            "col": 5, 
+            "color": "brown", 
+            "row": 4
+        }, 
+        "E7": {
+            "building": "D", 
+            "col": 6, 
+            "color": "gray", 
+            "row": 4
+        }, 
+        "E8": {
+            "col": 7, 
+            "color": "yellow", 
+            "row": 4
+        }, 
+        "E9": {
+            "building": "D", 
+            "col": 10, 
+            "color": "gray", 
+            "row": 4
+        }, 
+        "F1": {
+            "col": 0, 
+            "color": "gray", 
+            "row": 5
+        }, 
+        "F2": {
+            "building": "D", 
+            "col": 1, 
+            "color": "green", 
+            "row": 5
+        }, 
+        "F3": {
+            "col": 4, 
+            "color": "yellow", 
+            "row": 5
+        }, 
+        "F4": {
+            "building": "SH", 
+            "col": 5, 
+            "color": "green", 
+            "row": 5
+        }, 
+        "F5": {
+            "col": 9, 
+            "color": "brown", 
+            "row": 5
+        }, 
+        "F6": {
+            "col": 10, 
+            "color": "gray", 
+            "row": 5
+        }, 
+        "F7": {
+            "col": 11, 
+            "color": "brown", 
+            "row": 5
+        }, 
+        "FIRE1": {
+            "building": "P"
+        }, 
+        "G1": {
+            "col": 3, 
+            "color": "gray", 
+            "row": 6
+        }, 
+        "G2": {
+            "col": 5, 
+            "color": "red", 
+            "row": 6
+        }, 
+        "G3": {
+            "col": 7, 
+            "color": "green", 
+            "row": 6
+        }, 
+        "G4": {
+            "col": 9, 
+            "color": "yellow", 
+            "row": 6
+        }, 
+        "G5": {
+            "col": 10, 
+            "color": "black", 
+            "row": 6
+        }, 
+        "G6": {
+            "building": "TP", 
+            "col": 11, 
+            "color": "blue", 
+            "row": 6
+        }, 
+        "G7": {
+            "building": "SH", 
+            "col": 12, 
+            "color": "yellow", 
+            "row": 6
+        }, 
+        "H1": {
+            "col": 0, 
+            "color": "yellow", 
+            "row": 7
+        }, 
+        "H2": {
+            "col": 1, 
+            "color": "blue", 
+            "row": 7
+        }, 
+        "H3": {
+            "col": 2, 
+            "color": "brown", 
+            "row": 7
+        }, 
+        "H4": {
+            "building": "D", 
+            "col": 6, 
+            "color": "blue", 
+            "row": 7
+        }, 
+        "H5": {
+            "col": 7, 
+            "color": "black", 
+            "row": 7
+        }, 
+        "H6": {
+            "col": 9, 
+            "color": "gray", 
+            "row": 7
+        }, 
+        "H7": {
+            "col": 10, 
+            "color": "brown", 
+            "row": 7
+        }, 
+        "H8": {
+            "building": "D", 
+            "col": 11, 
+            "color": "blue", 
+            "row": 7
+        }, 
+        "I1": {
+            "col": 0, 
+            "color": "red", 
+            "row": 8
+        }, 
+        "I10": {
+            "col": 10, 
+            "color": "blue", 
+            "row": 8
+        }, 
+        "I11": {
+            "col": 11, 
+            "color": "green", 
+            "row": 8
+        }, 
+        "I12": {
+            "col": 12, 
+            "color": "red", 
+            "row": 8
+        }, 
+        "I2": {
+            "col": 1, 
+            "color": "black", 
+            "row": 8
+        }, 
+        "I3": {
+            "col": 2, 
+            "color": "gray", 
+            "row": 8
+        }, 
+        "I4": {
+            "col": 3, 
+            "color": "blue", 
+            "row": 8
+        }, 
+        "I5": {
+            "col": 4, 
+            "color": "red", 
+            "row": 8
+        }, 
+        "I6": {
+            "col": 5, 
+            "color": "green", 
+            "row": 8
+        }, 
+        "I7": {
+            "col": 6, 
+            "color": "yellow", 
+            "row": 8
+        }, 
+        "I8": {
+            "col": 7, 
+            "color": "brown", 
+            "row": 8
+        }, 
+        "I9": {
+            "col": 8, 
+            "color": "gray", 
+            "row": 8
+        }
+    }, 
+    "pool": {
+        "BON1": 0, 
+        "BON2": 0, 
+        "BON3": 1, 
+        "BON4": 1, 
+        "BON5": 0, 
+        "BON6": 0, 
+        "BON7": 1, 
+        "BON8": 0, 
+        "C": 1020, 
+        "EARTH": 100, 
+        "FAV1": 1, 
+        "FAV10": 3, 
+        "FAV11": 3, 
+        "FAV12": 3, 
+        "FAV2": 1, 
+        "FAV3": 1, 
+        "FAV4": 1, 
+        "FAV5": 3, 
+        "FAV6": 2, 
+        "FAV7": 3, 
+        "FAV8": 3, 
+        "FAV9": 3, 
+        "FIRE": 95, 
+        "P": 999, 
+        "P1": 10000, 
+        "P2": 10000, 
+        "P3": 10000, 
+        "VP": 996, 
+        "W": 1006, 
+        "WATER": 98, 
+        "WIND": 100
+    }
+}

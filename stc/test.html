@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <title>Age of Steam</title>
+    <script type="text/javascript" language="javascript"
+            src="prototype-1.6.0.3.js">
+    </script>
+    <script type="text/javascript" language="javascript"
+            src="game.js">
+    </script>
+    <script type="text/javascript" language="javascript"
+            src="debug.js">
+    </script>
+  </head>
+  <body>
+    <style type="text/css">
+      div.player {
+          border-style: solid;
+          margin: 2px;
+          padding: 3px;
+          width: 200px;
+          float: left;
+      }
+      table { border-style: solid }
+      div.color-red { background-color: #e04040 }
+      div.color-green { background-color: #40a040 }
+      div.color-yellow { background-color: #e0e040 }
+      div.color-blue { background-color: #4040e0 }
+      div.color-black { background-color: #000000 } 
+      div.color-gray { background-color: #808080 } 
+      div.color-purple { background-color: #990099 }
+      canvas#map { border-style: solid }
+    </style>
+    <div id="error"></div>
+    <div id="map-container">
+      <canvas id="map" width="800" height="500">
+        Browser not supported.
+      </canvas>
+    </div>
+    <script language="javascript">
+      var state = null;
+      new Ajax.Request('foo.json', {
+          method:'get',
+          onSuccess: function(transport){
+            state = transport.responseText.evalJSON();
+            try {
+              DrawMap();
+            } catch (e) {
+              handleException(e);
+            };
+          }
+      });
+    </script>
+  </body>
+</html>
