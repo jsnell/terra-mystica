@@ -30,12 +30,34 @@
       div.color-purple { background-color: #990099 }
       canvas#map { border-style: solid }
     </style>
-    <div id="error"></div>
-    <div id="map-container">
-      <canvas id="map" width="800" height="500">
-        Browser not supported.
-      </canvas>
-    </div>
+    <div id="error" style="background-color: #e33"></div>
+    <table style="border-style: none">
+      <tr>
+        <td>
+          <div id="map-container">
+            <canvas id="map" width="800" height="500">
+              Browser not supported.
+            </canvas>
+          </div>
+        <td>
+          <div id="cults">
+            <table width="200px" style="font-size: 25px">
+<tr><td id='FIRE-10'>10<td id='WATER-10'>10<td id='EARTH-10'>10<td id='WIND-10'>10</tr>
+<tr><td id='FIRE-9'>9<td id='WATER-9'>9<td id='EARTH-9'>9<td id='WIND-9'>9</tr>
+<tr><td id='FIRE-8'>8<td id='WATER-8'>8<td id='EARTH-8'>8<td id='WIND-8'>8</tr>
+<tr><td id='FIRE-7'>7<td id='WATER-7'>7<td id='EARTH-7'>7<td id='WIND-7'>7</tr>
+<tr><td id='FIRE-6'>6<td id='WATER-6'>6<td id='EARTH-6'>6<td id='WIND-6'>6</tr>
+<tr><td id='FIRE-5'>5<td id='WATER-5'>5<td id='EARTH-5'>5<td id='WIND-5'>5</tr>
+<tr><td id='FIRE-4'>4<td id='WATER-4'>4<td id='EARTH-4'>4<td id='WIND-4'>4</tr>
+<tr><td id='FIRE-3'>3<td id='WATER-3'>3<td id='EARTH-3'>3<td id='WIND-3'>3</tr>
+<tr><td id='FIRE-2'>2<td id='WATER-2'>2<td id='EARTH-2'>2<td id='WIND-2'>2</tr>
+<tr><td id='FIRE-1'>1<td id='WATER-1'>1<td id='EARTH-1'>1<td id='WIND-1'>1</tr>
+<tr><td id='FIRE-0'>0<td id='WATER-0'>0<td id='EARTH-0'>0<td id='WIND-0'>0</tr>
+            </table>
+          </div>
+      </tr>
+    </table>
+    <div id="factions"></div>
     <script language="javascript">
       var state = null;
       new Ajax.Request('foo.json', {

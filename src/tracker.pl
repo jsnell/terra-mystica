@@ -9,15 +9,15 @@ my @cults = qw(EARTH FIRE WATER WIND);
 
 my %setups = (
     alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
-                    WATER => 1, FIRE => 1 },
+                    WATER => 1, FIRE => 1, color => 'black'},
     auren => { C => 15, W => 3, P1 => 5, P2 => 7,
-               WATER => 1, WIND => 1 },
+               WATER => 1, WIND => 1, color => 'green'},
     swarmlings => { C => 20, W => 8, P1 => 3, P2 => 9,
                     FIRE => 1, EARTH => 1,
-                    WATER => 1, WIND => 1 },
+                    WATER => 1, WIND => 1, color => 'blue'},
     nomads => { C => 15, W => 2, P1 => 5, P2 => 7,
-                FIRE => 1, EARTH => 1 },
-    engineers => { C => 10, W => 2, P1 => 3, P2 => 9 }
+                FIRE => 1, EARTH => 1, color => 'yellow'},
+    engineers => { C => 10, W => 2, P1 => 3, P2 => 9, color => 'gray' }
 );
 
 my %pool = (
@@ -222,6 +222,7 @@ sub handle_row {
 }
 
 sub print_pretty {
+    local *STDOUT = *STDERR;
     for (@factions) {
         my %f = %{$factions{$_}};
 
@@ -256,6 +257,7 @@ sub print_pretty {
 
 sub print_json {
     my $out = encode_json {
+        order => \@factions,
         map => \%map,
         factions => \%factions,
         pool => \%pool,
@@ -268,5 +270,5 @@ while (<>) {
     handle_row $_;
 }
 
-# print_pretty;
+print_pretty;
 print_json;

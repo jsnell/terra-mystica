@@ -13,7 +13,7 @@ var colors = {
     red: '#e04040',
     green: '#40a040',
     yellow: '#e0e040',
-    blue: '#4040e0',
+    blue: '#0040f0',
     black: '#000000',
     white: '#ffffff',
     gray: '#808080',
@@ -47,6 +47,19 @@ function MakeHexPath(ctx, hex) {
     ctx.closePath();
 }
 
+function FillBuilding(ctx, hex) {
+    ctx.fillStyle = colors[hex.color];
+    ctx.fill();
+
+    if (hex.color == "black") {
+        ctx.strokeStyle = '#808080';
+    } else {
+        ctx.strokeStyle = '#000';
+    }
+    ctx.lineWidth = 2;
+    ctx.stroke();
+}
+
 function DrawDwelling(ctx, hex) {
     var loc = HexCenter(hex.row, hex.col);
 
@@ -59,12 +72,8 @@ function DrawDwelling(ctx, hex) {
     ctx.lineTo(loc[0] - 10, loc[1] + 10);
     ctx.lineTo(loc[0] - 10, loc[1]);
     ctx.closePath();
-    ctx.fillStyle = colors[hex.color];
-    ctx.fill();
 
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 3;
-    ctx.stroke();
+    FillBuilding(ctx, hex);
 
     ctx.restore();
 }
@@ -84,12 +93,8 @@ function DrawTradingPost(ctx, hex) {
     ctx.lineTo(loc[0] - 10, loc[1]);
     ctx.lineTo(loc[0] - 10, loc[1] - 10);
     ctx.closePath();
-    ctx.fillStyle = colors[hex.color];
-    ctx.fill();
 
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 3;
-    ctx.stroke();
+    FillBuilding(ctx, hex);
 
     ctx.restore();
 }
@@ -102,11 +107,8 @@ function DrawTemple(ctx, hex) {
 
     ctx.beginPath();
     ctx.arc(loc[0], loc[1], 14, 0, Math.PI*2);
-    ctx.fillStyle = colors[hex.color];
-    ctx.fill();
-    ctx.strokeStyle = "#000";
-    ctx.lineWidth = 3;
-    ctx.stroke();
+
+    FillBuilding(ctx, hex);
 
     ctx.restore();
 }
@@ -131,11 +133,7 @@ function DrawStronghold(ctx, hex) {
     ctx.quadraticCurveTo(loc[0], loc[1] - bend,
                          loc[0] - size, loc[1] - size);
 
-    ctx.fillStyle = colors[hex.color];
-    ctx.fill();
-    ctx.strokeStyle = "#000";
-    ctx.lineWidth = 3;
-    ctx.stroke();
+    FillBuilding(ctx, hex);
 
     ctx.restore();
 }
@@ -152,11 +150,7 @@ function DrawSanctuary(ctx, hex) {
     ctx.arc(loc[0] + size, loc[1], 12, -Math.PI / 2, Math.PI / 2);
     ctx.closePath();
     
-    ctx.fillStyle = colors[hex.color];
-    ctx.fill();
-    ctx.strokeStyle = "#000";
-    ctx.lineWidth = 3;
-    ctx.stroke();
+    FillBuilding(ctx, hex);
 
     ctx.restore();
 }
@@ -201,9 +195,13 @@ function DrawHex(ctx, elem) {
 
     ctx.save();
     var loc = HexCenter(hex.row, hex.col);
-    ctx.strokeStyle = "#000";
+    if (hex.color == "black") {
+        ctx.strokeStyle = "#c0c0c0";
+    } else {
+        ctx.strokeStyle = "#000";
+    }
     ctx.font = "12px Sans-Serif";
-    ctx.strokeText(id, loc[0], loc[1] + hex_size - 12);
+    ctx.strokeText(id, loc[0] - 9, loc[1] + 25);
     ctx.restore();
 }
 
@@ -214,5 +212,20 @@ function DrawMap() {
 
         $H(state.map).each(function(hex, index) { DrawHex(ctx, hex) });
     }
+
+    DrawCults();
 }
+
+function DrawCults() {
+    var cults = ["FIRE", "WATER", "EARTH", "WIND"];
+
+    $H(state.factions).each(function(faction, index) {
+        var color = faction.value.color;
+        cults.each(function(cult, index) {
+            var level = faction.value[cult];
+            $(cult + "-" + level).innerHTML += ("<span width='10px' style='background-color:" + colors[color] + "'>*</span>");
+        });
+    }); 
+}
+
 
