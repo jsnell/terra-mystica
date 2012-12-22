@@ -61,3 +61,10 @@ Nomads: SH -> G7. -4W. -6C. +5VP
 Swarmlings: Leech 3
 Auren: +2FIRE
 Swarmlings: P -> FIRE1. +3FIRE. +1PW
+Alchemists: F7:black. D -> F7. -4w. -2c. 
+Nomads: Leech 3
+Swarmlings: Leech 1
+Engineers: TP -> E9. -1w. -2c 
+Alchemists: Leech 1
+
+

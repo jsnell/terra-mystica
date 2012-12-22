@@ -2,22 +2,23 @@
     "factions": {
         "alchemists": {
             "BON6": 1, 
-            "C": 9, 
-            "D": 7, 
+            "C": 7, 
+            "D": 6, 
             "EARTH": 0, 
             "FIRE": 1, 
             "P": 0, 
-            "P1": 5, 
-            "P2": 3, 
+            "P1": 4, 
+            "P2": 4, 
             "P3": 0, 
             "SA": 1, 
             "SH": 1, 
             "TE": 3, 
             "TP": 3, 
             "VP": 18, 
-            "W": 8, 
+            "W": 4, 
             "WATER": 1, 
-            "WIND": 0
+            "WIND": 0, 
+            "color": "black"
         }, 
         "auren": {
             "BON2": 1, 
@@ -37,12 +38,13 @@
             "VP": 25, 
             "W": 0, 
             "WATER": 3, 
-            "WIND": 1
+            "WIND": 1, 
+            "color": "green"
         }, 
         "engineers": {
             "BON1": 1, 
-            "C": 10, 
-            "D": 4, 
+            "C": 8, 
+            "D": 5, 
             "EARTH": 0, 
             "FIRE": 0, 
             "P": 0, 
@@ -52,11 +54,12 @@
             "SA": 1, 
             "SH": 1, 
             "TE": 3, 
-            "TP": 4, 
+            "TP": 3, 
             "VP": 20, 
-            "W": 2, 
+            "W": 1, 
             "WATER": 0, 
-            "WIND": 0
+            "WIND": 0, 
+            "color": "gray"
         }, 
         "nomads": {
             "BON5": 1, 
@@ -65,17 +68,18 @@
             "EARTH": 1, 
             "FIRE": 1, 
             "P": 0, 
-            "P1": 4, 
-            "P2": 4, 
+            "P1": 1, 
+            "P2": 7, 
             "P3": 0, 
             "SA": 1, 
             "SH": 0, 
             "TE": 3, 
             "TP": 4, 
-            "VP": 24, 
+            "VP": 22, 
             "W": 1, 
             "WATER": 0, 
-            "WIND": 0
+            "WIND": 0, 
+            "color": "yellow"
         }, 
         "swarmlings": {
             "BON8": 1, 
@@ -85,8 +89,8 @@
             "FIRE": 4, 
             "P": 0, 
             "P1": 0, 
-            "P2": 9, 
-            "P3": 3, 
+            "P2": 8, 
+            "P3": 4, 
             "SA": 1, 
             "SH": 1, 
             "TE": 3, 
@@ -94,7 +98,8 @@
             "VP": 17, 
             "W": 1, 
             "WATER": 1, 
-            "WIND": 1
+            "WIND": 1, 
+            "color": "blue"
         }
     }, 
     "map": {
@@ -139,7 +144,7 @@
             "row": 0
         }, 
         "A5": {
-            "building": "SA", 
+            "building": "D", 
             "col": 4, 
             "color": "yellow", 
             "row": 0
@@ -316,11 +321,15 @@
             "row": 4
         }, 
         "E9": {
-            "building": "D", 
+            "building": "TP", 
             "col": 10, 
             "color": "gray", 
             "row": 4
         }, 
+        "EARTH1": {}, 
+        "EARTH2": {}, 
+        "EARTH3": {}, 
+        "EARTH4": {}, 
         "F1": {
             "col": 0, 
             "color": "gray", 
@@ -354,13 +363,17 @@
             "row": 5
         }, 
         "F7": {
+            "building": "D", 
             "col": 11, 
-            "color": "brown", 
+            "color": "black", 
             "row": 5
         }, 
         "FIRE1": {
             "building": "P"
         }, 
+        "FIRE2": {}, 
+        "FIRE3": {}, 
+        "FIRE4": {}, 
         "G1": {
             "col": 3, 
             "color": "gray", 
@@ -499,8 +512,23 @@
             "col": 8, 
             "color": "gray", 
             "row": 8
-        }
+        }, 
+        "WATER1": {}, 
+        "WATER2": {}, 
+        "WATER3": {}, 
+        "WATER4": {}, 
+        "WIND1": {}, 
+        "WIND2": {}, 
+        "WIND3": {}, 
+        "WIND4": {}
     }, 
+    "order": [
+        "nomads", 
+        "auren", 
+        "swarmlings", 
+        "alchemists", 
+        "engineers"
+    ], 
     "pool": {
         "BON1": 0, 
         "BON2": 0, 
@@ -510,7 +538,7 @@
         "BON6": 0, 
         "BON7": 1, 
         "BON8": 0, 
-        "C": 1020, 
+        "C": 1024, 
         "EARTH": 100, 
         "FAV1": 1, 
         "FAV10": 3, 
@@ -529,8 +557,8 @@
         "P1": 10000, 
         "P2": 10000, 
         "P3": 10000, 
-        "VP": 996, 
-        "W": 1006, 
+        "VP": 998, 
+        "W": 1011, 
         "WATER": 98, 
         "WIND": 100
     }
