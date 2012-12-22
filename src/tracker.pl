@@ -73,6 +73,7 @@ sub command {
     my $type;
 
     if ($command =~ /^([+-])(\d*)(\w+)$/) {
+        die "Need faction for command $command\n" if !$faction;
         my ($sign, $count) = (($1 eq '+' ? 1 : -1),
                               ($2 eq '' ? 1 : $2));
         $type = uc $3;
@@ -104,32 +105,44 @@ sub command {
             }
         }
     } elsif ($command =~ /^(\w+)->(\w+)$/) {
+        die "Need faction for command $command\n" if !$faction;
         $type = uc $1;
-        my $target = uc $2;
-        my $oldtype = $map{$target}{building};
+        my $where = uc $2;
+        my $oldtype = $map{$where}{building};
 
         if ($oldtype) {
             $factions{$faction}{$oldtype}++;
         }
 
-        $map{$target}{building} = $type;
+        $map{$where}{building} = $type;
 
         $factions{$faction}{$type}--;
-    } elsif ($command =~ /^burn (\d+)/) {
+    } elsif ($command =~ /^burn (\d+)$/) {
+        die "Need faction for command $command\n" if !$faction;
         $factions{$faction}{P2} -= 2*$1;
         $factions{$faction}{P3} += $1;
         $type = 'P2';
-    } elsif ($command =~ /^leech (\d+)/) {
+    } elsif ($command =~ /^leech (\d+)$/) {
+        die "Need faction for command $command\n" if !$faction;
         my $pw = $1;
         my $vp = $pw - 1;
 
         command $faction, "+${pw}PW";
         command $faction, "-${vp}VP";
+    } elsif ($command =~ /^(\w+):(\w+)$/) {
+        my $where = uc $1;
+        my $color = uc $2;
+        $map{$where}{color} = $color;
+    } elsif ($command =~ /^block (\w+)$/) {
+        my $where = uc $1;
+        $map{$where}{blocked} = 1;
+    } elsif ($command =~ /^clear$/) {
+        $map{$_}{blocked} = 0 for keys %map;
     } else {
         die "Could not parse command '$command'.\n";
     }
 
-    if ($type) {
+    if ($type and $faction) {
         if ($factions{$faction}{$type} < 0) {
             die "Not enough '$type' in $faction after command '$command'\n";
         }
@@ -168,7 +181,7 @@ sub handle_row {
         setup $_ for @commands;
     } elsif ($prefix eq 'delete') {
         delete $pool{$_} for @commands;
-    } elsif ($factions{$prefix}) {
+    } elsif ($factions{$prefix} or $prefix eq '') {
         for my $command (@commands) {
             command $prefix, $command;
         }
@@ -213,3 +226,5 @@ for my $cult (qw(EARTH FIRE WATER WIND)) {
     }
     print "";
 }
+
+
