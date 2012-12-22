@@ -1,0 +1,63 @@
+# Random setup
+Delete: Bon9
+
+# Role selection
+Setup: Nomads
+Setup: Auren
+Setup: Swarmlings
+Setup: Alchemists
+Setup: Engineers
+
+# Initial dwellings
+Nomads: D -> A5
+Auren: D -> F4
+Swarmlings: D -> H4
+Alchemists: D -> E5
+Engineers: D -> E7. D -> C5
+Alchemists: D -> E10
+Swarmlings: D -> G6
+Auren: D -> F2
+Nomads: D -> B4. D -> G7
+
+# Bonus tiles in reverse order
+Engineers: +Bon1
+Alchemists: +Bon6
+Swarmlings: +Bon8
+Auren: +Bon2
+Nomads: +Bon5
+
+# Round 1:
+
+# Income 
+Nomads: +5W. +3PW
+Auren: +3W. +4C
+Swarmlings: +4W. +1P
+Alchemists: +5W
+Engineers: +2W. +2C
+
+# Round 1, Turn 1:
+Nomads: Burn 4. -4PW. +7C
+Auren: TP -> F4. -2W. -3C
+Engineers: Leech 1
+Swarmlings: TP -> G6. -3W. -4C
+Alchemists: TP -> E10. -2W. -6C
+Engineers: Burn 4. -4PW. -1C. -1W. D -> D7
+Alchemists: Leech 2
+
+# Round 1, Turn 2:
+
+Nomads: TP -> G7. -2W. -3C.
+Swarmlings: Leech 2
+Auren: SH -> F4. -4W. -6C. +5VP. +FAV6. +2WATER. +1PW
+Engineers: Leech 1
+Swarmlings: D -> H8. -8W. -3C
+Nomads: Leech 2
+Alchemists: Burn 4. -4PW. +2W.
+Engineers: D -> E9. -1W. -1C.
+Alchemists: Leech 2
+
+# Round 1, Turn 3:
+Nomads: SH -> G7. -4W. -6C. +5VP 
+Swarmlings: Leech 3
+Auren: +2FIRE
+Swarmlings: P -> FIRE1. +3FIRE. +1PW
