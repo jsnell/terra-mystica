@@ -1,12 +1,12 @@
 # Random setup
-Delete: Bon9
+delete bon9
 
 # Role selection
-Setup: Nomads
-Setup: Auren
-Setup: Swarmlings
-Setup: Alchemists
-Setup: Engineers
+setup Nomads
+setup Auren
+setup Swarmlings
+setup Alchemists
+setup Engineers
 
 # Initial dwellings
 Nomads: D -> A5

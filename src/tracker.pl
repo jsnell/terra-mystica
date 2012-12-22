@@ -1,9 +1,11 @@
 #!/usr/bin/perl -wl
 
 use strict;
+use JSON;
 
 my @factions;
 my %factions;
+my @cults = qw(EARTH FIRE WATER WIND);
 
 my %setups = (
     alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
@@ -52,7 +54,7 @@ sub setup {
     $factions{$faction}{P} ||= 0;
     $factions{$faction}{P3} = 0;
 
-    for (qw(EARTH FIRE WATER WIND)) {
+    for (@cults) {
         $factions{$faction}{$_} ||= 0;
     }
 
@@ -138,6 +140,10 @@ sub command {
         $map{$where}{blocked} = 1;
     } elsif ($command =~ /^clear$/) {
         $map{$_}{blocked} = 0 for keys %map;
+    } elsif ($command =~ /^setup (\w+)$/) {
+        setup $1;
+    } elsif ($command =~ /delete (\w+)$/) {
+        delete $pool{uc $1};
     } else {
         die "Could not parse command '$command'.\n";
     }
@@ -177,54 +183,63 @@ sub handle_row {
 
     return if !@commands;
 
-    if ($prefix eq 'setup') {
-        setup $_ for @commands;
-    } elsif ($prefix eq 'delete') {
-        delete $pool{$_} for @commands;
-    } elsif ($factions{$prefix} or $prefix eq '') {
+    if ($factions{$prefix} or $prefix eq '') {
         for my $command (@commands) {
             command $prefix, $command;
         }
     } else {
         die "Unknown prefix: '$prefix' (expected one of ".
-            (join ", ", qw(setup delete), keys %factions).
+            (join ", ", keys %factions).
             ")\n";
     }
+}
+
+sub print_pretty {
+    for (@factions) {
+        my %f = %{$factions{$_}};
+
+        print ucfirst $_, ":";
+        print "  VP: $f{VP}";
+        print "  Resources: $f{C}c / $f{W}w / $f{P}p, $f{P1}/$f{P2}/$f{P3} power";
+        print "  Buildings: $f{D} D, $f{TP} TP, $f{TE} TE, $f{SH} SH, $f{SA} SA";
+        print "  Cults: $f{FIRE} / $f{WATER} / $f{EARTH} / $f{WIND}";
+
+        for (1..9) {
+            if ($f{"BON$_"}) {
+                print "  Bonus: $_";
+            }
+        }
+
+        for (1..12) {
+            if ($f{"FAV$_"}) {
+                print "  Favor: $_";
+            }
+        }
+    }
+
+    for my $cult (@cults) {
+        printf "%-8s", "$cult:";
+        for (1..4) {
+            my $key = "$cult$_";
+            printf "%s / ", ($map{"$key"}{building} or ($_ == 1 ? 3 : 2));
+        }
+        print "";
+    }
+}
+
+sub print_json {
+    my $out = encode_json {
+        map => \%map,
+        factions => \%factions,
+        pool => \%pool,
+    };
+
+    print $out;
 }
 
 while (<>) {
     handle_row $_;
 }
 
-for (@factions) {
-    my %f = %{$factions{$_}};
-
-    print ucfirst $_, ":";
-    print "  VP: $f{VP}";
-    print "  Resources: $f{C}c / $f{W}w / $f{P}p, $f{P1}/$f{P2}/$f{P3} power";
-    print "  Buildings: $f{D} D, $f{TP} TP, $f{TE} TE, $f{SH} SH, $f{SA} SA";
-    print "  Cults: $f{FIRE} / $f{WATER} / $f{EARTH} / $f{WIND}";
-
-    for (1..9) {
-        if ($f{"BON$_"}) {
-            print "  Bonus: $_";
-        }
-    }
-
-    for (1..12) {
-        if ($f{"FAV$_"}) {
-            print "  Favor: $_";
-        }
-    }
-}
-
-for my $cult (qw(EARTH FIRE WATER WIND)) {
-    printf "%-8s", "$cult:";
-    for (1..4) {
-        my $key = "$cult$_";
-        printf "%s / ", ($map{"$key"}{building} or ($_ == 1 ? 3 : 2));
-    }
-    print "";
-}
-
-
+# print_pretty;
+print_json;
