@@ -1,0 +1,74 @@
+* Resources
+
+Most playing pieces are represented as resources, that can be located
+either in a faction's treasury, the map, or the pool. The full list of
+resources (and the abbreviations you need to use) is:
+
+ Resources:
+   C      Coin
+   W      Worker
+   P      Priest
+   PW     Power (in general -- use P1 / P2 / P3 if you need to refer to
+                 power in a specific bowl)
+   VP     Victory points
+
+ Buildings:
+   D      Dwelling
+   TP     Trading post
+   TE     Temple
+   SH     Stronghold
+   SA     Sanctuary
+
+ Tiles:
+
+   BonX   Bonus tile #X
+   FavX   Favor tile #X
+
+* Locations
+
+The following locations exist in the game:
+
+  - Map hexes (e.g. E9)
+  - Cult track priest spots (e.g. FIRE1)
+
+* Commands
+
+Anything between a # and the end of the line is a comment, and ignored.
+Every line can contain a number of commands, seperate with a dot. Example:
+
+  Setup nomads. Setup alchemists.
+
+If the row starts with a faction name followed by a colon, the commands
+of that row will apply to that faction. Example:
+
+  Nomads: D -> A5. -1W. -2C.
+
+The case of characters doesn't matter. You can use upper and lower case
+however you want.
+
+Commands that don't require a faction:
+
+  Setup X  # Add faction X to the game
+
+  Block X  # Mark action space X as used
+
+  Clear    # Mark all action spaces as available
+
+  Delete X # Permanently remove a piece from the pool
+
+  X:Y      # Transform map location X to the color Y (e.g. E5:red)
+
+Commands that require a faction:
+
+  +XY      # Move X units of resource Y from the pool to the faction treasury.
+  -XY      # The opposite (e.g. -1W. -2C. +5VP)
+
+  X -> Y   # Swap contents of location Y with a piece X from the faction
+           # (e.g. TP -> E5)
+
+  Leech X  # Gain X power, lose X-1 VPs
+
+  Burn X   # Lose X power to the pool from bowl 2, move X power from bowl 2
+           # to bowl 3.
+
+
