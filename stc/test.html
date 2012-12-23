@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Age of Steam</title>
+    <title>Terra Mystica</title>
     <script type="text/javascript" language="javascript"
             src="prototype-1.6.0.3.js">
     </script>
@@ -13,22 +13,18 @@
   </head>
   <body>
     <style type="text/css">
-      div.player {
+      div.faction-board {
           border-style: solid;
           margin: 2px;
           padding: 3px;
           width: 200px;
+          height: 200px;
           float: left;
       }
       table { border-style: solid }
-      div.color-red { background-color: #e04040 }
-      div.color-green { background-color: #40a040 }
-      div.color-yellow { background-color: #e0e040 }
-      div.color-blue { background-color: #4040e0 }
-      div.color-black { background-color: #000000 } 
-      div.color-gray { background-color: #808080 } 
-      div.color-purple { background-color: #990099 }
+
       canvas#map { border-style: solid }
+      canvas#cults { border-style: solid }
     </style>
     <div id="error" style="background-color: #e33"></div>
     <table style="border-style: none">
@@ -40,28 +36,17 @@
             </canvas>
           </div>
         <td>
-          <div id="cults">
-            <table width="200px" style="font-size: 25px">
-<tr><td id='FIRE-10'>10<td id='WATER-10'>10<td id='EARTH-10'>10<td id='WIND-10'>10</tr>
-<tr><td id='FIRE-9'>9<td id='WATER-9'>9<td id='EARTH-9'>9<td id='WIND-9'>9</tr>
-<tr><td id='FIRE-8'>8<td id='WATER-8'>8<td id='EARTH-8'>8<td id='WIND-8'>8</tr>
-<tr><td id='FIRE-7'>7<td id='WATER-7'>7<td id='EARTH-7'>7<td id='WIND-7'>7</tr>
-<tr><td id='FIRE-6'>6<td id='WATER-6'>6<td id='EARTH-6'>6<td id='WIND-6'>6</tr>
-<tr><td id='FIRE-5'>5<td id='WATER-5'>5<td id='EARTH-5'>5<td id='WIND-5'>5</tr>
-<tr><td id='FIRE-4'>4<td id='WATER-4'>4<td id='EARTH-4'>4<td id='WIND-4'>4</tr>
-<tr><td id='FIRE-3'>3<td id='WATER-3'>3<td id='EARTH-3'>3<td id='WIND-3'>3</tr>
-<tr><td id='FIRE-2'>2<td id='WATER-2'>2<td id='EARTH-2'>2<td id='WIND-2'>2</tr>
-<tr><td id='FIRE-1'>1<td id='WATER-1'>1<td id='EARTH-1'>1<td id='WIND-1'>1</tr>
-<tr><td id='FIRE-0'>0<td id='WATER-0'>0<td id='EARTH-0'>0<td id='WIND-0'>0</tr>
-            </table>
+          <div id="cult-container">
+            <canvas id="cults" width="250" height="500">
+              Browser not supported.
+            </canvas>
           </div>
-      </tr>
     </table>
     <div id="factions"></div>
     <script language="javascript">
       var state = null;
-      new Ajax.Request('foo.json', {
-          method:'get',
+      new Ajax.Request("foo.json", {
+          method:"get",
           onSuccess: function(transport){
             state = transport.responseText.evalJSON();
             try {

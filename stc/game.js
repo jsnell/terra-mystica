@@ -214,18 +214,98 @@ function DrawMap() {
     }
 
     DrawCults();
+    DrawFactions();
 }
 
 function DrawCults() {
-    var cults = ["FIRE", "WATER", "EARTH", "WIND"];
+    var canvas = $("cults");
+    if (canvas.getContext) {
+        var ctx = canvas.getContext("2d");
 
-    $H(state.factions).each(function(faction, index) {
-        var color = faction.value.color;
-        cults.each(function(cult, index) {
-            var level = faction.value[cult];
-            $(cult + "-" + level).innerHTML += ("<span width='10px' style='background-color:" + colors[color] + "'>*</span>");
-        });
-    }); 
+        var cults = ["FIRE", "WATER", "EARTH", "WIND"];
+        var bgcolor = ["#f88", "#ccf", "#fc8", "#f0f0f0"];
+        var x_offset = 0;
+
+        var width = 250 / 4;
+        var height = 500;
+
+        for (var j = 0; j < 4; ++j) {
+            var cult = cults[j];
+
+            ctx.save();
+
+            ctx.translate(width * j, 0);
+
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, height);
+            ctx.lineTo(width, height);
+            ctx.lineTo(width, 0);
+            ctx.closePath();
+            ctx.fillStyle = bgcolor[j];
+            ctx.fill();
+
+            for (var i = 0; i <= 10; ++i) {
+                ctx.save();
+                ctx.translate(0, ((10 - i) * 40 + 20));
+
+                ctx.strokeStyle = '#000';
+                ctx.font = "12px sans-serif";
+                ctx.strokeText(i, 5, 0);
+
+                state.order.each(function(name, index) {
+                    var faction = state.factions[name];
+                    if (faction[cult] != i) {
+                        return;
+                    }
+
+                    ctx.translate(9, 0);
+
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(0, 10, 6, Math.PI * 2, 0);
+                    ctx.fillStyle = colors[faction.color];
+                    ctx.fill();
+                    ctx.stroke()
+                    ctx.restore();
+                });
+
+                ctx.restore();
+            }
+
+            ctx.save();
+            ctx.translate(5, 480);
+            ctx.font = "20px sans-serif";
+            ctx.strokeStyle = "#000";
+            ctx.fillStyle = "#000";
+
+            for (var i = 1; i < 5; ++i) {
+                if (state.map[cult + i].building) {
+                    ctx.fillText("X", 0, 0);
+                } else {
+                    ctx.fillText(i == 1 ? 3 : 2, 0, 0);
+                }
+                ctx.translate(12, 0);
+            }
+            ctx.restore();
+
+            ctx.restore();
+        };
+    }    
 }
 
-
+function DrawFactions() {
+    state.order.each(function(name) {
+        name = name;
+        var faction = state.factions[name];
+        var color = faction.color;
+        var board = new Element('div', {
+            'class': 'faction-board'
+        });
+        board.insert(new Element('div', {
+            'style': 'background-color: ' + colors[color] + '; color: ' +
+                (color == 'black' ? '#ccc' : '#000')
+        }).update(name));
+        $("factions").insert(board);
+    });
+}
