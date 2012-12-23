@@ -8,16 +8,16 @@ my %factions;
 my @cults = qw(EARTH FIRE WATER WIND);
 
 my %setups = (
-    alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
+    Alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
                     WATER => 1, FIRE => 1, color => 'black'},
-    auren => { C => 15, W => 3, P1 => 5, P2 => 7,
+    Auren => { C => 15, W => 3, P1 => 5, P2 => 7,
                WATER => 1, WIND => 1, color => 'green'},
-    swarmlings => { C => 20, W => 8, P1 => 3, P2 => 9,
+    Swarmlings => { C => 20, W => 8, P1 => 3, P2 => 9,
                     FIRE => 1, EARTH => 1,
                     WATER => 1, WIND => 1, color => 'blue'},
-    nomads => { C => 15, W => 2, P1 => 5, P2 => 7,
+    Nomads => { C => 15, W => 2, P1 => 5, P2 => 7,
                 FIRE => 1, EARTH => 1, color => 'yellow'},
-    engineers => { C => 10, W => 2, P1 => 3, P2 => 9, color => 'gray' }
+    Engineers => { C => 10, W => 2, P1 => 3, P2 => 9, color => 'gray' }
 );
 
 my %pool = (
@@ -73,7 +73,7 @@ my @map = qw(brown gray green blue yellow red brown black red green blue red bla
 }
 
 sub setup {
-    my $faction = shift;
+    my $faction = ucfirst shift;
 
     die "Unknown faction: $faction\n" if !$setups{$faction};
 
@@ -194,7 +194,7 @@ sub handle_row {
     my $prefix = '';
 
     if (s/^(.*?)://) {
-        $prefix = $1;
+        $prefix = ucfirst $1;
     }
 
     my @commands = split /[.]/, $_;
