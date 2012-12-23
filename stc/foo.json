@@ -1,6 +1,6 @@
 {
     "factions": {
-        "alchemists": {
+        "Alchemists": {
             "BON6": 1, 
             "C": 7, 
             "D": 6, 
@@ -20,16 +20,16 @@
             "WIND": 0, 
             "color": "black"
         }, 
-        "auren": {
+        "Auren": {
             "BON2": 1, 
             "C": 10, 
             "D": 7, 
             "EARTH": 0, 
             "FAV6": 1, 
-            "FIRE": 2, 
+            "FIRE": 3, 
             "P": 0, 
-            "P1": 4, 
-            "P2": 8, 
+            "P1": 3, 
+            "P2": 9, 
             "P3": 0, 
             "SA": 1, 
             "SH": 0, 
@@ -41,7 +41,7 @@
             "WIND": 1, 
             "color": "green"
         }, 
-        "engineers": {
+        "Engineers": {
             "BON1": 1, 
             "C": 8, 
             "D": 5, 
@@ -61,27 +61,27 @@
             "WIND": 0, 
             "color": "gray"
         }, 
-        "nomads": {
+        "Nomads": {
             "BON5": 1, 
-            "C": 13, 
-            "D": 6, 
+            "C": 11, 
+            "D": 5, 
             "EARTH": 1, 
             "FIRE": 1, 
             "P": 0, 
-            "P1": 1, 
-            "P2": 7, 
+            "P1": 0, 
+            "P2": 8, 
             "P3": 0, 
             "SA": 1, 
             "SH": 0, 
             "TE": 3, 
             "TP": 4, 
             "VP": 22, 
-            "W": 1, 
+            "W": 0, 
             "WATER": 0, 
             "WIND": 0, 
             "color": "yellow"
         }, 
-        "swarmlings": {
+        "Swarmlings": {
             "BON8": 1, 
             "C": 13, 
             "D": 6, 
@@ -216,8 +216,9 @@
             "row": 2
         }, 
         "C4": {
+            "building": "D", 
             "col": 8, 
-            "color": "green", 
+            "color": "yellow", 
             "row": 2
         }, 
         "C5": {
@@ -523,11 +524,11 @@
         "WIND4": {}
     }, 
     "order": [
-        "nomads", 
-        "auren", 
-        "swarmlings", 
-        "alchemists", 
-        "engineers"
+        "Nomads", 
+        "Auren", 
+        "Swarmlings", 
+        "Alchemists", 
+        "Engineers"
     ], 
     "pool": {
         "BON1": 0, 
@@ -538,7 +539,7 @@
         "BON6": 0, 
         "BON7": 1, 
         "BON8": 0, 
-        "C": 1024, 
+        "C": 1026, 
         "EARTH": 100, 
         "FAV1": 1, 
         "FAV10": 3, 
@@ -552,13 +553,13 @@
         "FAV7": 3, 
         "FAV8": 3, 
         "FAV9": 3, 
-        "FIRE": 95, 
+        "FIRE": 94, 
         "P": 999, 
         "P1": 10000, 
         "P2": 10000, 
         "P3": 10000, 
         "VP": 998, 
-        "W": 1011, 
+        "W": 1012, 
         "WATER": 98, 
         "WIND": 100
     }

@@ -40,6 +40,7 @@ Nomads: Burn 4. -4PW. +7C
 Auren: TP -> F4. -2W. -3C
 Engineers: Leech 1
 Swarmlings: TP -> G6. -3W. -4C
+Nomads: Leech 1
 Alchemists: TP -> E10. -2W. -6C
 Engineers: Burn 4. -4PW. D7:gray. -1C. -1W. D -> D7
 Alchemists: Leech 2
@@ -67,4 +68,8 @@ Swarmlings: Leech 1
 Engineers: TP -> E9. -1w. -2c 
 Alchemists: Leech 1
 
+# Round 2, Turn 4:
+
+Nomads: C4:yellow. D -> C4. -1w. -2c
+Auren: +FIRE. +1PW
 
