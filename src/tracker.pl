@@ -260,7 +260,7 @@ sub command {
         $map{$where}{blocked} = 1;
     } elsif ($command =~ /^clear$/) {
         $map{$_}{blocked} = 0 for keys %map;
-        $map{$_}{passed} = 0 for keys %map;
+        $factions{$_}{passed} = 0 for keys %factions;
         for (1..9) {
             if ($pool{"BON$_"}) {
                 $map{"BON$_"}{C}++;

@@ -7,7 +7,9 @@
         }
     ], 
     "factions": {
-        "": {}, 
+        "": {
+            "passed": 0
+        }, 
         "Alchemists": {
             "BON5": 1, 
             "BON6": 0, 
@@ -28,7 +30,7 @@
             "WATER": 1, 
             "WIND": 0, 
             "color": "black", 
-            "passed": 1
+            "passed": 0
         }, 
         "Auren": {
             "ACTA": 1, 
@@ -52,7 +54,7 @@
             "WATER": 3, 
             "WIND": 3, 
             "color": "green", 
-            "passed": 1
+            "passed": 0
         }, 
         "Engineers": {
             "BON1": 0, 
@@ -75,7 +77,7 @@
             "WATER": 0, 
             "WIND": 0, 
             "color": "gray", 
-            "passed": 1
+            "passed": 0
         }, 
         "Nomads": {
             "BON4": 1, 
@@ -97,7 +99,7 @@
             "WATER": 0, 
             "WIND": 0, 
             "color": "yellow", 
-            "passed": 1
+            "passed": 0
         }, 
         "Swarmlings": {
             "BON3": 1, 
@@ -119,7 +121,7 @@
             "WATER": 1, 
             "WIND": 1, 
             "color": "blue", 
-            "passed": 1
+            "passed": 0
         }
     }, 
     "ledger": [
@@ -1384,56 +1386,48 @@
             "blocked": 0, 
             "col": 0, 
             "color": "brown", 
-            "passed": 0, 
             "row": 0
         }, 
         "A10": {
             "blocked": 0, 
             "col": 9, 
             "color": "green", 
-            "passed": 0, 
             "row": 0
         }, 
         "A11": {
             "blocked": 0, 
             "col": 10, 
             "color": "blue", 
-            "passed": 0, 
             "row": 0
         }, 
         "A12": {
             "blocked": 0, 
             "col": 11, 
             "color": "red", 
-            "passed": 0, 
             "row": 0
         }, 
         "A13": {
             "blocked": 0, 
             "col": 12, 
             "color": "black", 
-            "passed": 0, 
             "row": 0
         }, 
         "A2": {
             "blocked": 0, 
             "col": 1, 
             "color": "gray", 
-            "passed": 0, 
             "row": 0
         }, 
         "A3": {
             "blocked": 0, 
             "col": 2, 
             "color": "green", 
-            "passed": 0, 
             "row": 0
         }, 
         "A4": {
             "blocked": 0, 
             "col": 3, 
             "color": "blue", 
-            "passed": 0, 
             "row": 0
         }, 
         "A5": {
@@ -1441,84 +1435,69 @@
             "building": "D", 
             "col": 4, 
             "color": "yellow", 
-            "passed": 0, 
             "row": 0
         }, 
         "A6": {
             "blocked": 0, 
             "col": 5, 
             "color": "red", 
-            "passed": 0, 
             "row": 0
         }, 
         "A7": {
             "blocked": 0, 
             "col": 6, 
             "color": "brown", 
-            "passed": 0, 
             "row": 0
         }, 
         "A8": {
             "blocked": 0, 
             "col": 7, 
             "color": "black", 
-            "passed": 0, 
             "row": 0
         }, 
         "A9": {
             "blocked": 0, 
             "col": 8, 
             "color": "red", 
-            "passed": 0, 
             "row": 0
         }, 
         "ACT1": {
-            "blocked": 0, 
-            "passed": 0
+            "blocked": 0
         }, 
         "ACT2": {
-            "blocked": 1, 
-            "passed": 0
+            "blocked": 1
         }, 
         "ACT3": {
-            "blocked": 1, 
-            "passed": 0
+            "blocked": 1
         }, 
         "ACT4": {
-            "blocked": 0, 
-            "passed": 0
+            "blocked": 0
         }, 
         "ACT5": {
-            "blocked": 0, 
-            "passed": 0
+            "blocked": 0
         }, 
         "ACT6": {
-            "blocked": 0, 
-            "passed": 0
+            "blocked": 0
         }, 
         "ACTA": {
-            "blocked": 1, 
-            "passed": 0
+            "blocked": 1
         }, 
         "B1": {
             "blocked": 0, 
             "col": 0, 
             "color": "yellow", 
-            "passed": 0, 
             "row": 1
         }, 
         "B2": {
             "blocked": 0, 
             "col": 3, 
             "color": "brown", 
-            "passed": 0, 
             "row": 1
         }, 
         "B3": {
             "blocked": 0, 
             "col": 4, 
             "color": "black", 
-            "passed": 0, 
             "row": 1
         }, 
         "B4": {
@@ -1526,95 +1505,78 @@
             "building": "D", 
             "col": 7, 
             "color": "yellow", 
-            "passed": 0, 
             "row": 1
         }, 
         "B5": {
             "blocked": 0, 
             "col": 8, 
             "color": "black", 
-            "passed": 0, 
             "row": 1
         }, 
         "B6": {
             "blocked": 0, 
             "col": 11, 
             "color": "yellow", 
-            "passed": 0, 
             "row": 1
         }, 
         "BON1": {
             "C": 0, 
-            "blocked": 0, 
-            "passed": 0
+            "blocked": 0
         }, 
         "BON1/Engineers": {
-            "blocked": 0, 
-            "passed": 0
+            "blocked": 0
         }, 
         "BON2": {
             "C": 1, 
-            "blocked": 0, 
-            "passed": 0
+            "blocked": 0
         }, 
         "BON2/Auren": {
-            "blocked": 0, 
-            "passed": 0
+            "blocked": 0
         }, 
         "BON3": {
             "C": 0, 
-            "blocked": 0, 
-            "passed": 0
+            "blocked": 0
         }, 
         "BON4": {
             "C": 0, 
-            "blocked": 0, 
-            "passed": 0
+            "blocked": 0
         }, 
         "BON5": {
             "C": 0, 
-            "blocked": 0, 
-            "passed": 0
+            "blocked": 0
         }, 
         "BON6": {
             "C": 0, 
-            "blocked": 0, 
-            "passed": 0
+            "blocked": 0
         }, 
         "BON7": {
             "C": 2, 
-            "blocked": 0, 
-            "passed": 0
+            "blocked": 0
         }, 
         "BON8": {
             "C": 1, 
-            "blocked": 0, 
-            "passed": 0
+            "blocked": 0
         }, 
         "BON9": {
             "C": 0, 
-            "blocked": 0, 
-            "passed": 0
+            "blocked": 0
         }, 
         "C1": {
             "blocked": 0, 
             "col": 2, 
             "color": "black", 
-            "passed": 0, 
             "row": 2
         }, 
         "C2": {
             "blocked": 0, 
             "col": 4, 
             "color": "gray", 
-            "passed": 0, 
             "row": 2
         }, 
         "C3": {
             "blocked": 0, 
             "col": 6, 
             "color": "green", 
-            "passed": 0, 
             "row": 2
         }, 
         "C4": {
@@ -1622,7 +1584,6 @@
             "building": "D", 
             "col": 8, 
             "color": "yellow", 
-            "passed": 0, 
             "row": 2
         }, 
         "C5": {
@@ -1630,42 +1591,36 @@
             "building": "D", 
             "col": 10, 
             "color": "gray", 
-            "passed": 0, 
             "row": 2
         }, 
         "D1": {
             "blocked": 0, 
             "col": 0, 
             "color": "green", 
-            "passed": 0, 
             "row": 3
         }, 
         "D2": {
             "blocked": 0, 
             "col": 1, 
             "color": "blue", 
-            "passed": 0, 
             "row": 3
         }, 
         "D3": {
             "blocked": 0, 
             "col": 2, 
             "color": "yellow", 
-            "passed": 0, 
             "row": 3
         }, 
         "D4": {
             "blocked": 0, 
             "col": 5, 
             "color": "red", 
-            "passed": 0, 
             "row": 3
         }, 
         "D5": {
             "blocked": 0, 
             "col": 6, 
             "color": "blue", 
-            "passed": 0, 
             "row": 3
         }, 
         "D6": {
@@ -1673,7 +1628,6 @@
             "building": "D", 
             "col": 8, 
             "color": "gray", 
-            "passed": 0, 
             "row": 3
         }, 
         "D7": {
@@ -1681,21 +1635,18 @@
             "building": "D", 
             "col": 10, 
             "color": "gray", 
-            "passed": 0, 
             "row": 3
         }, 
         "D8": {
             "blocked": 0, 
             "col": 11, 
             "color": "black", 
-            "passed": 0, 
             "row": 3
         }, 
         "E1": {
             "blocked": 0, 
             "col": 0, 
             "color": "black", 
-            "passed": 0, 
             "row": 4
         }, 
         "E10": {
@@ -1703,35 +1654,30 @@
             "building": "SH", 
             "col": 11, 
             "color": "black", 
-            "passed": 0, 
             "row": 4
         }, 
         "E11": {
             "blocked": 0, 
             "col": 12, 
             "color": "black", 
-            "passed": 0, 
             "row": 4
         }, 
         "E2": {
             "blocked": 0, 
             "col": 1, 
             "color": "brown", 
-            "passed": 0, 
             "row": 4
         }, 
         "E3": {
             "blocked": 0, 
             "col": 2, 
             "color": "red", 
-            "passed": 0, 
             "row": 4
         }, 
         "E4": {
             "blocked": 0, 
             "col": 3, 
             "color": "blue", 
-            "passed": 0, 
             "row": 4
         }, 
         "E5": {
@@ -1739,14 +1685,12 @@
             "building": "D", 
             "col": 4, 
             "color": "black", 
-            "passed": 0, 
             "row": 4
         }, 
         "E6": {
             "blocked": 0, 
             "col": 5, 
             "color": "brown", 
-            "passed": 0, 
             "row": 4
         }, 
         "E7": {
@@ -1754,7 +1698,6 @@
             "building": "D", 
             "col": 6, 
             "color": "gray", 
-            "passed": 0, 
             "row": 4
         }, 
         "E8": {
@@ -1762,7 +1705,6 @@
             "building": "D", 
             "col": 7, 
             "color": "yellow", 
-            "passed": 0, 
             "row": 4
         }, 
         "E9": {
@@ -1770,7 +1712,6 @@
             "building": "TE", 
             "col": 10, 
             "color": "gray", 
-            "passed": 0, 
             "row": 4
         }, 
         "EARTH1": {}, 
@@ -1781,7 +1722,6 @@
             "blocked": 0, 
             "col": 0, 
             "color": "gray", 
-            "passed": 0, 
             "row": 5
         }, 
         "F2": {
@@ -1789,14 +1729,12 @@
             "building": "D", 
             "col": 1, 
             "color": "green", 
-            "passed": 0, 
             "row": 5
         }, 
         "F3": {
             "blocked": 0, 
             "col": 4, 
             "color": "yellow", 
-            "passed": 0, 
             "row": 5
         }, 
         "F4": {
@@ -1804,21 +1742,18 @@
             "building": "SH", 
             "col": 5, 
             "color": "green", 
-            "passed": 0, 
             "row": 5
         }, 
         "F5": {
             "blocked": 0, 
             "col": 9, 
             "color": "brown", 
-            "passed": 0, 
             "row": 5
         }, 
         "F6": {
             "blocked": 0, 
             "col": 10, 
             "color": "gray", 
-            "passed": 0, 
             "row": 5
         }, 
         "F7": {
@@ -1826,24 +1761,20 @@
             "building": "D", 
             "col": 11, 
             "color": "black", 
-            "passed": 0, 
             "row": 5
         }, 
         "FAV6/Auren": {
-            "blocked": 0, 
-            "passed": 0
+            "blocked": 0
         }, 
         "FIRE1": {
             "blocked": 0, 
             "building": "P", 
-            "color": "blue", 
-            "passed": 0
+            "color": "blue"
         }, 
         "FIRE2": {
             "blocked": 0, 
             "building": "P", 
-            "color": "green", 
-            "passed": 0
+            "color": "green"
         }, 
         "FIRE3": {}, 
         "FIRE4": {}, 
@@ -1851,35 +1782,30 @@
             "blocked": 0, 
             "col": 3, 
             "color": "gray", 
-            "passed": 0, 
             "row": 6
         }, 
         "G2": {
             "blocked": 0, 
             "col": 5, 
             "color": "red", 
-            "passed": 0, 
             "row": 6
         }, 
         "G3": {
             "blocked": 0, 
             "col": 7, 
             "color": "green", 
-            "passed": 0, 
             "row": 6
         }, 
         "G4": {
             "blocked": 0, 
             "col": 9, 
             "color": "yellow", 
-            "passed": 0, 
             "row": 6
         }, 
         "G5": {
             "blocked": 0, 
             "col": 10, 
             "color": "black", 
-            "passed": 0, 
             "row": 6
         }, 
         "G6": {
@@ -1887,7 +1813,6 @@
             "building": "TP", 
             "col": 11, 
             "color": "blue", 
-            "passed": 0, 
             "row": 6
         }, 
         "G7": {
@@ -1895,28 +1820,24 @@
             "building": "SH", 
             "col": 12, 
             "color": "yellow", 
-            "passed": 0, 
             "row": 6
         }, 
         "H1": {
             "blocked": 0, 
             "col": 0, 
             "color": "yellow", 
-            "passed": 0, 
             "row": 7
         }, 
         "H2": {
             "blocked": 0, 
             "col": 1, 
             "color": "blue", 
-            "passed": 0, 
             "row": 7
         }, 
         "H3": {
             "blocked": 0, 
             "col": 2, 
             "color": "brown", 
-            "passed": 0, 
             "row": 7
         }, 
         "H4": {
@@ -1924,28 +1845,24 @@
             "building": "D", 
             "col": 6, 
             "color": "blue", 
-            "passed": 0, 
             "row": 7
         }, 
         "H5": {
             "blocked": 0, 
             "col": 7, 
             "color": "black", 
-            "passed": 0, 
             "row": 7
         }, 
         "H6": {
             "blocked": 0, 
             "col": 9, 
             "color": "gray", 
-            "passed": 0, 
             "row": 7
         }, 
         "H7": {
             "blocked": 0, 
             "col": 10, 
             "color": "brown", 
-            "passed": 0, 
             "row": 7
         }, 
         "H8": {
@@ -1953,91 +1870,78 @@
             "building": "D", 
             "col": 11, 
             "color": "blue", 
-            "passed": 0, 
             "row": 7
         }, 
         "I1": {
             "blocked": 0, 
             "col": 0, 
             "color": "red", 
-            "passed": 0, 
             "row": 8
         }, 
         "I10": {
             "blocked": 0, 
             "col": 10, 
             "color": "blue", 
-            "passed": 0, 
             "row": 8
         }, 
         "I11": {
             "blocked": 0, 
             "col": 11, 
             "color": "green", 
-            "passed": 0, 
             "row": 8
         }, 
         "I12": {
             "blocked": 0, 
             "col": 12, 
             "color": "red", 
-            "passed": 0, 
             "row": 8
         }, 
         "I2": {
             "blocked": 0, 
             "col": 1, 
             "color": "black", 
-            "passed": 0, 
             "row": 8
         }, 
         "I3": {
             "blocked": 0, 
             "col": 2, 
             "color": "gray", 
-            "passed": 0, 
             "row": 8
         }, 
         "I4": {
             "blocked": 0, 
             "col": 3, 
             "color": "blue", 
-            "passed": 0, 
             "row": 8
         }, 
         "I5": {
             "blocked": 0, 
             "col": 4, 
             "color": "red", 
-            "passed": 0, 
             "row": 8
         }, 
         "I6": {
             "blocked": 0, 
             "col": 5, 
             "color": "green", 
-            "passed": 0, 
             "row": 8
         }, 
         "I7": {
             "blocked": 0, 
             "col": 6, 
             "color": "yellow", 
-            "passed": 0, 
             "row": 8
         }, 
         "I8": {
             "blocked": 0, 
             "col": 7, 
             "color": "brown", 
-            "passed": 0, 
             "row": 8
         }, 
         "I9": {
             "blocked": 0, 
             "col": 8, 
             "color": "gray", 
-            "passed": 0, 
             "row": 8
         }, 
         "WATER1": {}, 

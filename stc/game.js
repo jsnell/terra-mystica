@@ -570,9 +570,10 @@ function renderTreasury(board, treasury, faction) {
     });
 }
 
-function makeBoard(color, name, klass) {
+function makeBoard(color, name, klass, style) {
     var board = new Element('div', {
-        'class': klass
+        'class': klass,
+        'style': style,
     });
     board.insert(new Element('div', {
         'style': 'background-color: ' + colors[color] + '; color: ' +
@@ -587,7 +588,13 @@ function drawFactions() {
         name = name;
         var faction = state.factions[name];
         var color = faction.color;
-        var board = makeBoard(color, name, 'faction-board');
+
+        var style ='';
+        if (faction.passed) {
+            style = 'opacity: 0.5';
+        }
+
+        var board = makeBoard(color, name, 'faction-board', style);
 
         board.insert(new Element('div').update(
             "#{C} c, #{W} w, #{P} p, #{VP} vp".interpolate(faction)));
