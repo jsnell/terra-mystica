@@ -261,7 +261,7 @@ function drawCults() {
     if (canvas.getContext) {
         var ctx = canvas.getContext("2d");
 
-        var cults = ["FIRE", "WATER", "EARTH", "WIND"];
+        var cults = ["FIRE", "WATER", "EARTH", "AIR"];
         var bgcolor = ["#f88", "#ccf", "#b84", "#f0f0f0"];
         var x_offset = 0;
 
@@ -505,7 +505,7 @@ function renderFavor(div, name, faction) {
             favor.insert("3 EARTH");
         }, 
         "FAV4": function() {
-            favor.insert("3 WIND");
+            favor.insert("3 AIR");
         }, 
         "FAV5": function() {
             favor.insert("2 FIRE");
@@ -521,7 +521,7 @@ function renderFavor(div, name, faction) {
             insertIncome(favor, "1w");
         },
         "FAV8": function() {
-            favor.insert("2 WIND");
+            favor.insert("2 AIR");
             insertIncome(favor, "4pw");
         },
         "FAV9": function() {
@@ -537,7 +537,7 @@ function renderFavor(div, name, faction) {
             insertScoring(favor, "2*D");
         },
         "FAV12": function() {
-            favor.insert("1 WIND");
+            favor.insert("1 AIR");
             insertScoring(favor, "TPs");
         },
     };

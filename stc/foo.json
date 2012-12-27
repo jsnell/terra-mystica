@@ -12,6 +12,7 @@
             "passed": 0
         }, 
         "Alchemists": {
+            "AIR": 0, 
             "BON5": 1, 
             "BON6": 0, 
             "C": 7, 
@@ -29,12 +30,12 @@
             "VP": 27, 
             "W": 4, 
             "WATER": 1, 
-            "WIND": 0, 
             "color": "black", 
             "passed": 0
         }, 
         "Auren": {
             "ACTA": 1, 
+            "AIR": 3, 
             "BON1": 1, 
             "BON2": 0, 
             "C": 12, 
@@ -53,11 +54,11 @@
             "VP": 25, 
             "W": 5, 
             "WATER": 3, 
-            "WIND": 3, 
             "color": "green", 
             "passed": 0
         }, 
         "Engineers": {
+            "AIR": 0, 
             "BON1": 0, 
             "BON6": 1, 
             "C": 3, 
@@ -76,11 +77,11 @@
             "VP": 18, 
             "W": 1, 
             "WATER": 0, 
-            "WIND": 0, 
             "color": "gray", 
             "passed": 0
         }, 
         "Nomads": {
+            "AIR": 0, 
             "BON4": 1, 
             "BON5": 0, 
             "C": 10, 
@@ -98,11 +99,11 @@
             "VP": 22, 
             "W": 3, 
             "WATER": 0, 
-            "WIND": 0, 
             "color": "yellow", 
             "passed": 0
         }, 
         "Swarmlings": {
+            "AIR": 1, 
             "BON3": 1, 
             "BON8": 0, 
             "C": 22, 
@@ -120,7 +121,6 @@
             "VP": 17, 
             "W": 9, 
             "WATER": 1, 
-            "WIND": 1, 
             "color": "blue", 
             "passed": 0
         }
@@ -657,7 +657,7 @@
             "TP": "+1 [4]", 
             "VP": "+5 [25]", 
             "W": "-4 [0]", 
-            "commands": "SH->F4. -4W. -6C. +5VP. +FAV6. +2WATER", 
+            "commands": "SH->F4. -4W. -6C. +5VP. +FAV6", 
             "faction": "Auren"
         }, 
         {
@@ -986,7 +986,7 @@
             "TP": "+1 [4]", 
             "VP": "", 
             "W": "-1 [0]", 
-            "commands": "TE->E9. -1w. -4c. +FAV7. +2EARTH", 
+            "commands": "TE->E9. -1w. -4c. +FAV7", 
             "faction": "Engineers"
         }, 
         {
@@ -1378,7 +1378,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
-            "commands": "Action ACTA. +2WIND", 
+            "commands": "Action ACTA. +2AIR", 
             "faction": "Auren"
         }
     ], 
@@ -1483,6 +1483,10 @@
         "ACTA": {
             "blocked": 1
         }, 
+        "AIR1": {}, 
+        "AIR2": {}, 
+        "AIR3": {}, 
+        "AIR4": {}, 
         "B1": {
             "blocked": 0, 
             "col": 0, 
@@ -1948,11 +1952,7 @@
         "WATER1": {}, 
         "WATER2": {}, 
         "WATER3": {}, 
-        "WATER4": {}, 
-        "WIND1": {}, 
-        "WIND2": {}, 
-        "WIND3": {}, 
-        "WIND4": {}
+        "WATER4": {}
     }, 
     "order": [
         "Nomads", 
@@ -1968,6 +1968,7 @@
         "ACT4": 1, 
         "ACT5": 1, 
         "ACT6": 1, 
+        "AIR": 98, 
         "BON1": 0, 
         "BON2": 1, 
         "BON3": 0, 
@@ -1997,7 +1998,6 @@
         "P3": 10000, 
         "VP": 991, 
         "W": 996, 
-        "WATER": 98, 
-        "WIND": 98
+        "WATER": 98
     }
 }

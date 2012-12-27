@@ -5,7 +5,7 @@ use JSON;
 
 my @factions;
 my %factions;
-my @cults = qw(EARTH FIRE WATER WIND);
+my @cults = qw(EARTH FIRE WATER AIR);
 my @ledger = ();
 my %map = ();
 my @error = ();
@@ -14,11 +14,11 @@ my %setups = (
     Alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
                     WATER => 1, FIRE => 1, color => 'black'},
     Auren => { C => 15, W => 3, P1 => 5, P2 => 7,
-               WATER => 1, WIND => 1, 'ACTA' => 1,
+               WATER => 1, AIR => 1, 'ACTA' => 1,
                color => 'green'},
     Swarmlings => { C => 20, W => 8, P1 => 3, P2 => 9,
                     FIRE => 1, EARTH => 1,
-                    WATER => 1, WIND => 1, color => 'blue'},
+                    WATER => 1, AIR => 1, color => 'blue'},
     Nomads => { C => 15, W => 2, P1 => 5, P2 => 7,
                 FIRE => 1, EARTH => 1, color => 'yellow'},
     Engineers => { C => 10, W => 2, P1 => 3, P2 => 9, color => 'gray' }
@@ -40,7 +40,7 @@ my %pool = (
     EARTH => 100,
     FIRE => 100,
     WATER => 100,
-    WIND => 100,
+    AIR => 100,
     );
 
 $pool{"ACT$_"}++ for 1..6;
@@ -48,6 +48,23 @@ $pool{"BON$_"}++ for 1..9;
 $map{"BON$_"}{C} = 0 for 1..9;
 $pool{"FAV$_"}++ for 1..4;
 $pool{"FAV$_"} += 3 for 5..12;
+
+my %favors = (
+    FAV1 => { gain => { FIRE => 3 }, income => {} },
+    FAV2 => { gain => { WATER => 3 }, income => {} },
+    FAV3 => { gain => { EARTH => 3 }, income => {} },
+    FAV4 => { gain => { AIR => 3 }, income => {} },
+
+    FAV5 => { gain => { FIRE => 2 }, income => {} }, # Town
+    FAV6 => { gain => { WATER => 2 }, income => {} }, # +1 cult
+    FAV7 => { gain => { EARTH => 2 }, income => { W => 1, PW => 1} },
+    FAV8 => { gain => { AIR => 2 }, income => { PW => 4} },
+
+    FAV9 => { gain => { FIRE => 1 }, income => { C => 3} },
+    FAV10 => { gain => { WATER => 1 }, income => {} }, # vp: 3*TP
+    FAV11 => { gain => { EARTH => 1 }, income => {} }, # vp: 2*D
+    FAV12 => { gain => { AIR => 1 }, income => {} }, # vp: TPs
+);
 
 my @map = qw(brown gray green blue yellow red brown black red green blue red black E
              yellow x x brown black x x yellow black x x yellow E
@@ -143,7 +160,15 @@ sub command {
                 die "Not enough '$type' in pool after command '$command'\n";
             }
 
-            if ($type =~ /FIRE|WATER|EARTH|WIND/) {
+            if ($type =~ /^FAV/) {
+                my %gain = %{$favors{$type}{gain}};
+
+                for (keys %gain) {
+                    command $faction, "+$gain{$_}$_";
+                }
+            }
+
+            if ($type =~ /FIRE|WATER|EARTH|AIR/) {
                 my $new_value = $factions{$faction}{$type};
                 if ($orig_value <= 2 && $new_value > 2) {
                     command $faction, "+1pw";
@@ -354,7 +379,7 @@ sub print_pretty {
         print "  VP: $f{VP}";
         print "  Resources: $f{C}c / $f{W}w / $f{P}p, $f{P1}/$f{P2}/$f{P3} power";
         print "  Buildings: $f{D} D, $f{TP} TP, $f{TE} TE, $f{SH} SH, $f{SA} SA";
-        print "  Cults: $f{FIRE} / $f{WATER} / $f{EARTH} / $f{WIND}";
+        print "  Cults: $f{FIRE} / $f{WATER} / $f{EARTH} / $f{AIR}";
 
         for (1..9) {
             if ($f{"BON$_"}) {

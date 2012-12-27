@@ -51,7 +51,7 @@ Alchemists: Leech 2
 
 Nomads: TP -> G7. -2W. -3C.
 Swarmlings: Leech 2
-Auren: SH -> F4. -4W. -6C. +5VP. +FAV6. +2WATER
+Auren: SH -> F4. -4W. -6C. +5VP. +FAV6
 Engineers: Leech 1
 Swarmlings: H8:blue. D -> H8. -8W. -3C
 Nomads: Leech 2
@@ -75,7 +75,7 @@ Auren: +FIRE. Action BON2
 Swarmlings: Pass Bon3
 Alchemists: SH -> E10. -4w. -6c. +12pw. +5vp
 Engineers: Leech 3
-Engineers: TE -> E9. -1w. -4c. +FAV7. +2EARTH
+Engineers: TE -> E9. -1w. -4c. +FAV7
 Alchemists: Leech 1
 
 # Round 1, Turn 5:
@@ -115,7 +115,7 @@ Engineers: -4w. -1c. D -> D6
 Nomads: Leech 1
 Nomads: D -> E8. -1w. -2c
 Engineers: Leech 1
-Auren: Action ACTA. +2WIND
+Auren: Action ACTA. +2AIR
 
 
 
