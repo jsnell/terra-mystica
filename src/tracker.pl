@@ -11,7 +11,8 @@ my %setups = (
     Alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
                     WATER => 1, FIRE => 1, color => 'black'},
     Auren => { C => 15, W => 3, P1 => 5, P2 => 7,
-               WATER => 1, WIND => 1, color => 'green'},
+               WATER => 1, WIND => 1, 'ACTA' => 1,
+               color => 'green'},
     Swarmlings => { C => 20, W => 8, P1 => 3, P2 => 9,
                     FIRE => 1, EARTH => 1,
                     WATER => 1, WIND => 1, color => 'blue'},
@@ -39,6 +40,7 @@ my %pool = (
     WIND => 100,
     );
 
+$pool{"ACT$_"}++ for 1..6;
 $pool{"BON$_"}++ for 1..9;
 $pool{"FAV$_"}++ for 1..4;
 $pool{"FAV$_"} += 3 for 5..12;
@@ -53,6 +55,7 @@ my @map = qw(brown gray green blue yellow red brown black red green blue red bla
              x x x gray x red x green x yellow black blue yellow E
              yellow blue brown x x x blue black x gray brown gray E
              red black gray blue red green yellow brown gray x blue green red E); 
+my @bridges = ();
 
 {
     my $ri = 0;
@@ -144,6 +147,7 @@ sub command {
         }
 
         $map{$where}{building} = $type;
+        $map{$where}{color} = $factions{$faction}{color};
 
         $factions{$faction}{$type}--;
     } elsif ($command =~ /^burn (\d+)$/) {
@@ -162,8 +166,17 @@ sub command {
         my $where = uc $1;
         my $color = lc $2;
         $map{$where}{color} = $color;
+    } elsif ($command =~ /^bridge (\w+):(\w+)$/) {
+        die "Need faction for command $command\n" if !$faction;
+
+        my $from = uc $1;
+        my $to = uc $2;
+        push @bridges, {from => $from, to => $to, color => $factions{$faction}{color}};
     } elsif ($command =~ /^block (\w+)$/) {
         my $where = uc $1;
+        if ($where !~ /^ACT/) {
+            $where .= "/$faction";
+        }
         $map{$where}{blocked} = 1;
     } elsif ($command =~ /^clear$/) {
         $map{$_}{blocked} = 0 for keys %map;
@@ -261,6 +274,7 @@ sub print_json {
         map => \%map,
         factions => \%factions,
         pool => \%pool,
+        bridges => \@bridges,
     };
 
     print $out;

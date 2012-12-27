@@ -1,35 +1,45 @@
 {
+    "bridges": [
+        {
+            "color": "gray", 
+            "from": "E9", 
+            "to": "D6"
+        }
+    ], 
     "factions": {
         "Alchemists": {
-            "BON6": 1, 
-            "C": 7, 
+            "BON5": 1, 
+            "BON6": 0, 
+            "C": 1, 
             "D": 6, 
             "EARTH": 0, 
             "FIRE": 1, 
             "P": 0, 
-            "P1": 4, 
-            "P2": 4, 
-            "P3": 0, 
+            "P1": 2, 
+            "P2": 5, 
+            "P3": 1, 
             "SA": 1, 
-            "SH": 1, 
+            "SH": 0, 
             "TE": 3, 
-            "TP": 3, 
-            "VP": 18, 
-            "W": 4, 
+            "TP": 4, 
+            "VP": 27, 
+            "W": 0, 
             "WATER": 1, 
             "WIND": 0, 
             "color": "black"
         }, 
         "Auren": {
-            "BON2": 1, 
+            "ACTA": 1, 
+            "BON1": 1, 
+            "BON2": 0, 
             "C": 10, 
             "D": 7, 
             "EARTH": 0, 
             "FAV6": 1, 
-            "FIRE": 3, 
+            "FIRE": 6, 
             "P": 0, 
-            "P1": 3, 
-            "P2": 9, 
+            "P1": 6, 
+            "P2": 3, 
             "P3": 0, 
             "SA": 1, 
             "SH": 0, 
@@ -42,28 +52,31 @@
             "color": "green"
         }, 
         "Engineers": {
-            "BON1": 1, 
-            "C": 8, 
+            "BON1": 0, 
+            "BON6": 1, 
+            "C": 4, 
             "D": 5, 
-            "EARTH": 0, 
+            "EARTH": 2, 
+            "FAV7": 1, 
             "FIRE": 0, 
             "P": 0, 
             "P1": 5, 
-            "P2": 3, 
+            "P2": 0, 
             "P3": 0, 
             "SA": 1, 
             "SH": 1, 
-            "TE": 3, 
-            "TP": 3, 
-            "VP": 20, 
-            "W": 1, 
+            "TE": 2, 
+            "TP": 4, 
+            "VP": 18, 
+            "W": 0, 
             "WATER": 0, 
             "WIND": 0, 
             "color": "gray"
         }, 
         "Nomads": {
-            "BON5": 1, 
-            "C": 11, 
+            "BON4": 1, 
+            "BON5": 0, 
+            "C": 12, 
             "D": 5, 
             "EARTH": 1, 
             "FIRE": 1, 
@@ -82,7 +95,8 @@
             "color": "yellow"
         }, 
         "Swarmlings": {
-            "BON8": 1, 
+            "BON3": 1, 
+            "BON8": 0, 
             "C": 13, 
             "D": 6, 
             "EARTH": 1, 
@@ -169,6 +183,27 @@
             "color": "red", 
             "row": 0
         }, 
+        "ACT1": {
+            "blocked": 1
+        }, 
+        "ACT2": {
+            "blocked": 1
+        }, 
+        "ACT3": {
+            "blocked": 1
+        }, 
+        "ACT4": {
+            "blocked": 1
+        }, 
+        "ACT5": {
+            "blocked": 1
+        }, 
+        "ACT6": {
+            "blocked": 1
+        }, 
+        "ACTA": {
+            "blocked": 1
+        }, 
         "B1": {
             "col": 0, 
             "color": "yellow", 
@@ -199,6 +234,12 @@
             "col": 11, 
             "color": "yellow", 
             "row": 1
+        }, 
+        "BON1/Engineers": {
+            "blocked": 1
+        }, 
+        "BON2/Auren": {
+            "blocked": 1
         }, 
         "C1": {
             "col": 2, 
@@ -265,7 +306,7 @@
         }, 
         "D8": {
             "col": 11, 
-            "color": "brown", 
+            "color": "black", 
             "row": 3
         }, 
         "E1": {
@@ -274,14 +315,14 @@
             "row": 4
         }, 
         "E10": {
-            "building": "TP", 
+            "building": "SH", 
             "col": 11, 
             "color": "black", 
             "row": 4
         }, 
         "E11": {
             "col": 12, 
-            "color": "blue", 
+            "color": "black", 
             "row": 4
         }, 
         "E2": {
@@ -322,7 +363,7 @@
             "row": 4
         }, 
         "E9": {
-            "building": "TP", 
+            "building": "TE", 
             "col": 10, 
             "color": "gray", 
             "row": 4
@@ -369,10 +410,17 @@
             "color": "black", 
             "row": 5
         }, 
-        "FIRE1": {
-            "building": "P"
+        "FAV6/Auren": {
+            "blocked": 1
         }, 
-        "FIRE2": {}, 
+        "FIRE1": {
+            "building": "P", 
+            "color": "blue"
+        }, 
+        "FIRE2": {
+            "building": "P", 
+            "color": "green"
+        }, 
         "FIRE3": {}, 
         "FIRE4": {}, 
         "G1": {
@@ -531,16 +579,22 @@
         "Engineers"
     ], 
     "pool": {
+        "ACT1": 1, 
+        "ACT2": 1, 
+        "ACT3": 1, 
+        "ACT4": 1, 
+        "ACT5": 1, 
+        "ACT6": 1, 
         "BON1": 0, 
-        "BON2": 0, 
-        "BON3": 1, 
-        "BON4": 1, 
+        "BON2": 1, 
+        "BON3": 0, 
+        "BON4": 0, 
         "BON5": 0, 
         "BON6": 0, 
         "BON7": 1, 
-        "BON8": 0, 
-        "C": 1026, 
-        "EARTH": 100, 
+        "BON8": 1, 
+        "C": 1035, 
+        "EARTH": 98, 
         "FAV1": 1, 
         "FAV10": 3, 
         "FAV11": 3, 
@@ -550,16 +604,16 @@
         "FAV4": 1, 
         "FAV5": 3, 
         "FAV6": 2, 
-        "FAV7": 3, 
+        "FAV7": 2, 
         "FAV8": 3, 
         "FAV9": 3, 
-        "FIRE": 94, 
-        "P": 999, 
+        "FIRE": 91, 
+        "P": 998, 
         "P1": 10000, 
         "P2": 10000, 
         "P3": 10000, 
-        "VP": 998, 
-        "W": 1012, 
+        "VP": 991, 
+        "W": 1017, 
         "WATER": 98, 
         "WIND": 100
     }

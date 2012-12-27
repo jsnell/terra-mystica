@@ -10,23 +10,10 @@
     <script type="text/javascript" language="javascript"
             src="debug.js">
     </script>
+    <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
-    <style type="text/css">
-      div.faction-board {
-          border-style: solid;
-          margin: 2px;
-          padding: 3px;
-          width: 200px;
-          height: 200px;
-          float: left;
-      }
-      table { border-style: solid }
-
-      canvas#map { border-style: solid }
-      canvas#cults { border-style: solid }
-    </style>
-    <div id="error" style="background-color: #e33"></div>
+    <div id="error"></div>
     <table style="border-style: none">
       <tr>
         <td>
@@ -50,7 +37,7 @@
           onSuccess: function(transport){
             state = transport.responseText.evalJSON();
             try {
-              DrawMap();
+              drawMap();
             } catch (e) {
               handleException(e);
             };
