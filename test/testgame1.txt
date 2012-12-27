@@ -38,13 +38,13 @@ Alchemists: +5W
 Engineers: +2W. +2C
 
 # Round 1, Turn 1:
-Nomads: Burn 4. -4PW. +7C. Block ACT4
+Nomads: Burn 4. Action ACT4
 Auren: TP -> F4. -2W. -3C
 Engineers: Leech 1
 Swarmlings: TP -> G6. -3W. -4C
 Nomads: Leech 1
 Alchemists: TP -> E10. -2W. -6C
-Engineers: Burn 4. -4PW. D7:gray. -1C. -1W. D -> D7. Block ACT5
+Engineers: Burn 4. Action ACT5. -1C. -1W. D -> D7. 
 Alchemists: Leech 2
 
 # Round 1, Turn 2:
@@ -55,23 +55,23 @@ Auren: SH -> F4. -4W. -6C. +5VP. +FAV6. +2WATER. +1PW
 Engineers: Leech 1
 Swarmlings: H8:blue. D -> H8. -8W. -3C
 Nomads: Leech 2
-Alchemists: Burn 4. -4PW. +2W. Block ACT3
+Alchemists: Burn 4. Action ACT3
 Engineers: E9:gray. D -> E9. -1W. -1C.
 Alchemists: Leech 2
 
 # Round 1, Turn 3:
 Nomads: SH -> G7. -4W. -6C. +5VP 
 Swarmlings: Leech 3
-Auren: +2FIRE. Block ACTA
+Auren: Action ACTA. +2FIRE
 Swarmlings: P -> FIRE1. +3FIRE. +1PW
 Alchemists: F7:black. D -> F7. -4w. -2c. 
 Nomads: Leech 3
-Engineers: TP -> E9. -1w. -2c. Block BON1
+Engineers: TP -> E9. -1w. -2c. Action BON1
 
 # Round 1, Turn 4:
 
 Nomads: C4:yellow. D -> C4. -1w. -2c
-Auren: +FIRE. +1PW. Block BON2
+Auren: +FIRE. +1PW. Action BON2
 Swarmlings: Pass Bon3
 Alchemists: SH -> E10. -4w. -6c. +12pw. +5vp
 Engineers: Leech 3
@@ -80,12 +80,12 @@ Alchemists: Leech 1
 
 # Round 1, Turn 5:
 Nomads: Pass Bon4
-Auren: +FIRE. Block FAV6
-Alchemists: D8:black. E11:black. -6pw. +4pw. Block ACT6
-Engineers: Burn 3. -3pw. Bridge E9:D6. Block ACT1
+Auren: +FIRE. Action FAV6
+Alchemists: D8:black. E11:black. Action ACT6. +4pw
+Engineers: Burn 3. Action ACT1. Bridge E9:D6. 
 
 # Round 1, Turn 6:
-Auren: Burn 3. -3pw. +p. Block ACT2
+Auren: Burn 3. Action ACT2
 Alchemists: Pass Bon5. +4vp
 Engineers: Pass Bon6
 
@@ -109,13 +109,13 @@ clear
 
 # Round 2. Turn 1
 
-Swarmlings: +2w. -4pw. Block ACT3
-Alchemists: -3pw. +p. Block ACT2.
+Swarmlings: Action ACT3
+Alchemists: Action ACT2
 Engineers: -4w. -1c. D -> D6
 Nomads: Leech 1
 Nomads: D -> E8. -1w. -2c
 Engineers: Leech 1
-Auren: Block ACTA. +2WIND. +1pw
+Auren: Action ACTA. +2WIND. +1pw
 
 
 

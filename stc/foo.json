@@ -146,6 +146,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "d->a5", 
             "faction": "Nomads"
         }, 
         {
@@ -162,6 +163,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "d->f4", 
             "faction": "Auren"
         }, 
         {
@@ -178,6 +180,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "d->h4", 
             "faction": "Swarmlings"
         }, 
         {
@@ -194,6 +197,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "d->e5", 
             "faction": "Alchemists"
         }, 
         {
@@ -210,6 +214,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "d->e7. d->c5", 
             "faction": "Engineers"
         }, 
         {
@@ -226,6 +231,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "d->e10", 
             "faction": "Alchemists"
         }, 
         {
@@ -242,6 +248,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "d->g6", 
             "faction": "Swarmlings"
         }, 
         {
@@ -258,6 +265,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "d->f2", 
             "faction": "Auren"
         }, 
         {
@@ -274,6 +282,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "d->b4. d->g7", 
             "faction": "Nomads"
         }, 
         {
@@ -293,6 +302,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "+bon1", 
             "faction": "Engineers"
         }, 
         {
@@ -309,6 +319,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "+bon6", 
             "faction": "Alchemists"
         }, 
         {
@@ -325,6 +336,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "+bon8", 
             "faction": "Swarmlings"
         }, 
         {
@@ -341,6 +353,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "+bon2", 
             "faction": "Auren"
         }, 
         {
@@ -357,6 +370,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "+bon5", 
             "faction": "Nomads"
         }, 
         {
@@ -379,6 +393,7 @@
             "TP": "", 
             "VP": "", 
             "W": "+5 [7]", 
+            "commands": "+5w. +3pw", 
             "faction": "Nomads"
         }, 
         {
@@ -395,6 +410,7 @@
             "TP": "", 
             "VP": "", 
             "W": "+3 [6]", 
+            "commands": "+3w. +4c", 
             "faction": "Auren"
         }, 
         {
@@ -411,6 +427,7 @@
             "TP": "", 
             "VP": "", 
             "W": "+4 [12]", 
+            "commands": "+4w. +1p", 
             "faction": "Swarmlings"
         }, 
         {
@@ -427,6 +444,7 @@
             "TP": "", 
             "VP": "", 
             "W": "+5 [8]", 
+            "commands": "+5w", 
             "faction": "Alchemists"
         }, 
         {
@@ -443,6 +461,7 @@
             "TP": "", 
             "VP": "", 
             "W": "+2 [4]", 
+            "commands": "+2w. +2c", 
             "faction": "Engineers"
         }, 
         {
@@ -462,6 +481,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "burn 4. action act4", 
             "faction": "Nomads"
         }, 
         {
@@ -478,6 +498,7 @@
             "TP": "-1 [3]", 
             "VP": "", 
             "W": "-2 [4]", 
+            "commands": "tp->f4. -2w. -3c", 
             "faction": "Auren"
         }, 
         {
@@ -494,6 +515,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "leech 1", 
             "faction": "Engineers"
         }, 
         {
@@ -510,6 +532,7 @@
             "TP": "-1 [3]", 
             "VP": "", 
             "W": "-3 [9]", 
+            "commands": "tp->g6. -3w. -4c", 
             "faction": "Swarmlings"
         }, 
         {
@@ -526,6 +549,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "leech 1", 
             "faction": "Nomads"
         }, 
         {
@@ -542,6 +566,7 @@
             "TP": "-1 [3]", 
             "VP": "", 
             "W": "-2 [6]", 
+            "commands": "tp->e10. -2w. -6c", 
             "faction": "Alchemists"
         }, 
         {
@@ -558,6 +583,7 @@
             "TP": "", 
             "VP": "", 
             "W": "-1 [3]", 
+            "commands": "burn 4. action act5. -1c. -1w. d->d7", 
             "faction": "Engineers"
         }, 
         {
@@ -574,6 +600,7 @@
             "TP": "", 
             "VP": "-1 [19]", 
             "W": "", 
+            "commands": "leech 2", 
             "faction": "Alchemists"
         }, 
         {
@@ -593,6 +620,7 @@
             "TP": "-1 [3]", 
             "VP": "", 
             "W": "-2 [5]", 
+            "commands": "tp->g7. -2w. -3c", 
             "faction": "Nomads"
         }, 
         {
@@ -609,6 +637,7 @@
             "TP": "", 
             "VP": "-1 [19]", 
             "W": "", 
+            "commands": "leech 2", 
             "faction": "Swarmlings"
         }, 
         {
@@ -625,6 +654,7 @@
             "TP": "+1 [4]", 
             "VP": "+5 [25]", 
             "W": "-4 [0]", 
+            "commands": "sh->f4. -4w. -6c. +5vp. +fav6. +2water. +1pw", 
             "faction": "Auren"
         }, 
         {
@@ -641,6 +671,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "leech 1", 
             "faction": "Engineers"
         }, 
         {
@@ -657,6 +688,7 @@
             "TP": "", 
             "VP": "", 
             "W": "-8 [1]", 
+            "commands": "h8:blue. d->h8. -8w. -3c", 
             "faction": "Swarmlings"
         }, 
         {
@@ -673,6 +705,7 @@
             "TP": "", 
             "VP": "-1 [19]", 
             "W": "", 
+            "commands": "leech 2", 
             "faction": "Nomads"
         }, 
         {
@@ -689,6 +722,7 @@
             "TP": "", 
             "VP": "", 
             "W": "+2 [8]", 
+            "commands": "burn 4. action act3", 
             "faction": "Alchemists"
         }, 
         {
@@ -705,6 +739,7 @@
             "TP": "", 
             "VP": "", 
             "W": "-1 [2]", 
+            "commands": "e9:gray. d->e9. -1w. -1c", 
             "faction": "Engineers"
         }, 
         {
@@ -721,6 +756,7 @@
             "TP": "", 
             "VP": "-1 [18]", 
             "W": "", 
+            "commands": "leech 2", 
             "faction": "Alchemists"
         }, 
         {
@@ -740,6 +776,7 @@
             "TP": "+1 [4]", 
             "VP": "+5 [24]", 
             "W": "-4 [1]", 
+            "commands": "sh->g7. -4w. -6c. +5vp", 
             "faction": "Nomads"
         }, 
         {
@@ -756,6 +793,7 @@
             "TP": "", 
             "VP": "-2 [17]", 
             "W": "", 
+            "commands": "leech 3", 
             "faction": "Swarmlings"
         }, 
         {
@@ -772,6 +810,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "action acta. +2fire", 
             "faction": "Auren"
         }, 
         {
@@ -788,6 +827,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "p->fire1. +3fire. +1pw", 
             "faction": "Swarmlings"
         }, 
         {
@@ -804,6 +844,7 @@
             "TP": "", 
             "VP": "", 
             "W": "-4 [4]", 
+            "commands": "f7:black. d->f7. -4w. -2c", 
             "faction": "Alchemists"
         }, 
         {
@@ -820,6 +861,7 @@
             "TP": "", 
             "VP": "-2 [22]", 
             "W": "", 
+            "commands": "leech 3", 
             "faction": "Nomads"
         }, 
         {
@@ -836,6 +878,7 @@
             "TP": "-1 [3]", 
             "VP": "", 
             "W": "-1 [1]", 
+            "commands": "tp->e9. -1w. -2c. action bon1", 
             "faction": "Engineers"
         }, 
         {
@@ -855,6 +898,7 @@
             "TP": "", 
             "VP": "", 
             "W": "-1 [0]", 
+            "commands": "c4:yellow. d->c4. -1w. -2c", 
             "faction": "Nomads"
         }, 
         {
@@ -871,6 +915,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "+fire. +1pw. action bon2", 
             "faction": "Auren"
         }, 
         {
@@ -887,6 +932,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "pass bon3", 
             "faction": "Swarmlings"
         }, 
         {
@@ -903,6 +949,7 @@
             "TP": "+1 [4]", 
             "VP": "+5 [23]", 
             "W": "-4 [0]", 
+            "commands": "sh->e10. -4w. -6c. +12pw. +5vp", 
             "faction": "Alchemists"
         }, 
         {
@@ -919,6 +966,7 @@
             "TP": "", 
             "VP": "-2 [18]", 
             "W": "", 
+            "commands": "leech 3", 
             "faction": "Engineers"
         }, 
         {
@@ -935,6 +983,7 @@
             "TP": "+1 [4]", 
             "VP": "", 
             "W": "-1 [0]", 
+            "commands": "te->e9. -1w. -4c. +fav7. +2earth", 
             "faction": "Engineers"
         }, 
         {
@@ -951,6 +1000,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "leech 1", 
             "faction": "Alchemists"
         }, 
         {
@@ -970,6 +1020,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "pass bon4", 
             "faction": "Nomads"
         }, 
         {
@@ -986,6 +1037,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "+fire. action fav6", 
             "faction": "Auren"
         }, 
         {
@@ -1002,6 +1054,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "d8:black. e11:black. action act6. +4pw", 
             "faction": "Alchemists"
         }, 
         {
@@ -1018,6 +1071,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "burn 3. action act1. bridge e9:d6", 
             "faction": "Engineers"
         }, 
         {
@@ -1037,6 +1091,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "burn 3. action act2", 
             "faction": "Auren"
         }, 
         {
@@ -1053,6 +1108,7 @@
             "TP": "", 
             "VP": "+4 [27]", 
             "W": "", 
+            "commands": "pass bon5. +4vp", 
             "faction": "Alchemists"
         }, 
         {
@@ -1069,6 +1125,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "pass bon6", 
             "faction": "Engineers"
         }, 
         {
@@ -1088,6 +1145,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "+2fire. p->fire2. +2pw", 
             "faction": "Auren"
         }, 
         {
@@ -1107,6 +1165,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "pass bon1", 
             "faction": "Auren"
         }, 
         {
@@ -1126,6 +1185,7 @@
             "TP": "", 
             "VP": "", 
             "W": "+4 [4]", 
+            "commands": "+4w. +5pw", 
             "faction": "Nomads"
         }, 
         {
@@ -1142,6 +1202,7 @@
             "TP": "", 
             "VP": "", 
             "W": "+5 [5]", 
+            "commands": "+3w. +2w. +2c. +2pw", 
             "faction": "Auren"
         }, 
         {
@@ -1158,6 +1219,7 @@
             "TP": "", 
             "VP": "", 
             "W": "+6 [7]", 
+            "commands": "+2w. +4w. +8c. +2pw", 
             "faction": "Swarmlings"
         }, 
         {
@@ -1174,6 +1236,7 @@
             "TP": "", 
             "VP": "", 
             "W": "+4 [4]", 
+            "commands": "+4w. +6c. +3pw", 
             "faction": "Alchemists"
         }, 
         {
@@ -1190,6 +1253,7 @@
             "TP": "", 
             "VP": "", 
             "W": "+5 [5]", 
+            "commands": "+5w. +1pw. +p", 
             "faction": "Engineers"
         }, 
         {
@@ -1209,6 +1273,7 @@
             "TP": "", 
             "VP": "", 
             "W": "+2 [9]", 
+            "commands": "action act3", 
             "faction": "Swarmlings"
         }, 
         {
@@ -1225,6 +1290,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "action act2", 
             "faction": "Alchemists"
         }, 
         {
@@ -1241,6 +1307,7 @@
             "TP": "", 
             "VP": "", 
             "W": "-4 [1]", 
+            "commands": "-4w. -1c. d->d6", 
             "faction": "Engineers"
         }, 
         {
@@ -1257,6 +1324,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "leech 1", 
             "faction": "Nomads"
         }, 
         {
@@ -1273,6 +1341,7 @@
             "TP": "", 
             "VP": "", 
             "W": "-1 [3]", 
+            "commands": "d->e8. -1w. -2c", 
             "faction": "Nomads"
         }, 
         {
@@ -1289,6 +1358,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "leech 1", 
             "faction": "Engineers"
         }, 
         {
@@ -1305,6 +1375,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
+            "commands": "action acta. +2wind. +1pw", 
             "faction": "Auren"
         }
     ], 
@@ -1425,7 +1496,7 @@
             "blocked": 0, 
             "passed": 0
         }, 
-        "ACTA": {
+        "ACTA/Auren": {
             "blocked": 1, 
             "passed": 0
         }, 

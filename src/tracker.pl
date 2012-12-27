@@ -199,6 +199,46 @@ sub command {
         if ($where !~ /^ACT/) {
             $where .= "/$faction";
         }
+        if ($map{$where}{blocked}) {
+            die "Action space $where is blocked"
+        }
+        $map{$where}{blocked} = 1;
+    } elsif ($command =~ /^action (\w+)$/) {
+        my $where = uc $1;
+        my $name = $where;
+        if ($where !~ /^ACT/) {
+            $where .= "/$faction";
+        }
+
+        my %act = (
+            ACT1 => { cost => { PW => 3 }, gain => {}},
+            ACT2 => { cost => { PW => 3 }, gain => { P => 1 } },
+            ACT3 => { cost => { PW => 4 }, gain => { W => 2 } },
+            ACT4 => { cost => { PW => 4 }, gain => { C => 7 } },
+            ACT5 => { cost => { PW => 4 }, gain => {} },
+            ACT6 => { cost => { PW => 6 }, gain => {} },
+            ACTA => { cost => {}, gain => {} },
+            BON1 => { cost => {}, gain => {} },
+            BON2 => { cost => {}, gain => {} },
+            FAV6 => { cost => {}, gain => {} },
+            );
+        
+        if ($act{$name}) {
+            my %cost = %{$act{$name}{cost}};
+            for my $currency (keys %cost) {
+                command $faction, "-$cost{$currency}$currency";
+            }
+            my %gain = %{$act{$name}{gain}};
+            for my $currency (keys %gain) {
+                command $faction, "+$gain{$currency}$currency";
+            }
+        } else {
+            die "Unknown action $name";
+        }
+
+        if ($map{$where}{blocked}) {
+            die "Action space $where is blocked"
+        }
         $map{$where}{blocked} = 1;
     } elsif ($command =~ /^clear$/) {
         $map{$_}{blocked} = 0 for keys %map;
@@ -278,6 +318,7 @@ sub handle_row {
             }
 
             push @ledger, { faction => $prefix,
+                            commands => (join ". ", @commands),
                             map { $_, $pretty_delta{$_} } @fields};
         }
     } else {
