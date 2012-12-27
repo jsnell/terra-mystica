@@ -136,6 +136,11 @@ sub command {
                 die "Not enough '$type' in pool after command '$command'\n";
             }
         }
+
+        if ($type =~ /^BON/) {
+            $factions{$faction}{C} += $map{$type}{C};
+            $map{$type}{C} = 0;
+        }
     } elsif ($command =~ /^(\w+)->(\w+)$/) {
         die "Need faction for command $command\n" if !$faction;
         $type = uc $1;
@@ -172,6 +177,19 @@ sub command {
         my $from = uc $1;
         my $to = uc $2;
         push @bridges, {from => $from, to => $to, color => $factions{$faction}{color}};
+    } elsif ($command =~ /^pass (\w+)$/) {
+        die "Need faction for command $command\n" if !$faction;
+        my $bon = $1;
+
+        $factions{$faction}{passed} = 1;
+        for (keys %{$factions{$faction}}) {
+            next if !$factions{$faction}{$_};
+
+            if (/^BON/) {
+                command $faction, "-$_"
+            }
+        }
+        command $faction, "+$bon"
     } elsif ($command =~ /^block (\w+)$/) {
         my $where = uc $1;
         if ($where !~ /^ACT/) {
@@ -180,6 +198,12 @@ sub command {
         $map{$where}{blocked} = 1;
     } elsif ($command =~ /^clear$/) {
         $map{$_}{blocked} = 0 for keys %map;
+        $map{$_}{passed} = 0 for keys %map;
+        for (1..9) {
+            if ($pool{"BON$_"}) {
+                $map{"BON$_"}{C}++;
+            }
+        }
     } elsif ($command =~ /^setup (\w+)$/) {
         setup $1;
     } elsif ($command =~ /delete (\w+)$/) {

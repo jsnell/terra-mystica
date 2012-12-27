@@ -10,46 +10,48 @@
         "Alchemists": {
             "BON5": 1, 
             "BON6": 0, 
-            "C": 1, 
+            "C": 7, 
             "D": 6, 
             "EARTH": 0, 
             "FIRE": 1, 
             "P": 0, 
-            "P1": 2, 
+            "P1": 0, 
             "P2": 5, 
-            "P3": 1, 
+            "P3": 3, 
             "SA": 1, 
             "SH": 0, 
             "TE": 3, 
             "TP": 4, 
             "VP": 27, 
-            "W": 0, 
+            "W": 4, 
             "WATER": 1, 
             "WIND": 0, 
-            "color": "black"
+            "color": "black", 
+            "passed": 1
         }, 
         "Auren": {
             "ACTA": 1, 
             "BON1": 1, 
             "BON2": 0, 
-            "C": 10, 
+            "C": 12, 
             "D": 7, 
             "EARTH": 0, 
             "FAV6": 1, 
             "FIRE": 6, 
             "P": 0, 
-            "P1": 6, 
-            "P2": 3, 
+            "P1": 2, 
+            "P2": 7, 
             "P3": 0, 
             "SA": 1, 
             "SH": 0, 
             "TE": 3, 
             "TP": 4, 
             "VP": 25, 
-            "W": 0, 
+            "W": 5, 
             "WATER": 3, 
             "WIND": 1, 
-            "color": "green"
+            "color": "green", 
+            "passed": 1
         }, 
         "Engineers": {
             "BON1": 0, 
@@ -59,19 +61,20 @@
             "EARTH": 2, 
             "FAV7": 1, 
             "FIRE": 0, 
-            "P": 0, 
-            "P1": 5, 
-            "P2": 0, 
+            "P": 1, 
+            "P1": 4, 
+            "P2": 1, 
             "P3": 0, 
             "SA": 1, 
             "SH": 1, 
             "TE": 2, 
             "TP": 4, 
             "VP": 18, 
-            "W": 0, 
+            "W": 5, 
             "WATER": 0, 
             "WIND": 0, 
-            "color": "gray"
+            "color": "gray", 
+            "passed": 1
         }, 
         "Nomads": {
             "BON4": 1, 
@@ -82,290 +85,427 @@
             "FIRE": 1, 
             "P": 0, 
             "P1": 0, 
-            "P2": 8, 
-            "P3": 0, 
+            "P2": 3, 
+            "P3": 5, 
             "SA": 1, 
             "SH": 0, 
             "TE": 3, 
             "TP": 4, 
             "VP": 22, 
-            "W": 0, 
+            "W": 4, 
             "WATER": 0, 
             "WIND": 0, 
-            "color": "yellow"
+            "color": "yellow", 
+            "passed": 1
         }, 
         "Swarmlings": {
             "BON3": 1, 
             "BON8": 0, 
-            "C": 13, 
+            "C": 22, 
             "D": 6, 
             "EARTH": 1, 
             "FIRE": 4, 
             "P": 0, 
-            "P1": 0, 
-            "P2": 8, 
-            "P3": 4, 
+            "P1": 4, 
+            "P2": 7, 
+            "P3": 1, 
             "SA": 1, 
             "SH": 1, 
             "TE": 3, 
             "TP": 3, 
             "VP": 17, 
-            "W": 1, 
+            "W": 9, 
             "WATER": 1, 
             "WIND": 1, 
-            "color": "blue"
+            "color": "blue", 
+            "passed": 1
         }
     }, 
     "map": {
         "A1": {
+            "blocked": 0, 
             "col": 0, 
             "color": "brown", 
+            "passed": 0, 
             "row": 0
         }, 
         "A10": {
+            "blocked": 0, 
             "col": 9, 
             "color": "green", 
+            "passed": 0, 
             "row": 0
         }, 
         "A11": {
+            "blocked": 0, 
             "col": 10, 
             "color": "blue", 
+            "passed": 0, 
             "row": 0
         }, 
         "A12": {
+            "blocked": 0, 
             "col": 11, 
             "color": "red", 
+            "passed": 0, 
             "row": 0
         }, 
         "A13": {
+            "blocked": 0, 
             "col": 12, 
             "color": "black", 
+            "passed": 0, 
             "row": 0
         }, 
         "A2": {
+            "blocked": 0, 
             "col": 1, 
             "color": "gray", 
+            "passed": 0, 
             "row": 0
         }, 
         "A3": {
+            "blocked": 0, 
             "col": 2, 
             "color": "green", 
+            "passed": 0, 
             "row": 0
         }, 
         "A4": {
+            "blocked": 0, 
             "col": 3, 
             "color": "blue", 
+            "passed": 0, 
             "row": 0
         }, 
         "A5": {
+            "blocked": 0, 
             "building": "D", 
             "col": 4, 
             "color": "yellow", 
+            "passed": 0, 
             "row": 0
         }, 
         "A6": {
+            "blocked": 0, 
             "col": 5, 
             "color": "red", 
+            "passed": 0, 
             "row": 0
         }, 
         "A7": {
+            "blocked": 0, 
             "col": 6, 
             "color": "brown", 
+            "passed": 0, 
             "row": 0
         }, 
         "A8": {
+            "blocked": 0, 
             "col": 7, 
             "color": "black", 
+            "passed": 0, 
             "row": 0
         }, 
         "A9": {
+            "blocked": 0, 
             "col": 8, 
             "color": "red", 
+            "passed": 0, 
             "row": 0
         }, 
         "ACT1": {
-            "blocked": 1
+            "blocked": 0, 
+            "passed": 0
         }, 
         "ACT2": {
-            "blocked": 1
+            "blocked": 0, 
+            "passed": 0
         }, 
         "ACT3": {
-            "blocked": 1
+            "blocked": 1, 
+            "passed": 0
         }, 
         "ACT4": {
-            "blocked": 1
+            "blocked": 0, 
+            "passed": 0
         }, 
         "ACT5": {
-            "blocked": 1
+            "blocked": 0, 
+            "passed": 0
         }, 
         "ACT6": {
-            "blocked": 1
+            "blocked": 0, 
+            "passed": 0
         }, 
         "ACTA": {
-            "blocked": 1
+            "blocked": 0, 
+            "passed": 0
         }, 
         "B1": {
+            "blocked": 0, 
             "col": 0, 
             "color": "yellow", 
+            "passed": 0, 
             "row": 1
         }, 
         "B2": {
+            "blocked": 0, 
             "col": 3, 
             "color": "brown", 
+            "passed": 0, 
             "row": 1
         }, 
         "B3": {
+            "blocked": 0, 
             "col": 4, 
             "color": "black", 
+            "passed": 0, 
             "row": 1
         }, 
         "B4": {
+            "blocked": 0, 
             "building": "D", 
             "col": 7, 
             "color": "yellow", 
+            "passed": 0, 
             "row": 1
         }, 
         "B5": {
+            "blocked": 0, 
             "col": 8, 
             "color": "black", 
+            "passed": 0, 
             "row": 1
         }, 
         "B6": {
+            "blocked": 0, 
             "col": 11, 
             "color": "yellow", 
+            "passed": 0, 
             "row": 1
         }, 
+        "BON1": {
+            "C": 0, 
+            "blocked": 0, 
+            "passed": 0
+        }, 
         "BON1/Engineers": {
-            "blocked": 1
+            "blocked": 0, 
+            "passed": 0
+        }, 
+        "BON2": {
+            "C": 1, 
+            "blocked": 0, 
+            "passed": 0
         }, 
         "BON2/Auren": {
-            "blocked": 1
+            "blocked": 0, 
+            "passed": 0
+        }, 
+        "BON3": {
+            "C": 0, 
+            "blocked": 0, 
+            "passed": 0
+        }, 
+        "BON4": {
+            "C": 0, 
+            "blocked": 0, 
+            "passed": 0
+        }, 
+        "BON5": {
+            "C": 0, 
+            "blocked": 0, 
+            "passed": 0
+        }, 
+        "BON6": {
+            "C": 0, 
+            "blocked": 0, 
+            "passed": 0
+        }, 
+        "BON7": {
+            "C": 2, 
+            "blocked": 0, 
+            "passed": 0
+        }, 
+        "BON8": {
+            "C": 1, 
+            "blocked": 0, 
+            "passed": 0
         }, 
         "C1": {
+            "blocked": 0, 
             "col": 2, 
             "color": "black", 
+            "passed": 0, 
             "row": 2
         }, 
         "C2": {
+            "blocked": 0, 
             "col": 4, 
             "color": "gray", 
+            "passed": 0, 
             "row": 2
         }, 
         "C3": {
+            "blocked": 0, 
             "col": 6, 
             "color": "green", 
+            "passed": 0, 
             "row": 2
         }, 
         "C4": {
+            "blocked": 0, 
             "building": "D", 
             "col": 8, 
             "color": "yellow", 
+            "passed": 0, 
             "row": 2
         }, 
         "C5": {
+            "blocked": 0, 
             "building": "D", 
             "col": 10, 
             "color": "gray", 
+            "passed": 0, 
             "row": 2
         }, 
         "D1": {
+            "blocked": 0, 
             "col": 0, 
             "color": "green", 
+            "passed": 0, 
             "row": 3
         }, 
         "D2": {
+            "blocked": 0, 
             "col": 1, 
             "color": "blue", 
+            "passed": 0, 
             "row": 3
         }, 
         "D3": {
+            "blocked": 0, 
             "col": 2, 
             "color": "yellow", 
+            "passed": 0, 
             "row": 3
         }, 
         "D4": {
+            "blocked": 0, 
             "col": 5, 
             "color": "red", 
+            "passed": 0, 
             "row": 3
         }, 
         "D5": {
+            "blocked": 0, 
             "col": 6, 
             "color": "blue", 
+            "passed": 0, 
             "row": 3
         }, 
         "D6": {
+            "blocked": 0, 
             "col": 8, 
             "color": "red", 
+            "passed": 0, 
             "row": 3
         }, 
         "D7": {
+            "blocked": 0, 
             "building": "D", 
             "col": 10, 
             "color": "gray", 
+            "passed": 0, 
             "row": 3
         }, 
         "D8": {
+            "blocked": 0, 
             "col": 11, 
             "color": "black", 
+            "passed": 0, 
             "row": 3
         }, 
         "E1": {
+            "blocked": 0, 
             "col": 0, 
             "color": "black", 
+            "passed": 0, 
             "row": 4
         }, 
         "E10": {
+            "blocked": 0, 
             "building": "SH", 
             "col": 11, 
             "color": "black", 
+            "passed": 0, 
             "row": 4
         }, 
         "E11": {
+            "blocked": 0, 
             "col": 12, 
             "color": "black", 
+            "passed": 0, 
             "row": 4
         }, 
         "E2": {
+            "blocked": 0, 
             "col": 1, 
             "color": "brown", 
+            "passed": 0, 
             "row": 4
         }, 
         "E3": {
+            "blocked": 0, 
             "col": 2, 
             "color": "red", 
+            "passed": 0, 
             "row": 4
         }, 
         "E4": {
+            "blocked": 0, 
             "col": 3, 
             "color": "blue", 
+            "passed": 0, 
             "row": 4
         }, 
         "E5": {
+            "blocked": 0, 
             "building": "D", 
             "col": 4, 
             "color": "black", 
+            "passed": 0, 
             "row": 4
         }, 
         "E6": {
+            "blocked": 0, 
             "col": 5, 
             "color": "brown", 
+            "passed": 0, 
             "row": 4
         }, 
         "E7": {
+            "blocked": 0, 
             "building": "D", 
             "col": 6, 
             "color": "gray", 
+            "passed": 0, 
             "row": 4
         }, 
         "E8": {
+            "blocked": 0, 
             "col": 7, 
             "color": "yellow", 
+            "passed": 0, 
             "row": 4
         }, 
         "E9": {
+            "blocked": 0, 
             "building": "TE", 
             "col": 10, 
             "color": "gray", 
+            "passed": 0, 
             "row": 4
         }, 
         "EARTH1": {}, 
@@ -373,193 +513,266 @@
         "EARTH3": {}, 
         "EARTH4": {}, 
         "F1": {
+            "blocked": 0, 
             "col": 0, 
             "color": "gray", 
+            "passed": 0, 
             "row": 5
         }, 
         "F2": {
+            "blocked": 0, 
             "building": "D", 
             "col": 1, 
             "color": "green", 
+            "passed": 0, 
             "row": 5
         }, 
         "F3": {
+            "blocked": 0, 
             "col": 4, 
             "color": "yellow", 
+            "passed": 0, 
             "row": 5
         }, 
         "F4": {
+            "blocked": 0, 
             "building": "SH", 
             "col": 5, 
             "color": "green", 
+            "passed": 0, 
             "row": 5
         }, 
         "F5": {
+            "blocked": 0, 
             "col": 9, 
             "color": "brown", 
+            "passed": 0, 
             "row": 5
         }, 
         "F6": {
+            "blocked": 0, 
             "col": 10, 
             "color": "gray", 
+            "passed": 0, 
             "row": 5
         }, 
         "F7": {
+            "blocked": 0, 
             "building": "D", 
             "col": 11, 
             "color": "black", 
+            "passed": 0, 
             "row": 5
         }, 
         "FAV6/Auren": {
-            "blocked": 1
+            "blocked": 0, 
+            "passed": 0
         }, 
         "FIRE1": {
+            "blocked": 0, 
             "building": "P", 
-            "color": "blue"
+            "color": "blue", 
+            "passed": 0
         }, 
         "FIRE2": {
+            "blocked": 0, 
             "building": "P", 
-            "color": "green"
+            "color": "green", 
+            "passed": 0
         }, 
         "FIRE3": {}, 
         "FIRE4": {}, 
         "G1": {
+            "blocked": 0, 
             "col": 3, 
             "color": "gray", 
+            "passed": 0, 
             "row": 6
         }, 
         "G2": {
+            "blocked": 0, 
             "col": 5, 
             "color": "red", 
+            "passed": 0, 
             "row": 6
         }, 
         "G3": {
+            "blocked": 0, 
             "col": 7, 
             "color": "green", 
+            "passed": 0, 
             "row": 6
         }, 
         "G4": {
+            "blocked": 0, 
             "col": 9, 
             "color": "yellow", 
+            "passed": 0, 
             "row": 6
         }, 
         "G5": {
+            "blocked": 0, 
             "col": 10, 
             "color": "black", 
+            "passed": 0, 
             "row": 6
         }, 
         "G6": {
+            "blocked": 0, 
             "building": "TP", 
             "col": 11, 
             "color": "blue", 
+            "passed": 0, 
             "row": 6
         }, 
         "G7": {
+            "blocked": 0, 
             "building": "SH", 
             "col": 12, 
             "color": "yellow", 
+            "passed": 0, 
             "row": 6
         }, 
         "H1": {
+            "blocked": 0, 
             "col": 0, 
             "color": "yellow", 
+            "passed": 0, 
             "row": 7
         }, 
         "H2": {
+            "blocked": 0, 
             "col": 1, 
             "color": "blue", 
+            "passed": 0, 
             "row": 7
         }, 
         "H3": {
+            "blocked": 0, 
             "col": 2, 
             "color": "brown", 
+            "passed": 0, 
             "row": 7
         }, 
         "H4": {
+            "blocked": 0, 
             "building": "D", 
             "col": 6, 
             "color": "blue", 
+            "passed": 0, 
             "row": 7
         }, 
         "H5": {
+            "blocked": 0, 
             "col": 7, 
             "color": "black", 
+            "passed": 0, 
             "row": 7
         }, 
         "H6": {
+            "blocked": 0, 
             "col": 9, 
             "color": "gray", 
+            "passed": 0, 
             "row": 7
         }, 
         "H7": {
+            "blocked": 0, 
             "col": 10, 
             "color": "brown", 
+            "passed": 0, 
             "row": 7
         }, 
         "H8": {
+            "blocked": 0, 
             "building": "D", 
             "col": 11, 
             "color": "blue", 
+            "passed": 0, 
             "row": 7
         }, 
         "I1": {
+            "blocked": 0, 
             "col": 0, 
             "color": "red", 
+            "passed": 0, 
             "row": 8
         }, 
         "I10": {
+            "blocked": 0, 
             "col": 10, 
             "color": "blue", 
+            "passed": 0, 
             "row": 8
         }, 
         "I11": {
+            "blocked": 0, 
             "col": 11, 
             "color": "green", 
+            "passed": 0, 
             "row": 8
         }, 
         "I12": {
+            "blocked": 0, 
             "col": 12, 
             "color": "red", 
+            "passed": 0, 
             "row": 8
         }, 
         "I2": {
+            "blocked": 0, 
             "col": 1, 
             "color": "black", 
+            "passed": 0, 
             "row": 8
         }, 
         "I3": {
+            "blocked": 0, 
             "col": 2, 
             "color": "gray", 
+            "passed": 0, 
             "row": 8
         }, 
         "I4": {
+            "blocked": 0, 
             "col": 3, 
             "color": "blue", 
+            "passed": 0, 
             "row": 8
         }, 
         "I5": {
+            "blocked": 0, 
             "col": 4, 
             "color": "red", 
+            "passed": 0, 
             "row": 8
         }, 
         "I6": {
+            "blocked": 0, 
             "col": 5, 
             "color": "green", 
+            "passed": 0, 
             "row": 8
         }, 
         "I7": {
+            "blocked": 0, 
             "col": 6, 
             "color": "yellow", 
+            "passed": 0, 
             "row": 8
         }, 
         "I8": {
+            "blocked": 0, 
             "col": 7, 
             "color": "brown", 
+            "passed": 0, 
             "row": 8
         }, 
         "I9": {
+            "blocked": 0, 
             "col": 8, 
             "color": "gray", 
+            "passed": 0, 
             "row": 8
         }, 
         "WATER1": {}, 
@@ -593,7 +806,7 @@
         "BON6": 0, 
         "BON7": 1, 
         "BON8": 1, 
-        "C": 1035, 
+        "C": 1020, 
         "EARTH": 98, 
         "FAV1": 1, 
         "FAV10": 3, 
@@ -608,12 +821,12 @@
         "FAV8": 3, 
         "FAV9": 3, 
         "FIRE": 91, 
-        "P": 998, 
+        "P": 997, 
         "P1": 10000, 
         "P2": 10000, 
         "P3": 10000, 
         "VP": 991, 
-        "W": 1017, 
+        "W": 991, 
         "WATER": 98, 
         "WIND": 100
     }

@@ -26,6 +26,8 @@ Swarmlings: +Bon8
 Auren: +Bon2
 Nomads: +Bon5
 
+clear
+
 # Round 1:
 
 # Income 
@@ -64,38 +66,49 @@ Auren: +2FIRE. Block ACTA
 Swarmlings: P -> FIRE1. +3FIRE. +1PW
 Alchemists: F7:black. D -> F7. -4w. -2c. 
 Nomads: Leech 3
-Swarmlings: Leech 1
 Engineers: TP -> E9. -1w. -2c. Block BON1
 
 # Round 1, Turn 4:
 
 Nomads: C4:yellow. D -> C4. -1w. -2c
 Auren: +FIRE. +1PW. Block BON2
-Swarmlings: +Bon3. -Bon8
+Swarmlings: Pass Bon3
 Alchemists: SH -> E10. -4w. -6c. +12pw. +5vp
 Engineers: Leech 3
 Engineers: TE -> E9. -1w. -4c. +FAV7. +2EARTH
+Alchemists: Leech 1
 
 # Round 1, Turn 5:
-Nomads: -Bon5. +1c. +Bon4
+Nomads: Pass Bon4
 Auren: +FIRE. Block FAV6
 Alchemists: D8:black. E11:black. -6pw. +4pw. Block ACT6
 Engineers: Burn 3. -3pw. Bridge E9:D6. Block ACT1
 
 # Round 1, Turn 6:
 Auren: Burn 3. -3pw. +p. Block ACT2
-Alchemists: -Bon6. +bon5. +4vp
-Engineers: -Bon1. +Bon6
+Alchemists: Pass Bon5. +4vp
+Engineers: Pass Bon6
 
 # Round 1. Turn 7
 
-Auren: +2Fire. p -> fire2.
+Auren: +2Fire. p -> fire2. +2pw
 
 # Round 1. Turn 8
 
-Auren: -Bon2. +Bon1. 
+Auren: Pass Bon1
 
+# Income
 
+Nomads: +4w. +5pw
+Auren: +3w. +2w. +2c. +2pw
+Swarmlings: +2w. +4w. +8c. +2pw
+Alchemists: +4w. +6c. +3pw 
+Engineers: +5w. +1pw. +p
 
+clear
+
+# Round 2. Turn 1
+
+Swarmlings: +2w. -4pw. Block ACT3
 
 

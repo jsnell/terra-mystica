@@ -348,7 +348,11 @@ function renderAction(canvas, name, key) {
     ctx.save();
     ctx.translate(2, 2);
 
-    ctx.fillStyle = colors.orange;
+    if (state.map[key] && state.map[key].blocked) {
+        ctx.fillStyle = '#ccc';
+    } else {
+        ctx.fillStyle = colors.orange;
+    }
     ctx.strokeStyle = '#000';
     ctx.lineWidth = 2;
 
@@ -368,10 +372,6 @@ function renderAction(canvas, name, key) {
 
     if (!name.startsWith("FAV") && !name.startsWith("BON")) {
         drawText(ctx, name, 1, 45, "12px Georgia");
-    }
-
-    if (state.map[key] && state.map[key].blocked) {
-        return;
     }
 
     ctx.save();
@@ -436,6 +436,9 @@ function insertScoring(parent, amount) {
 
 function renderBonus(div, name, faction) {
     div.insert(name);
+    if (state.map[name].C) {
+        div.insert(" [#{C}c]".interpolate(state.map[name]));
+    }
     div.insert("<hr>");
 
     var data = {
