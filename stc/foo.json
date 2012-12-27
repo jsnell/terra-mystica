@@ -127,7 +127,7 @@
             "comment": " Random setup"
         }, 
         {
-            "comment": " Role selection"
+            "comment": " Faction selection"
         }, 
         {
             "comment": " Initial dwellings"
@@ -654,7 +654,7 @@
             "TP": "+1 [4]", 
             "VP": "+5 [25]", 
             "W": "-4 [0]", 
-            "commands": "sh->f4. -4w. -6c. +5vp. +fav6. +2water. +1pw", 
+            "commands": "sh->f4. -4w. -6c. +5vp. +fav6. +2water", 
             "faction": "Auren"
         }, 
         {
@@ -827,7 +827,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
-            "commands": "p->fire1. +3fire. +1pw", 
+            "commands": "p->fire1. +3fire", 
             "faction": "Swarmlings"
         }, 
         {
@@ -915,7 +915,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
-            "commands": "+fire. +1pw. action bon2", 
+            "commands": "+fire. action bon2", 
             "faction": "Auren"
         }, 
         {
@@ -1145,7 +1145,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
-            "commands": "+2fire. p->fire2. +2pw", 
+            "commands": "+2fire. p->fire2", 
             "faction": "Auren"
         }, 
         {
@@ -1375,7 +1375,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
-            "commands": "action acta. +2wind. +1pw", 
+            "commands": "action acta. +2wind", 
             "faction": "Auren"
         }
     ], 
@@ -1496,7 +1496,7 @@
             "blocked": 0, 
             "passed": 0
         }, 
-        "ACTA/Auren": {
+        "ACTA": {
             "blocked": 1, 
             "passed": 0
         }, 

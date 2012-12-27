@@ -1,7 +1,7 @@
 # Random setup
 delete bon9
 
-# Role selection
+# Faction selection
 setup Nomads
 setup Auren
 setup Swarmlings
@@ -51,7 +51,7 @@ Alchemists: Leech 2
 
 Nomads: TP -> G7. -2W. -3C.
 Swarmlings: Leech 2
-Auren: SH -> F4. -4W. -6C. +5VP. +FAV6. +2WATER. +1PW
+Auren: SH -> F4. -4W. -6C. +5VP. +FAV6. +2WATER
 Engineers: Leech 1
 Swarmlings: H8:blue. D -> H8. -8W. -3C
 Nomads: Leech 2
@@ -63,7 +63,7 @@ Alchemists: Leech 2
 Nomads: SH -> G7. -4W. -6C. +5VP 
 Swarmlings: Leech 3
 Auren: Action ACTA. +2FIRE
-Swarmlings: P -> FIRE1. +3FIRE. +1PW
+Swarmlings: P -> FIRE1. +3FIRE
 Alchemists: F7:black. D -> F7. -4w. -2c. 
 Nomads: Leech 3
 Engineers: TP -> E9. -1w. -2c. Action BON1
@@ -71,7 +71,7 @@ Engineers: TP -> E9. -1w. -2c. Action BON1
 # Round 1, Turn 4:
 
 Nomads: C4:yellow. D -> C4. -1w. -2c
-Auren: +FIRE. +1PW. Action BON2
+Auren: +FIRE. Action BON2
 Swarmlings: Pass Bon3
 Alchemists: SH -> E10. -4w. -6c. +12pw. +5vp
 Engineers: Leech 3
@@ -91,7 +91,7 @@ Engineers: Pass Bon6
 
 # Round 1. Turn 7
 
-Auren: +2Fire. p -> fire2. +2pw
+Auren: +2Fire. p -> fire2
 
 # Round 1. Turn 8
 
@@ -115,7 +115,7 @@ Engineers: -4w. -1c. D -> D6
 Nomads: Leech 1
 Nomads: D -> E8. -1w. -2c
 Engineers: Leech 1
-Auren: Action ACTA. +2WIND. +1pw
+Auren: Action ACTA. +2WIND
 
 
 

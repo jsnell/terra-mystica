@@ -133,11 +133,29 @@ sub command {
                 }
             }
         } else {
+            my $orig_value = $factions{$faction}{$type};
+
             $pool{$type} -= $sign * $count;
             $factions{$faction}{$type} += $sign * $count;
 
             if ($pool{$type} < 0) {
                 die "Not enough '$type' in pool after command '$command'\n";
+            }
+
+            if ($type =~ /FIRE|WATER|EARTH|WIND/) {
+                my $new_value = $factions{$faction}{$type};
+                if ($orig_value <= 2 && $new_value > 2) {
+                    command $faction, "+1pw";
+                }
+                if ($orig_value <= 4 && $new_value > 4) {
+                    command $faction, "+2pw";
+                }
+                if ($orig_value <= 6 && $new_value > 6) {
+                    command $faction, "+2pw";
+                }
+                if ($orig_value <= 9 && $new_value > 9) {
+                    command $faction, "+3pw";
+                }
             }
         }
 
