@@ -6,6 +6,8 @@ use JSON;
 my @factions;
 my %factions;
 my @cults = qw(EARTH FIRE WATER WIND);
+my @ledger = ();
+my %map = ();
 
 my %setups = (
     Alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
@@ -42,10 +44,10 @@ my %pool = (
 
 $pool{"ACT$_"}++ for 1..6;
 $pool{"BON$_"}++ for 1..9;
+$map{"BON$_"}{C} = 0 for 1..9;
 $pool{"FAV$_"}++ for 1..4;
 $pool{"FAV$_"} += 3 for 5..12;
 
-my %map = ();
 my @map = qw(brown gray green blue yellow red brown black red green blue red black E
              yellow x x brown black x x yellow black x x yellow E
              x x black x gray x green x green x gray x x E
@@ -82,7 +84,9 @@ sub setup {
 
     $factions{$faction} = $setups{$faction};    
     $factions{$faction}{P} ||= 0;
-    $factions{$faction}{P3} = 0;
+    $factions{$faction}{P1} ||= 0;
+    $factions{$faction}{P2} ||= 0;
+    $factions{$faction}{P3} ||= 0;
 
     for (@cults) {
         $factions{$faction}{$_} ||= 0;
@@ -223,7 +227,10 @@ sub handle_row {
     local $_ = shift;
 
     # Comment
-    s/#.*//;
+    if (s/#(.*)//) {
+        push @ledger, { comment => $1 };
+    }
+
     s/\s+/ /g;
 
     $_ = lc;
@@ -248,8 +255,30 @@ sub handle_row {
     return if !@commands;
 
     if ($factions{$prefix} or $prefix eq '') {
+        my @fields = qw(VP C W P P1 P2 P3 PW D TP TE SH SA);
+        my %old_data = map { $_, $factions{$prefix}{$_} } @fields; 
+
         for my $command (@commands) {
             command $prefix, $command;
+        }
+
+        my %new_data = map { $_, $factions{$prefix}{$_} } @fields;
+
+        if ($prefix) {
+            $old_data{PW} = $old_data{P2} + 2 * $old_data{P3};
+            $new_data{PW} = $new_data{P2} + 2 * $old_data{P3};
+
+            my %delta = map { $_, $new_data{$_} - $old_data{$_} } @fields;
+            my %pretty_delta = map { $_, ($delta{$_} ?
+                                          sprintf "%+d [%d]", $delta{$_}, $new_data{$_} :
+                                          '')} @fields;
+            if ($delta{PW}) {
+                $pretty_delta{PW} = sprintf "%+d [%d/%d/%d]", $delta{PW}, $new_data{P1}, $new_data{P2}, $new_data{P3};
+                
+            }
+
+            push @ledger, { faction => $prefix,
+                            map { $_, $pretty_delta{$_} } @fields};
         }
     } else {
         die "Unknown prefix: '$prefix' (expected one of ".
@@ -299,6 +328,7 @@ sub print_json {
         factions => \%factions,
         pool => \%pool,
         bridges => \@bridges,
+        ledger => \@ledger,
     };
 
     print $out;

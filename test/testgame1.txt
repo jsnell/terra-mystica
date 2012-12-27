@@ -110,5 +110,9 @@ clear
 # Round 2. Turn 1
 
 Swarmlings: +2w. -4pw. Block ACT3
+Alchemists: -3pw. +p. Block ACT2.
+Engineers: -4w. -1c. D -> D6
+Nomads: Leech 1
+
 
 

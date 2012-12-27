@@ -66,3 +66,8 @@ div#error {
     background-color: #e33
 }
 
+table#ledger tr td {
+    padding-left: 2ex;
+    padding-right: 2ex;
+};
+

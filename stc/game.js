@@ -249,6 +249,7 @@ function drawMap() {
 
     drawCults();
     drawFactions();
+    drawLedger();
 }
 
 function drawCults() {
@@ -604,3 +605,20 @@ function drawFactions() {
     renderTreasury(pool, state.pool, 'pool');
     $("factions").insert(pool);
 }
+
+function drawLedger() {
+    var ledger = $("ledger");
+    state.ledger.each(function(record) {
+        if (record.comment) {
+            ledger.insert("<tr><td><td colspan=9>" + 
+                          record.comment.escapeHTML() +
+                          "</tr>")
+        } else {
+            record.bg = colors[state.factions[record.faction].color];
+            record.fg = (record.bg == '#000000' ? '#ccc' : '#000');
+            ledger.insert("<tr><td style='background-color:#{bg}; color: #{fg}'>#{faction}<td>#{VP}<td>#{C}<td>#{W}<td>#{P}<td>#{PW}<td>#{D}<td>#{TP}<td>#{TE}<td>#{SH}<td>#{SA}</tr>".interpolate(
+                record));
+        }
+    });
+}
+
