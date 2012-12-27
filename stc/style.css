@@ -63,7 +63,9 @@ canvas.action {
 }
 
 div#error {
-    background-color: #e33
+    background-color: #e33;
+    font-weight: bold;
+    width: 800px;
 }
 
 table#ledger tr td {

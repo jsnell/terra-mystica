@@ -250,6 +250,10 @@ function drawMap() {
     drawCults();
     drawFactions();
     drawLedger();
+
+    state.error.each(function(row) {
+        $("error").insert("<div>" + row.escapeHTML() + "</div>");
+    });
 }
 
 function drawCults() {

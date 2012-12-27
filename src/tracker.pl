@@ -8,6 +8,7 @@ my %factions;
 my @cults = qw(EARTH FIRE WATER WIND);
 my @ledger = ();
 my %map = ();
+my @error = ();
 
 my %setups = (
     Alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
@@ -386,14 +387,26 @@ sub print_json {
         pool => \%pool,
         bridges => \@bridges,
         ledger => \@ledger,
+        error => \@error,
     };
 
     print $out;
 }
 
 while (<>) {
-    handle_row $_;
+    eval { handle_row $_ };
+    if ($@) {
+        chomp;
+        push @error, "Error on line $. [$_]:";
+        push @error, "$@\n";
+        last;
+    }
 }
 
 print_pretty;
 print_json;
+
+if (@error) {
+    print STDERR $_ for @error;
+    exit 1;
+}
