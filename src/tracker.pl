@@ -291,12 +291,10 @@ sub handle_row {
 
     s/\s+/ /g;
 
-    $_ = lc;
-
     my $prefix = '';
 
     if (s/^(.*?)://) {
-        $prefix = ucfirst $1;
+        $prefix = ucfirst lc $1;
     }
 
     my @commands = split /[.]/, $_;
@@ -317,7 +315,7 @@ sub handle_row {
         my %old_data = map { $_, $factions{$prefix}{$_} } @fields; 
 
         for my $command (@commands) {
-            command $prefix, $command;
+            command $prefix, lc $command;
         }
 
         my %new_data = map { $_, $factions{$prefix}{$_} } @fields;
