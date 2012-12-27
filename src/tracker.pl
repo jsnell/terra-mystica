@@ -266,7 +266,7 @@ sub handle_row {
 
         if ($prefix) {
             $old_data{PW} = $old_data{P2} + 2 * $old_data{P3};
-            $new_data{PW} = $new_data{P2} + 2 * $old_data{P3};
+            $new_data{PW} = $new_data{P2} + 2 * $new_data{P3};
 
             my %delta = map { $_, $new_data{$_} - $old_data{$_} } @fields;
             my %pretty_delta = map { $_, ($delta{$_} ?
