@@ -49,6 +49,11 @@ $map{"BON$_"}{C} = 0 for 1..9;
 $pool{"FAV$_"}++ for 1..4;
 $pool{"FAV$_"} += 3 for 5..12;
 
+for my $cult (@cults) {
+    $map{"${cult}1"} = { gain => { $cult => 3 } };
+    $map{"${cult}$_"} = { gain => { $cult => 2 } } for 2..4;
+}
+
 my %favors = (
     FAV1 => { gain => { FIRE => 3 }, income => {} },
     FAV2 => { gain => { WATER => 3 }, income => {} },
@@ -191,12 +196,22 @@ sub command {
         }
     } elsif ($command =~ /^(\w+)->(\w+)$/) {
         die "Need faction for command $command\n" if !$faction;
+
         $type = uc $1;
         my $where = uc $2;
-        my $oldtype = $map{$where}{building};
+        die "Unknown location '$where'" if !$map{$where};
 
+        my $oldtype = $map{$where}{building};
         if ($oldtype) {
             $factions{$faction}{$oldtype}++;
+        }
+
+        if (exists $map{$where}{gain}) {
+            my %gain = %{$map{$where}{gain}};
+            for my $type (keys %gain) {
+                command $faction, "+$gain{$type}$type";
+                delete $gain{$type};
+            }
         }
 
         $map{$where}{building} = $type;

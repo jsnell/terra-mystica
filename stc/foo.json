@@ -830,7 +830,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
-            "commands": "P->FIRE1. +3FIRE", 
+            "commands": "P->FIRE1", 
             "faction": "Swarmlings"
         }, 
         {
@@ -1148,7 +1148,7 @@
             "TP": "", 
             "VP": "", 
             "W": "", 
-            "commands": "+2Fire. p->fire2", 
+            "commands": "P->FIRE2", 
             "faction": "Auren"
         }, 
         {
@@ -1483,10 +1483,30 @@
         "ACTA": {
             "blocked": 1
         }, 
-        "AIR1": {}, 
-        "AIR2": {}, 
-        "AIR3": {}, 
-        "AIR4": {}, 
+        "AIR1": {
+            "blocked": 0, 
+            "gain": {
+                "AIR": 3
+            }
+        }, 
+        "AIR2": {
+            "blocked": 0, 
+            "gain": {
+                "AIR": 2
+            }
+        }, 
+        "AIR3": {
+            "blocked": 0, 
+            "gain": {
+                "AIR": 2
+            }
+        }, 
+        "AIR4": {
+            "blocked": 0, 
+            "gain": {
+                "AIR": 2
+            }
+        }, 
         "B1": {
             "blocked": 0, 
             "col": 0, 
@@ -1719,10 +1739,30 @@
             "color": "gray", 
             "row": 4
         }, 
-        "EARTH1": {}, 
-        "EARTH2": {}, 
-        "EARTH3": {}, 
-        "EARTH4": {}, 
+        "EARTH1": {
+            "blocked": 0, 
+            "gain": {
+                "EARTH": 3
+            }
+        }, 
+        "EARTH2": {
+            "blocked": 0, 
+            "gain": {
+                "EARTH": 2
+            }
+        }, 
+        "EARTH3": {
+            "blocked": 0, 
+            "gain": {
+                "EARTH": 2
+            }
+        }, 
+        "EARTH4": {
+            "blocked": 0, 
+            "gain": {
+                "EARTH": 2
+            }
+        }, 
         "F1": {
             "blocked": 0, 
             "col": 0, 
@@ -1774,15 +1814,31 @@
         "FIRE1": {
             "blocked": 0, 
             "building": "P", 
-            "color": "blue"
+            "color": "blue", 
+            "gain": {
+                "FIRE": 3
+            }
         }, 
         "FIRE2": {
             "blocked": 0, 
             "building": "P", 
-            "color": "green"
+            "color": "green", 
+            "gain": {
+                "FIRE": 2
+            }
         }, 
-        "FIRE3": {}, 
-        "FIRE4": {}, 
+        "FIRE3": {
+            "blocked": 0, 
+            "gain": {
+                "FIRE": 2
+            }
+        }, 
+        "FIRE4": {
+            "blocked": 0, 
+            "gain": {
+                "FIRE": 2
+            }
+        }, 
         "G1": {
             "blocked": 0, 
             "col": 3, 
@@ -1949,10 +2005,30 @@
             "color": "gray", 
             "row": 8
         }, 
-        "WATER1": {}, 
-        "WATER2": {}, 
-        "WATER3": {}, 
-        "WATER4": {}
+        "WATER1": {
+            "blocked": 0, 
+            "gain": {
+                "WATER": 3
+            }
+        }, 
+        "WATER2": {
+            "blocked": 0, 
+            "gain": {
+                "WATER": 2
+            }
+        }, 
+        "WATER3": {
+            "blocked": 0, 
+            "gain": {
+                "WATER": 2
+            }
+        }, 
+        "WATER4": {
+            "blocked": 0, 
+            "gain": {
+                "WATER": 2
+            }
+        }
     }, 
     "order": [
         "Nomads", 

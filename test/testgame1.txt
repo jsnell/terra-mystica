@@ -63,7 +63,7 @@ Alchemists: Leech 2
 Nomads: SH -> G7. -4W. -6C. +5VP 
 Swarmlings: Leech 3
 Auren: Action ACTA. +2FIRE
-Swarmlings: P -> FIRE1. +3FIRE
+Swarmlings: P -> FIRE1
 Alchemists: F7:black. D -> F7. -4w. -2c. 
 Nomads: Leech 3
 Engineers: TP -> E9. -1w. -2c. Action BON1
@@ -91,7 +91,7 @@ Engineers: Pass Bon6
 
 # Round 1. Turn 7
 
-Auren: +2Fire. p -> fire2
+Auren: P -> FIRE2
 
 # Round 1. Turn 8
 
