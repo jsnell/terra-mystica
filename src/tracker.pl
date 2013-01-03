@@ -148,6 +148,8 @@ sub command {
                         $factions{$faction}{P2}--;
                         $factions{$faction}{P3}++;
                         $type = 'P2';
+                    } else {
+                        return $count - 1;
                     }
                 } else {
                     $factions{$faction}{P1}++;
@@ -155,6 +157,8 @@ sub command {
                     $type = 'P3';
                 }
             }
+
+            return $count;
         } else {
             my $orig_value = $factions{$faction}{$type};
 
@@ -226,9 +230,9 @@ sub command {
     } elsif ($command =~ /^leech (\d+)$/) {
         die "Need faction for command $command\n" if !$faction;
         my $pw = $1;
-        my $vp = $pw - 1;
+        my $actual_pw = command $faction, "+${pw}PW";
+        my $vp = $actual_pw - 1;
 
-        command $faction, "+${pw}PW";
         command $faction, "-${vp}VP";
     } elsif ($command =~ /^(\w+):(\w+)$/) {
         my $where = uc $1;
@@ -352,7 +356,8 @@ sub handle_row {
     return if !@commands;
 
     if ($factions{$prefix} or $prefix eq '') {
-        my @fields = qw(VP C W P P1 P2 P3 PW D TP TE SH SA);
+        my @fields = qw(VP C W P P1 P2 P3 PW D TP TE SH SA
+                        FIRE WATER EARTH AIR CULT);
         my %old_data = map { $_, $factions{$prefix}{$_} } @fields; 
 
         for my $command (@commands) {
@@ -365,13 +370,19 @@ sub handle_row {
             $old_data{PW} = $old_data{P2} + 2 * $old_data{P3};
             $new_data{PW} = $new_data{P2} + 2 * $new_data{P3};
 
+            $old_data{CULT} = $old_data{FIRE} +  $old_data{WATER} + $old_data{EARTH} + $old_data{AIR};
+            $new_data{CULT} = $new_data{FIRE} +  $new_data{WATER} + $new_data{EARTH} + $new_data{AIR};
+
             my %delta = map { $_, $new_data{$_} - $old_data{$_} } @fields;
             my %pretty_delta = map { $_, ($delta{$_} ?
                                           sprintf "%+d [%d]", $delta{$_}, $new_data{$_} :
                                           '')} @fields;
             if ($delta{PW}) {
                 $pretty_delta{PW} = sprintf "%+d [%d/%d/%d]", $delta{PW}, $new_data{P1}, $new_data{P2}, $new_data{P3};
-                
+            }
+
+            if ($delta{CULT}) {
+                $pretty_delta{CULT} = sprintf "%+d [%d/%d/%d/%d]", $delta{CULT}, $new_data{FIRE}, $new_data{WATER}, $new_data{EARTH}, $new_data{AIR};
             }
 
             push @ledger, { faction => $prefix,

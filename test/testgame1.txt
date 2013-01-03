@@ -117,6 +117,21 @@ Nomads: D -> E8. -1w. -2c
 Engineers: Leech 1
 Auren: Action ACTA. +2AIR
 
+# Round 2. Turn 2
+Swarmlings: SH -> G6. -5w. -8c
+Nomads: Leech 3
+Alchemists: Leech 1
+Alchemists: p -> air1
+Engineers: D -> F6. -1w. -1c
+Alchemists: Leech 4
+Nomads: D -> D5. -2c. -1w
+Engineers: Leech 1
+Auren: Action FAV6. +AIR
+
+
+
+
+
 
 
 

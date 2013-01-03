@@ -628,7 +628,7 @@ function drawLedger() {
             record.bg = colors[state.factions[record.faction].color];
             record.fg = (record.bg == '#000000' ? '#ccc' : '#000');
             record.commands = record.commands.escapeHTML();
-            ledger.insert("<tr><td style='background-color:#{bg}; color: #{fg}'>#{faction}<td>#{VP}<td>#{C}<td>#{W}<td>#{P}<td>#{PW}<td>#{commands}</tr>".interpolate(
+            ledger.insert("<tr><td style='background-color:#{bg}; color: #{fg}'>#{faction}<td>#{VP}<td>#{C}<td>#{W}<td>#{P}<td>#{PW}<td>#{CULT}<td>#{commands}</tr>".interpolate(
                 record));
         }
     });
