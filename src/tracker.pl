@@ -12,16 +12,52 @@ my @error = ();
 
 my %setups = (
     Alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
-                    WATER => 1, FIRE => 1, color => 'black'},
+                    WATER => 1, FIRE => 1, color => 'black',
+                    buildings => {
+                        D => { cost => { W => 1, C => 2 } },
+                        TP => { cost => { W => 2, C => 3 } },
+                        TE => { cost => { W => 2, C => 5 } },
+                        SH => { cost => { W => 4, C => 6 } },
+                        SA => { cost => { W => 4, C => 6 } },
+                    }},
     Auren => { C => 15, W => 3, P1 => 5, P2 => 7,
                WATER => 1, AIR => 1, 'ACTA' => 1,
-               color => 'green'},
+               color => 'green',
+               buildings => {
+                   D => { cost => { W => 1, C => 2 } },
+                   TP => { cost => { W => 2, C => 3 } },
+                   TE => { cost => { W => 2, C => 5 } },
+                   SH => { cost => { W => 4, C => 6 } },
+                   SA => { cost => { W => 4, C => 8 } },
+               }},
     Swarmlings => { C => 20, W => 8, P1 => 3, P2 => 9,
                     FIRE => 1, EARTH => 1,
-                    WATER => 1, AIR => 1, color => 'blue'},
+                    WATER => 1, AIR => 1, color => 'blue',
+                    buildings => {
+                        D => { cost => { W => 2, C => 3 } },
+                        TP => { cost => { W => 3, C => 4 } },
+                        TE => { cost => { W => 3, C => 6 } },
+                        SH => { cost => { W => 5, C => 8 } },
+                        SA => { cost => { W => 5, C => 8 } },
+                    }},
     Nomads => { C => 15, W => 2, P1 => 5, P2 => 7,
-                FIRE => 1, EARTH => 1, color => 'yellow'},
-    Engineers => { C => 10, W => 2, P1 => 3, P2 => 9, color => 'gray' }
+                FIRE => 1, EARTH => 1, color => 'yellow',
+                ACTN => 1,
+                buildings => {
+                    D => { cost => { W => 1, C => 2 } },
+                    TP => { cost => { W => 2, C => 3 } },
+                    TE => { cost => { W => 2, C => 5 } },
+                    SH => { cost => { W => 4, C => 8 } },
+                    SA => { cost => { W => 4, C => 6 } },
+                }},
+    Engineers => { C => 10, W => 2, P1 => 3, P2 => 9, color => 'gray',
+                buildings => {
+                    D => { cost => { W => 1, C => 1 } },
+                    TP => { cost => { W => 1, C => 2 } },
+                    TE => { cost => { W => 1, C => 4 } },
+                    SH => { cost => { W => 3, C => 6 } },
+                    SA => { cost => { W => 3, C => 6 } },
+                }},
 );
 
 my %pool = (
@@ -198,11 +234,12 @@ sub command {
             $factions{$faction}{C} += $map{$type}{C};
             $map{$type}{C} = 0;
         }
-    } elsif ($command =~ /^(\w+)->(\w+)$/) {
+    } elsif ($command =~ /^(free\s+)?(\w+)->(\w+)$/) {
         die "Need faction for command $command\n" if !$faction;
 
-        $type = uc $1;
-        my $where = uc $2;
+        my $free = $1;
+        $type = uc $2;
+        my $where = uc $3;
         die "Unknown location '$where'" if !$map{$where};
 
         my $oldtype = $map{$where}{building};
@@ -215,6 +252,15 @@ sub command {
             for my $type (keys %gain) {
                 command $faction, "+$gain{$type}$type";
                 delete $gain{$type};
+            }
+        }
+
+        if (!$free and
+            exists $factions{$faction}{buildings}{$type}{cost}) {
+            my %cost = %{$factions{$faction}{buildings}{$type}{cost}};
+
+            for my $type (keys %cost) {
+                command $faction, "-$cost{$type}$type";
             }
         }
 
@@ -281,6 +327,7 @@ sub command {
             ACT5 => { cost => { PW => 4 }, gain => {} },
             ACT6 => { cost => { PW => 6 }, gain => {} },
             ACTA => { cost => {}, gain => {} },
+            ACTN => { cost => {}, gain => {} },
             BON1 => { cost => {}, gain => {} },
             BON2 => { cost => {}, gain => {} },
             FAV6 => { cost => {}, gain => {} },

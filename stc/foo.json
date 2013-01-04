@@ -30,6 +30,39 @@
             "VP": 24, 
             "W": 4, 
             "WATER": 1, 
+            "buildings": {
+                "D": {
+                    "cost": {
+                        "C": 2, 
+                        "W": 1
+                    }
+                }, 
+                "P": {}, 
+                "SA": {
+                    "cost": {
+                        "C": 6, 
+                        "W": 4
+                    }
+                }, 
+                "SH": {
+                    "cost": {
+                        "C": 6, 
+                        "W": 4
+                    }
+                }, 
+                "TE": {
+                    "cost": {
+                        "C": 5, 
+                        "W": 2
+                    }
+                }, 
+                "TP": {
+                    "cost": {
+                        "C": 3, 
+                        "W": 2
+                    }
+                }
+            }, 
             "color": "black", 
             "passed": 0
         }, 
@@ -54,6 +87,39 @@
             "VP": 25, 
             "W": 5, 
             "WATER": 3, 
+            "buildings": {
+                "D": {
+                    "cost": {
+                        "C": 2, 
+                        "W": 1
+                    }
+                }, 
+                "P": {}, 
+                "SA": {
+                    "cost": {
+                        "C": 8, 
+                        "W": 4
+                    }
+                }, 
+                "SH": {
+                    "cost": {
+                        "C": 6, 
+                        "W": 4
+                    }
+                }, 
+                "TE": {
+                    "cost": {
+                        "C": 5, 
+                        "W": 2
+                    }
+                }, 
+                "TP": {
+                    "cost": {
+                        "C": 3, 
+                        "W": 2
+                    }
+                }
+            }, 
             "color": "green", 
             "passed": 0
         }, 
@@ -77,14 +143,47 @@
             "VP": 18, 
             "W": 0, 
             "WATER": 0, 
+            "buildings": {
+                "D": {
+                    "cost": {
+                        "C": 1, 
+                        "W": 1
+                    }
+                }, 
+                "SA": {
+                    "cost": {
+                        "C": 6, 
+                        "W": 3
+                    }
+                }, 
+                "SH": {
+                    "cost": {
+                        "C": 6, 
+                        "W": 3
+                    }
+                }, 
+                "TE": {
+                    "cost": {
+                        "C": 4, 
+                        "W": 1
+                    }
+                }, 
+                "TP": {
+                    "cost": {
+                        "C": 2, 
+                        "W": 1
+                    }
+                }
+            }, 
             "color": "gray", 
             "passed": 0
         }, 
         "Nomads": {
+            "ACTN": 1, 
             "AIR": 0, 
             "BON4": 1, 
             "BON5": 0, 
-            "C": 8, 
+            "C": 6, 
             "D": 3, 
             "EARTH": 1, 
             "FIRE": 1, 
@@ -99,6 +198,38 @@
             "VP": 21, 
             "W": 2, 
             "WATER": 0, 
+            "buildings": {
+                "D": {
+                    "cost": {
+                        "C": 2, 
+                        "W": 1
+                    }
+                }, 
+                "SA": {
+                    "cost": {
+                        "C": 6, 
+                        "W": 4
+                    }
+                }, 
+                "SH": {
+                    "cost": {
+                        "C": 8, 
+                        "W": 4
+                    }
+                }, 
+                "TE": {
+                    "cost": {
+                        "C": 5, 
+                        "W": 2
+                    }
+                }, 
+                "TP": {
+                    "cost": {
+                        "C": 3, 
+                        "W": 2
+                    }
+                }
+            }, 
             "color": "yellow", 
             "passed": 0
         }, 
@@ -121,6 +252,39 @@
             "VP": 17, 
             "W": 4, 
             "WATER": 1, 
+            "buildings": {
+                "D": {
+                    "cost": {
+                        "C": 3, 
+                        "W": 2
+                    }
+                }, 
+                "P": {}, 
+                "SA": {
+                    "cost": {
+                        "C": 8, 
+                        "W": 5
+                    }
+                }, 
+                "SH": {
+                    "cost": {
+                        "C": 8, 
+                        "W": 5
+                    }
+                }, 
+                "TE": {
+                    "cost": {
+                        "C": 6, 
+                        "W": 3
+                    }
+                }, 
+                "TP": {
+                    "cost": {
+                        "C": 4, 
+                        "W": 3
+                    }
+                }
+            }, 
             "color": "blue", 
             "passed": 0
         }
@@ -154,7 +318,7 @@
             "VP": "", 
             "W": "", 
             "WATER": "", 
-            "commands": "D->A5", 
+            "commands": "Free D->A5", 
             "faction": "Nomads"
         }, 
         {
@@ -176,7 +340,7 @@
             "VP": "", 
             "W": "", 
             "WATER": "", 
-            "commands": "D->F4", 
+            "commands": "Free D->F4", 
             "faction": "Auren"
         }, 
         {
@@ -198,7 +362,7 @@
             "VP": "", 
             "W": "", 
             "WATER": "", 
-            "commands": "D->H4", 
+            "commands": "Free D->H4", 
             "faction": "Swarmlings"
         }, 
         {
@@ -220,7 +384,7 @@
             "VP": "", 
             "W": "", 
             "WATER": "", 
-            "commands": "D->E5", 
+            "commands": "Free D->E5", 
             "faction": "Alchemists"
         }, 
         {
@@ -242,7 +406,7 @@
             "VP": "", 
             "W": "", 
             "WATER": "", 
-            "commands": "D->E7. D->C5", 
+            "commands": "Free D->E7. Free D->C5", 
             "faction": "Engineers"
         }, 
         {
@@ -264,7 +428,7 @@
             "VP": "", 
             "W": "", 
             "WATER": "", 
-            "commands": "D->E10", 
+            "commands": "Free D->E10", 
             "faction": "Alchemists"
         }, 
         {
@@ -286,7 +450,7 @@
             "VP": "", 
             "W": "", 
             "WATER": "", 
-            "commands": "D->G6", 
+            "commands": "Free D->G6", 
             "faction": "Swarmlings"
         }, 
         {
@@ -308,7 +472,7 @@
             "VP": "", 
             "W": "", 
             "WATER": "", 
-            "commands": "D->F2", 
+            "commands": "Free D->F2", 
             "faction": "Auren"
         }, 
         {
@@ -330,7 +494,7 @@
             "VP": "", 
             "W": "", 
             "WATER": "", 
-            "commands": "D->B4. D->G7", 
+            "commands": "Free D->B4. Free D->G7", 
             "faction": "Nomads"
         }, 
         {
@@ -606,7 +770,7 @@
             "VP": "", 
             "W": "-2 [4]", 
             "WATER": "", 
-            "commands": "TP->F4. -2W. -3C", 
+            "commands": "TP->F4", 
             "faction": "Auren"
         }, 
         {
@@ -650,7 +814,7 @@
             "VP": "", 
             "W": "-3 [9]", 
             "WATER": "", 
-            "commands": "TP->G6. -3W. -4C", 
+            "commands": "TP->G6", 
             "faction": "Swarmlings"
         }, 
         {
@@ -694,7 +858,7 @@
             "VP": "", 
             "W": "-2 [6]", 
             "WATER": "", 
-            "commands": "TP->E10. -2W. -6C", 
+            "commands": "TP->E10. -3C", 
             "faction": "Alchemists"
         }, 
         {
@@ -716,7 +880,7 @@
             "VP": "", 
             "W": "-1 [3]", 
             "WATER": "", 
-            "commands": "Burn 4. Action ACT5. -1C. -1W. D->D7", 
+            "commands": "Burn 4. Action ACT5. D->D7", 
             "faction": "Engineers"
         }, 
         {
@@ -763,7 +927,7 @@
             "VP": "", 
             "W": "-2 [5]", 
             "WATER": "", 
-            "commands": "TP->G7. -2W. -3C", 
+            "commands": "TP->G7", 
             "faction": "Nomads"
         }, 
         {
@@ -807,7 +971,7 @@
             "VP": "+5 [25]", 
             "W": "-4 [0]", 
             "WATER": "+2 [3]", 
-            "commands": "SH->F4. -4W. -6C. +5VP. +FAV6", 
+            "commands": "SH->F4. +5VP. +FAV6", 
             "faction": "Auren"
         }, 
         {
@@ -851,7 +1015,7 @@
             "VP": "", 
             "W": "-8 [1]", 
             "WATER": "", 
-            "commands": "H8:blue. D->H8. -8W. -3C", 
+            "commands": "H8:blue. D->H8. -6W", 
             "faction": "Swarmlings"
         }, 
         {
@@ -917,7 +1081,7 @@
             "VP": "", 
             "W": "-1 [2]", 
             "WATER": "", 
-            "commands": "E9:gray. D->E9. -1W. -1C", 
+            "commands": "E9:gray. D->E9", 
             "faction": "Engineers"
         }, 
         {
@@ -947,7 +1111,7 @@
         }, 
         {
             "AIR": "", 
-            "C": "-6 [13]", 
+            "C": "-8 [11]", 
             "CULT": "", 
             "D": "", 
             "EARTH": "", 
@@ -964,7 +1128,7 @@
             "VP": "+5 [24]", 
             "W": "-4 [1]", 
             "WATER": "", 
-            "commands": "SH->G7. -4W. -6C. +5VP", 
+            "commands": "SH->G7. +5VP", 
             "faction": "Nomads"
         }, 
         {
@@ -1052,7 +1216,7 @@
             "VP": "", 
             "W": "-4 [4]", 
             "WATER": "", 
-            "commands": "F7:black. D->F7. -4w. -2c", 
+            "commands": "F7:black. D->F7. -3w", 
             "faction": "Alchemists"
         }, 
         {
@@ -1096,7 +1260,7 @@
             "VP": "", 
             "W": "-1 [1]", 
             "WATER": "", 
-            "commands": "TP->E9. -1w. -2c. Action BON1", 
+            "commands": "Action BON1. TP->E9", 
             "faction": "Engineers"
         }, 
         {
@@ -1104,7 +1268,7 @@
         }, 
         {
             "AIR": "", 
-            "C": "-2 [11]", 
+            "C": "-2 [9]", 
             "CULT": "", 
             "D": "-1 [5]", 
             "EARTH": "", 
@@ -1121,7 +1285,7 @@
             "VP": "", 
             "W": "-1 [0]", 
             "WATER": "", 
-            "commands": "C4:yellow. D->C4. -1w. -2c", 
+            "commands": "Action ACTN. C4:yellow. D->C4", 
             "faction": "Nomads"
         }, 
         {
@@ -1187,7 +1351,7 @@
             "VP": "+5 [23]", 
             "W": "-4 [0]", 
             "WATER": "", 
-            "commands": "SH->E10. -4w. -6c. +12pw. +5vp", 
+            "commands": "SH->E10. +12pw. +5vp", 
             "faction": "Alchemists"
         }, 
         {
@@ -1231,7 +1395,7 @@
             "VP": "", 
             "W": "-1 [0]", 
             "WATER": "", 
-            "commands": "TE->E9. -1w. -4c. +FAV7", 
+            "commands": "TE->E9. +FAV7", 
             "faction": "Engineers"
         }, 
         {
@@ -1261,7 +1425,7 @@
         }, 
         {
             "AIR": "", 
-            "C": "+1 [12]", 
+            "C": "+1 [10]", 
             "CULT": "", 
             "D": "", 
             "EARTH": "", 
@@ -1645,7 +1809,7 @@
             "VP": "", 
             "W": "-4 [1]", 
             "WATER": "", 
-            "commands": "-4w. -1c. D->D6", 
+            "commands": "-3w. D->D6", 
             "faction": "Engineers"
         }, 
         {
@@ -1672,7 +1836,7 @@
         }, 
         {
             "AIR": "", 
-            "C": "-2 [10]", 
+            "C": "-2 [8]", 
             "CULT": "", 
             "D": "-1 [4]", 
             "EARTH": "", 
@@ -1689,7 +1853,7 @@
             "VP": "", 
             "W": "-1 [3]", 
             "WATER": "", 
-            "commands": "D->E8. -1w. -2c", 
+            "commands": "D->E8", 
             "faction": "Nomads"
         }, 
         {
@@ -1758,7 +1922,7 @@
             "VP": "", 
             "W": "-5 [4]", 
             "WATER": "", 
-            "commands": "SH->G6. -5w. -8c", 
+            "commands": "SH->G6", 
             "faction": "Swarmlings"
         }, 
         {
@@ -1846,7 +2010,7 @@
             "VP": "", 
             "W": "-1 [0]", 
             "WATER": "", 
-            "commands": "D->F6. -1w. -1c", 
+            "commands": "D->F6", 
             "faction": "Engineers"
         }, 
         {
@@ -1873,7 +2037,7 @@
         }, 
         {
             "AIR": "", 
-            "C": "-2 [8]", 
+            "C": "-2 [6]", 
             "CULT": "", 
             "D": "-1 [3]", 
             "EARTH": "", 
@@ -1890,7 +2054,7 @@
             "VP": "", 
             "W": "-1 [2]", 
             "WATER": "", 
-            "commands": "D->D5. -2c. -1w", 
+            "commands": "Action ACTN. D->D5", 
             "faction": "Nomads"
         }, 
         {
@@ -2037,6 +2201,9 @@
             "blocked": 0
         }, 
         "ACTA": {
+            "blocked": 1
+        }, 
+        "ACTN": {
             "blocked": 1
         }, 
         "AIR1": {
@@ -2613,7 +2780,7 @@
         "BON6": 0, 
         "BON7": 1, 
         "BON8": 1, 
-        "C": 1034, 
+        "C": 1036, 
         "EARTH": 98, 
         "FAV1": 1, 
         "FAV10": 3, 
