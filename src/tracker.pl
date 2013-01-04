@@ -17,17 +17,19 @@ my %setups = (
                         D => { cost => { W => 1, C => 2 } },
                         TP => { cost => { W => 2, C => 3 } },
                         TE => { cost => { W => 2, C => 5 } },
-                        SH => { cost => { W => 4, C => 6 } },
+                        SH => { cost => { W => 4, C => 6 },
+                                gain => { PW => 12 } },
                         SA => { cost => { W => 4, C => 6 } },
                     }},
     Auren => { C => 15, W => 3, P1 => 5, P2 => 7,
-               WATER => 1, AIR => 1, 'ACTA' => 1,
+               WATER => 1, AIR => 1,
                color => 'green',
                buildings => {
                    D => { cost => { W => 1, C => 2 } },
                    TP => { cost => { W => 2, C => 3 } },
                    TE => { cost => { W => 2, C => 5 } },
-                   SH => { cost => { W => 4, C => 6 } },
+                   SH => { cost => { W => 4, C => 6 },
+                           gain => { ACTA => 1 } },
                    SA => { cost => { W => 4, C => 8 } },
                }},
     Swarmlings => { C => 20, W => 8, P1 => 3, P2 => 9,
@@ -37,17 +39,18 @@ my %setups = (
                         D => { cost => { W => 2, C => 3 } },
                         TP => { cost => { W => 3, C => 4 } },
                         TE => { cost => { W => 3, C => 6 } },
-                        SH => { cost => { W => 5, C => 8 } },
+                        SH => { cost => { W => 5, C => 8 },
+                                gain => { ACTS => 1 } },
                         SA => { cost => { W => 5, C => 8 } },
                     }},
     Nomads => { C => 15, W => 2, P1 => 5, P2 => 7,
                 FIRE => 1, EARTH => 1, color => 'yellow',
-                ACTN => 1,
                 buildings => {
                     D => { cost => { W => 1, C => 2 } },
                     TP => { cost => { W => 2, C => 3 } },
                     TE => { cost => { W => 2, C => 5 } },
-                    SH => { cost => { W => 4, C => 8 } },
+                    SH => { cost => { W => 4, C => 8 },
+                            gain => { ACTN => 1 } },
                     SA => { cost => { W => 4, C => 6 } },
                 }},
     Engineers => { C => 10, W => 2, P1 => 3, P2 => 9, color => 'gray',
@@ -198,10 +201,14 @@ sub command {
         } else {
             my $orig_value = $factions{$faction}{$type};
 
-            $pool{$type} -= $sign * $count;
+            # Pseudo-resources not in the pool, but revealed by removing
+            # buildings.
+            if ($type !~ /^ACT.$/) {
+                $pool{$type} -= $sign * $count;
+            }
             $factions{$faction}{$type} += $sign * $count;
 
-            if ($pool{$type} < 0) {
+            if (exists $pool{$type} and $pool{$type} < 0) {
                 die "Not enough '$type' in pool after command '$command'\n";
             }
 
@@ -255,6 +262,13 @@ sub command {
             }
         }
 
+        if (exists $factions{$faction}{buildings}{$type}{gain}) {
+            my %gain = %{$factions{$faction}{buildings}{$type}{gain}};
+            for my $type (keys %gain) {
+                command $faction, "+$gain{$type}$type";
+            }
+        }
+
         if (!$free and
             exists $factions{$faction}{buildings}{$type}{cost}) {
             my %cost = %{$factions{$faction}{buildings}{$type}{cost}};
@@ -279,7 +293,9 @@ sub command {
         my $actual_pw = command $faction, "+${pw}PW";
         my $vp = $actual_pw - 1;
 
-        command $faction, "-${vp}VP";
+        if ($actual_pw > 0) {
+            command $faction, "-${vp}VP";
+        }
     } elsif ($command =~ /^(\w+):(\w+)$/) {
         my $where = uc $1;
         my $color = lc $2;
@@ -327,6 +343,7 @@ sub command {
             ACT5 => { cost => { PW => 4 }, gain => {} },
             ACT6 => { cost => { PW => 6 }, gain => {} },
             ACTA => { cost => {}, gain => {} },
+            ACTS => { cost => {}, gain => {} },
             ACTN => { cost => {}, gain => {} },
             BON1 => { cost => {}, gain => {} },
             BON2 => { cost => {}, gain => {} },

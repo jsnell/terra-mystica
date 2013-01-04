@@ -60,7 +60,7 @@ Engineers: E9:gray. D -> E9
 Alchemists: Leech 2
 
 # Round 1, Turn 3:
-Nomads: SH -> G7. +5VP 
+Nomads: SH -> G7. +5VP. +2c # Oops. Real cost is 4w8c, Nomads only paid 4w6c 
 Swarmlings: Leech 3
 Auren: Action ACTA. +2FIRE
 Swarmlings: P -> FIRE1
@@ -73,7 +73,7 @@ Engineers: Action BON1. TP -> E9.
 Nomads: Action ACTN. C4:yellow. D -> C4
 Auren: +FIRE. Action BON2
 Swarmlings: Pass Bon3
-Alchemists: SH -> E10. +12pw. +5vp
+Alchemists: SH -> E10. +5vp
 Engineers: Leech 3
 Engineers: TE -> E9. +FAV7
 Alchemists: Leech 1

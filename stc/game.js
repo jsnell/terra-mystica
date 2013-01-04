@@ -407,6 +407,9 @@ function renderAction(canvas, name, key) {
         "ACTN": function() {
             drawText(ctx, "tf", 15, 15, "10px Verdana");
         },
+        "ACTS": function() {
+            drawText(ctx, "tp", 15, 15, "10px Verdana");
+        },
         "BON1": function() {
             drawText(ctx, "sh", 15, 15, "10px Verdana");
         },
