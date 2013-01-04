@@ -439,27 +439,30 @@ sub maybe_score_favor_tile {
 
 sub maybe_gain_faction_special {
     my ($faction_name, $type) = @_;
+    my $faction = $factions{$faction_name};
 
-    my $enable_if = $factions{$faction_name}{special}{enable_if};
+    my $enable_if = $faction->{special}{enable_if};
     if ($enable_if) {
         for my $currency (keys %{$enable_if}) {
-            return if $factions{$faction_name}{$currency} != $enable_if->{$currency};
+            return if $faction->{$currency} != $enable_if->{$currency};
         }
     }
 
-    gain $faction_name, $factions{$faction_name}{special}{$type};
+    gain $faction_name, $faction->{special}{$type};
 }
 
 sub faction_income {
     my $faction_name = shift;
+    my $faction = $factions{$faction_name};
+
     my %total_income = map { $_, 0 } qw(C W P PW);
 
-    my %buildings = %{$factions{$faction_name}{buildings}};
+    my %buildings = %{$faction->{buildings}};
     for my $building (keys %buildings) {
         if (exists $buildings{$building}{income}) {
             my %building_income = %{$buildings{$building}{income}};
             for my $type (keys %building_income) {
-                my $delta = $building_income{$type}[$factions{$faction_name}{$building}];
+                my $delta = $building_income{$type}[$faction->{$building}];
                 if ($delta) {
                     $total_income{$type} += $delta;
                 }
@@ -467,8 +470,8 @@ sub faction_income {
         }
     }
 
-    for my $tile (keys %{$factions{$faction_name}}) {
-        if (!$factions{$faction_name}{$tile}) {
+    for my $tile (keys %{$faction}) {
+        if (!$faction->{$tile}) {
             next;
         }
 
@@ -489,7 +492,7 @@ sub faction_income {
     if ($scoring) {
         my %scoring_income = %{$scoring->{income}};
 
-        my $mul = int($factions{$faction_name}{$scoring->{cult}} / $scoring->{req});
+        my $mul = int($faction->{$scoring->{cult}} / $scoring->{req});
         for my $type (keys %scoring_income) {
             $total_income{$type} += $scoring_income{$type} * $mul;
         }        
@@ -500,6 +503,7 @@ sub faction_income {
 
 sub maybe_gain_power_from_cult {
     my ($faction_name, $old_value, $new_value) = @_;
+    my $faction = $factions{$faction_name};
 
     if ($old_value <= 2 && $new_value > 2) {
         command $faction_name, "+1pw";
@@ -532,13 +536,15 @@ sub color_difference {
 
 sub gain_power {
     my ($faction_name, $count) = @_;
+    my $faction = $factions{$faction_name};
+
     for (1..$count) {
-        if ($factions{$faction_name}{P1}) {
-            $factions{$faction_name}{P1}--;
-            $factions{$faction_name}{P2}++;
-        } elsif ($factions{$faction_name}{P2}) {
-            $factions{$faction_name}{P2}--;
-            $factions{$faction_name}{P3}++;
+        if ($faction->{P1}) {
+            $faction->{P1}--;
+            $faction->{P2}++;
+        } elsif ($faction->{P2}) {
+            $faction->{P2}--;
+            $faction->{P3}++;
         } else {
             return $_ - 1;
         }
@@ -550,6 +556,7 @@ sub gain_power {
 sub command {
     my ($faction_name, $command) = @_;
     my $type;
+    my $faction = $faction_name ? $factions{$faction_name} : undef;
 
     if ($command =~ /^([+-])(\d*)(\w+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
@@ -563,29 +570,29 @@ sub command {
                 gain_power $faction_name, $count;
                 $type = '';
             } else {
-                $factions{$faction_name}{P1} += $count;
-                $factions{$faction_name}{P3} -= $count;
+                $faction->{P1} += $count;
+                $faction->{P3} -= $count;
                 $type = 'P3';
             }
         } else {
-            my $orig_value = $factions{$faction_name}{$type};
+            my $orig_value = $faction->{$type};
 
             # Pseudo-resources not in the pool, but revealed by removing
             # buildings.
             if ($type !~ /^ACT.$/) {
                 $pool{$type} -= $delta;
             }
-            $factions{$faction_name}{$type} += $delta;
+            $faction->{$type} += $delta;
 
             if (exists $pool{$type} and $pool{$type} < 0) {
                 die "Not enough '$type' in pool after command '$command'\n";
             }
 
             if ($type =~ /^FAV/) {
-                if (!$factions{$faction_name}{GAIN_FAVOR}) {
+                if (!$faction->{GAIN_FAVOR}) {
                     die "Taking favor tile not allowed\n";
                 } else {
-                    $factions{$faction_name}{GAIN_FAVOR}--;
+                    $faction->{GAIN_FAVOR}--;
                 }
 
                 gain $faction_name, $favors{$type}{gain};
@@ -596,11 +603,11 @@ sub command {
             }
 
             if (grep { $_ eq $type } @cults) {
-                if ($factions{$faction_name}{CULT}) {
-                    $factions{$faction_name}{CULT} -= $delta;
+                if ($faction->{CULT}) {
+                    $faction->{CULT} -= $delta;
                 }
 
-                my $new_value = $factions{$faction_name}{$type};
+                my $new_value = $faction->{$type};
                 maybe_gain_power_from_cult $faction_name, $orig_value, $new_value;
             }
 
@@ -613,7 +620,7 @@ sub command {
         }
 
         if ($type =~ /^BON/) {
-            $factions{$faction_name}{C} += $map{$type}{C};
+            $faction->{C} += $map{$type}{C};
             $map{$type}{C} = 0;
         }
     } elsif ($command =~ /^(free\s+)?(\w+)->(\w+)$/) {
@@ -626,7 +633,7 @@ sub command {
 
         my $oldtype = $map{$where}{building};
         if ($oldtype) {
-            $factions{$faction_name}{$oldtype}++;
+            $faction->{$oldtype}++;
         }
 
         if (exists $map{$where}{gain}) {
@@ -634,22 +641,22 @@ sub command {
             delete $map{$where}{gain};
         }
 
-        gain $faction_name, $factions{$faction_name}{buildings}{$type}{gain};
+        gain $faction_name, $faction->{buildings}{$type}{gain};
 
-        if ($type eq 'TP' and $factions{$faction_name}{FREE_TP}) {
+        if ($type eq 'TP' and $faction->{FREE_TP}) {
             $free = 1;
-            $factions{$faction_name}{FREE_TP}--;
+            $faction->{FREE_TP}--;
         }
 
         if (!$free) {
-            pay $faction_name, $factions{$faction_name}{buildings}{$type}{cost};
+            pay $faction_name, $faction->{buildings}{$type}{cost};
         }
 
         maybe_score_favor_tile $faction_name, $type;
         maybe_score_current_score_tile $faction_name, $type;
 
         $map{$where}{building} = $type;
-        my $color = $factions{$faction_name}{color};
+        my $color = $faction->{color};
 
         if (exists $map{$where}{color}) {
             command $faction_name, "$where:$color";
@@ -657,11 +664,11 @@ sub command {
             $map{$where}{color} = $color;
         }
 
-        $factions{$faction_name}{$type}--;
+        $faction->{$type}--;
     } elsif ($command =~ /^burn (\d+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
-        $factions{$faction_name}{P2} -= 2*$1;
-        $factions{$faction_name}{P3} += $1;
+        $faction->{P2} -= 2*$1;
+        $faction->{P3} += $1;
         $type = 'P2';
     } elsif ($command =~ /^leech (\d+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
@@ -675,7 +682,7 @@ sub command {
     } elsif ($command =~ /^(\w+):(\w+)$/) {
         my $where = uc $1;
         my $color = lc $2;
-        if ($factions{$faction_name}{FREE_TF}) {
+        if ($faction->{FREE_TF}) {
             command $faction_name, "-FREE_TF";            
         } else {
             my $color_difference = color_difference $map{$where}{color}, $color;
@@ -689,7 +696,7 @@ sub command {
 
         $map{$where}{color} = $color;
     } elsif ($command =~ /^dig (\d+)/) {
-        my $cost = $factions{$faction_name}{dig}{cost}[$factions{$faction_name}{dig}{level}];
+        my $cost = $faction->{dig}{cost}[$faction->{dig}{level}];
 
         command $faction_name, "+${1}SHOVEL";
         pay $faction_name, $cost for 1..$1;
@@ -698,14 +705,14 @@ sub command {
 
         my $from = uc $1;
         my $to = uc $2;
-        push @bridges, {from => $from, to => $to, color => $factions{$faction_name}{color}};
+        push @bridges, {from => $from, to => $to, color => $faction->{color}};
     } elsif ($command =~ /^pass (\w+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
         my $bon = $1;
 
-        $factions{$faction_name}{passed} = 1;
-        for (keys %{$factions{$faction_name}}) {
-            next if !$factions{$faction_name}{$_};
+        $faction->{passed} = 1;
+        for (keys %{$faction}) {
+            next if !$faction->{$_};
 
             my $pass_vp;
             if (/^BON/) {
@@ -718,7 +725,7 @@ sub command {
 
             if ($pass_vp) {
                 for my $type (keys %{$pass_vp}) {
-                    my $x = $pass_vp->{$type}[$factions{$faction_name}{$type}];
+                    my $x = $pass_vp->{$type}[$faction->{$type}];
                     command $faction_name, "+${x}vp";
                 }
             }                
@@ -755,10 +762,11 @@ sub command {
         $round++;
 
         for my $faction_name (@factions) {
+            my $faction = $factions{$faction_name};
             die "Round $round income not taken for $faction_name\n" if
-                !$factions{$faction_name}{income_taken};
-            $factions{$faction_name}{income_taken} = 0;
-            $factions{$faction_name}{passed} = 0 for keys %factions;
+                !$faction->{income_taken};
+            $faction->{income_taken} = 0;
+            $faction->{passed} = 0 for keys %factions;
         }
 
         $map{$_}{blocked} = 0 for keys %map;
@@ -775,17 +783,17 @@ sub command {
         die "Need faction for command $command\n" if !$faction_name;
 
         die "Taking income twice for $faction_name" if
-            $factions{$faction_name}{income_taken};
+            $faction->{income_taken};
 
         my %income = faction_income $faction_name;
         gain $faction_name, \%income;
         
-        $factions{$faction_name}{income_taken} = 1
+        $faction->{income_taken} = 1
     } elsif ($command =~ /^upgrade (ship|dig)/) {
         die "Need faction for command $command\n" if !$faction_name;
 
         my $type = lc $1;
-        my $track = $factions{$faction_name}{$type};
+        my $track = $faction->{$type};
 
         pay $faction_name, $track->{upgrade_cost};
 
@@ -807,7 +815,7 @@ sub command {
     }
 
     if ($type and $faction_name) {
-        if ($factions{$faction_name}{$type} < 0) {
+        if ($faction->{$type} < 0) {
             die "Not enough '$type' in $faction_name after command '$command'\n";
         }
     }
