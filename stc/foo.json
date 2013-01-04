@@ -36,6 +36,7 @@
                 "C": 6, 
                 "P": 0, 
                 "PW": 3, 
+                "SHOVEL": 0, 
                 "W": 4
             }, 
             "passed": 0
@@ -68,6 +69,7 @@
                 "C": 2, 
                 "P": 0, 
                 "PW": 2, 
+                "SHOVEL": 0, 
                 "W": 2
             }, 
             "passed": 0
@@ -98,6 +100,7 @@
                 "C": 0, 
                 "P": 1, 
                 "PW": 1, 
+                "SHOVEL": 0, 
                 "W": 7
             }, 
             "passed": 0
@@ -129,6 +132,7 @@
                 "C": 0, 
                 "P": 0, 
                 "PW": 5, 
+                "SHOVEL": 0, 
                 "W": 6
             }, 
             "passed": 0
@@ -159,6 +163,7 @@
                 "C": 6, 
                 "P": 0, 
                 "PW": 4, 
+                "SHOVEL": 0, 
                 "W": 4
             }, 
             "passed": 0
@@ -846,7 +851,7 @@
             "VP": "+5 [25]", 
             "W": "-4 [0]", 
             "WATER": "+2 [3]", 
-            "commands": "SH->F4. +5VP. +FAV6", 
+            "commands": "SH->F4. +FAV6", 
             "faction": "Auren"
         }, 
         {
@@ -1006,7 +1011,7 @@
             "VP": "+5 [24]", 
             "W": "-4 [1]", 
             "WATER": "", 
-            "commands": "SH->G7. +5VP. +2c", 
+            "commands": "SH->G7. +2c", 
             "faction": "Nomads"
         }, 
         {
@@ -1229,7 +1234,7 @@
             "VP": "+5 [23]", 
             "W": "-4 [0]", 
             "WATER": "", 
-            "commands": "SH->E10. +5vp", 
+            "commands": "SH->E10", 
             "faction": "Alchemists"
         }, 
         {
@@ -1552,7 +1557,7 @@
             "VP": "", 
             "W": "+5 [5]", 
             "WATER": "", 
-            "commands": "income. +3w", 
+            "commands": "income", 
             "faction": "Auren"
         }, 
         {
@@ -1574,7 +1579,7 @@
             "VP": "", 
             "W": "+6 [7]", 
             "WATER": "", 
-            "commands": "income. +2w", 
+            "commands": "income", 
             "faction": "Swarmlings"
         }, 
         {

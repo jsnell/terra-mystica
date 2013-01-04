@@ -9,6 +9,8 @@ my @cults = qw(EARTH FIRE WATER AIR);
 my @ledger = ();
 my %map = ();
 my @error = ();
+my @score_tiles = ();
+my $turn = 0;
 
 my %setups = (
     Alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
@@ -121,6 +123,43 @@ my %bonus_tiles = (
     BON9 => { income => { C => 2 } },
 );
 
+my %score_tiles = (
+    SCORE1 => { vp => { SHOVEL => 2 },
+                cult => 'EARTH',
+                req => 1, 
+                income => { C => 1 } },
+    SCORE2 => { vp => { }, # vps filled in later
+                cult => 'EARTH',
+                req => 4, 
+                income => { SHOVEL => 1 } },
+    SCORE3 => { vp => { D => 2 },
+                cult => 'WATER',
+                req => 4, 
+                income => { P => 1 } },    
+    SCORE4 => { vp => { SA => 5, SH => 5 },
+                cult => 'FIRE',
+                req => 2,
+                income => { W => 1 } },    
+    SCORE5 => { vp => { D => 2 },
+                cult => 'FIRE',
+                req => 4, 
+                income => { PW => 4 } },    
+    SCORE6 => { vp => { TP => 3 },
+                cult => 'WATER',
+                req => 4, 
+                income => { SHOVEL => 1 } },    
+    SCORE7 => { vp => { SA => 5, SH => 5 },
+                cult => 'AIR',
+                req => 2,
+                income => { W => 1 } },    
+    SCORE8 => { vp => { TP => 3 },
+                cult => 'AIR',
+                req => 4, 
+                income => { SHOVEL => 1 } },    
+);
+
+$score_tiles{SCORE2}{vp}{"TW$_"} = 5 for 1..5;
+
 my %pool = (
     # Resources
     C => 1000,
@@ -204,6 +243,8 @@ my @bridges = ();
 
 ## 
 
+sub command;
+
 sub setup {
     my $faction = ucfirst shift;
 
@@ -229,6 +270,24 @@ sub setup {
     $factions{$faction}{SHOVEL} = 0;
 
     push @factions, $faction;
+}
+
+sub current_score_tile {
+    if ($turn > 0) {
+        return $score_tiles{$score_tiles[$turn - 1]};
+    }
+}
+
+sub maybe_score_current_score_tile {
+    my ($faction, $type) = @_;
+
+    my $scoring = current_score_tile;
+    if ($scoring) {
+        my $gain = $scoring->{vp}{$type};
+        if ($gain) {
+            command $faction, "+${gain}vp"
+        }
+    }
 }
 
 sub faction_income {
@@ -264,7 +323,17 @@ sub faction_income {
         for my $type (keys %tile_income) {
             $total_income{$type} += $tile_income{$type};
         }
-    };
+    }
+
+    my $scoring = current_score_tile;
+    if ($scoring) {
+        my %scoring_income = %{$scoring->{income}};
+
+        my $mul = int($factions{$faction}{$scoring->{cult}} / $scoring->{req});
+        for my $type (keys %scoring_income) {
+            $total_income{$type} += $scoring_income{$type} * $mul;
+        }        
+    }
 
     return %total_income;
 }
@@ -283,8 +352,6 @@ sub color_difference {
 
     return $diff;
 }
-
-sub command;
 
 sub command {
     my ($faction, $command) = @_;
@@ -359,6 +426,12 @@ sub command {
                     command $faction, "+3pw";
                 }
             }
+
+            if ($sign > 0) {
+                for (1..$count) {
+                    maybe_score_current_score_tile $faction, $type;
+                }
+            }
         }
 
         if ($type =~ /^BON/) {
@@ -406,6 +479,8 @@ sub command {
                 command $faction, "-$cost{$type}$type";
             }
         }
+
+        maybe_score_current_score_tile $faction, $type;
 
         $map{$where}{building} = $type;
         my $color = $factions{$faction}{color};
@@ -513,6 +588,7 @@ sub command {
                 $map{"BON$_"}{C}++;
             }
         }
+        $turn++;
     } elsif ($command =~ /^setup (\w+)$/) {
         setup $1;
     } elsif ($command =~ /delete (\w+)$/) {
@@ -526,6 +602,10 @@ sub command {
                 command $faction, "+$income{$currency}$currency";
             }
         }
+    } elsif ($command =~ /^score (.*)/) {
+        my $setup = uc $1;
+        @score_tiles = split /,/, $setup;
+        die "Invalid scoring tile setup: $setup" if @score_tiles != 6;
     } else {
         die "Could not parse command '$command'.\n";
     }

@@ -8,6 +8,8 @@ setup Swarmlings
 setup Alchemists
 setup Engineers
 
+score SCORE4, SCORE2, SCORE8, SCORE7, SCORE6, SCORE4
+
 # Initial dwellings
 Nomads: Free D -> A5
 Auren: Free D -> F4
@@ -26,8 +28,6 @@ Swarmlings: +Bon8
 Auren: +Bon2
 Nomads: +Bon5
 
-clear
-
 # Round 1:
 
 # Income 
@@ -36,6 +36,8 @@ Auren: income
 Swarmlings: income
 Alchemists: income
 Engineers: income
+
+clear
 
 # Round 1, Turn 1:
 Nomads: Burn 4. Action ACT4
@@ -51,7 +53,7 @@ Alchemists: Leech 2
 
 Nomads: TP -> G7
 Swarmlings: Leech 2
-Auren: SH -> F4. +5VP. +FAV6
+Auren: SH -> F4. +FAV6
 Engineers: Leech 1
 Swarmlings: Dig 2. D -> H8
 Nomads: Leech 2
@@ -60,7 +62,7 @@ Engineers: Action BON1. D -> E9
 Alchemists: Leech 2
 
 # Round 1, Turn 3:
-Nomads: SH -> G7. +5VP. +2c # Oops. Real cost is 4w8c, Nomads only paid 4w6c 
+Nomads: SH -> G7. +2c # Oops. Real cost is 4w8c, Nomads only paid 4w6c 
 Swarmlings: Leech 3
 Auren: Action ACTA. +2FIRE
 Swarmlings: P -> FIRE1
@@ -73,7 +75,7 @@ Engineers: TP -> E9
 Nomads: Action ACTN. D -> C4
 Auren: Action BON2. +FIRE
 Swarmlings: Pass Bon3
-Alchemists: SH -> E10. +5vp
+Alchemists: SH -> E10
 Engineers: Leech 3
 Engineers: TE -> E9. +FAV7
 Alchemists: Leech 1
@@ -100,8 +102,8 @@ Auren: Pass Bon1
 # Income
 
 Nomads: income
-Auren: income. +3w
-Swarmlings: income. +2w
+Auren: income
+Swarmlings: income
 Alchemists: income
 Engineers: income
 
