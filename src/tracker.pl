@@ -497,6 +497,23 @@ sub faction_income {
     return %total_income;
 }
 
+sub maybe_gain_power_from_cult {
+    my ($faction, $old_value, $new_value) = @_;
+
+    if ($old_value <= 2 && $new_value > 2) {
+        command $faction, "+1pw";
+    }
+    if ($old_value <= 4 && $new_value > 4) {
+        command $faction, "+2pw";
+    }
+    if ($old_value <= 6 && $new_value > 6) {
+        command $faction, "+2pw";
+    }
+    if ($old_value <= 9 && $new_value > 9) {
+        command $faction, "+3pw";
+    }
+}
+
 my @colors = qw(yellow brown black blue green gray red);
 my %colors = ();
 $colors{$colors[$_]} = $_ for 0..$#colors;
@@ -520,6 +537,7 @@ sub command {
         die "Need faction for command $command\n" if !$faction;
         my ($sign, $count) = (($1 eq '+' ? 1 : -1),
                               ($2 eq '' ? 1 : $2));
+        my $delta = $sign * $count;
         $type = uc $3;
 
         if ($type eq 'PW') {
@@ -550,9 +568,9 @@ sub command {
             # Pseudo-resources not in the pool, but revealed by removing
             # buildings.
             if ($type !~ /^ACT.$/) {
-                $pool{$type} -= $sign * $count;
+                $pool{$type} -= $delta;
             }
-            $factions{$faction}{$type} += $sign * $count;
+            $factions{$faction}{$type} += $delta;
 
             if (exists $pool{$type} and $pool{$type} < 0) {
                 die "Not enough '$type' in pool after command '$command'\n";
@@ -572,24 +590,13 @@ sub command {
                 gain $faction, $towns{$type}{gain};
             }
 
-            if ($type =~ /FIRE|WATER|EARTH|AIR/) {
-                my $new_value = $factions{$faction}{$type};
+            if (grep { $_ eq $type } @cults) {
                 if ($factions{$faction}{CULT}) {
-                    $factions{$faction}{CULT} -= ($sign * $count);
+                    $factions{$faction}{CULT} -= $delta;
                 }
 
-                if ($orig_value <= 2 && $new_value > 2) {
-                    command $faction, "+1pw";
-                }
-                if ($orig_value <= 4 && $new_value > 4) {
-                    command $faction, "+2pw";
-                }
-                if ($orig_value <= 6 && $new_value > 6) {
-                    command $faction, "+2pw";
-                }
-                if ($orig_value <= 9 && $new_value > 9) {
-                    command $faction, "+3pw";
-                }
+                my $new_value = $factions{$faction}{$type};
+                maybe_gain_power_from_cult $faction, $orig_value, $new_value;
             }
 
             if ($sign > 0) {
