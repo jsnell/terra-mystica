@@ -1,0 +1,20 @@
+- Shovel track
+- Ship track
+- Final cult track scoring
+- Automatic conversion of resources -> money -> VPs in endgame
+
+Partially implemented factions:
+- Engineer stronghold VP scoring
+
+Maybe:
+- Automatically pay higher price for non-adjacent TPs
+- Detect leeching opportunities, and require an explicit leech / don't
+  leech decision.
+
+Out of scope:
+- Any other spatial elements
+  - Automatic detection of valid / invalid build locations
+  - Automatic founding of towns
+  - Final network scoring
+  - Tracking of active player
+
