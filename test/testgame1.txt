@@ -74,7 +74,7 @@ Engineers: TP -> E9
 
 Nomads: Action ACTN. D -> C4
 Auren: Action BON2. +FIRE
-Swarmlings: Pass Bon3
+Swarmlings: Pass Bon3. 
 Alchemists: SH -> E10
 Engineers: Leech 3
 Engineers: TE -> E9. +FAV7
@@ -88,7 +88,7 @@ Engineers: Burn 3. Action ACT1. Bridge E9:D6.
 
 # Round 1, Turn 6:
 Auren: Burn 3. Action ACT2
-Alchemists: Pass Bon5. +4vp
+Alchemists: Pass Bon5
 Engineers: Pass Bon6
 
 # Round 1. Turn 7

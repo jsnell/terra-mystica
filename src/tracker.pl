@@ -117,10 +117,13 @@ my %bonus_tiles = (
     BON3 => { income => { C => 6 } },
     BON4 => { income => { PW => 3 } },
     BON5 => { income => { PW => 3, W => 1 } },
-    BON6 => { income => { W => 2 } },
-    BON7 => { income => { W => 1 } },
+    BON6 => { income => { W => 2 },
+              pass_vp => { SA => [4, 0], SH => [4, 0] } },
+    BON7 => { income => { W => 1 },
+              pass_vp => { TP => [ reverse map { $_ * 2 } 0..4 ] } },
     BON8 => { income => { P => 1 } },
-    BON9 => { income => { C => 2 } },
+    BON9 => { income => { C => 2 },
+              pass_vp => { D => [ reverse map { $_ } 0..8 ] } },
 );
 
 my %score_tiles = (
@@ -194,6 +197,7 @@ my %pool = (
     WATER => 100,
     AIR => 100,
 
+    # Temporary pseudo-resources for tracking activation effects
     SHOVEL => 10000,
     FREE_TF => 10000,
     FREE_TP => 10000,
@@ -225,7 +229,8 @@ my %favors = (
     FAV9 => { gain => { FIRE => 1 }, income => { C => 3} },
     FAV10 => { gain => { WATER => 1 }, income => {} }, # vp: 3*TP
     FAV11 => { gain => { EARTH => 1 }, income => {} }, # vp: 2*D
-    FAV12 => { gain => { AIR => 1 }, income => {} }, # vp: TPs
+    FAV12 => { gain => { AIR => 1 }, income => {},
+               pass_vp => { TP => [4, 3, 3, 2, 0] } }, # vp: TPs
 );
 
 my @map = qw(brown gray green blue yellow red brown black red green blue red black E
@@ -558,9 +563,21 @@ sub command {
         for (keys %{$factions{$faction}}) {
             next if !$factions{$faction}{$_};
 
+            my $pass_vp;
             if (/^BON/) {
-                command $faction, "-$_"
+                command $faction, "-$_";
+                
+                $pass_vp = $bonus_tiles{$_}{pass_vp};
+            } elsif (/FAV/) {
+                $pass_vp = $favors{$_}{pass_vp};
             }
+
+            if ($pass_vp) {
+                for my $type (keys %{$pass_vp}) {
+                    my $x = $pass_vp->{$type}[$factions{$faction}{$type}];
+                    command $faction, "+${x}vp";
+                }
+            }                
         }
         command $faction, "+$bon"
     } elsif ($command =~ /^block (\w+)$/) {

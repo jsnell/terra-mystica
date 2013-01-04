@@ -58,11 +58,11 @@
             "P3": 0, 
             "SA": 1, 
             "SH": 0, 
-            "SHOVEL": 1, 
+            "SHOVEL": 0, 
             "TE": 3, 
             "TP": 4, 
             "VP": 25, 
-            "W": 2, 
+            "W": 5, 
             "WATER": 3, 
             "color": "green", 
             "income": {
@@ -1490,7 +1490,7 @@
             "VP": "+4 [27]", 
             "W": "", 
             "WATER": "", 
-            "commands": "Pass Bon5. +4vp", 
+            "commands": "Pass Bon5", 
             "faction": "Alchemists", 
             "warning": ""
         }, 
@@ -2055,11 +2055,11 @@
             "TE": "", 
             "TP": "", 
             "VP": "", 
-            "W": "-3 [2]", 
+            "W": "", 
             "WATER": "", 
-            "commands": "Dig 1. Action FAV6. +AIR", 
+            "commands": "Action FAV6. +AIR", 
             "faction": "Auren", 
-            "warning": "Unused shovels for Auren\n"
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -2786,9 +2786,9 @@
         "P1": 10000, 
         "P2": 10000, 
         "P3": 10000, 
-        "SHOVEL": 9999, 
+        "SHOVEL": 10000, 
         "VP": 995, 
-        "W": 1008, 
+        "W": 1005, 
         "WATER": 98
     }, 
     "score_tiles": [
