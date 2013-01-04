@@ -612,6 +612,9 @@ function drawFactions() {
             "#{P1}/#{P2}/#{P3} power".interpolate(faction)));
 
         board.insert("<hr>");
+        board.insert(new Element('div').update(
+            "Income: #{C} c, #{W} w, #{P} p, #{PW} pw".interpolate(faction.income)));
+        board.insert("<hr>");
 
         renderTreasury(board, faction, name);
         

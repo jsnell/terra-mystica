@@ -25,97 +25,19 @@
             "P3": 3, 
             "SA": 1, 
             "SH": 0, 
+            "SHOVEL": 0, 
             "TE": 3, 
             "TP": 4, 
             "VP": 24, 
             "W": 4, 
             "WATER": 1, 
-            "buildings": {
-                "D": {
-                    "cost": {
-                        "C": 2, 
-                        "W": 1
-                    }, 
-                    "income": {
-                        "W": [
-                            8, 
-                            8, 
-                            7, 
-                            6, 
-                            5, 
-                            4, 
-                            3, 
-                            2, 
-                            1
-                        ]
-                    }
-                }, 
-                "P": {}, 
-                "SA": {
-                    "cost": {
-                        "C": 6, 
-                        "W": 4
-                    }, 
-                    "income": {
-                        "P": [
-                            1, 
-                            0
-                        ]
-                    }
-                }, 
-                "SH": {
-                    "cost": {
-                        "C": 6, 
-                        "W": 4
-                    }, 
-                    "gain": {
-                        "PW": 12
-                    }, 
-                    "income": {
-                        "C": [
-                            6, 
-                            0
-                        ]
-                    }
-                }, 
-                "TE": {
-                    "cost": {
-                        "C": 5, 
-                        "W": 2
-                    }, 
-                    "income": {
-                        "P": [
-                            3, 
-                            2, 
-                            1, 
-                            0
-                        ]
-                    }
-                }, 
-                "TP": {
-                    "cost": {
-                        "C": 3, 
-                        "W": 2
-                    }, 
-                    "income": {
-                        "C": [
-                            11, 
-                            7, 
-                            4, 
-                            2, 
-                            0
-                        ], 
-                        "PW": [
-                            4, 
-                            3, 
-                            2, 
-                            1, 
-                            0
-                        ]
-                    }
-                }
-            }, 
             "color": "black", 
+            "income": {
+                "C": 6, 
+                "P": 0, 
+                "PW": 3, 
+                "W": 4
+            }, 
             "passed": 0
         }, 
         "Auren": {
@@ -124,6 +46,7 @@
             "BON1": 1, 
             "BON2": 0, 
             "C": 12, 
+            "CULT": 0, 
             "D": 7, 
             "EARTH": 0, 
             "FAV6": 1, 
@@ -134,97 +57,19 @@
             "P3": 0, 
             "SA": 1, 
             "SH": 0, 
+            "SHOVEL": 0, 
             "TE": 3, 
             "TP": 4, 
             "VP": 25, 
             "W": 5, 
             "WATER": 3, 
-            "buildings": {
-                "D": {
-                    "cost": {
-                        "C": 2, 
-                        "W": 1
-                    }, 
-                    "income": {
-                        "W": [
-                            8, 
-                            8, 
-                            7, 
-                            6, 
-                            5, 
-                            4, 
-                            3, 
-                            2, 
-                            1
-                        ]
-                    }
-                }, 
-                "P": {}, 
-                "SA": {
-                    "cost": {
-                        "C": 8, 
-                        "W": 4
-                    }, 
-                    "income": {
-                        "P": [
-                            1, 
-                            0
-                        ]
-                    }
-                }, 
-                "SH": {
-                    "cost": {
-                        "C": 6, 
-                        "W": 4
-                    }, 
-                    "gain": {
-                        "ACTA": 1
-                    }, 
-                    "income": {
-                        "PW": [
-                            2, 
-                            0
-                        ]
-                    }
-                }, 
-                "TE": {
-                    "cost": {
-                        "C": 5, 
-                        "W": 2
-                    }, 
-                    "income": {
-                        "P": [
-                            3, 
-                            2, 
-                            1, 
-                            0
-                        ]
-                    }
-                }, 
-                "TP": {
-                    "cost": {
-                        "C": 3, 
-                        "W": 2
-                    }, 
-                    "income": {
-                        "C": [
-                            8, 
-                            6, 
-                            4, 
-                            2, 
-                            0
-                        ], 
-                        "PW": [
-                            6, 
-                            4, 
-                            2, 
-                            1, 
-                            0
-                        ]
-                    }
-                }
-            }, 
             "color": "green", 
+            "income": {
+                "C": 2, 
+                "P": 0, 
+                "PW": 2, 
+                "W": 2
+            }, 
             "passed": 0
         }, 
         "Engineers": {
@@ -242,99 +87,19 @@
             "P3": 0, 
             "SA": 1, 
             "SH": 1, 
+            "SHOVEL": 0, 
             "TE": 2, 
             "TP": 4, 
             "VP": 18, 
             "W": 0, 
             "WATER": 0, 
-            "buildings": {
-                "D": {
-                    "cost": {
-                        "C": 1, 
-                        "W": 1
-                    }, 
-                    "income": {
-                        "W": [
-                            6, 
-                            5, 
-                            4, 
-                            4, 
-                            3, 
-                            2, 
-                            2, 
-                            1, 
-                            0
-                        ]
-                    }
-                }, 
-                "SA": {
-                    "cost": {
-                        "C": 6, 
-                        "W": 3
-                    }, 
-                    "income": {
-                        "P": [
-                            1, 
-                            0
-                        ]
-                    }
-                }, 
-                "SH": {
-                    "cost": {
-                        "C": 6, 
-                        "W": 3
-                    }, 
-                    "income": {
-                        "PW": [
-                            2, 
-                            0
-                        ]
-                    }
-                }, 
-                "TE": {
-                    "cost": {
-                        "C": 4, 
-                        "W": 1
-                    }, 
-                    "income": {
-                        "P": [
-                            2, 
-                            1, 
-                            1, 
-                            0
-                        ], 
-                        "PW": [
-                            5, 
-                            5, 
-                            0, 
-                            0
-                        ]
-                    }
-                }, 
-                "TP": {
-                    "cost": {
-                        "C": 2, 
-                        "W": 1
-                    }, 
-                    "income": {
-                        "C": [
-                            8, 
-                            6, 
-                            4, 
-                            2, 
-                            0
-                        ], 
-                        "PW": [
-                            6, 
-                            4, 
-                            2, 
-                            1, 
-                            0
-                        ]
-                    }
-                }
-            }, 
             "color": "gray", 
+            "income": {
+                "C": 0, 
+                "P": 1, 
+                "PW": 1, 
+                "W": 7
+            }, 
             "passed": 0
         }, 
         "Nomads": {
@@ -346,102 +111,26 @@
             "D": 3, 
             "EARTH": 1, 
             "FIRE": 1, 
+            "FREE_TF": 0, 
             "P": 0, 
             "P1": 0, 
             "P2": 0, 
             "P3": 8, 
             "SA": 1, 
             "SH": 0, 
+            "SHOVEL": 0, 
             "TE": 3, 
             "TP": 4, 
             "VP": 21, 
             "W": 2, 
             "WATER": 0, 
-            "buildings": {
-                "D": {
-                    "cost": {
-                        "C": 2, 
-                        "W": 1
-                    }, 
-                    "income": {
-                        "W": [
-                            8, 
-                            8, 
-                            7, 
-                            6, 
-                            5, 
-                            4, 
-                            3, 
-                            2, 
-                            1
-                        ]
-                    }
-                }, 
-                "SA": {
-                    "cost": {
-                        "C": 6, 
-                        "W": 4
-                    }, 
-                    "income": {
-                        "P": [
-                            1, 
-                            0
-                        ]
-                    }
-                }, 
-                "SH": {
-                    "cost": {
-                        "C": 8, 
-                        "W": 4
-                    }, 
-                    "gain": {
-                        "ACTN": 1
-                    }, 
-                    "income": {
-                        "PW": [
-                            2, 
-                            0
-                        ]
-                    }
-                }, 
-                "TE": {
-                    "cost": {
-                        "C": 5, 
-                        "W": 2
-                    }, 
-                    "income": {
-                        "P": [
-                            3, 
-                            2, 
-                            1, 
-                            0
-                        ]
-                    }
-                }, 
-                "TP": {
-                    "cost": {
-                        "C": 3, 
-                        "W": 2
-                    }, 
-                    "income": {
-                        "C": [
-                            11, 
-                            7, 
-                            4, 
-                            2, 
-                            0
-                        ], 
-                        "PW": [
-                            4, 
-                            3, 
-                            2, 
-                            1, 
-                            0
-                        ]
-                    }
-                }
-            }, 
             "color": "yellow", 
+            "income": {
+                "C": 0, 
+                "P": 0, 
+                "PW": 5, 
+                "W": 6
+            }, 
             "passed": 0
         }, 
         "Swarmlings": {
@@ -459,97 +148,19 @@
             "P3": 1, 
             "SA": 1, 
             "SH": 0, 
+            "SHOVEL": 0, 
             "TE": 3, 
             "TP": 4, 
             "VP": 17, 
             "W": 4, 
             "WATER": 1, 
-            "buildings": {
-                "D": {
-                    "cost": {
-                        "C": 3, 
-                        "W": 2
-                    }, 
-                    "income": {
-                        "W": [
-                            9, 
-                            9, 
-                            8, 
-                            7, 
-                            6, 
-                            5, 
-                            4, 
-                            3, 
-                            2
-                        ]
-                    }
-                }, 
-                "P": {}, 
-                "SA": {
-                    "cost": {
-                        "C": 8, 
-                        "W": 5
-                    }, 
-                    "income": {
-                        "P": [
-                            2, 
-                            0
-                        ]
-                    }
-                }, 
-                "SH": {
-                    "cost": {
-                        "C": 8, 
-                        "W": 5
-                    }, 
-                    "gain": {
-                        "ACTS": 1
-                    }, 
-                    "income": {
-                        "PW": [
-                            4, 
-                            0
-                        ]
-                    }
-                }, 
-                "TE": {
-                    "cost": {
-                        "C": 6, 
-                        "W": 3
-                    }, 
-                    "income": {
-                        "P": [
-                            3, 
-                            2, 
-                            1, 
-                            0
-                        ]
-                    }
-                }, 
-                "TP": {
-                    "cost": {
-                        "C": 4, 
-                        "W": 3
-                    }, 
-                    "income": {
-                        "C": [
-                            9, 
-                            6, 
-                            4, 
-                            2, 
-                            0
-                        ], 
-                        "PW": [
-                            8, 
-                            6, 
-                            4, 
-                            2, 
-                            0
-                        ]
-                    }
-                }
-            }, 
             "color": "blue", 
+            "income": {
+                "C": 6, 
+                "P": 0, 
+                "PW": 4, 
+                "W": 4
+            }, 
             "passed": 0
         }
     }, 
@@ -1279,7 +890,7 @@
             "VP": "", 
             "W": "-8 [1]", 
             "WATER": "", 
-            "commands": "H8:blue. D->H8. -6W", 
+            "commands": "Dig 2. D->H8", 
             "faction": "Swarmlings"
         }, 
         {
@@ -1345,7 +956,7 @@
             "VP": "", 
             "W": "-1 [2]", 
             "WATER": "", 
-            "commands": "E9:gray. D->E9", 
+            "commands": "Action BON1. D->E9", 
             "faction": "Engineers"
         }, 
         {
@@ -1483,7 +1094,7 @@
             "VP": "", 
             "W": "-4 [4]", 
             "WATER": "", 
-            "commands": "F7:black. D->F7. -3w", 
+            "commands": "Dig 1. D->F7", 
             "faction": "Alchemists"
         }, 
         {
@@ -1527,7 +1138,7 @@
             "VP": "", 
             "W": "-1 [1]", 
             "WATER": "", 
-            "commands": "Action BON1. TP->E9", 
+            "commands": "TP->E9", 
             "faction": "Engineers"
         }, 
         {
@@ -1552,7 +1163,7 @@
             "VP": "", 
             "W": "-1 [0]", 
             "WATER": "", 
-            "commands": "Action ACTN. C4:yellow. D->C4", 
+            "commands": "Action ACTN. D->C4", 
             "faction": "Nomads"
         }, 
         {
@@ -1574,7 +1185,7 @@
             "VP": "", 
             "W": "", 
             "WATER": "", 
-            "commands": "+FIRE. Action BON2", 
+            "commands": "Action BON2. +FIRE", 
             "faction": "Auren"
         }, 
         {
@@ -1731,7 +1342,7 @@
             "VP": "", 
             "W": "", 
             "WATER": "", 
-            "commands": "+FIRE. Action FAV6", 
+            "commands": "Action FAV6. +FIRE", 
             "faction": "Auren"
         }, 
         {
@@ -1753,7 +1364,7 @@
             "VP": "", 
             "W": "", 
             "WATER": "", 
-            "commands": "D8:black. E11:black. Action ACT6. +4pw", 
+            "commands": "Action ACT6. D8:black. E11:black. +4pw", 
             "faction": "Alchemists"
         }, 
         {
@@ -2076,7 +1687,7 @@
             "VP": "", 
             "W": "-4 [1]", 
             "WATER": "", 
-            "commands": "-3w. D->D6", 
+            "commands": "dig 1. D->D6", 
             "faction": "Engineers"
         }, 
         {
@@ -3048,6 +2659,7 @@
         "BON7": 1, 
         "BON8": 1, 
         "C": 1034, 
+        "CULT": 9993, 
         "EARTH": 98, 
         "FAV1": 1, 
         "FAV10": 3, 
@@ -3062,10 +2674,13 @@
         "FAV8": 3, 
         "FAV9": 3, 
         "FIRE": 91, 
+        "FREE_TF": 10000, 
+        "FREE_TP": 10000, 
         "P": 996, 
         "P1": 10000, 
         "P2": 10000, 
         "P3": 10000, 
+        "SHOVEL": 10000, 
         "VP": 995, 
         "W": 1003, 
         "WATER": 98

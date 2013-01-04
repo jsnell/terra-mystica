@@ -99,14 +99,14 @@ my %actions = (
     ACT2 => { cost => { PW => 3 }, gain => { P => 1 } },
     ACT3 => { cost => { PW => 4 }, gain => { W => 2 } },
     ACT4 => { cost => { PW => 4 }, gain => { C => 7 } },
-    ACT5 => { cost => { PW => 4 }, gain => {} },
-    ACT6 => { cost => { PW => 6 }, gain => {} },
-    ACTA => { cost => {}, gain => {} },
-    ACTS => { cost => {}, gain => {} },
-    ACTN => { cost => {}, gain => {} },
-    BON1 => { cost => {}, gain => {} },
-    BON2 => { cost => {}, gain => {} },
-    FAV6 => { cost => {}, gain => {} },
+    ACT5 => { cost => { PW => 4 }, gain => { SHOVEL => 1 } },
+    ACT6 => { cost => { PW => 6 }, gain => { SHOVEL => 2 } },
+    ACTA => { cost => {}, gain => { CULT => 2} },
+    ACTS => { cost => {}, gain => { FREE_TP => 1 } },
+    ACTN => { cost => {}, gain => { FREE_TF => 1 } },
+    BON1 => { cost => {}, gain => { SHOVEL => 1 } },
+    BON2 => { cost => {}, gain => { CULT => 1 } },
+    FAV6 => { cost => {}, gain => { CULT => 1 } },
 );
         
 my %bonus_tiles = (
@@ -138,7 +138,12 @@ my %pool = (
     FIRE => 100,
     WATER => 100,
     AIR => 100,
-    );
+
+    SHOVEL => 10000,
+    FREE_TF => 10000,
+    FREE_TP => 10000,
+    CULT => 10000,
+);
 
 $pool{"ACT$_"}++ for 1..6;
 $pool{"BON$_"}++ for 1..9;
@@ -197,6 +202,8 @@ my @bridges = ();
     }
 }
 
+## 
+
 sub setup {
     my $faction = ucfirst shift;
 
@@ -219,7 +226,62 @@ sub setup {
     $factions{$faction}{SA} = 1;
     $factions{$faction}{VP} = 20;
 
+    $factions{$faction}{SHOVEL} = 0;
+
     push @factions, $faction;
+}
+
+sub faction_income {
+    my $faction = shift;
+    my %total_income = map { $_, 0 } qw(C W P PW);
+
+    my %buildings = %{$factions{$faction}{buildings}};
+    for my $building (keys %buildings) {
+        if (exists $buildings{$building}{income}) {
+            my %building_income = %{$buildings{$building}{income}};
+            for my $type (keys %building_income) {
+                my $delta = $building_income{$type}[$factions{$faction}{$building}];
+                if ($delta) {
+                    $total_income{$type} += $delta;
+                }
+            }
+        }
+    }
+
+    for my $tile (keys %{$factions{$faction}}) {
+        if (!$factions{$faction}{$tile}) {
+            next;
+        }
+
+        my %tile_income = ();
+
+        if ($tile =~ /^BON/) {
+            %tile_income = %{$bonus_tiles{$tile}{income}};
+        } elsif ($tile =~ /^FAV/) {
+            %tile_income = %{$favors{$tile}{income}};
+        }
+
+        for my $type (keys %tile_income) {
+            $total_income{$type} += $tile_income{$type};
+        }
+    };
+
+    return %total_income;
+}
+
+my @colors = qw(yellow brown black blue green gray red);
+my %colors = ();
+$colors{$colors[$_]} = $_ for 0..$#colors;
+
+sub color_difference {
+    my ($a, $b) = @_;
+    my $diff = abs $colors{$a} - $colors{$b};
+
+    if ($diff > 3) {
+        $diff = 7 - $diff;
+    }
+
+    return $diff;
 }
 
 sub command;
@@ -280,6 +342,10 @@ sub command {
 
             if ($type =~ /FIRE|WATER|EARTH|AIR/) {
                 my $new_value = $factions{$faction}{$type};
+                if ($factions{$faction}{CULT}) {
+                    $factions{$faction}{CULT} -= ($sign * $count);
+                }
+
                 if ($orig_value <= 2 && $new_value > 2) {
                     command $faction, "+1pw";
                 }
@@ -327,6 +393,11 @@ sub command {
             }
         }
 
+        if ($type eq 'TP' and $factions{$faction}{FREE_TP}) {
+            $free = 1;
+            $factions{$faction}{FREE_TP}--;
+        }
+
         if (!$free and
             exists $factions{$faction}{buildings}{$type}{cost}) {
             my %cost = %{$factions{$faction}{buildings}{$type}{cost}};
@@ -337,7 +408,13 @@ sub command {
         }
 
         $map{$where}{building} = $type;
-        $map{$where}{color} = $factions{$faction}{color};
+        my $color = $factions{$faction}{color};
+
+        if (exists $map{$where}{color}) {
+            command $faction, "$where:$color";
+        } else {
+            $map{$where}{color} = $color;
+        }
 
         $factions{$faction}{$type}--;
     } elsif ($command =~ /^burn (\d+)$/) {
@@ -357,7 +434,25 @@ sub command {
     } elsif ($command =~ /^(\w+):(\w+)$/) {
         my $where = uc $1;
         my $color = lc $2;
+        if ($factions{$faction}{FREE_TF}) {
+            command $faction, "-FREE_TF";            
+        } else {
+            my $color_difference = color_difference $map{$where}{color}, $color;
+
+            if ($faction eq 'Giants' and $color_difference != 0) {
+                $color_difference = 2;
+            }
+
+            command $faction, "-${color_difference}SHOVEL";
+        } 
+
         $map{$where}{color} = $color;
+    } elsif ($command =~ /^dig (\d+)/) {
+        # XXX: Variable costs (shovel upgrades, swarmlings)
+        my $cost = 3 * $1;
+
+        command $faction, "+${1}SHOVEL";
+        command $faction, "-${cost}W";
     } elsif ($command =~ /^bridge (\w+):(\w+)$/) {
         die "Need faction for command $command\n" if !$faction;
 
@@ -424,37 +519,13 @@ sub command {
         delete $pool{uc $1};
     } elsif ($command =~ /^income$/) {
         die "Need faction for command $command\n" if !$faction;
-        
-        my %buildings = %{$factions{$faction}{buildings}};
-        for my $building (keys %buildings) {
-            if (exists $buildings{$building}{income}) {
-                my %income = %{$buildings{$building}{income}};
-                for my $type (keys %income) {
-                    my $delta = $income{$type}[$factions{$faction}{$building}];
-                    if ($delta) {
-                        command $faction, "+$delta$type";
-                    }
-                }
+
+        my %income = faction_income $faction;
+        for my $currency (keys %income) {
+            if ($income{$currency}) {
+                command $faction, "+$income{$currency}$currency";
             }
         }
-
-        for my $tile (keys %{$factions{$faction}}) {
-            if (!$factions{$faction}{$tile}) {
-                next;
-            }
-
-            my %income = ();
-
-            if ($tile =~ /^BON/) {
-                %income = %{$bonus_tiles{$tile}{income}};
-            } elsif ($tile =~ /^FAV/) {
-                %income = %{$favors{$tile}{income}};
-            }
-
-            for my $type (keys %income) {
-                command $faction, "+$income{$type}$type";
-            }
-        };
     } else {
         die "Could not parse command '$command'.\n";
     }
@@ -528,6 +599,22 @@ sub handle_row {
             push @ledger, { faction => $prefix,
                             commands => (join ". ", @commands),
                             map { $_, $pretty_delta{$_} } @fields};
+
+            if ($factions{$prefix}{SHOVEL}) {
+                die "Unused shovels for $prefix ($factions{$prefix}{SHOVEL})\n";
+            }
+
+            if ($factions{$prefix}{FREE_TF}) {
+                die "Unused free terraform for $prefix\n";
+            }
+
+            if ($factions{$prefix}{FREE_TP}) {
+                die "Unused free trading post for $prefix\n";
+            }
+
+            if ($factions{$prefix}{CULT}) {
+                die "Unused cult advance for $prefix\n";
+            }
         }
     } else {
         die "Unknown prefix: '$prefix' (expected one of ".
@@ -592,6 +679,11 @@ while (<>) {
         push @error, "$@\n";
         last;
     }
+}
+
+for my $faction (@factions) {
+    $factions{$faction}{income} = { faction_income $faction };
+    delete $factions{$faction}{buildings};
 }
 
 print_pretty;

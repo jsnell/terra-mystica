@@ -53,10 +53,10 @@ Nomads: TP -> G7
 Swarmlings: Leech 2
 Auren: SH -> F4. +5VP. +FAV6
 Engineers: Leech 1
-Swarmlings: H8:blue. D -> H8. -6W
+Swarmlings: Dig 2. D -> H8
 Nomads: Leech 2
 Alchemists: Burn 4. Action ACT3
-Engineers: E9:gray. D -> E9
+Engineers: Action BON1. D -> E9
 Alchemists: Leech 2
 
 # Round 1, Turn 3:
@@ -64,14 +64,14 @@ Nomads: SH -> G7. +5VP. +2c # Oops. Real cost is 4w8c, Nomads only paid 4w6c
 Swarmlings: Leech 3
 Auren: Action ACTA. +2FIRE
 Swarmlings: P -> FIRE1
-Alchemists: F7:black. D -> F7. -3w
+Alchemists: Dig 1. D -> F7
 Nomads: Leech 3
-Engineers: Action BON1. TP -> E9. 
+Engineers: TP -> E9
 
 # Round 1, Turn 4:
 
-Nomads: Action ACTN. C4:yellow. D -> C4
-Auren: +FIRE. Action BON2
+Nomads: Action ACTN. D -> C4
+Auren: Action BON2. +FIRE
 Swarmlings: Pass Bon3
 Alchemists: SH -> E10. +5vp
 Engineers: Leech 3
@@ -80,8 +80,8 @@ Alchemists: Leech 1
 
 # Round 1, Turn 5:
 Nomads: Pass Bon4
-Auren: +FIRE. Action FAV6
-Alchemists: D8:black. E11:black. Action ACT6. +4pw
+Auren: Action FAV6. +FIRE
+Alchemists: Action ACT6. D8:black. E11:black. +4pw
 Engineers: Burn 3. Action ACT1. Bridge E9:D6. 
 
 # Round 1, Turn 6:
@@ -111,7 +111,7 @@ clear
 
 Swarmlings: Action ACT3
 Alchemists: Action ACT2
-Engineers: -3w. D -> D6
+Engineers: dig 1. D -> D6
 Nomads: Leech 1
 Nomads: D -> E8
 Engineers: Leech 1
