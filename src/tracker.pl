@@ -2,6 +2,7 @@
 
 use strict;
 use JSON;
+use List::Util qw(sum);
 
 my @factions;
 my %factions;
@@ -872,8 +873,8 @@ sub handle_row {
             $old_data{PW} = $old_data{P2} + 2 * $old_data{P3};
             $new_data{PW} = $new_data{P2} + 2 * $new_data{P3};
 
-            $old_data{CULT} = $old_data{FIRE} +  $old_data{WATER} + $old_data{EARTH} + $old_data{AIR};
-            $new_data{CULT} = $new_data{FIRE} +  $new_data{WATER} + $new_data{EARTH} + $new_data{AIR};
+            $old_data{CULT} = sum @old_data{@cults};
+            $new_data{CULT} = sum @new_data{@cults};
 
             my %delta = map { $_, $new_data{$_} - $old_data{$_} } @fields;
             my %pretty_delta = map { $_, ($delta{$_} ?
