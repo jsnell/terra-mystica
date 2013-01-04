@@ -58,11 +58,11 @@
             "P3": 0, 
             "SA": 1, 
             "SH": 0, 
-            "SHOVEL": 0, 
+            "SHOVEL": 1, 
             "TE": 3, 
             "TP": 4, 
             "VP": 25, 
-            "W": 5, 
+            "W": 2, 
             "WATER": 3, 
             "color": "green", 
             "income": {
@@ -199,7 +199,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Free D->A5", 
-            "faction": "Nomads"
+            "faction": "Nomads", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -221,7 +222,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Free D->F4", 
-            "faction": "Auren"
+            "faction": "Auren", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -243,7 +245,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Free D->H4", 
-            "faction": "Swarmlings"
+            "faction": "Swarmlings", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -265,7 +268,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Free D->E5", 
-            "faction": "Alchemists"
+            "faction": "Alchemists", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -287,7 +291,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Free D->E7. Free D->C5", 
-            "faction": "Engineers"
+            "faction": "Engineers", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -309,7 +314,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Free D->E10", 
-            "faction": "Alchemists"
+            "faction": "Alchemists", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -331,7 +337,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Free D->G6", 
-            "faction": "Swarmlings"
+            "faction": "Swarmlings", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -353,7 +360,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Free D->F2", 
-            "faction": "Auren"
+            "faction": "Auren", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -375,7 +383,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Free D->B4. Free D->G7", 
-            "faction": "Nomads"
+            "faction": "Nomads", 
+            "warning": ""
         }, 
         {
             "comment": " Bonus tiles in reverse order"
@@ -400,7 +409,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "+Bon1", 
-            "faction": "Engineers"
+            "faction": "Engineers", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -422,7 +432,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "+Bon6", 
-            "faction": "Alchemists"
+            "faction": "Alchemists", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -444,7 +455,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "+Bon8", 
-            "faction": "Swarmlings"
+            "faction": "Swarmlings", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -466,7 +478,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "+Bon2", 
-            "faction": "Auren"
+            "faction": "Auren", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -488,7 +501,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "+Bon5", 
-            "faction": "Nomads"
+            "faction": "Nomads", 
+            "warning": ""
         }, 
         {
             "comment": " Round 1:"
@@ -516,7 +530,8 @@
             "W": "+5 [7]", 
             "WATER": "", 
             "commands": "income", 
-            "faction": "Nomads"
+            "faction": "Nomads", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -538,7 +553,8 @@
             "W": "+3 [6]", 
             "WATER": "", 
             "commands": "income", 
-            "faction": "Auren"
+            "faction": "Auren", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -560,7 +576,8 @@
             "W": "+4 [12]", 
             "WATER": "", 
             "commands": "income", 
-            "faction": "Swarmlings"
+            "faction": "Swarmlings", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -582,7 +599,8 @@
             "W": "+5 [8]", 
             "WATER": "", 
             "commands": "income", 
-            "faction": "Alchemists"
+            "faction": "Alchemists", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -604,7 +622,8 @@
             "W": "+2 [4]", 
             "WATER": "", 
             "commands": "income", 
-            "faction": "Engineers"
+            "faction": "Engineers", 
+            "warning": ""
         }, 
         {
             "comment": " Round 1, Turn 1:"
@@ -629,7 +648,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Burn 4. Action ACT4", 
-            "faction": "Nomads"
+            "faction": "Nomads", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -651,7 +671,8 @@
             "W": "-2 [4]", 
             "WATER": "", 
             "commands": "TP->F4", 
-            "faction": "Auren"
+            "faction": "Auren", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -673,7 +694,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 1", 
-            "faction": "Engineers"
+            "faction": "Engineers", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -695,7 +717,8 @@
             "W": "-3 [9]", 
             "WATER": "", 
             "commands": "TP->G6", 
-            "faction": "Swarmlings"
+            "faction": "Swarmlings", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -717,7 +740,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 1", 
-            "faction": "Nomads"
+            "faction": "Nomads", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -739,7 +763,8 @@
             "W": "-2 [6]", 
             "WATER": "", 
             "commands": "TP->E10. -3C", 
-            "faction": "Alchemists"
+            "faction": "Alchemists", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -761,7 +786,8 @@
             "W": "-1 [3]", 
             "WATER": "", 
             "commands": "Burn 4. Action ACT5. D->D7", 
-            "faction": "Engineers"
+            "faction": "Engineers", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -783,7 +809,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 2", 
-            "faction": "Alchemists"
+            "faction": "Alchemists", 
+            "warning": ""
         }, 
         {
             "comment": " Round 1, Turn 2:"
@@ -808,7 +835,8 @@
             "W": "-2 [5]", 
             "WATER": "", 
             "commands": "TP->G7", 
-            "faction": "Nomads"
+            "faction": "Nomads", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -830,7 +858,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 2", 
-            "faction": "Swarmlings"
+            "faction": "Swarmlings", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -852,7 +881,8 @@
             "W": "-4 [0]", 
             "WATER": "+2 [3]", 
             "commands": "SH->F4. +FAV6", 
-            "faction": "Auren"
+            "faction": "Auren", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -874,7 +904,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 1", 
-            "faction": "Engineers"
+            "faction": "Engineers", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -896,7 +927,8 @@
             "W": "-8 [1]", 
             "WATER": "", 
             "commands": "Dig 2. D->H8", 
-            "faction": "Swarmlings"
+            "faction": "Swarmlings", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -918,7 +950,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 2", 
-            "faction": "Nomads"
+            "faction": "Nomads", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -940,7 +973,8 @@
             "W": "+2 [8]", 
             "WATER": "", 
             "commands": "Burn 4. Action ACT3", 
-            "faction": "Alchemists"
+            "faction": "Alchemists", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -962,7 +996,8 @@
             "W": "-1 [2]", 
             "WATER": "", 
             "commands": "Action BON1. D->E9", 
-            "faction": "Engineers"
+            "faction": "Engineers", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -984,7 +1019,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 2", 
-            "faction": "Alchemists"
+            "faction": "Alchemists", 
+            "warning": ""
         }, 
         {
             "comment": " Round 1, Turn 3:"
@@ -1009,7 +1045,8 @@
             "W": "-4 [1]", 
             "WATER": "", 
             "commands": "SH->G7", 
-            "faction": "Nomads"
+            "faction": "Nomads", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1031,7 +1068,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 3", 
-            "faction": "Swarmlings"
+            "faction": "Swarmlings", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1053,7 +1091,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Action ACTA. +2FIRE", 
-            "faction": "Auren"
+            "faction": "Auren", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1075,7 +1114,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "P->FIRE1", 
-            "faction": "Swarmlings"
+            "faction": "Swarmlings", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1097,7 +1137,8 @@
             "W": "-4 [4]", 
             "WATER": "", 
             "commands": "Dig 1. D->F7", 
-            "faction": "Alchemists"
+            "faction": "Alchemists", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1119,7 +1160,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 3", 
-            "faction": "Nomads"
+            "faction": "Nomads", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1141,7 +1183,8 @@
             "W": "-1 [1]", 
             "WATER": "", 
             "commands": "TP->E9", 
-            "faction": "Engineers"
+            "faction": "Engineers", 
+            "warning": ""
         }, 
         {
             "comment": " Round 1, Turn 4:"
@@ -1166,7 +1209,8 @@
             "W": "-1 [0]", 
             "WATER": "", 
             "commands": "Action ACTN. D->C4", 
-            "faction": "Nomads"
+            "faction": "Nomads", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1188,7 +1232,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Action BON2. +FIRE", 
-            "faction": "Auren"
+            "faction": "Auren", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1210,7 +1255,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Pass Bon3", 
-            "faction": "Swarmlings"
+            "faction": "Swarmlings", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1232,7 +1278,8 @@
             "W": "-4 [0]", 
             "WATER": "", 
             "commands": "SH->E10", 
-            "faction": "Alchemists"
+            "faction": "Alchemists", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1254,7 +1301,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 3", 
-            "faction": "Engineers"
+            "faction": "Engineers", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1276,7 +1324,8 @@
             "W": "-1 [0]", 
             "WATER": "", 
             "commands": "TE->E9. +FAV7", 
-            "faction": "Engineers"
+            "faction": "Engineers", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1298,7 +1347,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 1", 
-            "faction": "Alchemists"
+            "faction": "Alchemists", 
+            "warning": ""
         }, 
         {
             "comment": " Round 1, Turn 5:"
@@ -1323,7 +1373,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Pass Bon4", 
-            "faction": "Nomads"
+            "faction": "Nomads", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1345,7 +1396,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Action FAV6. +FIRE", 
-            "faction": "Auren"
+            "faction": "Auren", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1367,7 +1419,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Action ACT6. D8:black. E11:black. +4pw", 
-            "faction": "Alchemists"
+            "faction": "Alchemists", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1389,7 +1442,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Burn 3. Action ACT1. Bridge E9:D6", 
-            "faction": "Engineers"
+            "faction": "Engineers", 
+            "warning": ""
         }, 
         {
             "comment": " Round 1, Turn 6:"
@@ -1414,7 +1468,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Burn 3. Action ACT2", 
-            "faction": "Auren"
+            "faction": "Auren", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1436,7 +1491,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Pass Bon5. +4vp", 
-            "faction": "Alchemists"
+            "faction": "Alchemists", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1458,7 +1514,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Pass Bon6", 
-            "faction": "Engineers"
+            "faction": "Engineers", 
+            "warning": ""
         }, 
         {
             "comment": " Round 1. Turn 7"
@@ -1483,7 +1540,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "P->FIRE2", 
-            "faction": "Auren"
+            "faction": "Auren", 
+            "warning": ""
         }, 
         {
             "comment": " Round 1. Turn 8"
@@ -1508,7 +1566,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Pass Bon1", 
-            "faction": "Auren"
+            "faction": "Auren", 
+            "warning": ""
         }, 
         {
             "comment": " Income"
@@ -1533,7 +1592,8 @@
             "W": "+4 [4]", 
             "WATER": "", 
             "commands": "income", 
-            "faction": "Nomads"
+            "faction": "Nomads", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1555,7 +1615,8 @@
             "W": "+5 [5]", 
             "WATER": "", 
             "commands": "income", 
-            "faction": "Auren"
+            "faction": "Auren", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1577,7 +1638,8 @@
             "W": "+6 [7]", 
             "WATER": "", 
             "commands": "income", 
-            "faction": "Swarmlings"
+            "faction": "Swarmlings", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1599,7 +1661,8 @@
             "W": "+4 [4]", 
             "WATER": "", 
             "commands": "income", 
-            "faction": "Alchemists"
+            "faction": "Alchemists", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1621,7 +1684,8 @@
             "W": "+5 [5]", 
             "WATER": "", 
             "commands": "income", 
-            "faction": "Engineers"
+            "faction": "Engineers", 
+            "warning": ""
         }, 
         {
             "comment": " Round 2. Turn 1"
@@ -1646,7 +1710,8 @@
             "W": "+2 [9]", 
             "WATER": "", 
             "commands": "Action ACT3", 
-            "faction": "Swarmlings"
+            "faction": "Swarmlings", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1668,7 +1733,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Action ACT2", 
-            "faction": "Alchemists"
+            "faction": "Alchemists", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1690,7 +1756,8 @@
             "W": "-4 [1]", 
             "WATER": "", 
             "commands": "dig 1. D->D6", 
-            "faction": "Engineers"
+            "faction": "Engineers", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1712,7 +1779,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 1", 
-            "faction": "Nomads"
+            "faction": "Nomads", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1734,7 +1802,8 @@
             "W": "-1 [3]", 
             "WATER": "", 
             "commands": "D->E8", 
-            "faction": "Nomads"
+            "faction": "Nomads", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1756,7 +1825,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 1", 
-            "faction": "Engineers"
+            "faction": "Engineers", 
+            "warning": ""
         }, 
         {
             "AIR": "+2 [3]", 
@@ -1778,7 +1848,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Action ACTA. +2AIR", 
-            "faction": "Auren"
+            "faction": "Auren", 
+            "warning": ""
         }, 
         {
             "comment": " Round 2. Turn 2"
@@ -1803,7 +1874,8 @@
             "W": "-5 [4]", 
             "WATER": "", 
             "commands": "SH->G6", 
-            "faction": "Swarmlings"
+            "faction": "Swarmlings", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1825,7 +1897,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 3", 
-            "faction": "Nomads"
+            "faction": "Nomads", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1847,7 +1920,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 1", 
-            "faction": "Alchemists"
+            "faction": "Alchemists", 
+            "warning": ""
         }, 
         {
             "AIR": "+3 [3]", 
@@ -1869,7 +1943,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "p->air1", 
-            "faction": "Alchemists"
+            "faction": "Alchemists", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1891,7 +1966,8 @@
             "W": "-1 [0]", 
             "WATER": "", 
             "commands": "D->F6", 
-            "faction": "Engineers"
+            "faction": "Engineers", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1913,7 +1989,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 4", 
-            "faction": "Alchemists"
+            "faction": "Alchemists", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1935,7 +2012,8 @@
             "W": "-1 [2]", 
             "WATER": "", 
             "commands": "Action ACTN. D->D5", 
-            "faction": "Nomads"
+            "faction": "Nomads", 
+            "warning": ""
         }, 
         {
             "AIR": "", 
@@ -1957,7 +2035,8 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 1", 
-            "faction": "Engineers"
+            "faction": "Engineers", 
+            "warning": ""
         }, 
         {
             "AIR": "+1 [4]", 
@@ -1976,10 +2055,11 @@
             "TE": "", 
             "TP": "", 
             "VP": "", 
-            "W": "", 
+            "W": "-3 [2]", 
             "WATER": "", 
-            "commands": "Action FAV6. +AIR", 
-            "faction": "Auren"
+            "commands": "Dig 1. Action FAV6. +AIR", 
+            "faction": "Auren", 
+            "warning": "Unused shovels for Auren\n"
         }, 
         {
             "AIR": "", 
@@ -2001,7 +2081,8 @@
             "W": "-2 [2]", 
             "WATER": "", 
             "commands": "Burn 3. Action ACT5. D->I11", 
-            "faction": "Swarmlings"
+            "faction": "Swarmlings", 
+            "warning": ""
         }
     ], 
     "map": {
@@ -2705,9 +2786,9 @@
         "P1": 10000, 
         "P2": 10000, 
         "P3": 10000, 
-        "SHOVEL": 10000, 
+        "SHOVEL": 9999, 
         "VP": 995, 
-        "W": 1005, 
+        "W": 1008, 
         "WATER": 98
     }, 
     "score_tiles": [

@@ -692,25 +692,28 @@ sub handle_row {
                 $pretty_delta{CULT} = sprintf "%+d [%d/%d/%d/%d]", $delta{CULT}, $new_data{FIRE}, $new_data{WATER}, $new_data{EARTH}, $new_data{AIR};
             }
 
-            push @ledger, { faction => $prefix,
-                            commands => (join ". ", @commands),
-                            map { $_, $pretty_delta{$_} } @fields};
-
+            my $warn = '';
             if ($factions{$prefix}{SHOVEL}) {
-                die "Unused shovels for $prefix ($factions{$prefix}{SHOVEL})\n";
+                 $warn = "Unused shovels for $prefix\n";
             }
 
             if ($factions{$prefix}{FREE_TF}) {
-                die "Unused free terraform for $prefix\n";
+                $warn = "Unused free terraform for $prefix\n";
             }
 
             if ($factions{$prefix}{FREE_TP}) {
-                die "Unused free trading post for $prefix\n";
+                $warn = "Unused free trading post for $prefix\n";
             }
 
             if ($factions{$prefix}{CULT}) {
-                die "Unused cult advance for $prefix\n";
+                $warn = "Unused cult advance for $prefix\n";
             }
+
+            push @ledger, { faction => $prefix,
+                            warning => $warn,
+                            commands => (join ". ", @commands),
+                            map { $_, $pretty_delta{$_} } @fields};
+
         }
     } else {
         die "Unknown prefix: '$prefix' (expected one of ".

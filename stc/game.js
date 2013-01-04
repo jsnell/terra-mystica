@@ -640,6 +640,11 @@ function drawLedger() {
             record.commands = record.commands.escapeHTML();
             ledger.insert("<tr><td style='background-color:#{bg}; color: #{fg}'>#{faction}<td>#{VP}<td>#{C}<td>#{W}<td>#{P}<td>#{PW}<td>#{CULT}<td>#{commands}</tr>".interpolate(
                 record));
+            if (record.warning) {
+                ledger.insert("<tr><td colspan=7><td><span class='warning'>" + 
+                              record.warning.escapeHTML() +
+                              "</span></tr>")
+            }
         }
     });
 }
