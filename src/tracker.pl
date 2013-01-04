@@ -783,6 +783,14 @@ for my $faction (@factions) {
     delete $factions{$faction}{buildings};
 }
 
+for (0..($turn-2)) {
+    print STDERR $_;
+    $score_tiles{$score_tiles[$_]}->{old} = 1;
+}
+
+current_score_tile->{active} = 1;
+$score_tiles{$score_tiles[-1]}->{income_display} = '';
+
 print_pretty;
 print_json;
 

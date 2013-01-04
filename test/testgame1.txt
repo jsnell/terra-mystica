@@ -8,7 +8,7 @@ setup Swarmlings
 setup Alchemists
 setup Engineers
 
-score SCORE4, SCORE2, SCORE8, SCORE7, SCORE6, SCORE4
+score SCORE4, SCORE2, SCORE8, SCORE7, SCORE6, SCORE5
 
 # Initial dwellings
 Nomads: Free D -> A5
@@ -62,7 +62,7 @@ Engineers: Action BON1. D -> E9
 Alchemists: Leech 2
 
 # Round 1, Turn 3:
-Nomads: SH -> G7. +2c # Oops. Real cost is 4w8c, Nomads only paid 4w6c 
+Nomads: SH -> G7.
 Swarmlings: Leech 3
 Auren: Action ACTA. +2FIRE
 Swarmlings: P -> FIRE1
@@ -129,7 +129,7 @@ Alchemists: Leech 4
 Nomads: Action ACTN. D -> D5
 Engineers: Leech 1
 Auren: Action FAV6. +AIR
-
+Swarmlings: Burn 3. Action ACT5. D -> I11
 
 
 

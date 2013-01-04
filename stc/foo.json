@@ -110,7 +110,7 @@
             "AIR": 0, 
             "BON4": 1, 
             "BON5": 0, 
-            "C": 8, 
+            "C": 6, 
             "D": 3, 
             "EARTH": 1, 
             "FIRE": 1, 
@@ -142,21 +142,21 @@
             "AIR": 1, 
             "BON3": 1, 
             "BON8": 0, 
-            "C": 14, 
-            "D": 6, 
+            "C": 11, 
+            "D": 5, 
             "EARTH": 1, 
             "FIRE": 4, 
             "P": 0, 
-            "P1": 4, 
-            "P2": 7, 
-            "P3": 1, 
+            "P1": 8, 
+            "P2": 1, 
+            "P3": 0, 
             "SA": 1, 
             "SH": 0, 
             "SHOVEL": 0, 
             "TE": 3, 
             "TP": 4, 
             "VP": 17, 
-            "W": 4, 
+            "W": 2, 
             "WATER": 1, 
             "color": "blue", 
             "income": {
@@ -164,7 +164,7 @@
                 "P": 0, 
                 "PW": 4, 
                 "SHOVEL": 0, 
-                "W": 4
+                "W": 5
             }, 
             "passed": 0
         }
@@ -990,11 +990,8 @@
             "comment": " Round 1, Turn 3:"
         }, 
         {
-            "comment": " Oops. Real cost is 4w8c, Nomads only paid 4w6c "
-        }, 
-        {
             "AIR": "", 
-            "C": "-6 [13]", 
+            "C": "-8 [11]", 
             "CULT": "", 
             "D": "", 
             "EARTH": "", 
@@ -1011,7 +1008,7 @@
             "VP": "+5 [24]", 
             "W": "-4 [1]", 
             "WATER": "", 
-            "commands": "SH->G7. +2c", 
+            "commands": "SH->G7", 
             "faction": "Nomads"
         }, 
         {
@@ -1151,7 +1148,7 @@
         }, 
         {
             "AIR": "", 
-            "C": "-2 [11]", 
+            "C": "-2 [9]", 
             "CULT": "", 
             "D": "-1 [5]", 
             "EARTH": "", 
@@ -1308,7 +1305,7 @@
         }, 
         {
             "AIR": "", 
-            "C": "+1 [12]", 
+            "C": "+1 [10]", 
             "CULT": "", 
             "D": "", 
             "EARTH": "", 
@@ -1719,7 +1716,7 @@
         }, 
         {
             "AIR": "", 
-            "C": "-2 [10]", 
+            "C": "-2 [8]", 
             "CULT": "", 
             "D": "-1 [4]", 
             "EARTH": "", 
@@ -1920,7 +1917,7 @@
         }, 
         {
             "AIR": "", 
-            "C": "-2 [8]", 
+            "C": "-2 [6]", 
             "CULT": "", 
             "D": "-1 [3]", 
             "EARTH": "", 
@@ -1983,6 +1980,28 @@
             "WATER": "", 
             "commands": "Action FAV6. +AIR", 
             "faction": "Auren"
+        }, 
+        {
+            "AIR": "", 
+            "C": "-3 [11]", 
+            "CULT": "", 
+            "D": "-1 [5]", 
+            "EARTH": "", 
+            "FIRE": "", 
+            "P": "", 
+            "P1": "+4 [8]", 
+            "P2": "-6 [1]", 
+            "P3": "-1 [0]", 
+            "PW": "-8 [8/1/0]", 
+            "SA": "", 
+            "SH": "", 
+            "TE": "", 
+            "TP": "", 
+            "VP": "", 
+            "W": "-2 [2]", 
+            "WATER": "", 
+            "commands": "Burn 3. Action ACT5. D->I11", 
+            "faction": "Swarmlings"
         }
     ], 
     "map": {
@@ -2078,7 +2097,7 @@
             "blocked": 0
         }, 
         "ACT5": {
-            "blocked": 0
+            "blocked": 1
         }, 
         "ACT6": {
             "blocked": 0
@@ -2557,8 +2576,9 @@
         }, 
         "I11": {
             "blocked": 0, 
+            "building": "D", 
             "col": 11, 
-            "color": "green", 
+            "color": "blue", 
             "row": 8
         }, 
         "I12": {
@@ -2663,7 +2683,7 @@
         "BON6": 0, 
         "BON7": 1, 
         "BON8": 1, 
-        "C": 1034, 
+        "C": 1039, 
         "CULT": 9993, 
         "EARTH": 98, 
         "FAV1": 1, 
@@ -2687,7 +2707,7 @@
         "P3": 10000, 
         "SHOVEL": 10000, 
         "VP": 995, 
-        "W": 1003, 
+        "W": 1005, 
         "WATER": 98
     }, 
     "score_tiles": [
@@ -2697,6 +2717,7 @@
                 "W": 1
             }, 
             "income_display": "2 FIRE -> 1 W", 
+            "old": 1, 
             "req": 2, 
             "vp": {
                 "SA": 5, 
@@ -2705,6 +2726,7 @@
             "vp_display": "5 / SA or SH"
         }, 
         {
+            "active": 1, 
             "cult": "EARTH", 
             "income": {
                 "SHOVEL": 1
@@ -2760,15 +2782,14 @@
         {
             "cult": "FIRE", 
             "income": {
-                "W": 1
+                "PW": 4
             }, 
-            "income_display": "2 FIRE -> 1 W", 
-            "req": 2, 
+            "income_display": "", 
+            "req": 4, 
             "vp": {
-                "SA": 5, 
-                "SH": 5
+                "D": 2
             }, 
-            "vp_display": "5 / SA or SH"
+            "vp_display": "2 / D"
         }
     ]
 }

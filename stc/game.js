@@ -647,7 +647,13 @@ function drawLedger() {
 function drawScoringTiles() {
     var container = $("scoring");
     state.score_tiles.each(function(record) {
-        var tile = new Element('div', {'class': 'scoring'});
+        var style = '';
+        if (record.active) {
+            style = 'background-color: #ffcccc';
+        } else if (record.old) {
+            style = 'opacity: 0.5';
+        }
+        var tile = new Element('div', {'class': 'scoring', 'style': style});
         tile.insert(new Element('div').update(
             "<div class='scoring-head'>vp:</div><div>#{vp_display}</div>".interpolate(record)));
         tile.insert(new Element('div').update(
