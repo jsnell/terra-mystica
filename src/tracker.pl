@@ -187,6 +187,14 @@ my %score_tiles = (
                 income => { SHOVEL => 1 } },    
 );
 
+my %towns = (
+    TW1 => { gain => { VP => 5, C => 6 } },
+    TW2 => { gain => { VP => 7, W => 2 } },
+    TW3 => { gain => { VP => 9, P => 1 } },
+    TW4 => { gain => { VP => 6, PW => 8 } },
+    TW5 => { gain => { VP => 8, FIRE => 1, WATER => 1, EARTH => 1, AIR => 1 } }
+);
+
 for (keys %score_tiles) {
     my $tile = $score_tiles{$_};
     my $currency = (keys %{$tile->{income}})[0];
@@ -227,6 +235,7 @@ $pool{"BON$_"}++ for 1..9;
 $map{"BON$_"}{C} = 0 for 1..9;
 $pool{"FAV$_"}++ for 1..4;
 $pool{"FAV$_"} += 3 for 5..12;
+$pool{"TW$_"} += 2 for 1..5;
 
 for my $cult (@cults) {
     $map{"${cult}1"} = { gain => { $cult => 3 } };
@@ -438,6 +447,14 @@ sub command {
 
             if ($type =~ /^FAV/) {
                 my %gain = %{$favors{$type}{gain}};
+
+                for (keys %gain) {
+                    command $faction, "+$gain{$_}$_";
+                }
+            }
+
+            if ($type =~ /^TW/) {
+                my %gain = %{$towns{$type}{gain}};
 
                 for (keys %gain) {
                     command $faction, "+$gain{$_}$_";
@@ -799,6 +816,7 @@ sub print_json {
         bridges => \@bridges,
         ledger => \@ledger,
         error => \@error,
+        towns => \%towns,
         score_tiles => [map $score_tiles{$_}, @score_tiles], 
     };
 
@@ -821,7 +839,6 @@ for my $faction (@factions) {
 }
 
 for (0..($turn-2)) {
-    print STDERR $_;
     $score_tiles{$score_tiles[$_]}->{old} = 1;
 }
 

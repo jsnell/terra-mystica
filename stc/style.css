@@ -30,6 +30,7 @@ div.bonus {
 
 div.favor {
     float: left;
+    background-color: #f0e0e0;
     border-style: solid;
     font: 12px Verdana;
     margin: 2px;
@@ -64,6 +65,17 @@ div.scoring {
 
 div.scoring-head {
     font-weight: bold;
+}
+
+div.town {
+    float: left;
+    background-color: #def;
+    border-style: solid;
+    font: 12px Verdana;
+    margin: 2px;
+    padding: 3px;
+    width: 60px;
+    height: 80px;
 }
 
 table { border-style: solid }

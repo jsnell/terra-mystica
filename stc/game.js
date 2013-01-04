@@ -554,6 +554,20 @@ function renderFavor(div, name, faction) {
     }
 }
 
+function renderTown(div, name, faction) {
+    div.insert(name);
+
+    div.insert("<div>#{VP} vp</div>".interpolate(state.towns[name].gain));
+    $H(state.towns[name].gain).each(function(elem, index) {
+        var key = elem.key;
+        var value = elem.value;
+
+        if (key != "VP") {
+            div.insert("<div>#{value} #{key}</div>".interpolate(elem));
+        }
+    });
+}
+
 function renderTreasury(board, treasury, faction) {
     $H(treasury).each(function(elem, index) {
         var name = elem.key;
@@ -576,6 +590,12 @@ function renderTreasury(board, treasury, faction) {
                 'class': 'favor'}));
             var div = board.childElements().last();
             renderFavor(div, name, faction);
+            return;
+        } else if (name.startsWith("TW")) {
+            board.insert(new Element('div', {
+                'class': 'town'}));
+            var div = board.childElements().last();
+            renderTown(div, name, faction);
             return;
         }
     });
