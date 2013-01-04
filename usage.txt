@@ -1,74 +1,71 @@
-* Resources
+* Quick start
 
-Most playing pieces are represented as resources, that can be located
-either in a faction's treasury, the map, or the pool. The full list of
-resources (and the abbreviations you need to use) is:
+Each line should start with the name of the faction that's doing
+stuff, followed by a colo. After this, you can have multiple commands
+that apply to that faction, separated by full stops. For example:
 
- Resources:
-   C      Coin
-   W      Worker
-   P      Priest
-   PW     Power (in general -- use P1 / P2 / P3 if you need to refer to
-                 power in a specific bowl)
-   VP     Victory points
+Nomads: Dig 1. D -> E7
 
- Buildings:
-   D      Dwelling
-   TP     Trading post
-   TE     Temple
-   SH     Stronghold
-   SA     Sanctuary
+The exact capitalization doesn't matter. 
 
- Tiles:
+The commands that you'd usually use are:
 
-   BonX   Bonus tile #X
-   FavX   Favor tile #X
+- Pass Bon2
+  Pass, return current bonus tile, and replace it with Bon2.
 
-* Locations
+- Leech 2
+  Have the Nomads trade 1 vp for 2 power
 
-The following locations exist in the game:
+- Action ACT5
+  Take the power action 5 (or stronghold, bonus tile, or favor special
+  action).
 
-  - Map hexes (e.g. E9)
-  - Cult track priest spots (e.g. FIRE1)
+- Dig 1
+  Trade workers / priests to shovels at the appropriate exchange rate.
+  The shovels need to be spent by commands later on the same line.
 
-* Commands
+- D -> F5
+  Terraform the hex F5 into the correct terrain type, and build a dwelling
+  there.
 
-Anything between a # and the end of the line is a comment, and ignored.
-Every line can contain a number of commands, seperate with a dot. Example:
+- TP -> F5
+  Replace the dwelling in F5 with a trading post (TE for temples, SH for
+  strongholds, SA for sanctuaries).
 
-  Setup nomads. Setup alchemists.
+- P -> FIRE1
+  Send a priest to the first spot on the fire cult track.
 
-If the row starts with a faction name followed by a colon, the commands
-of that row will apply to that faction. Example:
+- F5:black
+  Terraform F5 to black, but don't build anything there.
 
-  Nomads: D -> A5. -1W. -2C.
+- +FAV11
+  Take the Favor tile #11. (TW3 for Town tile 3, you shouldn't take
+  Bonus tiles with +, but use the Pass command)
 
-The case of characters doesn't matter. You can use upper and lower case
-however you want.
+- Bridge E9:D6
+  Build a bridge from E9 to D6.
 
-Commands that don't require a faction:
+- Income
+  Take all income (buildings, favors, bonus tiles, last turn's special
+  scoring tile). Note -- should be done just before starting a new round.
 
-  Setup X  # Add faction X to the game
+- Start
+  Move to the next round.
 
-  Block X  # Mark action space X as used
+* Notes on specific factions:
 
-  Clear    # Mark all action spaces as available
+- Dwarves, Fakirs:
 
-  Delete X # Permanently remove a piece from the pool
+Since adjancy isn't tracked, there's no special representation of
+tunneling / carpet flight. Just use a command like "-2w. +4vp" to
+get the correct effect.
+  
+- Alchemists:
 
-  X:Y      # Transform map location X to the color Y (e.g. E5:red)
+There's no special support for the VP / money conversion. Use a command
+like "-4vp. +2c".
 
-Commands that require a faction:
 
-  +XY      # Move X units of resource Y from the pool to the faction treasury.
-  -XY      # The opposite (e.g. -1W. -2C. +5VP)
 
-  X -> Y   # Swap contents of location Y with a piece X from the faction
-           # (e.g. TP -> E5)
-
-  Leech X  # Gain X power, lose X-1 VPs
-
-  Burn X   # Lose X power to the pool from bowl 2, move X power from bowl 2
-           # to bowl 3.
 
 
