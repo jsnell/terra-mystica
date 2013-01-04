@@ -14,53 +14,111 @@ my %setups = (
     Alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
                     WATER => 1, FIRE => 1, color => 'black',
                     buildings => {
-                        D => { cost => { W => 1, C => 2 } },
-                        TP => { cost => { W => 2, C => 3 } },
-                        TE => { cost => { W => 2, C => 5 } },
+                        D => { cost => { W => 1, C => 2 },
+                               income => { W => [ 8, 8, 7, 6, 5, 4, 3, 2, 1 ] } },
+                        TP => { cost => { W => 2, C => 3 },
+                                income => { C => [ 11, 7, 4, 2, 0 ],
+                                            PW => [ 4, 3, 2, 1, 0] } },
+                        TE => { cost => { W => 2, C => 5 },
+                                income => { P => [ 3, 2, 1, 0 ] } },
                         SH => { cost => { W => 4, C => 6 },
-                                gain => { PW => 12 } },
-                        SA => { cost => { W => 4, C => 6 } },
+                                gain => { PW => 12 },
+                                income => { C => [ 6, 0 ] } },
+                        SA => { cost => { W => 4, C => 6 },
+                                income => { P => [ 1, 0 ] } },
                     }},
     Auren => { C => 15, W => 3, P1 => 5, P2 => 7,
                WATER => 1, AIR => 1,
                color => 'green',
                buildings => {
-                   D => { cost => { W => 1, C => 2 } },
-                   TP => { cost => { W => 2, C => 3 } },
-                   TE => { cost => { W => 2, C => 5 } },
+                   D => { cost => { W => 1, C => 2 },
+                          income => { W => [ 8, 8, 7, 6, 5, 4, 3, 2, 1 ] } },
+                   TP => { cost => { W => 2, C => 3 },
+                           income => { C => [ 8, 6, 4, 2, 0 ],
+                                       PW => [ 6, 4, 2, 1, 0] } },
+                   TE => { cost => { W => 2, C => 5 },
+                           income => { P => [ 3, 2, 1, 0 ] } },
                    SH => { cost => { W => 4, C => 6 },
-                           gain => { ACTA => 1 } },
-                   SA => { cost => { W => 4, C => 8 } },
+                           gain => { ACTA => 1 },
+                           income => { PW => [ 2, 0 ] } },
+                   SA => { cost => { W => 4, C => 8 },
+                           income => { P => [ 1, 0 ] } },
                }},
     Swarmlings => { C => 20, W => 8, P1 => 3, P2 => 9,
                     FIRE => 1, EARTH => 1,
                     WATER => 1, AIR => 1, color => 'blue',
                     buildings => {
-                        D => { cost => { W => 2, C => 3 } },
-                        TP => { cost => { W => 3, C => 4 } },
-                        TE => { cost => { W => 3, C => 6 } },
+                        D => { cost => { W => 2, C => 3 },
+                               income => { W => [ 9, 9, 8, 7, 6, 5, 4, 3, 2 ] } },
+                        TP => { cost => { W => 3, C => 4 },
+                                income => { PW => [ 8, 6, 4, 2, 0],
+                                            C => [ 9, 6, 4, 2, 0] } },
+                        TE => { cost => { W => 3, C => 6 },
+                                income => { P => [ 3, 2, 1, 0 ] } },
                         SH => { cost => { W => 5, C => 8 },
-                                gain => { ACTS => 1 } },
-                        SA => { cost => { W => 5, C => 8 } },
+                                gain => { ACTS => 1 },
+                                income => { PW => [ 4, 0 ] } },
+                        SA => { cost => { W => 5, C => 8 },
+                                income => { P => [ 2, 0 ] } },
                     }},
     Nomads => { C => 15, W => 2, P1 => 5, P2 => 7,
                 FIRE => 1, EARTH => 1, color => 'yellow',
                 buildings => {
-                    D => { cost => { W => 1, C => 2 } },
-                    TP => { cost => { W => 2, C => 3 } },
-                    TE => { cost => { W => 2, C => 5 } },
+                    D => { cost => { W => 1, C => 2 },
+                           income => { W => [ 8, 8, 7, 6, 5, 4, 3, 2, 1 ] } },
+                    TP => { cost => { W => 2, C => 3 },
+                            income => { C => [ 11, 7, 4, 2, 0 ],
+                                        PW => [ 4, 3, 2, 1, 0] } },
+                    TE => { cost => { W => 2, C => 5 },
+                            income => { P => [ 3, 2, 1, 0 ] } },
                     SH => { cost => { W => 4, C => 8 },
-                            gain => { ACTN => 1 } },
-                    SA => { cost => { W => 4, C => 6 } },
+                            gain => { ACTN => 1 },
+                            income => { PW => [ 2, 0 ] } },
+                    SA => { cost => { W => 4, C => 6 },
+                            income => { P => [ 1, 0 ] } },
                 }},
     Engineers => { C => 10, W => 2, P1 => 3, P2 => 9, color => 'gray',
                 buildings => {
-                    D => { cost => { W => 1, C => 1 } },
-                    TP => { cost => { W => 1, C => 2 } },
-                    TE => { cost => { W => 1, C => 4 } },
-                    SH => { cost => { W => 3, C => 6 } },
-                    SA => { cost => { W => 3, C => 6 } },
+                    D => { cost => { W => 1, C => 1 },
+                           income => { W => [ 6, 5, 4, 4, 3, 2, 2, 1, 0 ] } },
+                    TP => { cost => { W => 1, C => 2 },
+                            income => { C => [ 8, 6, 4, 2, 0 ],
+                                        PW => [ 6, 4, 2, 1, 0] } },
+                    TE => { cost => { W => 1, C => 4 },
+                            income => { P => [ 2, 1, 1, 0 ],
+                                        PW => [ 5, 5, 0, 0 ] } },
+                    SH => { cost => { W => 3, C => 6 },
+                            income => { PW => [2, 0 ] } },
+                    SA => { cost => { W => 3, C => 6 },
+                            income => { P => [ 1, 0 ] } },
                 }},
+);
+
+my %actions = (
+    ACT1 => { cost => { PW => 3 }, gain => {}},
+    ACT2 => { cost => { PW => 3 }, gain => { P => 1 } },
+    ACT3 => { cost => { PW => 4 }, gain => { W => 2 } },
+    ACT4 => { cost => { PW => 4 }, gain => { C => 7 } },
+    ACT5 => { cost => { PW => 4 }, gain => {} },
+    ACT6 => { cost => { PW => 6 }, gain => {} },
+    ACTA => { cost => {}, gain => {} },
+    ACTS => { cost => {}, gain => {} },
+    ACTN => { cost => {}, gain => {} },
+    BON1 => { cost => {}, gain => {} },
+    BON2 => { cost => {}, gain => {} },
+    FAV6 => { cost => {}, gain => {} },
+);
+        
+my %bonus_tiles = (
+    BON1 => { income => { C => 2 } },
+    BON2 => { income => { C => 4 } },
+    BON3 => { income => { C => 6 } },
+    BON4 => { income => { PW => 3 } },
+    BON5 => { income => { PW => 3, W => 1 } },
+    BON6 => { income => { W => 2 } },
+    BON7 => { income => { W => 1 } },
+    BON8 => { income => { P => 1 } },
+    BON9 => { income => { C => 2 } },
 );
 
 my %pool = (
@@ -335,27 +393,12 @@ sub command {
             $where .= "/$faction";
         }
 
-        my %act = (
-            ACT1 => { cost => { PW => 3 }, gain => {}},
-            ACT2 => { cost => { PW => 3 }, gain => { P => 1 } },
-            ACT3 => { cost => { PW => 4 }, gain => { W => 2 } },
-            ACT4 => { cost => { PW => 4 }, gain => { C => 7 } },
-            ACT5 => { cost => { PW => 4 }, gain => {} },
-            ACT6 => { cost => { PW => 6 }, gain => {} },
-            ACTA => { cost => {}, gain => {} },
-            ACTS => { cost => {}, gain => {} },
-            ACTN => { cost => {}, gain => {} },
-            BON1 => { cost => {}, gain => {} },
-            BON2 => { cost => {}, gain => {} },
-            FAV6 => { cost => {}, gain => {} },
-            );
-        
-        if ($act{$name}) {
-            my %cost = %{$act{$name}{cost}};
+        if ($actions{$name}) {
+            my %cost = %{$actions{$name}{cost}};
             for my $currency (keys %cost) {
                 command $faction, "-$cost{$currency}$currency";
             }
-            my %gain = %{$act{$name}{gain}};
+            my %gain = %{$actions{$name}{gain}};
             for my $currency (keys %gain) {
                 command $faction, "+$gain{$currency}$currency";
             }
@@ -379,6 +422,39 @@ sub command {
         setup $1;
     } elsif ($command =~ /delete (\w+)$/) {
         delete $pool{uc $1};
+    } elsif ($command =~ /^income$/) {
+        die "Need faction for command $command\n" if !$faction;
+        
+        my %buildings = %{$factions{$faction}{buildings}};
+        for my $building (keys %buildings) {
+            if (exists $buildings{$building}{income}) {
+                my %income = %{$buildings{$building}{income}};
+                for my $type (keys %income) {
+                    my $delta = $income{$type}[$factions{$faction}{$building}];
+                    if ($delta) {
+                        command $faction, "+$delta$type";
+                    }
+                }
+            }
+        }
+
+        for my $tile (keys %{$factions{$faction}}) {
+            if (!$factions{$faction}{$tile}) {
+                next;
+            }
+
+            my %income = ();
+
+            if ($tile =~ /^BON/) {
+                %income = %{$bonus_tiles{$tile}{income}};
+            } elsif ($tile =~ /^FAV/) {
+                %income = %{$favors{$tile}{income}};
+            }
+
+            for my $type (keys %income) {
+                command $faction, "+$income{$type}$type";
+            }
+        };
     } else {
         die "Could not parse command '$command'.\n";
     }

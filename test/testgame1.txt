@@ -31,11 +31,11 @@ clear
 # Round 1:
 
 # Income 
-Nomads: +5W. +3PW
-Auren: +3W. +4C
-Swarmlings: +4W. +1P
-Alchemists: +5W
-Engineers: +2W. +2C
+Nomads: income
+Auren: income
+Swarmlings: income
+Alchemists: income
+Engineers: income
 
 # Round 1, Turn 1:
 Nomads: Burn 4. Action ACT4
@@ -99,11 +99,11 @@ Auren: Pass Bon1
 
 # Income
 
-Nomads: +4w. +5pw
-Auren: +3w. +2w. +2c. +2pw
-Swarmlings: +2w. +4w. +8c. +2pw
-Alchemists: +4w. +6c. +3pw 
-Engineers: +5w. +1pw. +p
+Nomads: income
+Auren: income. +3w
+Swarmlings: income. +2w
+Alchemists: income
+Engineers: income
 
 clear
 
