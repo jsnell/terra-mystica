@@ -1,5 +1,3 @@
-- Shovel track
-- Ship track
 - Final cult track scoring
 - Automatic conversion of resources -> money -> VPs in endgame
 

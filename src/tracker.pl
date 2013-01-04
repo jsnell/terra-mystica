@@ -15,6 +15,20 @@ my $round = 0;
 my %setups = (
     Alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
                     WATER => 1, FIRE => 1, color => 'black',
+                    ship => { 
+                        level => 0,
+                        upgrade_cost => { C => 4, P => 1 },
+                        upgrade_gain => [ { VP => 2 },
+                                          { VP => 3 },
+                                          { VP => 4 } ]
+                    },
+                    dig => {
+                        level => 0,
+                        cost => [ { W => 3 }, { W => 2 }, { W => 1 } ],
+                        upgrade_cost => { W => 2, C => 5, P => 1 },
+                        upgrade_gain => [ { VP => 6 },
+                                          { VP => 6 } ]
+                    },
                     special => {
                         SHOVEL => { PW => 2 },
                         enable_if => { SH => 0 },
@@ -36,6 +50,20 @@ my %setups = (
     Auren => { C => 15, W => 3, P1 => 5, P2 => 7,
                WATER => 1, AIR => 1,
                color => 'green',
+               ship => { 
+                   level => 0,
+                   upgrade_cost => { C => 4, P => 1 },
+                   upgrade_gain => [ { VP => 2 },
+                                     { VP => 3 },
+                                     { VP => 4 } ]
+               },
+               dig => {
+                   level => 0,
+                   cost => [ { W => 3 }, { W => 2 }, { W => 1 } ],
+                   upgrade_cost => { W => 2, C => 5, P => 1 },
+                   upgrade_gain => [ { VP => 6 },
+                                     { VP => 6 } ]
+               },
                buildings => {
                    D => { cost => { W => 1, C => 2 },
                           income => { W => [ 8, 8, 7, 6, 5, 4, 3, 2, 1 ] } },
@@ -53,6 +81,20 @@ my %setups = (
     Swarmlings => { C => 20, W => 8, P1 => 3, P2 => 9,
                     FIRE => 1, EARTH => 1,
                     WATER => 1, AIR => 1, color => 'blue',
+                    ship => { 
+                        level => 0,
+                        upgrade_cost => { C => 4, P => 1 },
+                        upgrade_gain => [ { VP => 2 },
+                                          { VP => 3 },
+                                          { VP => 4 } ]
+                    },
+                    dig => {
+                        level => 0,
+                        cost => [ { W => 3 }, { W => 2 }, { W => 1 } ],
+                        upgrade_cost => { W => 2, C => 5, P => 1 },
+                        upgrade_gain => [ { VP => 6 },
+                                          { VP => 6 } ]
+                    },
                     special => {
                         map(("TW$_", { W => 3 }), 1..5)
                     },
@@ -72,6 +114,20 @@ my %setups = (
                     }},
     Nomads => { C => 15, W => 2, P1 => 5, P2 => 7,
                 FIRE => 1, EARTH => 1, color => 'yellow',
+                ship => { 
+                    level => 0,
+                    upgrade_cost => { C => 4, P => 1 },
+                    upgrade_gain => [ { VP => 2 },
+                                      { VP => 3 },
+                                      { VP => 4 } ]
+                },
+                dig => {
+                    level => 0,
+                    cost => [ { W => 3 }, { W => 2 }, { W => 1 } ],
+                    upgrade_cost => { W => 2, C => 5, P => 1 },
+                    upgrade_gain => [ { VP => 6 },
+                                      { VP => 6 } ]
+                },
                 buildings => {
                     D => { cost => { W => 1, C => 2 },
                            income => { W => [ 8, 8, 7, 6, 5, 4, 3, 2, 1 ] } },
@@ -87,7 +143,21 @@ my %setups = (
                             income => { P => [ 1, 0 ] } },
                 }},
     Engineers => { C => 10, W => 2, P1 => 3, P2 => 9, color => 'gray',
-                buildings => {
+                   ship => { 
+                       level => 0,
+                       upgrade_cost => { C => 4, P => 1 },
+                       upgrade_gain => [ { VP => 2 },
+                                         { VP => 3 },
+                                         { VP => 4 } ]
+                   },
+                   dig => {
+                       level => 0,
+                       cost => [ { W => 3 }, { W => 2 }, { W => 1 } ],
+                       upgrade_cost => { W => 2, C => 5, P => 1 },
+                       upgrade_gain => [ { VP => 6 },
+                                         { VP => 6 } ]
+                   },
+                   buildings => {
                     D => { cost => { W => 1, C => 1 },
                            income => { W => [ 6, 5, 4, 4, 3, 2, 2, 1, 0 ] } },
                     TP => { cost => { W => 1, C => 2 },
@@ -615,11 +685,13 @@ sub command {
 
         $map{$where}{color} = $color;
     } elsif ($command =~ /^dig (\d+)/) {
-        # XXX: Variable costs (shovel upgrades, swarmlings)
-        my $cost = 3 * $1;
+        my $cost = $factions{$faction}{dig}{cost}[$factions{$faction}{dig}{level}];
 
         command $faction, "+${1}SHOVEL";
-        command $faction, "-${cost}W";
+        for my $currency (keys %{$cost}) {
+            my $amount = $cost->{$currency} * $1;
+            command $faction, "-${amount}$currency";
+        }
     } elsif ($command =~ /^bridge (\w+):(\w+)$/) {
         die "Need faction for command $command\n" if !$faction;
 
@@ -718,6 +790,29 @@ sub command {
         }
         
         $factions{$faction}{income_taken} = 1
+    } elsif ($command =~ /^upgrade (ship|dig)/) {
+        die "Need faction for command $command\n" if !$faction;
+
+        my $type = lc $1;
+        my $track = $factions{$faction}{$type};
+
+        for my $currency (keys %{$track->{upgrade_cost}}) {
+            my $amount = $track->{upgrade_cost}{$currency};
+            command $faction, "-${amount}$currency";            
+        }
+
+        my $gain = $track->{upgrade_gain}[$track->{level}];
+
+        if (!$gain) {
+            die "Can't upgrade $type from level $track->{level}\n"; 
+        }
+        
+        for my $currency (keys %{$gain}) {
+            my $amount = $gain->{$currency};
+            command $faction, "+${amount}$currency";            
+        }
+
+        $track->{level}++;
     } elsif ($command =~ /^score (.*)/) {
         my $setup = uc $1;
         @score_tiles = split /,/, $setup;

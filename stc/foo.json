@@ -30,6 +30,33 @@
             "W": 3, 
             "WATER": 1, 
             "color": "black", 
+            "dig": {
+                "cost": [
+                    {
+                        "W": 3
+                    }, 
+                    {
+                        "W": 2
+                    }, 
+                    {
+                        "W": 1
+                    }
+                ], 
+                "level": 0, 
+                "upgrade_cost": {
+                    "C": 5, 
+                    "P": 1, 
+                    "W": 2
+                }, 
+                "upgrade_gain": [
+                    {
+                        "VP": 6
+                    }, 
+                    {
+                        "VP": 6
+                    }
+                ]
+            }, 
             "income": {
                 "C": 6, 
                 "P": 0, 
@@ -39,6 +66,24 @@
             }, 
             "income_taken": 0, 
             "passed": 0, 
+            "ship": {
+                "level": 0, 
+                "upgrade_cost": {
+                    "C": 4, 
+                    "P": 1
+                }, 
+                "upgrade_gain": [
+                    {
+                        "VP": 2
+                    }, 
+                    {
+                        "VP": 3
+                    }, 
+                    {
+                        "VP": 4
+                    }
+                ]
+            }, 
             "special": {
                 "SHOVEL": {
                     "PW": 2
@@ -73,6 +118,33 @@
             "W": 5, 
             "WATER": 3, 
             "color": "green", 
+            "dig": {
+                "cost": [
+                    {
+                        "W": 3
+                    }, 
+                    {
+                        "W": 2
+                    }, 
+                    {
+                        "W": 1
+                    }
+                ], 
+                "level": 0, 
+                "upgrade_cost": {
+                    "C": 5, 
+                    "P": 1, 
+                    "W": 2
+                }, 
+                "upgrade_gain": [
+                    {
+                        "VP": 6
+                    }, 
+                    {
+                        "VP": 6
+                    }
+                ]
+            }, 
             "income": {
                 "C": 2, 
                 "P": 0, 
@@ -82,6 +154,24 @@
             }, 
             "income_taken": 0, 
             "passed": 0, 
+            "ship": {
+                "level": 0, 
+                "upgrade_cost": {
+                    "C": 4, 
+                    "P": 1
+                }, 
+                "upgrade_gain": [
+                    {
+                        "VP": 2
+                    }, 
+                    {
+                        "VP": 3
+                    }, 
+                    {
+                        "VP": 4
+                    }
+                ]
+            }, 
             "special": {}
         }, 
         "Engineers": {
@@ -107,6 +197,33 @@
             "W": 0, 
             "WATER": 0, 
             "color": "gray", 
+            "dig": {
+                "cost": [
+                    {
+                        "W": 3
+                    }, 
+                    {
+                        "W": 2
+                    }, 
+                    {
+                        "W": 1
+                    }
+                ], 
+                "level": 0, 
+                "upgrade_cost": {
+                    "C": 5, 
+                    "P": 1, 
+                    "W": 2
+                }, 
+                "upgrade_gain": [
+                    {
+                        "VP": 6
+                    }, 
+                    {
+                        "VP": 6
+                    }
+                ]
+            }, 
             "income": {
                 "C": 0, 
                 "P": 1, 
@@ -116,6 +233,24 @@
             }, 
             "income_taken": 0, 
             "passed": 0, 
+            "ship": {
+                "level": 0, 
+                "upgrade_cost": {
+                    "C": 4, 
+                    "P": 1
+                }, 
+                "upgrade_gain": [
+                    {
+                        "VP": 2
+                    }, 
+                    {
+                        "VP": 3
+                    }, 
+                    {
+                        "VP": 4
+                    }
+                ]
+            }, 
             "special": {}
         }, 
         "Nomads": {
@@ -141,6 +276,33 @@
             "W": 2, 
             "WATER": 0, 
             "color": "yellow", 
+            "dig": {
+                "cost": [
+                    {
+                        "W": 3
+                    }, 
+                    {
+                        "W": 2
+                    }, 
+                    {
+                        "W": 1
+                    }
+                ], 
+                "level": 0, 
+                "upgrade_cost": {
+                    "C": 5, 
+                    "P": 1, 
+                    "W": 2
+                }, 
+                "upgrade_gain": [
+                    {
+                        "VP": 6
+                    }, 
+                    {
+                        "VP": 6
+                    }
+                ]
+            }, 
             "income": {
                 "C": 0, 
                 "P": 0, 
@@ -150,6 +312,24 @@
             }, 
             "income_taken": 0, 
             "passed": 0, 
+            "ship": {
+                "level": 0, 
+                "upgrade_cost": {
+                    "C": 4, 
+                    "P": 1
+                }, 
+                "upgrade_gain": [
+                    {
+                        "VP": 2
+                    }, 
+                    {
+                        "VP": 3
+                    }, 
+                    {
+                        "VP": 4
+                    }
+                ]
+            }, 
             "special": {}
         }, 
         "Swarmlings": {
@@ -174,6 +354,33 @@
             "W": 2, 
             "WATER": 1, 
             "color": "blue", 
+            "dig": {
+                "cost": [
+                    {
+                        "W": 3
+                    }, 
+                    {
+                        "W": 2
+                    }, 
+                    {
+                        "W": 1
+                    }
+                ], 
+                "level": 0, 
+                "upgrade_cost": {
+                    "C": 5, 
+                    "P": 1, 
+                    "W": 2
+                }, 
+                "upgrade_gain": [
+                    {
+                        "VP": 6
+                    }, 
+                    {
+                        "VP": 6
+                    }
+                ]
+            }, 
             "income": {
                 "C": 6, 
                 "P": 0, 
@@ -183,6 +390,24 @@
             }, 
             "income_taken": 0, 
             "passed": 0, 
+            "ship": {
+                "level": 0, 
+                "upgrade_cost": {
+                    "C": 4, 
+                    "P": 1
+                }, 
+                "upgrade_gain": [
+                    {
+                        "VP": 2
+                    }, 
+                    {
+                        "VP": 3
+                    }, 
+                    {
+                        "VP": 4
+                    }
+                ]
+            }, 
             "special": {
                 "TW1": {
                     "W": 3

@@ -628,9 +628,9 @@ function drawFactions() {
         var board = makeBoard(color, name, 'faction-board', style);
 
         board.insert(new Element('div').update(
-            "#{C} c, #{W} w, #{P} p, #{VP} vp".interpolate(faction)));
+            "#{C} c, #{W} w, #{P} p, #{VP} vp, #{P1}/#{P2}/#{P3} pw".interpolate(faction)));
         board.insert(new Element('div').update(
-            "#{P1}/#{P2}/#{P3} power".interpolate(faction)));
+            "dig level #{dig.level}, ship level #{ship.level}".interpolate(faction)));
 
         board.insert("<hr>");
         board.insert(new Element('div').update(
