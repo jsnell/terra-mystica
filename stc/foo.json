@@ -258,15 +258,15 @@
             "AIR": 0, 
             "BON4": 1, 
             "BON5": 0, 
-            "C": 6, 
+            "C": 13, 
             "D": 3, 
             "EARTH": 1, 
             "FIRE": 1, 
             "FREE_TF": 0, 
             "P": 0, 
-            "P1": 0, 
+            "P1": 4, 
             "P2": 0, 
-            "P3": 8, 
+            "P3": 4, 
             "SA": 1, 
             "SH": 0, 
             "SHOVEL": 0, 
@@ -2413,6 +2413,29 @@
             "commands": "p->earth1", 
             "faction": "Engineers", 
             "warning": ""
+        }, 
+        {
+            "AIR": "", 
+            "C": "+7 [13]", 
+            "CULT": "", 
+            "D": "", 
+            "EARTH": "", 
+            "FIRE": "", 
+            "P": "", 
+            "P1": "+4 [4]", 
+            "P2": "", 
+            "P3": "-4 [4]", 
+            "PW": "-8 [4/0/4]", 
+            "SA": "", 
+            "SH": "", 
+            "TE": "", 
+            "TP": "", 
+            "VP": "", 
+            "W": "", 
+            "WATER": "", 
+            "commands": "Action ACT4", 
+            "faction": "Nomads", 
+            "warning": ""
         }
     ], 
     "map": {
@@ -2505,7 +2528,7 @@
             "blocked": 1
         }, 
         "ACT4": {
-            "blocked": 0
+            "blocked": 1
         }, 
         "ACT5": {
             "blocked": 1
@@ -3085,7 +3108,7 @@
         "BON6": 0, 
         "BON7": 1, 
         "BON8": 1, 
-        "C": 1041, 
+        "C": 1034, 
         "CULT": 9993, 
         "EARTH": 95, 
         "FAV1": 1, 

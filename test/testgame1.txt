@@ -135,4 +135,5 @@ Swarmlings: Burn 3. Action ACT5. D -> I11.
 Alchemists: D -> D8
 Engineers: Leech 1
 Engineers: p -> earth1
+Nomads: Action ACT4
 
