@@ -41,7 +41,7 @@ my %setups = (
                    TE => { cost => { W => 2, C => 5 },
                            income => { P => [ 3, 2, 1, 0 ] } },
                    SH => { cost => { W => 4, C => 6 },
-                           gain => { ACTA => 1 },
+                           gain => { ACTA => 1, GAIN_FAVOR => 1 },
                            income => { PW => [ 2, 0 ] } },
                    SA => { cost => { W => 4, C => 8 },
                            income => { P => [ 1, 0 ] } },
@@ -228,6 +228,7 @@ my %pool = (
     FREE_TF => 10000,
     FREE_TP => 10000,
     CULT => 10000,
+    GAIN_FAVOR => 10000,
 );
 
 $pool{"ACT$_"}++ for 1..6;
@@ -296,6 +297,9 @@ sub setup {
     $factions{$faction}{TE} = 3;
     $factions{$faction}{SA} = 1;
     $factions{$faction}{VP} = 20;
+
+    $factions{$faction}{buildings}{TE}{gain}{GAIN_FAVOR} ||= 1;
+    $factions{$faction}{buildings}{SA}{gain}{GAIN_FAVOR} ||= 1;
 
     $factions{$faction}{SHOVEL} = 0;
 
@@ -446,6 +450,12 @@ sub command {
             }
 
             if ($type =~ /^FAV/) {
+                if (!$factions{$faction}{GAIN_FAVOR}) {
+                    die "Taking favor tile not allowed\n";
+                } else {
+                    $factions{$faction}{GAIN_FAVOR}--;
+                }
+
                 my %gain = %{$favors{$type}{gain}};
 
                 for (keys %gain) {
@@ -758,6 +768,10 @@ sub handle_row {
 
             if ($factions{$prefix}{CULT}) {
                 $warn = "Unused cult advance for $prefix\n";
+            }
+
+            if ($factions{$prefix}{GAIN_FAVOR}) {
+                $warn = "favor not taken by $prefix\n";
             }
 
             push @ledger, { faction => $prefix,
