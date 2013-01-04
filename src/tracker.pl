@@ -633,17 +633,14 @@ sub command {
             delete $map{$where}{gain};
         }
 
-        if (exists $factions{$faction}{buildings}{$type}{gain}) {
-            gain $faction, $factions{$faction}{buildings}{$type}{gain};
-        }
+        gain $faction, $factions{$faction}{buildings}{$type}{gain};
 
         if ($type eq 'TP' and $factions{$faction}{FREE_TP}) {
             $free = 1;
             $factions{$faction}{FREE_TP}--;
         }
 
-        if (!$free and
-            exists $factions{$faction}{buildings}{$type}{cost}) {
+        if (!$free) {
             pay $faction, $factions{$faction}{buildings}{$type}{cost};
         }
 
@@ -789,7 +786,7 @@ sub command {
         my $type = lc $1;
         my $track = $factions{$faction}{$type};
 
-        pay $track->{upgrade_cost};
+        pay $faction, $track->{upgrade_cost};
 
         my $gain = $track->{upgrade_gain}[$track->{level}];
 
@@ -797,13 +794,13 @@ sub command {
             die "Can't upgrade $type from level $track->{level}\n"; 
         }
         
-        gain $track->{upgrade_cost};
+        gain $faction, $gain;
 
         $track->{level}++;
     } elsif ($command =~ /^score (.*)/) {
         my $setup = uc $1;
         @score_tiles = split /,/, $setup;
-        die "Invalid scoring tile setup: $setup" if @score_tiles != 6;
+        die "Invalid scoring tile setup: $setup\n" if @score_tiles != 6;
     } else {
         die "Could not parse command '$command'.\n";
     }
