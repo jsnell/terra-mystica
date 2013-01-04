@@ -390,6 +390,24 @@ sub current_score_tile {
     }
 }
 
+sub pay {
+    my ($faction, $cost) = @_;
+
+    for my $currency (keys %{$cost}) {
+        my $amount = $cost->{$currency};
+        command $faction, "-${amount}$currency";            
+    }
+}
+
+sub gain {
+    my ($faction, $cost) = @_;
+
+    for my $currency (keys %{$cost}) {
+        my $amount = $cost->{$currency};
+        command $faction, "+${amount}$currency";            
+    }
+}
+
 sub maybe_score_current_score_tile {
     my ($faction, $type) = @_;
 
@@ -428,13 +446,7 @@ sub maybe_gain_faction_special {
         }
     }
 
-    my $gain = $factions{$faction}{special}{$type};
-    if ($gain) {
-        for my $currency (keys %{$gain}) {
-            my $amount = $gain->{$currency};
-            command $faction, "+${amount}$currency";
-        }
-    }
+    gain $faction, $factions{$faction}{special}{$type};
 }
 
 sub faction_income {
@@ -553,19 +565,11 @@ sub command {
                     $factions{$faction}{GAIN_FAVOR}--;
                 }
 
-                my %gain = %{$favors{$type}{gain}};
-
-                for (keys %gain) {
-                    command $faction, "+$gain{$_}$_";
-                }
+                gain $faction, $favors{$type}{gain};
             }
 
             if ($type =~ /^TW/) {
-                my %gain = %{$towns{$type}{gain}};
-
-                for (keys %gain) {
-                    command $faction, "+$gain{$_}$_";
-                }
+                gain $faction, $towns{$type}{gain};
             }
 
             if ($type =~ /FIRE|WATER|EARTH|AIR/) {
@@ -614,18 +618,12 @@ sub command {
         }
 
         if (exists $map{$where}{gain}) {
-            my %gain = %{$map{$where}{gain}};
-            for my $type (keys %gain) {
-                command $faction, "+$gain{$type}$type";
-                delete $gain{$type};
-            }
+            gain $faction, $map{$where}{gain};
+            delete $map{$where}{gain};
         }
 
         if (exists $factions{$faction}{buildings}{$type}{gain}) {
-            my %gain = %{$factions{$faction}{buildings}{$type}{gain}};
-            for my $type (keys %gain) {
-                command $faction, "+$gain{$type}$type";
-            }
+            gain $faction, $factions{$faction}{buildings}{$type}{gain};
         }
 
         if ($type eq 'TP' and $factions{$faction}{FREE_TP}) {
@@ -635,11 +633,7 @@ sub command {
 
         if (!$free and
             exists $factions{$faction}{buildings}{$type}{cost}) {
-            my %cost = %{$factions{$faction}{buildings}{$type}{cost}};
-
-            for my $type (keys %cost) {
-                command $faction, "-$cost{$type}$type";
-            }
+            pay $faction, $factions{$faction}{buildings}{$type}{cost};
         }
 
         maybe_score_favor_tile $faction, $type;
@@ -689,10 +683,7 @@ sub command {
         my $cost = $factions{$faction}{dig}{cost}[$factions{$faction}{dig}{level}];
 
         command $faction, "+${1}SHOVEL";
-        for my $currency (keys %{$cost}) {
-            my $amount = $cost->{$currency} * $1;
-            command $faction, "-${amount}$currency";
-        }
+        pay $faction, $cost for 1..$1;
     } elsif ($command =~ /^bridge (\w+):(\w+)$/) {
         die "Need faction for command $command\n" if !$faction;
 
@@ -741,14 +732,8 @@ sub command {
         }
 
         if ($actions{$name}) {
-            my %cost = %{$actions{$name}{cost}};
-            for my $currency (keys %cost) {
-                command $faction, "-$cost{$currency}$currency";
-            }
-            my %gain = %{$actions{$name}{gain}};
-            for my $currency (keys %gain) {
-                command $faction, "+$gain{$currency}$currency";
-            }
+            pay $faction, $actions{$name}{cost};
+            gain $faction, $actions{$name}{gain};
         } else {
             die "Unknown action $name";
         }
@@ -784,11 +769,7 @@ sub command {
             $factions{$faction}{income_taken};
 
         my %income = faction_income $faction;
-        for my $currency (keys %income) {
-            if ($income{$currency}) {
-                command $faction, "+$income{$currency}$currency";
-            }
-        }
+        gain $faction, \%income;
         
         $factions{$faction}{income_taken} = 1
     } elsif ($command =~ /^upgrade (ship|dig)/) {
@@ -797,10 +778,7 @@ sub command {
         my $type = lc $1;
         my $track = $factions{$faction}{$type};
 
-        for my $currency (keys %{$track->{upgrade_cost}}) {
-            my $amount = $track->{upgrade_cost}{$currency};
-            command $faction, "-${amount}$currency";            
-        }
+        pay $track->{upgrade_cost};
 
         my $gain = $track->{upgrade_gain}[$track->{level}];
 
@@ -808,10 +786,7 @@ sub command {
             die "Can't upgrade $type from level $track->{level}\n"; 
         }
         
-        for my $currency (keys %{$gain}) {
-            my $amount = $gain->{$currency};
-            command $faction, "+${amount}$currency";            
-        }
+        gain $track->{upgrade_cost};
 
         $track->{level}++;
     } elsif ($command =~ /^score (.*)/) {

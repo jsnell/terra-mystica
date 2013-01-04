@@ -2522,10 +2522,7 @@
         "AIR1": {
             "blocked": 0, 
             "building": "P", 
-            "color": "black", 
-            "gain": {
-                "AIR": 3
-            }
+            "color": "black"
         }, 
         "AIR2": {
             "blocked": 0, 
@@ -2782,10 +2779,7 @@
         "EARTH1": {
             "blocked": 0, 
             "building": "P", 
-            "color": "gray", 
-            "gain": {
-                "EARTH": 3
-            }
+            "color": "gray"
         }, 
         "EARTH2": {
             "blocked": 0, 
@@ -2857,18 +2851,12 @@
         "FIRE1": {
             "blocked": 0, 
             "building": "P", 
-            "color": "blue", 
-            "gain": {
-                "FIRE": 3
-            }
+            "color": "blue"
         }, 
         "FIRE2": {
             "blocked": 0, 
             "building": "P", 
-            "color": "green", 
-            "gain": {
-                "FIRE": 2
-            }
+            "color": "green"
         }, 
         "FIRE3": {
             "blocked": 0, 
