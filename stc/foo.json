@@ -8,15 +8,13 @@
     ], 
     "error": [], 
     "factions": {
-        "": {
-            "passed": 0
-        }, 
+        "": {}, 
         "Alchemists": {
             "AIR": 3, 
             "BON5": 1, 
             "BON6": 0, 
-            "C": 7, 
-            "D": 6, 
+            "C": 5, 
+            "D": 5, 
             "EARTH": 0, 
             "FIRE": 1, 
             "P": 0, 
@@ -29,7 +27,7 @@
             "TE": 3, 
             "TP": 4, 
             "VP": 24, 
-            "W": 4, 
+            "W": 3, 
             "WATER": 1, 
             "color": "black", 
             "income": {
@@ -37,9 +35,18 @@
                 "P": 0, 
                 "PW": 3, 
                 "SHOVEL": 0, 
-                "W": 4
+                "W": 5
             }, 
-            "passed": 0
+            "income_taken": 0, 
+            "passed": 0, 
+            "special": {
+                "SHOVEL": {
+                    "PW": 2
+                }, 
+                "enable_if": {
+                    "SH": 0
+                }
+            }
         }, 
         "Auren": {
             "ACTA": 1, 
@@ -73,7 +80,9 @@
                 "SHOVEL": 0, 
                 "W": 2
             }, 
-            "passed": 0
+            "income_taken": 0, 
+            "passed": 0, 
+            "special": {}
         }, 
         "Engineers": {
             "AIR": 0, 
@@ -81,14 +90,14 @@
             "BON6": 1, 
             "C": 2, 
             "D": 3, 
-            "EARTH": 2, 
+            "EARTH": 5, 
             "FAV7": 1, 
             "FIRE": 0, 
             "GAIN_FAVOR": 0, 
-            "P": 1, 
-            "P1": 2, 
+            "P": 0, 
+            "P1": 0, 
             "P2": 3, 
-            "P3": 0, 
+            "P3": 2, 
             "SA": 1, 
             "SH": 1, 
             "SHOVEL": 0, 
@@ -102,10 +111,12 @@
                 "C": 0, 
                 "P": 1, 
                 "PW": 1, 
-                "SHOVEL": 0, 
+                "SHOVEL": 1, 
                 "W": 7
             }, 
-            "passed": 0
+            "income_taken": 0, 
+            "passed": 0, 
+            "special": {}
         }, 
         "Nomads": {
             "ACTN": 1, 
@@ -137,7 +148,9 @@
                 "SHOVEL": 0, 
                 "W": 6
             }, 
-            "passed": 0
+            "income_taken": 0, 
+            "passed": 0, 
+            "special": {}
         }, 
         "Swarmlings": {
             "ACTS": 1, 
@@ -168,7 +181,25 @@
                 "SHOVEL": 0, 
                 "W": 5
             }, 
-            "passed": 0
+            "income_taken": 0, 
+            "passed": 0, 
+            "special": {
+                "TW1": {
+                    "W": 3
+                }, 
+                "TW2": {
+                    "W": 3
+                }, 
+                "TW3": {
+                    "W": 3
+                }, 
+                "TW4": {
+                    "W": 3
+                }, 
+                "TW5": {
+                    "W": 3
+                }
+            }
         }
     }, 
     "ledger": [
@@ -510,7 +541,7 @@
             "comment": " Round 1:"
         }, 
         {
-            "comment": " Income "
+            "comment": " Round 1 income "
         }, 
         {
             "AIR": "", 
@@ -1420,7 +1451,7 @@
             "VP": "", 
             "W": "", 
             "WATER": "", 
-            "commands": "Action ACT6. D8:black. E11:black. +4pw", 
+            "commands": "Action ACT6. D8:black. E11:black", 
             "faction": "Alchemists", 
             "warning": ""
         }, 
@@ -1572,7 +1603,7 @@
             "warning": ""
         }, 
         {
-            "comment": " Income"
+            "comment": " Round 2 Income"
         }, 
         {
             "AIR": "", 
@@ -2064,6 +2095,9 @@
             "warning": ""
         }, 
         {
+            "comment": " Round 2. Turn 3"
+        }, 
+        {
             "AIR": "", 
             "C": "-3 [11]", 
             "CULT": "", 
@@ -2084,6 +2118,75 @@
             "WATER": "", 
             "commands": "Burn 3. Action ACT5. D->I11", 
             "faction": "Swarmlings", 
+            "warning": ""
+        }, 
+        {
+            "AIR": "", 
+            "C": "-2 [5]", 
+            "CULT": "", 
+            "D": "-1 [5]", 
+            "EARTH": "", 
+            "FIRE": "", 
+            "P": "", 
+            "P1": "", 
+            "P2": "", 
+            "P3": "", 
+            "PW": "", 
+            "SA": "", 
+            "SH": "", 
+            "TE": "", 
+            "TP": "", 
+            "VP": "", 
+            "W": "-1 [3]", 
+            "WATER": "", 
+            "commands": "D->D8", 
+            "faction": "Alchemists", 
+            "warning": ""
+        }, 
+        {
+            "AIR": "", 
+            "C": "", 
+            "CULT": "", 
+            "D": "", 
+            "EARTH": "", 
+            "FIRE": "", 
+            "P": "", 
+            "P1": "-1 [1]", 
+            "P2": "+1 [4]", 
+            "P3": "", 
+            "PW": "+1 [1/4/0]", 
+            "SA": "", 
+            "SH": "", 
+            "TE": "", 
+            "TP": "", 
+            "VP": "", 
+            "W": "", 
+            "WATER": "", 
+            "commands": "Leech 1", 
+            "faction": "Engineers", 
+            "warning": ""
+        }, 
+        {
+            "AIR": "", 
+            "C": "", 
+            "CULT": "+3 [0/0/5/0]", 
+            "D": "", 
+            "EARTH": "+3 [5]", 
+            "FIRE": "", 
+            "P": "-1 [0]", 
+            "P1": "-1 [0]", 
+            "P2": "-1 [3]", 
+            "P3": "+2 [2]", 
+            "PW": "+3 [0/3/2]", 
+            "SA": "", 
+            "SH": "", 
+            "TE": "", 
+            "TP": "", 
+            "VP": "", 
+            "W": "", 
+            "WATER": "", 
+            "commands": "p->earth1", 
+            "faction": "Engineers", 
             "warning": ""
         }
     ], 
@@ -2375,6 +2478,7 @@
         }, 
         "D8": {
             "blocked": 0, 
+            "building": "D", 
             "col": 11, 
             "color": "black", 
             "row": 3
@@ -2452,6 +2556,8 @@
         }, 
         "EARTH1": {
             "blocked": 0, 
+            "building": "P", 
+            "color": "gray", 
             "gain": {
                 "EARTH": 3
             }
@@ -2766,9 +2872,9 @@
         "BON6": 0, 
         "BON7": 1, 
         "BON8": 1, 
-        "C": 1039, 
+        "C": 1041, 
         "CULT": 9993, 
-        "EARTH": 98, 
+        "EARTH": 95, 
         "FAV1": 1, 
         "FAV10": 3, 
         "FAV11": 3, 
@@ -2796,7 +2902,7 @@
         "TW4": 2, 
         "TW5": 2, 
         "VP": 995, 
-        "W": 1005, 
+        "W": 1006, 
         "WATER": 98
     }, 
     "score_tiles": [

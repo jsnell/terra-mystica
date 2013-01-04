@@ -10,11 +10,15 @@ my @ledger = ();
 my %map = ();
 my @error = ();
 my @score_tiles = ();
-my $turn = 0;
+my $round = 0;
 
 my %setups = (
     Alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
                     WATER => 1, FIRE => 1, color => 'black',
+                    special => {
+                        SHOVEL => { PW => 2 },
+                        enable_if => { SH => 0 },
+                    },
                     buildings => {
                         D => { cost => { W => 1, C => 2 },
                                income => { W => [ 8, 8, 7, 6, 5, 4, 3, 2, 1 ] } },
@@ -49,6 +53,9 @@ my %setups = (
     Swarmlings => { C => 20, W => 8, P1 => 3, P2 => 9,
                     FIRE => 1, EARTH => 1,
                     WATER => 1, AIR => 1, color => 'blue',
+                    special => {
+                        map(("TW$_", { W => 3 }), 1..5)
+                    },
                     buildings => {
                         D => { cost => { W => 2, C => 3 },
                                income => { W => [ 9, 9, 8, 7, 6, 5, 4, 3, 2 ] } },
@@ -307,8 +314,8 @@ sub setup {
 }
 
 sub current_score_tile {
-    if ($turn > 0) {
-        return $score_tiles{$score_tiles[$turn - 1]};
+    if ($round > 0) {
+        return $score_tiles{$score_tiles[$round - 1]};
     }
 }
 
@@ -336,6 +343,25 @@ sub maybe_score_favor_tile {
                     command $faction, "+${gain}vp"
                 }
             }
+        }
+    }
+}
+
+sub maybe_gain_faction_special {
+    my ($faction, $type) = @_;
+
+    my $enable_if = $factions{$faction}{special}{enable_if};
+    if ($enable_if) {
+        for my $currency (keys %{$enable_if}) {
+            return if $factions{$faction}{$currency} != $enable_if->{$currency};
+        }
+    }
+
+    my $gain = $factions{$faction}{special}{$type};
+    if ($gain) {
+        for my $currency (keys %{$gain}) {
+            my $amount = $gain->{$currency};
+            command $faction, "+${amount}$currency";
         }
     }
 }
@@ -494,6 +520,7 @@ sub command {
             if ($sign > 0) {
                 for (1..$count) {
                     maybe_score_current_score_tile $faction, $type;
+                    maybe_gain_faction_special $faction, $type;
                 }
             }
         }
@@ -657,15 +684,22 @@ sub command {
             die "Action space $where is blocked"
         }
         $map{$where}{blocked} = 1;
-    } elsif ($command =~ /^clear$/) {
+    } elsif ($command =~ /^start$/) {
+        $round++;
+
+        for my $faction (@factions) {
+            die "Round $round income not taken for $faction\n" if
+                !$factions{$faction}{income_taken};
+            $factions{$faction}{income_taken} = 0;
+            $factions{$faction}{passed} = 0 for keys %factions;
+        }
+
         $map{$_}{blocked} = 0 for keys %map;
-        $factions{$_}{passed} = 0 for keys %factions;
         for (1..9) {
             if ($pool{"BON$_"}) {
                 $map{"BON$_"}{C}++;
             }
         }
-        $turn++;
     } elsif ($command =~ /^setup (\w+)$/) {
         setup $1;
     } elsif ($command =~ /delete (\w+)$/) {
@@ -673,12 +707,17 @@ sub command {
     } elsif ($command =~ /^income$/) {
         die "Need faction for command $command\n" if !$faction;
 
+        die "Taking income twice for $faction" if
+            $factions{$faction}{income_taken};
+
         my %income = faction_income $faction;
         for my $currency (keys %income) {
             if ($income{$currency}) {
                 command $faction, "+$income{$currency}$currency";
             }
         }
+        
+        $factions{$faction}{income_taken} = 1
     } elsif ($command =~ /^score (.*)/) {
         my $setup = uc $1;
         @score_tiles = split /,/, $setup;
@@ -847,17 +886,22 @@ while (<>) {
     }
 }
 
+if ($round > 0) {
+    for my $faction (@factions) {
+        $factions{$faction}{income} = { faction_income $faction };
+    }
+
+    for (0..($round-2)) {
+        $score_tiles{$score_tiles[$_]}->{old} = 1;
+    }
+
+    current_score_tile->{active} = 1;
+    $score_tiles{$score_tiles[-1]}->{income_display} = '';
+}
+
 for my $faction (@factions) {
-    $factions{$faction}{income} = { faction_income $faction };
     delete $factions{$faction}{buildings};
 }
-
-for (0..($turn-2)) {
-    $score_tiles{$score_tiles[$_]}->{old} = 1;
-}
-
-current_score_tile->{active} = 1;
-$score_tiles{$score_tiles[-1]}->{income_display} = '';
 
 print_pretty;
 print_json;

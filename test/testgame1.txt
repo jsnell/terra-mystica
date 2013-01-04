@@ -30,14 +30,14 @@ Nomads: +Bon5
 
 # Round 1:
 
-# Income 
+# Round 1 income 
 Nomads: income
 Auren: income
 Swarmlings: income
 Alchemists: income
 Engineers: income
 
-clear
+start
 
 # Round 1, Turn 1:
 Nomads: Burn 4. Action ACT4
@@ -83,7 +83,7 @@ Alchemists: Leech 1
 # Round 1, Turn 5:
 Nomads: Pass Bon4
 Auren: Action FAV6. +FIRE
-Alchemists: Action ACT6. D8:black. E11:black. +4pw
+Alchemists: Action ACT6. D8:black. E11:black
 Engineers: Burn 3. Action ACT1. Bridge E9:D6. 
 
 # Round 1, Turn 6:
@@ -99,7 +99,7 @@ Auren: P -> FIRE2
 
 Auren: Pass Bon1
 
-# Income
+# Round 2 Income
 
 Nomads: income
 Auren: income
@@ -107,7 +107,7 @@ Swarmlings: income
 Alchemists: income
 Engineers: income
 
-clear
+start
 
 # Round 2. Turn 1
 
@@ -129,10 +129,12 @@ Alchemists: Leech 4
 Nomads: Action ACTN. D -> D5
 Engineers: Leech 1
 Auren: Action FAV6. +AIR
+
+# Round 2. Turn 3
 Swarmlings: Burn 3. Action ACT5. D -> I11.
-
-
-
+Alchemists: D -> D8
+Engineers: Leech 1
+Engineers: p -> earth1
 
 
 
