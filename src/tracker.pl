@@ -529,6 +529,23 @@ sub color_difference {
     return $diff;
 }
 
+sub gain_power {
+    my ($faction, $count) = @_;
+    for (1..$count) {
+        if ($factions{$faction}{P1}) {
+            $factions{$faction}{P1}--;
+            $factions{$faction}{P2}++;
+        } elsif ($factions{$faction}{P2}) {
+            $factions{$faction}{P2}--;
+            $factions{$faction}{P3}++;
+        } else {
+            return $_ - 1;
+        }
+    }
+
+    return $count;
+}
+
 sub command {
     my ($faction, $command) = @_;
     my $type;
@@ -541,27 +558,14 @@ sub command {
         $type = uc $3;
 
         if ($type eq 'PW') {
-            for (1..$count) {
-                if ($sign > 0) {
-                    if ($factions{$faction}{P1}) {
-                        $factions{$faction}{P1}--;
-                        $factions{$faction}{P2}++;
-                        $type = 'P1';
-                    } elsif ($factions{$faction}{P2}) {
-                        $factions{$faction}{P2}--;
-                        $factions{$faction}{P3}++;
-                        $type = 'P2';
-                    } else {
-                        return $count - 1;
-                    }
-                } else {
-                    $factions{$faction}{P1}++;
-                    $factions{$faction}{P3}--;
-                    $type = 'P3';
-                }
+            if ($sign > 0) {
+                gain_power $faction, $count;
+                $type = '';
+            } else {
+                $factions{$faction}{P1} += $count;
+                $factions{$faction}{P3} -= $count;
+                $type = 'P3';
             }
-
-            return $count;
         } else {
             my $orig_value = $factions{$faction}{$type};
 
@@ -664,7 +668,7 @@ sub command {
     } elsif ($command =~ /^leech (\d+)$/) {
         die "Need faction for command $command\n" if !$faction;
         my $pw = $1;
-        my $actual_pw = command $faction, "+${pw}PW";
+        my $actual_pw = gain_power $faction, $pw;
         my $vp = $actual_pw - 1;
 
         if ($actual_pw > 0) {
