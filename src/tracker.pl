@@ -126,6 +126,24 @@ my %bonus_tiles = (
               pass_vp => { D => [ reverse map { $_ } 0..8 ] } },
 );
 
+my %favors = (
+    FAV1 => { gain => { FIRE => 3 }, income => {} },
+    FAV2 => { gain => { WATER => 3 }, income => {} },
+    FAV3 => { gain => { EARTH => 3 }, income => {} },
+    FAV4 => { gain => { AIR => 3 }, income => {} },
+
+    FAV5 => { gain => { FIRE => 2 }, income => {} }, # Town
+    FAV6 => { gain => { WATER => 2 }, income => {} }, # +1 cult
+    FAV7 => { gain => { EARTH => 2 }, income => { W => 1, PW => 1} },
+    FAV8 => { gain => { AIR => 2 }, income => { PW => 4} },
+
+    FAV9 => { gain => { FIRE => 1 }, income => { C => 3} },
+    FAV10 => { gain => { WATER => 1 }, income => {}, vp => { TP => 3 } },
+    FAV11 => { gain => { EARTH => 1 }, income => {}, vp => { D => 2 } },
+    FAV12 => { gain => { AIR => 1 }, income => {},
+               pass_vp => { TP => [4, 3, 3, 2, 0] } },
+);
+
 my %score_tiles = (
     SCORE1 => { vp => { SHOVEL => 2 },
                 vp_display => '2 / sh',
@@ -215,24 +233,6 @@ for my $cult (@cults) {
     $map{"${cult}$_"} = { gain => { $cult => 2 } } for 2..4;
 }
 
-my %favors = (
-    FAV1 => { gain => { FIRE => 3 }, income => {} },
-    FAV2 => { gain => { WATER => 3 }, income => {} },
-    FAV3 => { gain => { EARTH => 3 }, income => {} },
-    FAV4 => { gain => { AIR => 3 }, income => {} },
-
-    FAV5 => { gain => { FIRE => 2 }, income => {} }, # Town
-    FAV6 => { gain => { WATER => 2 }, income => {} }, # +1 cult
-    FAV7 => { gain => { EARTH => 2 }, income => { W => 1, PW => 1} },
-    FAV8 => { gain => { AIR => 2 }, income => { PW => 4} },
-
-    FAV9 => { gain => { FIRE => 1 }, income => { C => 3} },
-    FAV10 => { gain => { WATER => 1 }, income => {} }, # vp: 3*TP
-    FAV11 => { gain => { EARTH => 1 }, income => {} }, # vp: 2*D
-    FAV12 => { gain => { AIR => 1 }, income => {},
-               pass_vp => { TP => [4, 3, 3, 2, 0] } }, # vp: TPs
-);
-
 my @map = qw(brown gray green blue yellow red brown black red green blue red black E
              yellow x x brown black x x yellow black x x yellow E
              x x black x gray x green x green x gray x x E
@@ -307,6 +307,22 @@ sub maybe_score_current_score_tile {
         my $gain = $scoring->{vp}{$type};
         if ($gain) {
             command $faction, "+${gain}vp"
+        }
+    }
+}
+
+sub maybe_score_favor_tile {
+    my ($faction, $type) = @_;
+
+    for my $tile (keys %{$factions{$faction}}) {
+        if ($tile =~ /^FAV/) {
+            my $scoring = $favors{$tile}{vp};
+            if ($scoring) {
+                my $gain = $scoring->{$type};
+                if ($gain) {
+                    command $faction, "+${gain}vp"
+                }
+            }
         }
     }
 }
@@ -501,6 +517,7 @@ sub command {
             }
         }
 
+        maybe_score_favor_tile $faction, $type;
         maybe_score_current_score_tile $faction, $type;
 
         $map{$where}{building} = $type;

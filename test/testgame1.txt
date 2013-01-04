@@ -46,7 +46,7 @@ Engineers: Leech 1
 Swarmlings: TP -> G6
 Nomads: Leech 1
 Alchemists: TP -> E10. -3C
-Engineers: Burn 4. Action ACT5. D -> D7. 
+Engineers: Burn 4. Action ACT5. D -> D7
 Alchemists: Leech 2
 
 # Round 1, Turn 2:
