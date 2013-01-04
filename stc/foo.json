@@ -2689,5 +2689,86 @@
         "VP": 995, 
         "W": 1003, 
         "WATER": 98
-    }
+    }, 
+    "score_tiles": [
+        {
+            "cult": "FIRE", 
+            "income": {
+                "W": 1
+            }, 
+            "income_display": "2 FIRE -> 1 W", 
+            "req": 2, 
+            "vp": {
+                "SA": 5, 
+                "SH": 5
+            }, 
+            "vp_display": "5 / SA or SH"
+        }, 
+        {
+            "cult": "EARTH", 
+            "income": {
+                "SHOVEL": 1
+            }, 
+            "income_display": "4 EARTH -> 1 SHOVEL", 
+            "req": 4, 
+            "vp": {
+                "TW1": 5, 
+                "TW2": 5, 
+                "TW3": 5, 
+                "TW4": 5, 
+                "TW5": 5
+            }, 
+            "vp_display": "5 / town"
+        }, 
+        {
+            "cult": "AIR", 
+            "income": {
+                "SHOVEL": 1
+            }, 
+            "income_display": "4 AIR -> 1 SHOVEL", 
+            "req": 4, 
+            "vp": {
+                "TP": 3
+            }, 
+            "vp_display": "3 / TP"
+        }, 
+        {
+            "cult": "AIR", 
+            "income": {
+                "W": 1
+            }, 
+            "income_display": "2 AIR -> 1 W", 
+            "req": 2, 
+            "vp": {
+                "SA": 5, 
+                "SH": 5
+            }, 
+            "vp_display": "5 / SA or SH"
+        }, 
+        {
+            "cult": "WATER", 
+            "income": {
+                "SHOVEL": 1
+            }, 
+            "income_display": "4 WATER -> 1 SHOVEL", 
+            "req": 4, 
+            "vp": {
+                "TP": 3
+            }, 
+            "vp_display": "3 / TP"
+        }, 
+        {
+            "cult": "FIRE", 
+            "income": {
+                "W": 1
+            }, 
+            "income_display": "2 FIRE -> 1 W", 
+            "req": 2, 
+            "vp": {
+                "SA": 5, 
+                "SH": 5
+            }, 
+            "vp_display": "5 / SA or SH"
+        }
+    ]
 }

@@ -53,6 +53,19 @@ div.favor-oval {
     border-radius: 60px / 40px;
 }
 
+div.scoring {
+    border-style: solid;
+    font: 12px Verdana;
+    margin: 2px;
+    padding: 3px;
+    width: 80px;
+    height: 70px;
+}
+
+div.scoring-head {
+    font-weight: bold;
+}
+
 table { border-style: solid }
 
 canvas#map { border-style: solid }

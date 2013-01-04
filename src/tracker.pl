@@ -125,38 +125,54 @@ my %bonus_tiles = (
 
 my %score_tiles = (
     SCORE1 => { vp => { SHOVEL => 2 },
+                vp_display => '2 / sh',
                 cult => 'EARTH',
                 req => 1, 
                 income => { C => 1 } },
     SCORE2 => { vp => { }, # vps filled in later
+                vp_display => '5 / town',
                 cult => 'EARTH',
                 req => 4, 
                 income => { SHOVEL => 1 } },
     SCORE3 => { vp => { D => 2 },
+                vp_display => '2 / D',
                 cult => 'WATER',
                 req => 4, 
                 income => { P => 1 } },    
     SCORE4 => { vp => { SA => 5, SH => 5 },
+                vp_display => '5 / SA or SH',
                 cult => 'FIRE',
                 req => 2,
                 income => { W => 1 } },    
     SCORE5 => { vp => { D => 2 },
+                vp_display => '2 / D',
                 cult => 'FIRE',
                 req => 4, 
                 income => { PW => 4 } },    
     SCORE6 => { vp => { TP => 3 },
+                vp_display => '3 / TP',
                 cult => 'WATER',
                 req => 4, 
                 income => { SHOVEL => 1 } },    
     SCORE7 => { vp => { SA => 5, SH => 5 },
+                vp_display => '5 / SA or SH',
                 cult => 'AIR',
                 req => 2,
                 income => { W => 1 } },    
     SCORE8 => { vp => { TP => 3 },
+                vp_display => '3 / TP',
                 cult => 'AIR',
                 req => 4, 
                 income => { SHOVEL => 1 } },    
 );
+
+for (keys %score_tiles) {
+    my $tile = $score_tiles{$_};
+    my $currency = (keys %{$tile->{income}})[0];
+    $tile->{income_display} =
+        sprintf("%d %s -> %d %s", $tile->{req}, $tile->{cult},
+                $tile->{income}{$currency}, $currency);
+}
 
 $score_tiles{SCORE2}{vp}{"TW$_"} = 5 for 1..5;
 
@@ -746,6 +762,7 @@ sub print_json {
         bridges => \@bridges,
         ledger => \@ledger,
         error => \@error,
+        score_tiles => [map $score_tiles{$_}, @score_tiles], 
     };
 
     print $out;

@@ -248,6 +248,7 @@ function drawMap() {
     }
 
     drawCults();
+    drawScoringTiles();
     drawFactions();
     drawLedger();
 
@@ -643,3 +644,14 @@ function drawLedger() {
     });
 }
 
+function drawScoringTiles() {
+    var container = $("scoring");
+    state.score_tiles.each(function(record) {
+        var tile = new Element('div', {'class': 'scoring'});
+        tile.insert(new Element('div').update(
+            "<div class='scoring-head'>vp:</div><div>#{vp_display}</div>".interpolate(record)));
+        tile.insert(new Element('div').update(
+            "<div class='scoring-head'>income:</div><div>#{income_display}</div>".interpolate(record)));
+        container.insert(tile);
+    });
+}
