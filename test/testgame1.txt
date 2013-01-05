@@ -136,4 +136,9 @@ Alchemists: D -> D8
 Engineers: Leech 1
 Engineers: p -> earth1
 Nomads: Action ACT4
+Auren: Burn 3. Action ACT1. Bridge F4:G3
 
+# Round 2. Turn 4
+Swarmlings: D -> I10
+Alchemists: D -> E11
+Engineers: Pass Bon2

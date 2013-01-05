@@ -189,7 +189,7 @@ my %actions = (
     FAV6 => { cost => {}, gain => { CULT => 1 } },
 );
         
-my %bonus_tiles = (
+my %tiles = (
     BON1 => { income => { C => 2 } },
     BON2 => { income => { C => 4 } },
     BON3 => { income => { C => 6 } },
@@ -202,16 +202,14 @@ my %bonus_tiles = (
     BON8 => { income => { P => 1 } },
     BON9 => { income => { C => 2 },
               pass_vp => { D => [ reverse map { $_ } 0..8 ] } },
-);
 
-my %favors = (
     FAV1 => { gain => { FIRE => 3 }, income => {} },
     FAV2 => { gain => { WATER => 3 }, income => {} },
     FAV3 => { gain => { EARTH => 3 }, income => {} },
     FAV4 => { gain => { AIR => 3 }, income => {} },
 
     FAV5 => { gain => { FIRE => 2 }, income => {} }, # Town
-    FAV6 => { gain => { WATER => 2 }, income => {} }, # +1 cult
+    FAV6 => { gain => { WATER => 2 }, income => {} },
     FAV7 => { gain => { EARTH => 2 }, income => { W => 1, PW => 1} },
     FAV8 => { gain => { AIR => 2 }, income => { PW => 4} },
 
@@ -220,15 +218,13 @@ my %favors = (
     FAV11 => { gain => { EARTH => 1 }, income => {}, vp => { D => 2 } },
     FAV12 => { gain => { AIR => 1 }, income => {},
                pass_vp => { TP => [4, 3, 3, 2, 0] } },
-);
 
-my %score_tiles = (
     SCORE1 => { vp => { SHOVEL => 2 },
                 vp_display => '2 / sh',
                 cult => 'EARTH',
                 req => 1, 
                 income => { C => 1 } },
-    SCORE2 => { vp => { }, # vps filled in later
+    SCORE2 => { vp => { map(("TW$_", 5), 1..5) },
                 vp_display => '5 / town',
                 cult => 'EARTH',
                 req => 4, 
@@ -263,9 +259,7 @@ my %score_tiles = (
                 cult => 'AIR',
                 req => 4, 
                 income => { SHOVEL => 1 } },    
-);
 
-my %towns = (
     TW1 => { gain => { VP => 5, C => 6 } },
     TW2 => { gain => { VP => 7, W => 2 } },
     TW3 => { gain => { VP => 9, P => 1 } },
@@ -273,15 +267,15 @@ my %towns = (
     TW5 => { gain => { VP => 8, FIRE => 1, WATER => 1, EARTH => 1, AIR => 1 } }
 );
 
-for (keys %score_tiles) {
-    my $tile = $score_tiles{$_};
-    my $currency = (keys %{$tile->{income}})[0];
-    $tile->{income_display} =
-        sprintf("%d %s -> %d %s", $tile->{req}, $tile->{cult},
-                $tile->{income}{$currency}, $currency);
+for (keys %tiles) {
+    if (/^SCORE/) {
+        my $tile = $tiles{$_};
+        my $currency = (keys %{$tile->{income}})[0];
+        $tile->{income_display} =
+            sprintf("%d %s -> %d %s", $tile->{req}, $tile->{cult},
+                    $tile->{income}{$currency}, $currency);
+    }
 }
-
-$score_tiles{SCORE2}{vp}{"TW$_"} = 5 for 1..5;
 
 my %pool = (
     # Resources
@@ -387,7 +381,7 @@ sub setup {
 
 sub current_score_tile {
     if ($round > 0) {
-        return $score_tiles{$score_tiles[$round - 1]};
+        return $tiles{$score_tiles[$round - 1]};
     }
 }
 
@@ -426,7 +420,7 @@ sub maybe_score_favor_tile {
 
     for my $tile (keys %{$factions{$faction_name}}) {
         if ($tile =~ /^FAV/) {
-            my $scoring = $favors{$tile}{vp};
+            my $scoring = $tiles{$tile}{vp};
             if ($scoring) {
                 my $gain = $scoring->{$type};
                 if ($gain) {
@@ -475,16 +469,11 @@ sub faction_income {
             next;
         }
 
-        my %tile_income = ();
-
-        if ($tile =~ /^BON/) {
-            %tile_income = %{$bonus_tiles{$tile}{income}};
-        } elsif ($tile =~ /^FAV/) {
-            %tile_income = %{$favors{$tile}{income}};
-        }
-
-        for my $type (keys %tile_income) {
-            $total_income{$type} += $tile_income{$type};
+        if ($tile =~ /^BON|FAV/) {
+            my $tile_income = $tiles{$tile}{income};
+            for my $type (keys %{$tile_income}) {
+                $total_income{$type} += $tile_income->{$type};
+            }
         }
     }
 
@@ -595,11 +584,11 @@ sub command {
                     $faction->{GAIN_FAVOR}--;
                 }
 
-                gain $faction_name, $favors{$type}{gain};
+                gain $faction_name, $tiles{$type}{gain};
             }
 
             if ($type =~ /^TW/) {
-                gain $faction_name, $towns{$type}{gain};
+                gain $faction_name, $tiles{$type}{gain};
             }
 
             if (grep { $_ eq $type } @cults) {
@@ -718,9 +707,9 @@ sub command {
             if (/^BON/) {
                 command $faction_name, "-$_";
                 
-                $pass_vp = $bonus_tiles{$_}{pass_vp};
+                $pass_vp = $tiles{$_}{pass_vp};
             } elsif (/FAV/) {
-                $pass_vp = $favors{$_}{pass_vp};
+                $pass_vp = $tiles{$_}{pass_vp};
             }
 
             if ($pass_vp) {
@@ -957,8 +946,11 @@ sub print_json {
         bridges => \@bridges,
         ledger => \@ledger,
         error => \@error,
-        towns => \%towns,
-        score_tiles => [map $score_tiles{$_}, @score_tiles], 
+        # tiles => \%tiles,
+        towns => { map({$_, $tiles{$_}} grep { /^TW/ } keys %tiles ) },
+        score_tiles => [ map({$tiles{$_}} @score_tiles ) ],
+        bonus_tiles => { map({$_, $tiles{$_}} grep { /^BON/ } keys %tiles ) },
+        favors => { map({$_, $tiles{$_}} grep { /^FAV/ } keys %tiles ) },
     };
 
     print $out;
@@ -980,11 +972,11 @@ if ($round > 0) {
     }
 
     for (0..($round-2)) {
-        $score_tiles{$score_tiles[$_]}->{old} = 1;
+        $tiles{$score_tiles[$_]}->{old} = 1;
     }
 
     current_score_tile->{active} = 1;
-    $score_tiles{$score_tiles[-1]}->{income_display} = '';
+    $tiles{$score_tiles[-1]}->{income_display} = '';
 }
 
 for my $faction (@factions) {
