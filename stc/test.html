@@ -60,7 +60,7 @@
           onSuccess: function(transport){
             state = transport.responseText.evalJSON();
             try {
-              drawMap();
+              draw();
             } catch (e) {
               handleException(e);
             };

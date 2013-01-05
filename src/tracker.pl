@@ -723,15 +723,6 @@ sub command {
             }                
         }
         command $faction_name, "+$bon"
-    } elsif ($command =~ /^block (\w+)$/) {
-        my $where = uc $1;
-        if ($where !~ /^ACT/) {
-            $where .= "/$faction_name";
-        }
-        if ($map{$where}{blocked}) {
-            die "Action space $where is blocked"
-        }
-        $map{$where}{blocked} = 1;
     } elsif ($command =~ /^action (\w+)$/) {
         my $where = uc $1;
         my $name = $where;

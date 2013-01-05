@@ -247,15 +247,6 @@ function drawMap() {
 
         $H(state.map).each(function(hex, index) { drawHex(ctx, hex) });
     }
-
-    drawCults();
-    drawScoringTiles();
-    drawFactions();
-    drawLedger();
-
-    state.error.each(function(row) {
-        $("error").insert("<div>" + row.escapeHTML() + "</div>");
-    });
 }
 
 function drawCults() {
@@ -610,3 +601,16 @@ function drawScoringTiles() {
         container.insert(tile);
     });
 }
+
+function draw() {
+    drawMap();
+    drawCults();
+    drawScoringTiles();
+    drawFactions();
+    drawLedger();
+
+    state.error.each(function(row) {
+        $("error").insert("<div>" + row.escapeHTML() + "</div>");
+    });
+}
+
