@@ -439,120 +439,43 @@ function insertAction(parent, name, key) {
     renderAction(canvas, name, key);
 }
 
-function insertIncome(parent, amount) {
-    parent.insert("<div class=income>+" + amount + "</div>");
-}
-
-function insertScoring(parent, amount) {
-    parent.insert("<div class=vp>vp:" + amount + "</div>");
-}
-
-function renderBonus(div, name, faction) {
+function renderTile(div, name, record, faction) {
     div.insert(name);
-    if (state.map[name].C) {
+    if (state.map[name] && state.map[name].C) {
         div.insert(" [#{C}c]".interpolate(state.map[name]));
     }
     div.insert("<hr>");
 
-    var data = {
-        "BON1": function() {
-            insertAction(div, name, name + "/" + faction);
-            insertIncome(div, "2c");
-        }, 
-        "BON2": function() {
-            insertAction(div, name, name + "/" + faction);
-            insertIncome(div, "4c");
-        },
-        "BON3": function() {
-            insertIncome(div, "6c");
-        },
-        "BON4": function() {
-            insertIncome(div, "3pw");
-            // XXX
-            insertIncome(div, "ship");
-        },
-        "BON5": function() {
-            insertIncome(div, "3pw");
-            insertIncome(div, "w");
-        },
-        "BON6": function() {
-            insertScoring(div, "4*SH/SA");
-            insertIncome(div, "2w");
-        },
-        "BON7": function() {
-            insertScoring(div, "2*TP");
-            insertIncome(div, "w");
-        },
-        "BON8": function() {
-            insertIncome(div, "p");
-        },
-        "BON9": function() {
-            insertScoring(div, "1*D");
-            insertIncome(div, "2c");
-        },
-    };
-
-    if (data[name]) {
-        data[name]();
+    if (!record) {
+        return;
     }
+
+    $H(record.gain).each(function (elem, index) {
+        div.insert("<div>#{value} #{key}</div>".interpolate(elem));
+    });
+    $H(record.vp).each(function (elem, index) {
+        div.insert("<div>#{key} &gt;&gt; #{value} vp</div>".interpolate(elem));
+    });
+    $H(record.pass_vp).each(function (elem, index) {
+        div.insert("<div>pass-vp: #{key}</div>".interpolate(elem));
+    });
+    if (record.action) {
+        insertAction(div, name, name + "/" + faction);
+    }
+    $H(record.income).each(function (elem, index) {
+        div.insert("<div>+#{value} #{key}</div>".interpolate(elem));
+    });
+    $H(record.special).each(function (elem, index) {
+        div.insert("<div>#{value} #{key}</div>".interpolate(elem));
+    });
+}
+
+function renderBonus(div, name, faction) {
+    renderTile(div, name, state.bonus_tiles[name], faction);
 }
 
 function renderFavor(div, name, faction) {
-    div.insert(name);
-    div.insert("<hr>");
-    var favor = div;
-
-    var data = {
-        "FAV1": function() {
-            favor.insert("3 FIRE");
-        }, 
-        "FAV2": function() {
-            favor.insert("3 WATER");
-        }, 
-        "FAV3": function() {
-            favor.insert("3 EARTH");
-        }, 
-        "FAV4": function() {
-            favor.insert("3 AIR");
-        }, 
-        "FAV5": function() {
-            favor.insert("2 FIRE");
-            favor.insert("<br>Town");
-        },
-        "FAV6": function() {
-            favor.insert("2 WATER");
-            insertAction(favor, name, name + "/" + faction);
-        },
-        "FAV7": function() {
-            favor.insert("2 EARTH");
-            insertIncome(favor, "1pw");
-            insertIncome(favor, "1w");
-        },
-        "FAV8": function() {
-            favor.insert("2 AIR");
-            insertIncome(favor, "4pw");
-        },
-        "FAV9": function() {
-            favor.insert("1 FIRE");
-            insertIncome(favor, "3c");
-        },
-        "FAV10": function() {
-            favor.insert("1 WATER");
-            insertScoring(favor, "3*TP");
-        },
-        "FAV11": function() {
-            favor.insert("1 EARTH");
-            insertScoring(favor, "2*D");
-        },
-        "FAV12": function() {
-            favor.insert("1 AIR");
-            insertScoring(favor, "TPs");
-        },
-    };
-
-    if (data[name]) {
-        data[name]();
-    }
+    renderTile(div, name, state.favors[name], faction);
 }
 
 function renderTown(div, name, faction) {

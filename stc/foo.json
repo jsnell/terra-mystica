@@ -1,11 +1,23 @@
 {
     "bonus_tiles": {
         "BON1": {
+            "action": {
+                "cost": {}, 
+                "gain": {
+                    "SHOVEL": 1
+                }
+            }, 
             "income": {
                 "C": 2
             }
         }, 
         "BON2": {
+            "action": {
+                "cost": {}, 
+                "gain": {
+                    "CULT": 1
+                }
+            }, 
             "income": {
                 "C": 4
             }
@@ -18,6 +30,9 @@
         "BON4": {
             "income": {
                 "PW": 3
+            }, 
+            "special": {
+                "ship": 1
             }
         }, 
         "BON5": {
@@ -578,6 +593,12 @@
             "income": {}
         }, 
         "FAV6": {
+            "action": {
+                "cost": {}, 
+                "gain": {
+                    "CULT": 1
+                }
+            }, 
             "gain": {
                 "WATER": 2
             }, 
@@ -3433,7 +3454,7 @@
                 "SA": 5, 
                 "SH": 5
             }, 
-            "vp_display": "5 / SA or SH"
+            "vp_display": "SA/SH >> 5"
         }, 
         {
             "active": 1, 
@@ -3450,7 +3471,7 @@
                 "TW4": 5, 
                 "TW5": 5
             }, 
-            "vp_display": "5 / town"
+            "vp_display": "TOWN >> 5"
         }, 
         {
             "cult": "AIR", 
@@ -3462,7 +3483,7 @@
             "vp": {
                 "TP": 3
             }, 
-            "vp_display": "3 / TP"
+            "vp_display": "TP >> 3"
         }, 
         {
             "cult": "AIR", 
@@ -3475,7 +3496,7 @@
                 "SA": 5, 
                 "SH": 5
             }, 
-            "vp_display": "5 / SA or SH"
+            "vp_display": "SA/SH >> 5"
         }, 
         {
             "cult": "WATER", 
@@ -3487,7 +3508,7 @@
             "vp": {
                 "TP": 3
             }, 
-            "vp_display": "3 / TP"
+            "vp_display": "TP >> 3"
         }, 
         {
             "cult": "FIRE", 
@@ -3499,7 +3520,7 @@
             "vp": {
                 "D": 2
             }, 
-            "vp_display": "2 / D"
+            "vp_display": "D >> 2"
         }
     ], 
     "towns": {
