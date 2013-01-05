@@ -897,40 +897,6 @@ sub handle_row {
     }
 }
 
-sub print_pretty {
-    local *STDOUT = *STDERR;
-    for (@factions) {
-        my %f = %{$factions{$_}};
-
-        print ucfirst $_, ":";
-        print "  VP: $f{VP}";
-        print "  Resources: $f{C}c / $f{W}w / $f{P}p, $f{P1}/$f{P2}/$f{P3} power";
-        print "  Buildings: $f{D} D, $f{TP} TP, $f{TE} TE, $f{SH} SH, $f{SA} SA";
-        print "  Cults: $f{FIRE} / $f{WATER} / $f{EARTH} / $f{AIR}";
-
-        for (1..9) {
-            if ($f{"BON$_"}) {
-                print "  Bonus: $_";
-            }
-        }
-
-        for (1..12) {
-            if ($f{"FAV$_"}) {
-                print "  Favor: $_";
-            }
-        }
-    }
-
-    for my $cult (@cults) {
-        printf "%-8s", "$cult:";
-        for (1..4) {
-            my $key = "$cult$_";
-            printf "%s / ", ($map{"$key"}{building} or ($_ == 1 ? 3 : 2));
-        }
-        print "";
-    }
-}
-
 sub print_json {
     my $out = encode_json {
         order => \@factions,
@@ -977,7 +943,6 @@ for my $faction (@factions) {
     delete $factions{$faction}{buildings};
 }
 
-print_pretty;
 print_json;
 
 if (@error) {
