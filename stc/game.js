@@ -221,6 +221,7 @@ function drawBridge(ctx, from, to, color) {
 
     ctx.save();
 
+    ctx.beginPath();
     ctx.moveTo(from_loc[0], from_loc[1]);
     ctx.lineTo(to_loc[0], to_loc[1]);
 
