@@ -142,3 +142,19 @@ Auren: Burn 3. Action ACT1. Bridge F4:G3
 Swarmlings: D -> I10
 Alchemists: D -> E11
 Engineers: Pass Bon2
+Nomads: Pass Bon7
+Auren: D -> G3
+
+# Round 2. Turn 5
+Swarmlings: Action ACTS. TP -> I11. +TW5
+Alchemists: TP -> D8. +TW2
+Engineers: Leech 1
+Auren: Action BON1. D -> F1
+
+# Round 2. Turn 6
+
+Swarmlings: Pass Bon6
+Alchemists: Pass Bon3
+
+
+

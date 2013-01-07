@@ -4,7 +4,7 @@ div.faction-board {
     margin: 2px;
     padding: 3px;
     width: 300px;
-    height: 220px;
+    min-height: 220px;
     float: left;
 }
 

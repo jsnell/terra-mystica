@@ -1,13 +1,16 @@
 - Final cult track scoring
 - Automatic conversion of resources -> money -> VPs in endgame
+- Check upgrade prereqs (no building TPs in empty hex...)
+- Check mana / resource conversions
 
 Partially implemented factions:
 - Engineer stronghold VP scoring
 
 Maybe:
 - Automatically pay higher price for non-adjacent TPs
-- Detect leeching opportunities, and require an explicit leech / don't
-  leech decision.
+- Detect leeching opportunities:
+  - Require an explicit leech / don't leech decision.
+  - Detect invalid leech amounts
 
 Out of scope:
 - Any other spatial elements

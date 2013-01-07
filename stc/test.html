@@ -55,7 +55,8 @@
     </table>
     <script language="javascript">
       var state = null;
-      new Ajax.Request("foo.json", {
+      var gameid = re.sub(document.location.pathname('.*/', ''));
+      new Ajax.Request("bridge.pl", {
           method:"get",
           onSuccess: function(transport){
             state = transport.responseText.evalJSON();

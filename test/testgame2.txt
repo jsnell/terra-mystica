@@ -1,0 +1,328 @@
+# Random setup
+delete bon1
+delete bon9
+
+score score6,score7,score1,score5,score4,score8
+
+# Faction selection
+setup chaosmagicians
+setup Nomads
+setup Mermaids
+setup Darklings
+
+Nomads: Free D -> F3
+Mermaids: Free D -> E4
+Darklings: Free D -> C1. Free D -> G5 
+Mermaids: Free D -> H4
+Nomads: Free D -> D3. Free D -> G4
+ChaosMagicians: Free D -> D7
+
+# Bon9 -> Bon8
+# Bon8 -> Bon6
+
+Darklings: +Bon5
+Mermaids: +Bon6
+Nomads: +Bon4
+ChaosMagicians: +Bon8
+
+# Round 1: Income
+
+ChaosMagicians: income
+Nomads: income
+Mermaids: income
+Darklings: income
+
+start
+
+# Round 1: Turn 1
+ChaosMagicians: upgrade ship
+Nomads: burn 4. Action ACT5. D -> F5
+Darklings: Leech 1
+Mermaids: Dig 1. D -> E5
+Nomads: Leech 1
+Darklings: Burn 4. Action ACT3
+
+# Round 1: Turn 2
+Chaosmagicians: D -> D6
+Nomads: Dig 1. D -> B2
+Mermaids: TP -> E4
+Nomads: Leech 1
+Darklings: Dig 1. D -> D2
+Nomads: Leech 1
+
+# Round 1: Turn 3
+Chaosmagicians: TP -> D6. -3c
+Nomads: D -> A5
+Mermaids: Burn 3. Action ACT2
+Darklings: TP -> D2
+Nomads: Leech 1
+
+# Round 1: Turn 4
+Chaosmagicians: Burn 2. -2pw. +2c. TE -> D6. +Fav8. +Fav9
+Nomads: Pass Bon2
+Mermaids: TE -> E4. +Fav6
+Nomads: Leech 1
+Darklings: TP -> G5
+Nomads: Leech 2
+
+# Round 1: Turn 5
+Chaosmagicians: Pass Bon4
+Mermaids: P -> Water1
+Darklings: TE -> G5. +FAV7
+Nomads: Leech 2
+
+# Round 1: Turn 6
+Mermaids: Action FAV6. +WATER
+Darklings: Pass Bon3
+
+# Round 1: Turn 7
+Mermaids: Pass Bon5
+
+# Round 2: income
+
+Chaosmagicians: income
+Nomads: income
+Mermaids: income. G3:blue. F2:blue
+Darklings: income
+
+start
+
+# Round 2: Turn 1
+Nomads: Burn 1. Action ACT4
+Mermaids: Burn 2. Action ACT5. D -> F4
+Darklings: Dig 1. D -> E2
+Chaosmagicians: P -> Air1
+
+# Round 2: Turn 2
+Nomads: TP -> D3
+Darklings: Leech 3
+Mermaids: Leech 2
+Mermaids: D -> F2
+Darklings: Leech 1
+Darklings: TE -> D2. +FAV8
+Nomads: Leech 2
+Chaosmagicians: Burn 2. Action ACT6. D -> E8. C5:red
+
+# Round 2: Turn 3
+Nomads: SH -> D3
+Darklings: Leech 3
+Mermaids: Leech 2
+Mermaids: Burn 2. -2pw. +2c. TP -> E5
+Nomads: Leech 1
+Darklings: Action ACT2
+Chaosmagicians: Burn 1. -1pw. +1c. D -> G2 
+
+# Round 2: Turn 4
+Nomads: Leech 1
+Mermaids: Leech 1
+Nomads: Action ACTN. D -> E6
+Mermaids: Leech 3
+Mermaids: Action FAV6. +EARTH
+Darklings: Pass Bon8
+Chaosmagicians: Pass Bon3
+
+# Round 2: Turn 5
+Nomads: Action Bon2. +FIRE
+Mermaids: P -> Earth1
+
+# Round 2: Turn 6
+Nomads: Pass Bon6
+Mermaids: Pass Bon2
+
+# Round 3: income
+
+Chaosmagicians: income
+Nomads: income
+Mermaids: income
+Darklings: income
+
+start
+
+# Round 3: Turn 1
+Darklings: Dig 1. D -> G6.
+Chaosmagicians: TP -> G2
+Nomads: Leech 1
+Mermaids: Leech 1
+Nomads: Action ACTN. D -> F6
+Darklings: Leech 3
+Mermaids: Action ACT4
+
+# Round 3: Turn 2
+Darklings: Dig 1. -2pw. +2c. D -> F7
+Nomads: Leech 1
+Chaosmagicians: TE -> G2. +Fav7. +Fav11
+# Oops. This power leech was dropped in the accounting
+# Nomads: Leech 1
+Mermaids: Leech 1
+Nomads: Dig 1. D -> D4
+Mermaids: SA -> E4. +Fav5. +TW2
+
+# Round 3: Turn 3
+Darklings: Dig 1. D -> H7
+Chaosmagicians: P -> Earth2
+Nomads: TP -> F6
+Mermaids: D -> G3
+
+# Round 3: Turn 4
+Darklings: Dig 1. -2pw. +2c. D -> I10
+Chaosmagicians: Leech 1
+Chaosmagicians: Pass Bon5
+Nomads: -1pw. +1c. TP -> F5
+Darklings: Leech 2
+Mermaids: Action Bon2. +Earth
+
+# Round 3: Turn 5
+Darklings: -2pw. +2c. D -> E10. +TW3
+Nomads: Pass Bon7
+Mermaids: Action FAV6. +EARTH
+
+# Round 3: Turn 6
+Darklings: P -> EARTH3
+Mermaids: Pass Bon3
+
+# Round 3: Turn 7
+Darklings: Pass Bon2
+
+# Round 4: income
+
+Chaosmagicians: income
+Nomads: income
+Mermaids: income
+Darklings: income
+
+start
+
+# Round 4: Turn 1
+Chaosmagicians: Action ACT6. D -> E7. I7:red
+Nomads: Leech 2
+Mermaids: Leech 1
+Nomads: Action ACT4.
+Mermaids: P -> FIRE1
+Darklings: Pass Bon6. -3pw. +3c
+
+# Round 4: Turn 2
+Chaosmagicians: D -> C5
+Nomads: Action ACT1. bridge D3:C2
+Mermaids: Action ACT5. D -> H5
+
+# Round 4: Turn 3
+Chaosmagicians: D -> I7
+Mermaids: Leech 1
+Nomads: Action ACTN. D -> D5
+Chaosmagicians: Leech 2
+Mermaids: TP -> F4
+Nomads: Leech 2
+
+# Round 4: Turn 4
+Chaosmagicians: D -> I5
+Nomads: TE -> F6. +Fav5
+Mermaids: D -> H2
+
+# Round 4: Turn 5
+Chaosmagicians: D -> A12
+Nomads: TP -> F3
+Mermaids: Upgrade ship
+
+# Round 4: Turn 6
+Chaosmagicians: P -> FIRE2
+Nomads: TP -> D4. +TW3
+Chaosmagicians: Leech 1
+Mermaids: Action FAV6. +FIRE
+
+# Round 4: Turn 7
+Chaosmagicians: Pass Bon2. -pw. +1c
+Nomads: Pass Bon8
+Mermaids: TP -> H4. +TW2
+Chaosmagicians: Leech 1
+
+# Round 4: Turn 8
+Mermaids: Pass Bon7
+
+# Round 5: income
+
+Chaosmagicians: income
+Nomads: income
+Mermaids: income
+Darklings: income
+
+# Oops: Chaos Magicians got cheated out of 1 worker here
+Chaosmagicians: -1w
+# Oops: I think nomads were given an extra coin here
+Nomads: +1c
+# Oops: Darklings were screwed out of 1 worker
+Darklings: -1w
+
+start
+
+# Round 5: Turn 1
+Darklings: Burn 1. Action ACT4
+Chaosmagicians: Action ACT1. Bridge E8:D6
+Nomads: Action ACTN. D -> C2. +TW5. -2pw. +2c
+Mermaids: -2pw. +2c. TE -> E5. +FAV1
+
+# Round 5: Turn 2
+Darklings: SA -> D2. +FAV10
+Chaosmagicians: Action ACT5. D -> B6
+Nomads: SA -> F6. +FAV12. +TW5.
+Mermaids: SH -> H4.
+Chaosmagicians: Leech 1
+
+# Round 5: Turn 3
+Darklings: P -> Earth4
+Chaosmagicians: P -> Fire3
+Nomads: TE -> F3. +FAV4
+# Oops. I think this VP loss wasn't correctly lost. 
+Chaosmagicians: Leech 2
+Mermaids: -2pw. +2c. D -> I4
+Chaosmagicians: Leech 1
+
+# Round 5: Turn 4
+Darklings: TP -> C1
+Chaosmagicians: -2w. +2c. SA -> D6. +FAV5. +FAV3
+Nomads: Action ACT2
+Mermaids: Action FAV6. +FIRE
+
+# Round 5: Turn 5
+Darklings: Dig 2. D -> E9
+Chaosmagicians: Leech 1
+Chaosmagicians: Action Bon2. +WATER
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

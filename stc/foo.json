@@ -109,12 +109,13 @@
     "error": [], 
     "factions": {
         "": {}, 
-        "Alchemists": {
+        "alchemists": {
             "AIR": 3, 
-            "BON5": 1, 
+            "BON3": 1, 
+            "BON5": 0, 
             "BON6": 0, 
-            "C": 3, 
-            "D": 4, 
+            "C": 0, 
+            "D": 5, 
             "EARTH": 0, 
             "FIRE": 1, 
             "P": 0, 
@@ -125,8 +126,9 @@
             "SH": 0, 
             "SHOVEL": 0, 
             "TE": 3, 
-            "TP": 4, 
-            "VP": 24, 
+            "TP": 3, 
+            "TW2": 1, 
+            "VP": 36, 
             "W": 2, 
             "WATER": 1, 
             "color": "black", 
@@ -142,6 +144,7 @@
                         "W": 1
                     }
                 ], 
+                "gain": [], 
                 "level": 0, 
                 "upgrade_cost": {
                     "C": 5, 
@@ -158,14 +161,14 @@
                 ]
             }, 
             "income": {
-                "C": 6, 
+                "C": 14, 
                 "P": 0, 
-                "PW": 3, 
+                "PW": 1, 
                 "SHOVEL": 0, 
-                "W": 6
+                "W": 4
             }, 
             "income_taken": 0, 
-            "passed": 0, 
+            "passed": 1, 
             "ship": {
                 "level": 0, 
                 "upgrade_cost": {
@@ -193,14 +196,14 @@
                 }
             }
         }, 
-        "Auren": {
+        "auren": {
             "ACTA": 1, 
             "AIR": 4, 
             "BON1": 1, 
             "BON2": 0, 
-            "C": 12, 
+            "C": 8, 
             "CULT": 0, 
-            "D": 7, 
+            "D": 5, 
             "EARTH": 0, 
             "FAV6": 1, 
             "FIRE": 6, 
@@ -215,7 +218,7 @@
             "TE": 3, 
             "TP": 4, 
             "VP": 25, 
-            "W": 5, 
+            "W": 3, 
             "WATER": 3, 
             "color": "green", 
             "dig": {
@@ -250,7 +253,7 @@
                 "P": 0, 
                 "PW": 2, 
                 "SHOVEL": 0, 
-                "W": 2
+                "W": 4
             }, 
             "income_taken": 0, 
             "passed": 0, 
@@ -274,7 +277,7 @@
             }, 
             "special": {}
         }, 
-        "Engineers": {
+        "engineers": {
             "AIR": 0, 
             "BON1": 0, 
             "BON2": 1, 
@@ -287,8 +290,8 @@
             "GAIN_FAVOR": 0, 
             "P": 0, 
             "P1": 0, 
-            "P2": 3, 
-            "P3": 2, 
+            "P2": 2, 
+            "P3": 3, 
             "SA": 1, 
             "SH": 1, 
             "SHOVEL": 0, 
@@ -310,6 +313,7 @@
                         "W": 1
                     }
                 ], 
+                "gain": [], 
                 "level": 0, 
                 "upgrade_cost": {
                     "C": 5, 
@@ -354,12 +358,13 @@
             }, 
             "special": {}
         }, 
-        "Nomads": {
+        "nomads": {
             "ACTN": 1, 
             "AIR": 0, 
-            "BON4": 1, 
+            "BON4": 0, 
             "BON5": 0, 
-            "C": 13, 
+            "BON7": 1, 
+            "C": 15, 
             "D": 3, 
             "EARTH": 1, 
             "FIRE": 1, 
@@ -407,12 +412,12 @@
             "income": {
                 "C": 0, 
                 "P": 0, 
-                "PW": 5, 
+                "PW": 2, 
                 "SHOVEL": 0, 
-                "W": 6
+                "W": 7
             }, 
             "income_taken": 0, 
-            "passed": 0, 
+            "passed": 1, 
             "ship": {
                 "level": 0, 
                 "upgrade_cost": {
@@ -433,27 +438,30 @@
             }, 
             "special": {}
         }, 
-        "Swarmlings": {
+        "swarmlings": {
             "ACTS": 1, 
-            "AIR": 1, 
-            "BON3": 1, 
+            "AIR": 2, 
+            "BON3": 0, 
+            "BON6": 1, 
             "BON8": 0, 
             "C": 8, 
-            "D": 4, 
-            "EARTH": 1, 
-            "FIRE": 4, 
+            "D": 5, 
+            "EARTH": 2, 
+            "FIRE": 5, 
+            "FREE_TP": 0, 
             "P": 0, 
-            "P1": 8, 
-            "P2": 1, 
+            "P1": 6, 
+            "P2": 3, 
             "P3": 0, 
             "SA": 1, 
             "SH": 0, 
             "SHOVEL": 0, 
             "TE": 3, 
-            "TP": 4, 
-            "VP": 17, 
-            "W": 0, 
-            "WATER": 1, 
+            "TP": 3, 
+            "TW5": 1, 
+            "VP": 30, 
+            "W": 3, 
+            "WATER": 2, 
             "color": "blue", 
             "dig": {
                 "cost": [
@@ -467,6 +475,7 @@
                         "W": 1
                     }
                 ], 
+                "gain": [], 
                 "level": 0, 
                 "upgrade_cost": {
                     "C": 5, 
@@ -483,14 +492,14 @@
                 ]
             }, 
             "income": {
-                "C": 6, 
+                "C": 2, 
                 "P": 0, 
-                "PW": 4, 
+                "PW": 6, 
                 "SHOVEL": 0, 
-                "W": 6
+                "W": 7
             }, 
             "income_taken": 0, 
-            "passed": 0, 
+            "passed": 1, 
             "ship": {
                 "level": 0, 
                 "upgrade_cost": {
@@ -660,7 +669,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Free D->A5", 
-            "faction": "Nomads", 
+            "faction": "nomads", 
             "warning": ""
         }, 
         {
@@ -683,7 +692,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Free D->F4", 
-            "faction": "Auren", 
+            "faction": "auren", 
             "warning": ""
         }, 
         {
@@ -706,7 +715,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Free D->H4", 
-            "faction": "Swarmlings", 
+            "faction": "swarmlings", 
             "warning": ""
         }, 
         {
@@ -729,7 +738,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Free D->E5", 
-            "faction": "Alchemists", 
+            "faction": "alchemists", 
             "warning": ""
         }, 
         {
@@ -752,7 +761,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Free D->E7. Free D->C5", 
-            "faction": "Engineers", 
+            "faction": "engineers", 
             "warning": ""
         }, 
         {
@@ -775,7 +784,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Free D->E10", 
-            "faction": "Alchemists", 
+            "faction": "alchemists", 
             "warning": ""
         }, 
         {
@@ -798,7 +807,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Free D->G6", 
-            "faction": "Swarmlings", 
+            "faction": "swarmlings", 
             "warning": ""
         }, 
         {
@@ -821,7 +830,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Free D->F2", 
-            "faction": "Auren", 
+            "faction": "auren", 
             "warning": ""
         }, 
         {
@@ -844,7 +853,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Free D->B4. Free D->G7", 
-            "faction": "Nomads", 
+            "faction": "nomads", 
             "warning": ""
         }, 
         {
@@ -870,7 +879,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "+Bon1", 
-            "faction": "Engineers", 
+            "faction": "engineers", 
             "warning": ""
         }, 
         {
@@ -893,7 +902,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "+Bon6", 
-            "faction": "Alchemists", 
+            "faction": "alchemists", 
             "warning": ""
         }, 
         {
@@ -916,7 +925,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "+Bon8", 
-            "faction": "Swarmlings", 
+            "faction": "swarmlings", 
             "warning": ""
         }, 
         {
@@ -939,7 +948,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "+Bon2", 
-            "faction": "Auren", 
+            "faction": "auren", 
             "warning": ""
         }, 
         {
@@ -962,7 +971,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "+Bon5", 
-            "faction": "Nomads", 
+            "faction": "nomads", 
             "warning": ""
         }, 
         {
@@ -991,7 +1000,7 @@
             "W": "+5 [7]", 
             "WATER": "", 
             "commands": "income", 
-            "faction": "Nomads", 
+            "faction": "nomads", 
             "warning": ""
         }, 
         {
@@ -1014,7 +1023,7 @@
             "W": "+3 [6]", 
             "WATER": "", 
             "commands": "income", 
-            "faction": "Auren", 
+            "faction": "auren", 
             "warning": ""
         }, 
         {
@@ -1037,7 +1046,7 @@
             "W": "+4 [12]", 
             "WATER": "", 
             "commands": "income", 
-            "faction": "Swarmlings", 
+            "faction": "swarmlings", 
             "warning": ""
         }, 
         {
@@ -1060,7 +1069,7 @@
             "W": "+5 [8]", 
             "WATER": "", 
             "commands": "income", 
-            "faction": "Alchemists", 
+            "faction": "alchemists", 
             "warning": ""
         }, 
         {
@@ -1083,7 +1092,7 @@
             "W": "+2 [4]", 
             "WATER": "", 
             "commands": "income", 
-            "faction": "Engineers", 
+            "faction": "engineers", 
             "warning": ""
         }, 
         {
@@ -1109,7 +1118,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Burn 4. Action ACT4", 
-            "faction": "Nomads", 
+            "faction": "nomads", 
             "warning": ""
         }, 
         {
@@ -1132,7 +1141,7 @@
             "W": "-2 [4]", 
             "WATER": "", 
             "commands": "TP->F4", 
-            "faction": "Auren", 
+            "faction": "auren", 
             "warning": ""
         }, 
         {
@@ -1155,7 +1164,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 1", 
-            "faction": "Engineers", 
+            "faction": "engineers", 
             "warning": ""
         }, 
         {
@@ -1178,7 +1187,7 @@
             "W": "-3 [9]", 
             "WATER": "", 
             "commands": "TP->G6", 
-            "faction": "Swarmlings", 
+            "faction": "swarmlings", 
             "warning": ""
         }, 
         {
@@ -1201,7 +1210,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 1", 
-            "faction": "Nomads", 
+            "faction": "nomads", 
             "warning": ""
         }, 
         {
@@ -1224,7 +1233,7 @@
             "W": "-2 [6]", 
             "WATER": "", 
             "commands": "TP->E10. -3C", 
-            "faction": "Alchemists", 
+            "faction": "alchemists", 
             "warning": ""
         }, 
         {
@@ -1247,7 +1256,7 @@
             "W": "-1 [3]", 
             "WATER": "", 
             "commands": "Burn 4. Action ACT5. D->D7", 
-            "faction": "Engineers", 
+            "faction": "engineers", 
             "warning": ""
         }, 
         {
@@ -1270,7 +1279,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 2", 
-            "faction": "Alchemists", 
+            "faction": "alchemists", 
             "warning": ""
         }, 
         {
@@ -1296,7 +1305,7 @@
             "W": "-2 [5]", 
             "WATER": "", 
             "commands": "TP->G7", 
-            "faction": "Nomads", 
+            "faction": "nomads", 
             "warning": ""
         }, 
         {
@@ -1319,7 +1328,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 2", 
-            "faction": "Swarmlings", 
+            "faction": "swarmlings", 
             "warning": ""
         }, 
         {
@@ -1342,7 +1351,7 @@
             "W": "-4 [0]", 
             "WATER": "+2 [3]", 
             "commands": "SH->F4. +FAV6", 
-            "faction": "Auren", 
+            "faction": "auren", 
             "warning": ""
         }, 
         {
@@ -1365,7 +1374,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 1", 
-            "faction": "Engineers", 
+            "faction": "engineers", 
             "warning": ""
         }, 
         {
@@ -1388,7 +1397,7 @@
             "W": "-8 [1]", 
             "WATER": "", 
             "commands": "Dig 2. D->H8", 
-            "faction": "Swarmlings", 
+            "faction": "swarmlings", 
             "warning": ""
         }, 
         {
@@ -1411,7 +1420,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 2", 
-            "faction": "Nomads", 
+            "faction": "nomads", 
             "warning": ""
         }, 
         {
@@ -1434,7 +1443,7 @@
             "W": "+2 [8]", 
             "WATER": "", 
             "commands": "Burn 4. Action ACT3", 
-            "faction": "Alchemists", 
+            "faction": "alchemists", 
             "warning": ""
         }, 
         {
@@ -1457,7 +1466,7 @@
             "W": "-1 [2]", 
             "WATER": "", 
             "commands": "Action BON1. D->E9", 
-            "faction": "Engineers", 
+            "faction": "engineers", 
             "warning": ""
         }, 
         {
@@ -1480,7 +1489,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 2", 
-            "faction": "Alchemists", 
+            "faction": "alchemists", 
             "warning": ""
         }, 
         {
@@ -1506,7 +1515,7 @@
             "W": "-4 [1]", 
             "WATER": "", 
             "commands": "SH->G7", 
-            "faction": "Nomads", 
+            "faction": "nomads", 
             "warning": ""
         }, 
         {
@@ -1529,7 +1538,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 3", 
-            "faction": "Swarmlings", 
+            "faction": "swarmlings", 
             "warning": ""
         }, 
         {
@@ -1552,7 +1561,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Action ACTA. +2FIRE", 
-            "faction": "Auren", 
+            "faction": "auren", 
             "warning": ""
         }, 
         {
@@ -1575,7 +1584,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "P->FIRE1", 
-            "faction": "Swarmlings", 
+            "faction": "swarmlings", 
             "warning": ""
         }, 
         {
@@ -1598,7 +1607,7 @@
             "W": "-4 [4]", 
             "WATER": "", 
             "commands": "Dig 1. D->F7", 
-            "faction": "Alchemists", 
+            "faction": "alchemists", 
             "warning": ""
         }, 
         {
@@ -1621,7 +1630,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 3", 
-            "faction": "Nomads", 
+            "faction": "nomads", 
             "warning": ""
         }, 
         {
@@ -1644,7 +1653,7 @@
             "W": "-1 [1]", 
             "WATER": "", 
             "commands": "TP->E9", 
-            "faction": "Engineers", 
+            "faction": "engineers", 
             "warning": ""
         }, 
         {
@@ -1670,7 +1679,7 @@
             "W": "-1 [0]", 
             "WATER": "", 
             "commands": "Action ACTN. D->C4", 
-            "faction": "Nomads", 
+            "faction": "nomads", 
             "warning": ""
         }, 
         {
@@ -1693,7 +1702,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Action BON2. +FIRE", 
-            "faction": "Auren", 
+            "faction": "auren", 
             "warning": ""
         }, 
         {
@@ -1716,7 +1725,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Pass Bon3", 
-            "faction": "Swarmlings", 
+            "faction": "swarmlings", 
             "warning": ""
         }, 
         {
@@ -1739,7 +1748,7 @@
             "W": "-4 [0]", 
             "WATER": "", 
             "commands": "SH->E10", 
-            "faction": "Alchemists", 
+            "faction": "alchemists", 
             "warning": ""
         }, 
         {
@@ -1762,7 +1771,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 3", 
-            "faction": "Engineers", 
+            "faction": "engineers", 
             "warning": ""
         }, 
         {
@@ -1785,7 +1794,7 @@
             "W": "-1 [0]", 
             "WATER": "", 
             "commands": "TE->E9. +FAV7", 
-            "faction": "Engineers", 
+            "faction": "engineers", 
             "warning": ""
         }, 
         {
@@ -1808,7 +1817,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 1", 
-            "faction": "Alchemists", 
+            "faction": "alchemists", 
             "warning": ""
         }, 
         {
@@ -1834,7 +1843,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Pass Bon4", 
-            "faction": "Nomads", 
+            "faction": "nomads", 
             "warning": ""
         }, 
         {
@@ -1857,7 +1866,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Action FAV6. +FIRE", 
-            "faction": "Auren", 
+            "faction": "auren", 
             "warning": ""
         }, 
         {
@@ -1880,7 +1889,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Action ACT6. D8:black. E11:black", 
-            "faction": "Alchemists", 
+            "faction": "alchemists", 
             "warning": ""
         }, 
         {
@@ -1903,7 +1912,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Burn 3. Action ACT1. Bridge E9:D6", 
-            "faction": "Engineers", 
+            "faction": "engineers", 
             "warning": ""
         }, 
         {
@@ -1929,7 +1938,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Burn 3. Action ACT2", 
-            "faction": "Auren", 
+            "faction": "auren", 
             "warning": ""
         }, 
         {
@@ -1952,7 +1961,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Pass Bon5", 
-            "faction": "Alchemists", 
+            "faction": "alchemists", 
             "warning": ""
         }, 
         {
@@ -1975,7 +1984,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Pass Bon6", 
-            "faction": "Engineers", 
+            "faction": "engineers", 
             "warning": ""
         }, 
         {
@@ -2001,7 +2010,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "P->FIRE2", 
-            "faction": "Auren", 
+            "faction": "auren", 
             "warning": ""
         }, 
         {
@@ -2027,7 +2036,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Pass Bon1", 
-            "faction": "Auren", 
+            "faction": "auren", 
             "warning": ""
         }, 
         {
@@ -2053,7 +2062,7 @@
             "W": "+4 [4]", 
             "WATER": "", 
             "commands": "income", 
-            "faction": "Nomads", 
+            "faction": "nomads", 
             "warning": ""
         }, 
         {
@@ -2076,7 +2085,7 @@
             "W": "+5 [5]", 
             "WATER": "", 
             "commands": "income", 
-            "faction": "Auren", 
+            "faction": "auren", 
             "warning": ""
         }, 
         {
@@ -2099,7 +2108,7 @@
             "W": "+6 [7]", 
             "WATER": "", 
             "commands": "income", 
-            "faction": "Swarmlings", 
+            "faction": "swarmlings", 
             "warning": ""
         }, 
         {
@@ -2122,7 +2131,7 @@
             "W": "+4 [4]", 
             "WATER": "", 
             "commands": "income", 
-            "faction": "Alchemists", 
+            "faction": "alchemists", 
             "warning": ""
         }, 
         {
@@ -2145,7 +2154,7 @@
             "W": "+5 [5]", 
             "WATER": "", 
             "commands": "income", 
-            "faction": "Engineers", 
+            "faction": "engineers", 
             "warning": ""
         }, 
         {
@@ -2171,7 +2180,7 @@
             "W": "+2 [9]", 
             "WATER": "", 
             "commands": "Action ACT3", 
-            "faction": "Swarmlings", 
+            "faction": "swarmlings", 
             "warning": ""
         }, 
         {
@@ -2194,7 +2203,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Action ACT2", 
-            "faction": "Alchemists", 
+            "faction": "alchemists", 
             "warning": ""
         }, 
         {
@@ -2217,7 +2226,7 @@
             "W": "-4 [1]", 
             "WATER": "", 
             "commands": "dig 1. D->D6", 
-            "faction": "Engineers", 
+            "faction": "engineers", 
             "warning": ""
         }, 
         {
@@ -2240,7 +2249,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 1", 
-            "faction": "Nomads", 
+            "faction": "nomads", 
             "warning": ""
         }, 
         {
@@ -2263,7 +2272,7 @@
             "W": "-1 [3]", 
             "WATER": "", 
             "commands": "D->E8", 
-            "faction": "Nomads", 
+            "faction": "nomads", 
             "warning": ""
         }, 
         {
@@ -2286,7 +2295,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 1", 
-            "faction": "Engineers", 
+            "faction": "engineers", 
             "warning": ""
         }, 
         {
@@ -2309,7 +2318,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Action ACTA. +2AIR", 
-            "faction": "Auren", 
+            "faction": "auren", 
             "warning": ""
         }, 
         {
@@ -2335,7 +2344,7 @@
             "W": "-5 [4]", 
             "WATER": "", 
             "commands": "SH->G6", 
-            "faction": "Swarmlings", 
+            "faction": "swarmlings", 
             "warning": ""
         }, 
         {
@@ -2358,7 +2367,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 3", 
-            "faction": "Nomads", 
+            "faction": "nomads", 
             "warning": ""
         }, 
         {
@@ -2381,7 +2390,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 1", 
-            "faction": "Alchemists", 
+            "faction": "alchemists", 
             "warning": ""
         }, 
         {
@@ -2404,7 +2413,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "p->air1", 
-            "faction": "Alchemists", 
+            "faction": "alchemists", 
             "warning": ""
         }, 
         {
@@ -2427,7 +2436,7 @@
             "W": "-1 [0]", 
             "WATER": "", 
             "commands": "D->F6", 
-            "faction": "Engineers", 
+            "faction": "engineers", 
             "warning": ""
         }, 
         {
@@ -2450,7 +2459,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 4", 
-            "faction": "Alchemists", 
+            "faction": "alchemists", 
             "warning": ""
         }, 
         {
@@ -2473,7 +2482,7 @@
             "W": "-1 [2]", 
             "WATER": "", 
             "commands": "Action ACTN. D->D5", 
-            "faction": "Nomads", 
+            "faction": "nomads", 
             "warning": ""
         }, 
         {
@@ -2496,7 +2505,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 1", 
-            "faction": "Engineers", 
+            "faction": "engineers", 
             "warning": ""
         }, 
         {
@@ -2519,7 +2528,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Action FAV6. +AIR", 
-            "faction": "Auren", 
+            "faction": "auren", 
             "warning": ""
         }, 
         {
@@ -2545,7 +2554,7 @@
             "W": "-2 [2]", 
             "WATER": "", 
             "commands": "Burn 3. Action ACT5. D->I11", 
-            "faction": "Swarmlings", 
+            "faction": "swarmlings", 
             "warning": ""
         }, 
         {
@@ -2568,7 +2577,7 @@
             "W": "-1 [3]", 
             "WATER": "", 
             "commands": "D->D8", 
-            "faction": "Alchemists", 
+            "faction": "alchemists", 
             "warning": ""
         }, 
         {
@@ -2591,7 +2600,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Leech 1", 
-            "faction": "Engineers", 
+            "faction": "engineers", 
             "warning": ""
         }, 
         {
@@ -2614,7 +2623,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "p->earth1", 
-            "faction": "Engineers", 
+            "faction": "engineers", 
             "warning": ""
         }, 
         {
@@ -2637,7 +2646,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Action ACT4", 
-            "faction": "Nomads", 
+            "faction": "nomads", 
             "warning": ""
         }, 
         {
@@ -2660,7 +2669,7 @@
             "W": "", 
             "WATER": "", 
             "commands": "Burn 3. Action ACT1. Bridge F4:G3", 
-            "faction": "Auren", 
+            "faction": "auren", 
             "warning": ""
         }, 
         {
@@ -2686,7 +2695,7 @@
             "W": "-2 [0]", 
             "WATER": "", 
             "commands": "D->I10", 
-            "faction": "Swarmlings", 
+            "faction": "swarmlings", 
             "warning": ""
         }, 
         {
@@ -2709,7 +2718,7 @@
             "W": "-1 [2]", 
             "WATER": "", 
             "commands": "D->E11", 
-            "faction": "Alchemists", 
+            "faction": "alchemists", 
             "warning": ""
         }, 
         {
@@ -2732,7 +2741,197 @@
             "W": "", 
             "WATER": "", 
             "commands": "Pass Bon2", 
-            "faction": "Engineers", 
+            "faction": "engineers", 
+            "warning": ""
+        }, 
+        {
+            "AIR": "", 
+            "C": "+2 [15]", 
+            "CULT": "", 
+            "D": "", 
+            "EARTH": "", 
+            "FIRE": "", 
+            "P": "", 
+            "P1": "", 
+            "P2": "", 
+            "P3": "", 
+            "PW": "", 
+            "SA": "", 
+            "SH": "", 
+            "TE": "", 
+            "TP": "", 
+            "VP": "", 
+            "W": "", 
+            "WATER": "", 
+            "commands": "Pass Bon7", 
+            "faction": "nomads", 
+            "warning": ""
+        }, 
+        {
+            "AIR": "", 
+            "C": "-2 [10]", 
+            "CULT": "", 
+            "D": "-1 [6]", 
+            "EARTH": "", 
+            "FIRE": "", 
+            "P": "", 
+            "P1": "", 
+            "P2": "", 
+            "P3": "", 
+            "PW": "", 
+            "SA": "", 
+            "SH": "", 
+            "TE": "", 
+            "TP": "", 
+            "VP": "", 
+            "W": "-1 [4]", 
+            "WATER": "", 
+            "commands": "D->G3", 
+            "faction": "auren", 
+            "warning": ""
+        }, 
+        {
+            "comment": " Round 2. Turn 5"
+        }, 
+        {
+            "AIR": "+1 [2]", 
+            "C": "", 
+            "CULT": "+4 [5/2/2/2]", 
+            "D": "+1 [5]", 
+            "EARTH": "+1 [2]", 
+            "FIRE": "+1 [5]", 
+            "P": "", 
+            "P1": "-2 [6]", 
+            "P2": "+2 [3]", 
+            "P3": "", 
+            "PW": "+2 [6/3/0]", 
+            "SA": "", 
+            "SH": "", 
+            "TE": "", 
+            "TP": "-1 [3]", 
+            "VP": "+13 [30]", 
+            "W": "+3 [3]", 
+            "WATER": "+1 [2]", 
+            "commands": "Action ACTS. TP->I11. +TW5", 
+            "faction": "swarmlings", 
+            "warning": ""
+        }, 
+        {
+            "AIR": "", 
+            "C": "-3 [0]", 
+            "CULT": "", 
+            "D": "+1 [5]", 
+            "EARTH": "", 
+            "FIRE": "", 
+            "P": "", 
+            "P1": "", 
+            "P2": "", 
+            "P3": "", 
+            "PW": "", 
+            "SA": "", 
+            "SH": "", 
+            "TE": "", 
+            "TP": "-1 [3]", 
+            "VP": "+12 [36]", 
+            "W": "", 
+            "WATER": "", 
+            "commands": "TP->D8. +TW2", 
+            "faction": "alchemists", 
+            "warning": ""
+        }, 
+        {
+            "AIR": "", 
+            "C": "", 
+            "CULT": "", 
+            "D": "", 
+            "EARTH": "", 
+            "FIRE": "", 
+            "P": "", 
+            "P1": "", 
+            "P2": "-1 [2]", 
+            "P3": "+1 [3]", 
+            "PW": "+1 [0/2/3]", 
+            "SA": "", 
+            "SH": "", 
+            "TE": "", 
+            "TP": "", 
+            "VP": "", 
+            "W": "", 
+            "WATER": "", 
+            "commands": "Leech 1", 
+            "faction": "engineers", 
+            "warning": ""
+        }, 
+        {
+            "AIR": "", 
+            "C": "-2 [8]", 
+            "CULT": "", 
+            "D": "-1 [5]", 
+            "EARTH": "", 
+            "FIRE": "", 
+            "P": "", 
+            "P1": "", 
+            "P2": "", 
+            "P3": "", 
+            "PW": "", 
+            "SA": "", 
+            "SH": "", 
+            "TE": "", 
+            "TP": "", 
+            "VP": "", 
+            "W": "-1 [3]", 
+            "WATER": "", 
+            "commands": "Action BON1. D->F1", 
+            "faction": "auren", 
+            "warning": ""
+        }, 
+        {
+            "comment": " Round 2. Turn 6"
+        }, 
+        {
+            "AIR": "", 
+            "C": "", 
+            "CULT": "", 
+            "D": "", 
+            "EARTH": "", 
+            "FIRE": "", 
+            "P": "", 
+            "P1": "", 
+            "P2": "", 
+            "P3": "", 
+            "PW": "", 
+            "SA": "", 
+            "SH": "", 
+            "TE": "", 
+            "TP": "", 
+            "VP": "", 
+            "W": "", 
+            "WATER": "", 
+            "commands": "Pass Bon6", 
+            "faction": "swarmlings", 
+            "warning": ""
+        }, 
+        {
+            "AIR": "", 
+            "C": "", 
+            "CULT": "", 
+            "D": "", 
+            "EARTH": "", 
+            "FIRE": "", 
+            "P": "", 
+            "P1": "", 
+            "P2": "", 
+            "P3": "", 
+            "PW": "", 
+            "SA": "", 
+            "SH": "", 
+            "TE": "", 
+            "TP": "", 
+            "VP": "", 
+            "W": "", 
+            "WATER": "", 
+            "commands": "Pass Bon3", 
+            "faction": "alchemists", 
             "warning": ""
         }
     ], 
@@ -2840,6 +3039,9 @@
         "ACTN": {
             "blocked": 1
         }, 
+        "ACTS": {
+            "blocked": 1
+        }, 
         "AIR1": {
             "blocked": 0, 
             "building": "P", 
@@ -2904,14 +3106,17 @@
             "C": 0, 
             "blocked": 0
         }, 
-        "BON1/Engineers": {
+        "BON1/auren": {
+            "blocked": 1
+        }, 
+        "BON1/engineers": {
             "blocked": 0
         }, 
         "BON2": {
             "C": 0, 
             "blocked": 0
         }, 
-        "BON2/Auren": {
+        "BON2/auren": {
             "blocked": 0
         }, 
         "BON3": {
@@ -2931,7 +3136,7 @@
             "blocked": 0
         }, 
         "BON7": {
-            "C": 2, 
+            "C": 0, 
             "blocked": 0
         }, 
         "BON8": {
@@ -3021,7 +3226,7 @@
         }, 
         "D8": {
             "blocked": 0, 
-            "building": "D", 
+            "building": "TP", 
             "col": 11, 
             "color": "black", 
             "row": 3
@@ -3123,8 +3328,9 @@
         }, 
         "F1": {
             "blocked": 0, 
+            "building": "D", 
             "col": 0, 
-            "color": "gray", 
+            "color": "green", 
             "row": 5
         }, 
         "F2": {
@@ -3167,7 +3373,7 @@
             "color": "black", 
             "row": 5
         }, 
-        "FAV6/Auren": {
+        "FAV6/auren": {
             "blocked": 1
         }, 
         "FIRE1": {
@@ -3206,6 +3412,7 @@
         }, 
         "G3": {
             "blocked": 0, 
+            "building": "D", 
             "col": 7, 
             "color": "green", 
             "row": 6
@@ -3301,7 +3508,7 @@
         }, 
         "I11": {
             "blocked": 0, 
-            "building": "D", 
+            "building": "TP", 
             "col": 11, 
             "color": "blue", 
             "row": 8
@@ -3386,11 +3593,11 @@
         }
     }, 
     "order": [
-        "Nomads", 
-        "Auren", 
-        "Swarmlings", 
-        "Alchemists", 
-        "Engineers"
+        "nomads", 
+        "auren", 
+        "swarmlings", 
+        "alchemists", 
+        "engineers"
     ], 
     "pool": {
         "ACT1": 1, 
@@ -3399,18 +3606,18 @@
         "ACT4": 1, 
         "ACT5": 1, 
         "ACT6": 1, 
-        "AIR": 94, 
+        "AIR": 93, 
         "BON1": 0, 
         "BON2": 0, 
         "BON3": 0, 
-        "BON4": 0, 
-        "BON5": 0, 
-        "BON6": 1, 
-        "BON7": 1, 
+        "BON4": 1, 
+        "BON5": 1, 
+        "BON6": 0, 
+        "BON7": 0, 
         "BON8": 1, 
-        "C": 1039, 
+        "C": 1046, 
         "CULT": 9993, 
-        "EARTH": 95, 
+        "EARTH": 94, 
         "FAV1": 1, 
         "FAV10": 3, 
         "FAV11": 3, 
@@ -3423,23 +3630,24 @@
         "FAV7": 2, 
         "FAV8": 3, 
         "FAV9": 3, 
-        "FIRE": 91, 
+        "FIRE": 90, 
         "FREE_TF": 10000, 
-        "FREE_TP": 10000, 
+        "FREE_TP": 9999, 
         "GAIN_FAVOR": 9998, 
+        "GAIN_SHIP": 10000, 
         "P": 996, 
         "P1": 10000, 
         "P2": 10000, 
         "P3": 10000, 
         "SHOVEL": 10000, 
         "TW1": 2, 
-        "TW2": 2, 
+        "TW2": 1, 
         "TW3": 2, 
         "TW4": 2, 
-        "TW5": 2, 
-        "VP": 995, 
-        "W": 1009, 
-        "WATER": 98
+        "TW5": 1, 
+        "VP": 970, 
+        "W": 1008, 
+        "WATER": 97
     }, 
     "score_tiles": [
         {

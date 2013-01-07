@@ -484,7 +484,7 @@ function renderTown(div, name, faction) {
 }
 
 function renderTreasury(board, treasury, faction) {
-    $H(treasury).each(function(elem, index) {
+    $H(treasury).sortBy(function(elem) { return elem.key}).each(function(elem, index) {
         var name = elem.key;
         var value = elem.value;
 
