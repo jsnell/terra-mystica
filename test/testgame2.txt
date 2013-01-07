@@ -245,12 +245,8 @@ Nomads: income
 Mermaids: income
 Darklings: income
 
-# Oops: Chaos Magicians got cheated out of 1 worker here
-Chaosmagicians: -1w
-# Oops: I think nomads were given an extra coin here
-Nomads: +1c
-# Oops: Darklings were screwed out of 1 worker
-Darklings: -1w
+# Retroactive fixup for income phase snafu 
+Nomads: +1c. -1vp
 
 start
 
@@ -271,7 +267,6 @@ Chaosmagicians: Leech 1
 Darklings: P -> Earth4
 Chaosmagicians: P -> Fire3
 Nomads: TE -> F3. +FAV4
-# Oops. I think this VP loss wasn't correctly lost. 
 Chaosmagicians: Leech 2
 Mermaids: -2pw. +2c. D -> I4
 Chaosmagicians: Leech 1
@@ -286,11 +281,18 @@ Mermaids: Action FAV6. +FIRE
 Darklings: Dig 2. D -> E9
 Chaosmagicians: Leech 1
 Chaosmagicians: Action Bon2. +WATER
+Nomads: Pass Bon3
+Mermaids: -p. +w. burn 1. -3pw. +3c. TP -> I4
+Chaosmagicians: Leech 1
 
+# Round 5: Turn 6
+Darklings: SH -> C1. +TW1. -3w. +3p.
+Chaosmagicians: P -> Air2
+Mermaids: Pass Bon4.
 
-
-
-
+# Round 5: Turn 7
+Darklings: -P. +Earth
+Chaosmagicians: -2pw. -2w. +4c. Upgrade ship
 
 
 
