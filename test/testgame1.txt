@@ -155,6 +155,20 @@ Auren: Action BON1. D -> F1
 
 Swarmlings: Pass Bon6
 Alchemists: Pass Bon3
+Auren: Pass Bon8
 
+# Round 3 income
+
+Nomads: income
+Auren: income
+Swarmlings: income
+Alchemists: income
+Engineers: income. D4:gray
+
+start
+
+# Round 3. Turn 1
+Engineers: D -> D4
+Nomads: Leech 1
 
 
