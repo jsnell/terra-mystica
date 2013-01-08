@@ -1,7 +1,5 @@
 - Final cult track scoring
 - Automatic conversion of resources -> money -> VPs in endgame
-- Check upgrade prereqs (no building TPs in empty hex...)
-- Check mana / resource conversions
 
 Partially implemented factions:
 - Engineer stronghold VP scoring

@@ -73,7 +73,7 @@ my %setups = (
             TE => { cost => { W => 2, C => 5 },
                     income => { P => [ 3, 2, 1, 0 ] } },
             SH => { cost => { W => 4, C => 6 },
-                    ## FIXME: one-time W -> P conversion ability
+                    gain => { CONVERT_W_TO_P => 3 },
                     income => { PW => [ 2, 0 ] } },
             SA => { cost => { W => 4, C => 10 },
                     income => { P => [ 2, 0 ] } },
@@ -406,6 +406,7 @@ my %pool = (
     CULT => 10000,
     GAIN_FAVOR => 10000,
     GAIN_SHIP => 10000,
+    CONVERT_W_TO_P => 3,
 );
 
 $pool{"ACT$_"}++ for 1..6;
@@ -751,7 +752,7 @@ sub command {
         $map{$where}{building} = $type;
         my $color = $faction->{color};
 
-        command $faction_name, "$where:$color";
+        command $faction_name, "transform $where to $color";
 
         $faction->{$type}--;
     } elsif ($command =~ /^upgrade (\w+) to (\w+)$/) {
@@ -812,6 +813,36 @@ sub command {
         $map{$where}{color} = $faction->{color};
 
         $faction->{$type}--;
+    } elsif ($command =~ /^convert (\d+)?(\w+) to (\d+)?(\w+)$/) {
+        die "Need faction for command $command\n" if !$faction_name;
+
+        my $from_count = $1 || 1;
+        my $from_type = $2;
+        my $to_count = $3 || 1;
+        my $to_type = $4;
+
+        my %exchange_rates = (
+            pw => { c => 1, w => 3, p => 5 },
+            w => { c => 1 },
+            p => { c => 1, w => 1 }
+        );
+
+        if ($faction->{CONVERT_W_TO_P}) {
+            die "Can't convert more than 3 W to P" if $to_count > 3;
+            $exchange_rates{w}{p} = 1;
+            delete $faction->{CONVERT_W_TO_P};
+        }
+
+        die "Can't convert from $from_type to $to_type"
+            if !$exchange_rates{$from_type}{$to_type};
+
+        my $wanted_from_count =
+            $to_count * $exchange_rates{$from_type}{$to_type};
+        die "Conversion to $to_count $to_type requires $wanted_from_count $from_type, not $from_count"
+            if  $wanted_from_count != $from_count;
+        
+        command $faction_name, "-$from_count$from_type";
+        command $faction_name, "+$to_count$to_type";
     } elsif ($command =~ /^burn (\d+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
         $faction->{P2} -= 2*$1;
@@ -826,7 +857,7 @@ sub command {
         if ($actual_pw > 0) {
             command $faction_name, "-${vp}VP";
         }
-    } elsif ($command =~ /^(\w+):(\w+)$/) {
+    } elsif ($command =~ /^transform (\w+) to (\w+)$/) {
         my $where = uc $1;
         my $color = lc $2;
         if ($faction->{FREE_TF}) {
@@ -863,13 +894,9 @@ sub command {
         for (keys %{$faction}) {
             next if !$faction->{$_};
 
-            my $pass_vp;
+            my $pass_vp  = $tiles{$_}{pass_vp};
             if (/^BON/) {
                 command $faction_name, "-$_";
-                
-                $pass_vp = $tiles{$_}{pass_vp};
-            } elsif (/FAV/) {
-                $pass_vp = $tiles{$_}{pass_vp};
             }
 
             if ($pass_vp) {
