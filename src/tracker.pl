@@ -894,13 +894,9 @@ sub command {
         for (keys %{$faction}) {
             next if !$faction->{$_};
 
-            my $pass_vp;
+            my $pass_vp  = $tiles{$_}{pass_vp};
             if (/^BON/) {
                 command $faction_name, "-$_";
-                
-                $pass_vp = $tiles{$_}{pass_vp};
-            } elsif (/FAV/) {
-                $pass_vp = $tiles{$_}{pass_vp};
             }
 
             if ($pass_vp) {
