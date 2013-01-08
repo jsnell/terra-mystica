@@ -294,6 +294,27 @@ Mermaids: Pass Bon4.
 Darklings: -P. +Earth
 Chaosmagicians: -2pw. -2w. +4c. Upgrade ship
 
+# Round 5: Turn 8
+Darklings: -p. +w. Pass Bon7
+Chaosmagicians: Pass Bon6
+
+# Round 6: income
+
+Chaosmagicians: income
+Nomads: income
+Mermaids: income
+Darklings: income
+
+start
+
+# Round 6: Turn 1
+Nomads: Action ACT4
+Mermaids: Action ACT5. Dig 1. D -> H3
+Darklings: -P. +EARTH
+
+
+
+
 
 
 

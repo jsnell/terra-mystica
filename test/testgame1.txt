@@ -173,6 +173,13 @@ Nomads: Leech 1
 Nomads: Action ACTN. D -> C3
 Engineers: Leech 1
 Auren: P -> Water1
+Swarmlings: Dig 1. D -> H5.
+Auren: Leech 1
+Alchemists: Burn 2. Action ACT6. E4:black. D -> E6
+Auren: Leech 3
+
+# Round 3. Turn 2
+Engineers: Action ACT4
 
 
 
