@@ -469,8 +469,8 @@ function renderFavor(div, name, faction) {
     renderTile(div, name, state.favors[name], faction);
 }
 
-function renderTown(div, name, faction) {
-    div.insert(name);
+function renderTown(div, name, faction, count) {
+    div.insert(name + " (x" + count + ")");
 
     div.insert("<div>#{VP} vp</div>".interpolate(state.towns[name].gain));
     $H(state.towns[name].gain).each(function(elem, index) {
@@ -510,7 +510,7 @@ function renderTreasury(board, treasury, faction) {
             board.insert(new Element('div', {
                 'class': 'town'}));
             var div = board.childElements().last();
-            renderTown(div, name, faction);
+            renderTown(div, name, faction, value);
             return;
         }
     });
@@ -535,26 +535,28 @@ function drawFactions() {
         var faction = state.factions[name];
         var color = faction.color;
 
-        var style ='';
+        var style ='float: left; margin-right: 20px; ';
         if (faction.passed) {
-            style = 'opacity: 0.5';
+            style += 'opacity: 0.5';
         }
 
-        var board = makeBoard(color, name, 'faction-board', style);
+        var container = new Element('div', { 'class': 'faction-board' });
+        var board = makeBoard(color, name, '', style);
+        container.insert(board);
+        var info = new Element('div', {'class': 'faction-info' });
+        board.insert(info);
 
-        board.insert(new Element('div').update(
+        info.insert(new Element('div').update(
             "#{C} c, #{W} w, #{P} p, #{VP} vp, #{P1}/#{P2}/#{P3} pw".interpolate(faction)));
-        board.insert(new Element('div').update(
+        info.insert(new Element('div').update(
             "dig level #{dig.level}, ship level #{ship.level}".interpolate(faction)));
 
-        board.insert("<hr>");
-        board.insert(new Element('div').update(
-            "Income: #{C} c, #{W} w, #{P} p, #{PW} pw".interpolate(faction.income)));
-        board.insert("<hr>");
+        info.insert(new Element('div').update(
+            "<br>Income: #{C} c, #{W} w, #{P} p, #{PW} pw".interpolate(faction.income)));
 
-        renderTreasury(board, faction, name);
+        renderTreasury(container, faction, name);
         
-        $("factions").insert(board);
+        $("factions").insert(container);
     });
     
     var pool = makeBoard("orange", "Pool", 'pool');
