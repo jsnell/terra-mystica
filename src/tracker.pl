@@ -725,13 +725,44 @@ sub command {
             $faction->{C} += $map{$type}{C};
             $map{$type}{C} = 0;
         }
-    } elsif ($command =~ /^(\w+)->(\w+)$/) {
+    }  elsif ($command =~ /^build (\w+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
 
         my $free = ($round == 0);
+        my $where = uc $1;
+        my $type = 'D';
+        die "Unknown location '$where'" if !$map{$where};
+
+        die "'$where' already contains a $map{$where}{building}"
+            if $map{$where}{building};
+
+        if ($faction->{FREE_D}) {
+            $free = 1;
+            $faction->{FREE_D}--;
+        }
+
+        if (!$free) {
+            pay $faction_name, $faction->{buildings}{$type}{cost};
+        }
+
+        maybe_score_favor_tile $faction_name, $type;
+        maybe_score_current_score_tile $faction_name, $type;
+
+        $map{$where}{building} = $type;
+        my $color = $faction->{color};
+
+        command $faction_name, "$where:$color";
+
+        $faction->{$type}--;
+    } elsif ($command =~ /^(\w+)->(\w+)$/) {
+        die "Need faction for command $command\n" if !$faction_name;
+
         $type = uc $1;
+        my $free = 0;
         my $where = uc $2;
         die "Unknown location '$where'" if !$map{$where};
+
+        die if $type eq 'D';
 
         my $oldtype = $map{$where}{building};
         if ($oldtype) {

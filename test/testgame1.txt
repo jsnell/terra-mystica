@@ -11,15 +11,15 @@ setup Engineers
 score SCORE4, SCORE2, SCORE8, SCORE7, SCORE6, SCORE5
 
 # Initial dwellings
-Nomads: D -> A5
-Auren: D -> F4
-Swarmlings: D -> H4
-Alchemists: D -> E5
-Engineers: D -> E7. D -> C5
-Alchemists: D -> E10
-Swarmlings: D -> G6
-Auren: D -> F2
-Nomads: D -> B4. D -> G7
+Nomads: Build A5
+Auren: Build F4
+Swarmlings: Build H4
+Alchemists: Build E5
+Engineers: Build E7. Build C5
+Alchemists: Build E10
+Swarmlings: Build G6
+Auren: Build F2
+Nomads: Build B4. Build G7
 
 # Bonus tiles in reverse order
 Engineers: +Bon1
@@ -46,7 +46,7 @@ Engineers: Leech 1
 Swarmlings: TP -> G6
 Nomads: Leech 1
 Alchemists: TP -> E10. -3C
-Engineers: Burn 4. Action ACT5. D -> D7
+Engineers: Burn 4. Action ACT5. Build D7
 Alchemists: Leech 2
 
 # Round 1, Turn 2:
@@ -55,10 +55,10 @@ Nomads: TP -> G7
 Swarmlings: Leech 2
 Auren: SH -> F4. +FAV6
 Engineers: Leech 1
-Swarmlings: Dig 2. D -> H8
+Swarmlings: Dig 2. Build H8
 Nomads: Leech 2
 Alchemists: Burn 4. Action ACT3
-Engineers: Action BON1. D -> E9
+Engineers: Action BON1. Build E9
 Alchemists: Leech 2
 
 # Round 1, Turn 3:
@@ -66,13 +66,13 @@ Nomads: SH -> G7.
 Swarmlings: Leech 3
 Auren: Action ACTA. +2FIRE
 Swarmlings: P -> FIRE1
-Alchemists: Dig 1. D -> F7
+Alchemists: Dig 1. Build F7
 Nomads: Leech 3
 Engineers: TP -> E9
 
 # Round 1, Turn 4:
 
-Nomads: Action ACTN. D -> C4
+Nomads: Action ACTN. Build C4
 Auren: Action BON2. +FIRE
 Swarmlings: Pass Bon3. 
 Alchemists: SH -> E10
@@ -113,9 +113,9 @@ start
 
 Swarmlings: Action ACT3
 Alchemists: Action ACT2
-Engineers: dig 1. D -> D6
+Engineers: dig 1. Build D6
 Nomads: Leech 1
-Nomads: D -> E8
+Nomads: Build E8
 Engineers: Leech 1
 Auren: Action ACTA. +2AIR
 
@@ -124,32 +124,32 @@ Swarmlings: SH -> G6
 Nomads: Leech 3
 Alchemists: Leech 1
 Alchemists: p -> air1
-Engineers: D -> F6
+Engineers: Build F6
 Alchemists: Leech 4
-Nomads: Action ACTN. D -> D5
+Nomads: Action ACTN. Build D5
 Engineers: Leech 1
 Auren: Action FAV6. +AIR
 
 # Round 2. Turn 3
-Swarmlings: Burn 3. Action ACT5. D -> I11.
-Alchemists: D -> D8
+Swarmlings: Burn 3. Action ACT5. Build I11.
+Alchemists: Build D8
 Engineers: Leech 1
 Engineers: p -> earth1
 Nomads: Action ACT4
 Auren: Burn 3. Action ACT1. Bridge F4:G3
 
 # Round 2. Turn 4
-Swarmlings: D -> I10
-Alchemists: D -> E11
+Swarmlings: Build I10
+Alchemists: Build E11
 Engineers: Pass Bon2
 Nomads: Pass Bon7
-Auren: D -> G3
+Auren: Build G3
 
 # Round 2. Turn 5
 Swarmlings: Action ACTS. TP -> I11. +TW5
 Alchemists: TP -> D8. +TW2
 Engineers: Leech 1
-Auren: Action BON1. D -> F1
+Auren: Action BON1. Build F1
 
 # Round 2. Turn 6
 
@@ -168,14 +168,14 @@ Engineers: income. D4:gray
 start
 
 # Round 3. Turn 1
-Engineers: D -> D4
+Engineers: Build D4
 Nomads: Leech 1
-Nomads: Action ACTN. D -> C3
+Nomads: Action ACTN. Build C3
 Engineers: Leech 1
 Auren: P -> Water1
-Swarmlings: Dig 1. D -> H5.
+Swarmlings: Dig 1. Build H5.
 Auren: Leech 1
-Alchemists: Burn 2. Action ACT6. E4:black. D -> E6
+Alchemists: Burn 2. Action ACT6. E4:black. Build E6
 Auren: Leech 3
 
 # Round 3. Turn 2

@@ -10,12 +10,12 @@ setup Nomads
 setup Mermaids
 setup Darklings
 
-Nomads: D -> F3
-Mermaids: D -> E4
-Darklings: D -> C1. D -> G5 
-Mermaids: D -> H4
-Nomads: D -> D3. D -> G4
-ChaosMagicians: D -> D7
+Nomads: Build F3
+Mermaids: Build E4
+Darklings: Build C1. Build G5 
+Mermaids: Build H4
+Nomads: Build D3. Build G4
+ChaosMagicians: Build D7
 
 # Bon9 -> Bon8
 # Bon8 -> Bon6
@@ -36,23 +36,23 @@ start
 
 # Round 1: Turn 1
 ChaosMagicians: advance ship
-Nomads: burn 4. Action ACT5. D -> F5
+Nomads: burn 4. Action ACT5. Build F5
 Darklings: Leech 1
-Mermaids: Dig 1. D -> E5
+Mermaids: Dig 1. Build E5
 Nomads: Leech 1
 Darklings: Burn 4. Action ACT3
 
 # Round 1: Turn 2
-Chaosmagicians: D -> D6
-Nomads: Dig 1. D -> B2
+Chaosmagicians: Build D6
+Nomads: Dig 1. Build B2
 Mermaids: TP -> E4
 Nomads: Leech 1
-Darklings: Dig 1. D -> D2
+Darklings: Dig 1. Build D2
 Nomads: Leech 1
 
 # Round 1: Turn 3
 Chaosmagicians: TP -> D6. -3c
-Nomads: D -> A5
+Nomads: Build A5
 Mermaids: Burn 3. Action ACT2
 Darklings: TP -> D2
 Nomads: Leech 1
@@ -89,19 +89,19 @@ start
 
 # Round 2: Turn 1
 Nomads: Burn 1. Action ACT4
-Mermaids: Burn 2. Action ACT5. D -> F4
-Darklings: Dig 1. D -> E2
+Mermaids: Burn 2. Action ACT5. Build F4
+Darklings: Dig 1. Build E2
 Chaosmagicians: P -> Air1
 
 # Round 2: Turn 2
 Nomads: TP -> D3
 Darklings: Leech 3
 Mermaids: Leech 2
-Mermaids: D -> F2
+Mermaids: Build F2
 Darklings: Leech 1
 Darklings: TE -> D2. +FAV8
 Nomads: Leech 2
-Chaosmagicians: Burn 2. Action ACT6. D -> E8. C5:red
+Chaosmagicians: Burn 2. Action ACT6. Build E8. C5:red
 
 # Round 2: Turn 3
 Nomads: SH -> D3
@@ -110,12 +110,12 @@ Mermaids: Leech 2
 Mermaids: Burn 2. -2pw. +2c. TP -> E5
 Nomads: Leech 1
 Darklings: Action ACT2
-Chaosmagicians: Burn 1. -1pw. +1c. D -> G2 
+Chaosmagicians: Burn 1. -1pw. +1c. Build G2 
 
 # Round 2: Turn 4
 Nomads: Leech 1
 Mermaids: Leech 1
-Nomads: Action ACTN. D -> E6
+Nomads: Action ACTN. Build E6
 Mermaids: Leech 3
 Mermaids: Action FAV6. +EARTH
 Darklings: Pass Bon8
@@ -139,32 +139,32 @@ Darklings: income
 start
 
 # Round 3: Turn 1
-Darklings: Dig 1. D -> G6.
+Darklings: Dig 1. Build G6.
 Chaosmagicians: TP -> G2
 Nomads: Leech 1
 Mermaids: Leech 1
-Nomads: Action ACTN. D -> F6
+Nomads: Action ACTN. Build F6
 Darklings: Leech 3
 Mermaids: Action ACT4
 
 # Round 3: Turn 2
-Darklings: Dig 1. -2pw. +2c. D -> F7
+Darklings: Dig 1. -2pw. +2c. Build F7
 Nomads: Leech 1
 Chaosmagicians: TE -> G2. +Fav7. +Fav11
 # Oops. This power leech was dropped in the accounting
 # Nomads: Leech 1
 Mermaids: Leech 1
-Nomads: Dig 1. D -> D4
+Nomads: Dig 1. Build D4
 Mermaids: SA -> E4. +Fav5. +TW2
 
 # Round 3: Turn 3
-Darklings: Dig 1. D -> H7
+Darklings: Dig 1. Build H7
 Chaosmagicians: P -> Earth2
 Nomads: TP -> F6
-Mermaids: D -> G3
+Mermaids: Build G3
 
 # Round 3: Turn 4
-Darklings: Dig 1. -2pw. +2c. D -> I10
+Darklings: Dig 1. -2pw. +2c. Build I10
 Chaosmagicians: Leech 1
 Chaosmagicians: Pass Bon5
 Nomads: -1pw. +1c. TP -> F5
@@ -172,7 +172,7 @@ Darklings: Leech 2
 Mermaids: Action Bon2. +Earth
 
 # Round 3: Turn 5
-Darklings: -2pw. +2c. D -> E10. +TW3
+Darklings: -2pw. +2c. Build E10. +TW3
 Nomads: Pass Bon7
 Mermaids: Action FAV6. +EARTH
 
@@ -193,7 +193,7 @@ Darklings: income
 start
 
 # Round 4: Turn 1
-Chaosmagicians: Action ACT6. D -> E7. I7:red
+Chaosmagicians: Action ACT6. Build E7. I7:red
 Nomads: Leech 2
 Mermaids: Leech 1
 Nomads: Action ACT4.
@@ -201,25 +201,25 @@ Mermaids: P -> FIRE1
 Darklings: Pass Bon6. -3pw. +3c
 
 # Round 4: Turn 2
-Chaosmagicians: D -> C5
+Chaosmagicians: Build C5
 Nomads: Action ACT1. bridge D3:C2
-Mermaids: Action ACT5. D -> H5
+Mermaids: Action ACT5. Build H5
 
 # Round 4: Turn 3
-Chaosmagicians: D -> I7
+Chaosmagicians: Build I7
 Mermaids: Leech 1
-Nomads: Action ACTN. D -> D5
+Nomads: Action ACTN. Build D5
 Chaosmagicians: Leech 2
 Mermaids: TP -> F4
 Nomads: Leech 2
 
 # Round 4: Turn 4
-Chaosmagicians: D -> I5
+Chaosmagicians: Build I5
 Nomads: TE -> F6. +Fav5
-Mermaids: D -> H2
+Mermaids: Build H2
 
 # Round 4: Turn 5
-Chaosmagicians: D -> A12
+Chaosmagicians: Build A12
 Nomads: TP -> F3
 Mermaids: Advance ship
 
@@ -253,12 +253,12 @@ start
 # Round 5: Turn 1
 Darklings: Burn 1. Action ACT4
 Chaosmagicians: Action ACT1. Bridge E8:D6
-Nomads: Action ACTN. D -> C2. +TW5. -2pw. +2c
+Nomads: Action ACTN. Build C2. +TW5. -2pw. +2c
 Mermaids: -2pw. +2c. TE -> E5. +FAV1
 
 # Round 5: Turn 2
 Darklings: SA -> D2. +FAV10
-Chaosmagicians: Action ACT5. D -> B6
+Chaosmagicians: Action ACT5. Build B6
 Nomads: SA -> F6. +FAV12. +TW5.
 Mermaids: SH -> H4.
 Chaosmagicians: Leech 1
@@ -268,7 +268,7 @@ Darklings: P -> Earth4
 Chaosmagicians: P -> Fire3
 Nomads: TE -> F3. +FAV4
 Chaosmagicians: Leech 2
-Mermaids: -2pw. +2c. D -> I4
+Mermaids: -2pw. +2c. Build I4
 Chaosmagicians: Leech 1
 
 # Round 5: Turn 4
@@ -278,7 +278,7 @@ Nomads: Action ACT2
 Mermaids: Action FAV6. +FIRE
 
 # Round 5: Turn 5
-Darklings: Dig 2. D -> E9
+Darklings: Dig 2. Build E9
 Chaosmagicians: Leech 1
 Chaosmagicians: Action Bon2. +WATER
 Nomads: Pass Bon3
@@ -309,7 +309,7 @@ start
 
 # Round 6: Turn 1
 Nomads: Action ACT4
-Mermaids: Action ACT5. Dig 1. D -> H3
+Mermaids: Action ACT5. Dig 1. Build H3
 Darklings: -P. +EARTH
 
 
