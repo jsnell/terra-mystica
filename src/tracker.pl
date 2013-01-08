@@ -754,25 +754,26 @@ sub command {
         command $faction_name, "$where:$color";
 
         $faction->{$type}--;
-    } elsif ($command =~ /^(\w+)->(\w+)$/) {
+    } elsif ($command =~ /^upgrade (\w+) to (\w+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
 
-        $type = uc $1;
         my $free = 0;
-        my $where = uc $2;
+        $type = uc $2;
+        my $where = uc $1;
         die "Unknown location '$where'" if !$map{$where};
 
-        die if $type eq 'D';
+        my $color = $faction->{color};
+        die "$where has wrong color ($color vs $map{$where}{color})\n" if
+            $map{$where}{color} ne $color;
 
+        my %wanted_oldtype = (TP => 'D', TE => 'TP', SH => 'TP', SA => 'TE');
         my $oldtype = $map{$where}{building};
-        if ($oldtype) {
-            $faction->{$oldtype}++;
+
+        if ($oldtype ne $wanted_oldtype{$type}) {
+            die "$where contains ə $oldtype, wanted $wanted_oldtype{$type}"
         }
 
-        if (exists $map{$where}{gain}) {
-            gain $faction_name, $map{$where}{gain};
-            delete $map{$where}{gain};
-        }
+        $faction->{$oldtype}++;
 
         gain $faction_name, $faction->{buildings}{$type}{gain};
 
@@ -789,13 +790,26 @@ sub command {
         maybe_score_current_score_tile $faction_name, $type;
 
         $map{$where}{building} = $type;
-        my $color = $faction->{color};
 
-        if (exists $map{$where}{color}) {
-            command $faction_name, "$where:$color";
-        } else {
-            $map{$where}{color} = $color;
+        $faction->{$type}--;
+    } elsif ($command =~ /^(p)->(\w+)$/) {
+        die "Need faction for command $command\n" if !$faction_name;
+
+        $type = uc $1;
+        my $free = 0;
+        my $where = uc $2;
+        die "Unknown location '$where'" if !$map{$where};
+
+        my $oldtype = $map{$where}{building};
+        die "$where already contains a priest" if $oldtype;
+
+        if (exists $map{$where}{gain}) {
+            gain $faction_name, $map{$where}{gain};
+            delete $map{$where}{gain};
         }
+
+        $map{$where}{building} = $type;
+        $map{$where}{color} = $faction->{color};
 
         $faction->{$type}--;
     } elsif ($command =~ /^burn (\d+)$/) {

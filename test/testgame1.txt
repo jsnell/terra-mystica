@@ -41,19 +41,19 @@ start
 
 # Round 1, Turn 1:
 Nomads: Burn 4. Action ACT4
-Auren: TP -> F4
+Auren: Upgrade F4 to TP
 Engineers: Leech 1
-Swarmlings: TP -> G6
+Swarmlings: Upgrade G6 to TP
 Nomads: Leech 1
-Alchemists: TP -> E10. -3C
+Alchemists: Upgrade E10 to TP. -3C
 Engineers: Burn 4. Action ACT5. Build D7
 Alchemists: Leech 2
 
 # Round 1, Turn 2:
 
-Nomads: TP -> G7
+Nomads: Upgrade G7 to TP
 Swarmlings: Leech 2
-Auren: SH -> F4. +FAV6
+Auren: Upgrade F4 to SH. +FAV6
 Engineers: Leech 1
 Swarmlings: Dig 2. Build H8
 Nomads: Leech 2
@@ -62,22 +62,22 @@ Engineers: Action BON1. Build E9
 Alchemists: Leech 2
 
 # Round 1, Turn 3:
-Nomads: SH -> G7.
+Nomads: Upgrade G7 to SH.
 Swarmlings: Leech 3
 Auren: Action ACTA. +2FIRE
 Swarmlings: P -> FIRE1
 Alchemists: Dig 1. Build F7
 Nomads: Leech 3
-Engineers: TP -> E9
+Engineers: Upgrade E9 to TP
 
 # Round 1, Turn 4:
 
 Nomads: Action ACTN. Build C4
 Auren: Action BON2. +FIRE
 Swarmlings: Pass Bon3. 
-Alchemists: SH -> E10
+Alchemists: Upgrade E10 to SH
 Engineers: Leech 3
-Engineers: TE -> E9. +FAV7
+Engineers: Upgrade E9 to TE. +FAV7
 Alchemists: Leech 1
 
 # Round 1, Turn 5:
@@ -120,7 +120,7 @@ Engineers: Leech 1
 Auren: Action ACTA. +2AIR
 
 # Round 2. Turn 2
-Swarmlings: SH -> G6
+Swarmlings: Upgrade G6 to SH
 Nomads: Leech 3
 Alchemists: Leech 1
 Alchemists: p -> air1
@@ -146,8 +146,8 @@ Nomads: Pass Bon7
 Auren: Build G3
 
 # Round 2. Turn 5
-Swarmlings: Action ACTS. TP -> I11. +TW5
-Alchemists: TP -> D8. +TW2
+Swarmlings: Action ACTS. Upgrade I11 to TP. +TW5
+Alchemists: Upgrade D8 to TP. +TW2
 Engineers: Leech 1
 Auren: Action BON1. Build F1
 
