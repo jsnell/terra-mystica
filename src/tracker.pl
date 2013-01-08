@@ -18,16 +18,16 @@ my %setups = (
                     WATER => 1, FIRE => 1, color => 'black',
                     ship => { 
                         level => 0,
-                        upgrade_cost => { C => 4, P => 1 },
-                        upgrade_gain => [ { VP => 2 },
+                        advance_cost => { C => 4, P => 1 },
+                        advance_gain => [ { VP => 2 },
                                           { VP => 3 },
                                           { VP => 4 } ]
                     },
                     dig => {
                         level => 0,
                         cost => [ { W => 3 }, { W => 2 }, { W => 1 } ],
-                        upgrade_cost => { W => 2, C => 5, P => 1 },
-                        upgrade_gain => [ { VP => 6 },
+                        advance_cost => { W => 2, C => 5, P => 1 },
+                        advance_gain => [ { VP => 6 },
                                           { VP => 6 } ]
                     },
                     special => {
@@ -54,8 +54,8 @@ my %setups = (
         color => 'black',
         ship => { 
             level => 0,
-            upgrade_cost => { C => 4, P => 1 },
-            upgrade_gain => [ { VP => 2 },
+            advance_cost => { C => 4, P => 1 },
+            advance_gain => [ { VP => 2 },
                               { VP => 3 },
                               { VP => 4 } ]
         },
@@ -84,16 +84,16 @@ my %setups = (
                color => 'green',
                ship => { 
                    level => 0,
-                   upgrade_cost => { C => 4, P => 1 },
-                   upgrade_gain => [ { VP => 2 },
+                   advance_cost => { C => 4, P => 1 },
+                   advance_gain => [ { VP => 2 },
                                      { VP => 3 },
                                      { VP => 4 } ]
                },
                dig => {
                    level => 0,
                    cost => [ { W => 3 }, { W => 2 }, { W => 1 } ],
-                   upgrade_cost => { W => 2, C => 5, P => 1 },
-                   upgrade_gain => [ { VP => 6 },
+                   advance_cost => { W => 2, C => 5, P => 1 },
+                   advance_gain => [ { VP => 6 },
                                      { VP => 6 } ]
                },
                buildings => {
@@ -116,8 +116,8 @@ my %setups = (
         color => 'blue',
         ship => { 
             level => 1,
-            upgrade_cost => { C => 4, P => 1 },
-            upgrade_gain => [ { VP => 0 },
+            advance_cost => { C => 4, P => 1 },
+            advance_gain => [ { VP => 0 },
                               { VP => 2 },
                               { VP => 3 },
                               { VP => 4 },
@@ -126,8 +126,8 @@ my %setups = (
         dig => {
             level => 0,
             cost => [ { W => 3 }, { W => 2 }, { W => 1 } ],
-            upgrade_cost => { W => 2, C => 5, P => 1 },
-            upgrade_gain => [ { VP => 6 },
+            advance_cost => { W => 2, C => 5, P => 1 },
+            advance_gain => [ { VP => 6 },
                               { VP => 6 } ]
         },
         buildings => {
@@ -150,16 +150,16 @@ my %setups = (
                     WATER => 1, AIR => 1, color => 'blue',
                     ship => { 
                         level => 0,
-                        upgrade_cost => { C => 4, P => 1 },
-                        upgrade_gain => [ { VP => 2 },
+                        advance_cost => { C => 4, P => 1 },
+                        advance_gain => [ { VP => 2 },
                                           { VP => 3 },
                                           { VP => 4 } ]
                     },
                     dig => {
                         level => 0,
                         cost => [ { W => 3 }, { W => 2 }, { W => 1 } ],
-                        upgrade_cost => { W => 2, C => 5, P => 1 },
-                        upgrade_gain => [ { VP => 6 },
+                        advance_cost => { W => 2, C => 5, P => 1 },
+                        advance_gain => [ { VP => 6 },
                                           { VP => 6 } ]
                     },
                     special => {
@@ -183,16 +183,16 @@ my %setups = (
                 FIRE => 1, EARTH => 1, color => 'yellow',
                 ship => { 
                     level => 0,
-                    upgrade_cost => { C => 4, P => 1 },
-                    upgrade_gain => [ { VP => 2 },
+                    advance_cost => { C => 4, P => 1 },
+                    advance_gain => [ { VP => 2 },
                                       { VP => 3 },
                                       { VP => 4 } ]
                 },
                 dig => {
                     level => 0,
                     cost => [ { W => 3 }, { W => 2 }, { W => 1 } ],
-                    upgrade_cost => { W => 2, C => 5, P => 1 },
-                    upgrade_gain => [ { VP => 6 },
+                    advance_cost => { W => 2, C => 5, P => 1 },
+                    advance_gain => [ { VP => 6 },
                                       { VP => 6 } ]
                 },
                 buildings => {
@@ -212,16 +212,16 @@ my %setups = (
     engineers => { C => 10, W => 2, P1 => 3, P2 => 9, color => 'gray',
                    ship => { 
                        level => 0,
-                       upgrade_cost => { C => 4, P => 1 },
-                       upgrade_gain => [ { VP => 2 },
+                       advance_cost => { C => 4, P => 1 },
+                       advance_gain => [ { VP => 2 },
                                          { VP => 3 },
                                          { VP => 4 } ]
                    },
                    dig => {
                        level => 0,
                        cost => [ { W => 3 }, { W => 2 }, { W => 1 } ],
-                       upgrade_cost => { W => 2, C => 5, P => 1 },
-                       upgrade_gain => [ { VP => 6 },
+                       advance_cost => { W => 2, C => 5, P => 1 },
+                       advance_gain => [ { VP => 6 },
                                          { VP => 6 } ]
                    },
                    buildings => {
@@ -244,16 +244,16 @@ my %setups = (
         color => 'red',
         ship => { 
             level => 0,
-            upgrade_cost => { C => 4, P => 1 },
-            upgrade_gain => [ { VP => 2 },
+            advance_cost => { C => 4, P => 1 },
+            advance_gain => [ { VP => 2 },
                               { VP => 3 },
                               { VP => 4 } ]
         },
         dig => {
             level => 0,
             cost => [ { W => 3 }, { W => 2 }, { W => 1 } ],
-            upgrade_cost => { W => 2, C => 5, P => 1 },
-            upgrade_gain => [ { VP => 6 },
+            advance_cost => { W => 2, C => 5, P => 1 },
+            advance_gain => [ { VP => 6 },
                               { VP => 6 } ]
         },
         buildings => {
@@ -662,7 +662,7 @@ sub command {
         if ($type eq 'GAIN_SHIP') {
             for (1..$delta) {
                 my $track = $faction->{ship};
-                my $gain = $track->{upgrade_gain}[$track->{level}];
+                my $gain = $track->{advance_gain}[$track->{level}];
                 gain $faction_name, $gain;
                 $track->{level}++
             }
@@ -884,18 +884,18 @@ sub command {
         gain $faction_name, \%income;
         
         $faction->{income_taken} = 1
-    } elsif ($command =~ /^upgrade (ship|dig)/) {
+    } elsif ($command =~ /^advance (ship|dig)/) {
         die "Need faction for command $command\n" if !$faction_name;
 
         my $type = lc $1;
         my $track = $faction->{$type};
 
-        pay $faction_name, $track->{upgrade_cost};
+        pay $faction_name, $track->{advance_cost};
 
-        my $gain = $track->{upgrade_gain}[$track->{level}];
+        my $gain = $track->{advance_gain}[$track->{level}];
 
         if (!$gain) {
-            die "Can't upgrade $type from level $track->{level}\n"; 
+            die "Can't advance $type from level $track->{level}\n"; 
         }
         
         gain $faction_name, $gain;

@@ -35,7 +35,7 @@ Darklings: income
 start
 
 # Round 1: Turn 1
-ChaosMagicians: upgrade ship
+ChaosMagicians: advance ship
 Nomads: burn 4. Action ACT5. D -> F5
 Darklings: Leech 1
 Mermaids: Dig 1. D -> E5
@@ -221,7 +221,7 @@ Mermaids: D -> H2
 # Round 4: Turn 5
 Chaosmagicians: D -> A12
 Nomads: TP -> F3
-Mermaids: Upgrade ship
+Mermaids: Advance ship
 
 # Round 4: Turn 6
 Chaosmagicians: P -> FIRE2
@@ -292,7 +292,7 @@ Mermaids: Pass Bon4.
 
 # Round 5: Turn 7
 Darklings: -P. +Earth
-Chaosmagicians: -2pw. -2w. +4c. Upgrade ship
+Chaosmagicians: -2pw. -2w. +4c. Advance ship
 
 # Round 5: Turn 8
 Darklings: -p. +w. Pass Bon7
