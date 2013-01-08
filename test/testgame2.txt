@@ -82,7 +82,7 @@ Mermaids: Pass Bon5
 
 Chaosmagicians: income
 Nomads: income
-Mermaids: income. G3:blue. F2:blue
+Mermaids: income. Transform G3 to blue. Transform F2 to blue
 Darklings: income
 
 start
@@ -101,7 +101,7 @@ Mermaids: Build F2
 Darklings: Leech 1
 Darklings: Upgrade D2 to TE. +FAV8
 Nomads: Leech 2
-Chaosmagicians: Burn 2. Action ACT6. Build E8. C5:red
+Chaosmagicians: Burn 2. Action ACT6. Build E8. Transform C5 to red
 
 # Round 2: Turn 3
 Nomads: Upgrade D3 to SH
@@ -193,7 +193,7 @@ Darklings: income
 start
 
 # Round 4: Turn 1
-Chaosmagicians: Action ACT6. Build E7. I7:red
+Chaosmagicians: Action ACT6. Build E7. Transform I7 to red
 Nomads: Leech 2
 Mermaids: Leech 1
 Nomads: Action ACT4.

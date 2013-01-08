@@ -752,7 +752,7 @@ sub command {
         $map{$where}{building} = $type;
         my $color = $faction->{color};
 
-        command $faction_name, "$where:$color";
+        command $faction_name, "transform $where to $color";
 
         $faction->{$type}--;
     } elsif ($command =~ /^upgrade (\w+) to (\w+)$/) {
@@ -857,7 +857,7 @@ sub command {
         if ($actual_pw > 0) {
             command $faction_name, "-${vp}VP";
         }
-    } elsif ($command =~ /^(\w+):(\w+)$/) {
+    } elsif ($command =~ /^transform (\w+) to (\w+)$/) {
         my $where = uc $1;
         my $color = lc $2;
         if ($faction->{FREE_TF}) {

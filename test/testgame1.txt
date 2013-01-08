@@ -83,7 +83,7 @@ Alchemists: Leech 1
 # Round 1, Turn 5:
 Nomads: Pass Bon4
 Auren: Action FAV6. +FIRE
-Alchemists: Action ACT6. D8:black. E11:black
+Alchemists: Action ACT6. Transform D8 to black. Transform E11 to black
 Engineers: Burn 3. Action ACT1. Bridge E9:D6. 
 
 # Round 1, Turn 6:
@@ -163,7 +163,7 @@ Nomads: income
 Auren: income
 Swarmlings: income
 Alchemists: income
-Engineers: income. D4:gray
+Engineers: income. Transform D4 to gray
 
 start
 
@@ -175,7 +175,7 @@ Engineers: Leech 1
 Auren: P -> Water1
 Swarmlings: Dig 1. Build H5.
 Auren: Leech 1
-Alchemists: Burn 2. Action ACT6. E4:black. Build E6
+Alchemists: Burn 2. Action ACT6. transform E4 to black. Build E6
 Auren: Leech 3
 
 # Round 3. Turn 2
