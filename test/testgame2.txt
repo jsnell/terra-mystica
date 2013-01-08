@@ -58,7 +58,7 @@ Darklings: Upgrade D2 to TP
 Nomads: Leech 1
 
 # Round 1: Turn 4
-Chaosmagicians: Burn 2. -2pw. +2c. Upgrade D6 to TE. +Fav8. +Fav9
+Chaosmagicians: Burn 2. Convert 2pw to 2c. Upgrade D6 to TE. +Fav8. +Fav9
 Nomads: Pass Bon2
 Mermaids: Upgrade E4 to TE. +Fav6
 Nomads: Leech 1
@@ -107,10 +107,10 @@ Chaosmagicians: Burn 2. Action ACT6. Build E8. C5:red
 Nomads: Upgrade D3 to SH
 Darklings: Leech 3
 Mermaids: Leech 2
-Mermaids: Burn 2. -2pw. +2c. Upgrade E5 to TP
+Mermaids: Burn 2. Convert 2pw to 2c. Upgrade E5 to TP
 Nomads: Leech 1
 Darklings: Action ACT2
-Chaosmagicians: Burn 1. -1pw. +1c. Build G2 
+Chaosmagicians: Burn 1. Convert pw to c. Build G2 
 
 # Round 2: Turn 4
 Nomads: Leech 1
@@ -148,7 +148,7 @@ Darklings: Leech 3
 Mermaids: Action ACT4
 
 # Round 3: Turn 2
-Darklings: Dig 1. -2pw. +2c. Build F7
+Darklings: Dig 1. Convert 2pw to 2c. Build F7
 Nomads: Leech 1
 Chaosmagicians: Upgrade G2 to TE. +Fav7. +Fav11
 # Oops. This power leech was dropped in the accounting
@@ -164,15 +164,15 @@ Nomads: Upgrade F6 to TP
 Mermaids: Build G3
 
 # Round 3: Turn 4
-Darklings: Dig 1. -2pw. +2c. Build I10
+Darklings: Dig 1. Convert 2pw to 2c. Build I10
 Chaosmagicians: Leech 1
 Chaosmagicians: Pass Bon5
-Nomads: -1pw. +1c. Upgrade F5 to TP
+Nomads: Convert pw to c. Upgrade F5 to TP
 Darklings: Leech 2
 Mermaids: Action Bon2. +Earth
 
 # Round 3: Turn 5
-Darklings: -2pw. +2c. Build E10. +TW3
+Darklings: Convert 2pw to 2c. Build E10. +TW3
 Nomads: Pass Bon7
 Mermaids: Action FAV6. +EARTH
 
@@ -198,7 +198,7 @@ Nomads: Leech 2
 Mermaids: Leech 1
 Nomads: Action ACT4.
 Mermaids: P -> FIRE1
-Darklings: Pass Bon6. -3pw. +3c
+Darklings: Pass Bon6. Convert 3pw to 3c
 
 # Round 4: Turn 2
 Chaosmagicians: Build C5
@@ -230,7 +230,7 @@ Chaosmagicians: Leech 1
 Mermaids: Action FAV6. +FIRE
 
 # Round 4: Turn 7
-Chaosmagicians: Pass Bon2. -pw. +1c
+Chaosmagicians: Pass Bon2. Convert pw to 1c
 Nomads: Pass Bon8
 Mermaids: Upgrade H4 to TP. +TW2
 Chaosmagicians: Leech 1
@@ -253,8 +253,8 @@ start
 # Round 5: Turn 1
 Darklings: Burn 1. Action ACT4
 Chaosmagicians: Action ACT1. Bridge E8:D6
-Nomads: Action ACTN. Build C2. +TW5. -2pw. +2c
-Mermaids: -2pw. +2c. Upgrade E5 to TE. +FAV1
+Nomads: Action ACTN. Build C2. +TW5. Convert 2pw to 2c
+Mermaids: Convert 2pw to 2c. Upgrade E5 to TE. +FAV1
 
 # Round 5: Turn 2
 Darklings: Upgrade D2 to SA. +FAV10
@@ -268,12 +268,12 @@ Darklings: P -> Earth4
 Chaosmagicians: P -> Fire3
 Nomads: Upgrade F3 to TE. +FAV4
 Chaosmagicians: Leech 2
-Mermaids: -2pw. +2c. Build I4
+Mermaids: Convert 2pw to 2c. Build I4
 Chaosmagicians: Leech 1
 
 # Round 5: Turn 4
 Darklings: Upgrade C1 to TP
-Chaosmagicians: -2w. +2c. Upgrade D6 to SA. +FAV5. +FAV3
+Chaosmagicians: Convert 2w to 2c. Upgrade D6 to SA. +FAV5. +FAV3
 Nomads: Action ACT2
 Mermaids: Action FAV6. +FIRE
 
@@ -282,20 +282,20 @@ Darklings: Dig 2. Build E9
 Chaosmagicians: Leech 1
 Chaosmagicians: Action Bon2. +WATER
 Nomads: Pass Bon3
-Mermaids: -p. +w. burn 1. -3pw. +3c. Upgrade I4 to TP
+Mermaids: Convert p to w. burn 1. Convert 3pw to 3c. Upgrade I4 to TP
 Chaosmagicians: Leech 1
 
 # Round 5: Turn 6
-Darklings: Upgrade C1 to SH. +TW1. -3w. +3p.
+Darklings: Upgrade C1 to SH. +TW1. Convert 3w to 3p.
 Chaosmagicians: P -> Air2
 Mermaids: Pass Bon4.
 
 # Round 5: Turn 7
 Darklings: -P. +Earth
-Chaosmagicians: -2pw. -2w. +4c. Advance ship
+Chaosmagicians: Convert 2pw to 2c. Convert 2w to 2c. Advance ship
 
 # Round 5: Turn 8
-Darklings: -p. +w. Pass Bon7
+Darklings: Convert p to w. Pass Bon7
 Chaosmagicians: Pass Bon6
 
 # Round 6: income
