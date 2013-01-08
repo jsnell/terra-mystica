@@ -573,8 +573,19 @@ function drawLedger() {
             record.bg = colors[state.factions[record.faction].color];
             record.fg = (record.bg == '#000000' ? '#ccc' : '#000');
             record.commands = record.commands.escapeHTML();
-            ledger.insert("<tr><td style='background-color:#{bg}; color: #{fg}'>#{faction}<td>#{VP}<td>#{C}<td>#{W}<td>#{P}<td>#{PW}<td>#{CULT}<td>#{commands}</tr>".interpolate(
-                record));
+            var row = "<tr><td style='background-color:#{bg}; color: #{fg}'>#{faction}".interpolate(record);
+            ["VP", "C", "W", "P", "PW", "CULT"].each(function(key) {
+                var elem = record[key];
+                if (!elem.delta) {
+                    elem.delta = '';
+                } else if (elem.delta > 0) {
+                    elem.delta = "+" + elem.delta;
+                }
+                row += "<td><span style='min-width: 3em; float: left'>#{delta}&#160;</span><span style='color: #999;'>#{value}</span>".
+                    interpolate(elem);
+            });
+            row += "<td>#{commands}</tr>".interpolate(record);
+            ledger.insert(row);
             if (record.warning) {
                 ledger.insert("<tr><td colspan=7><td><span class='warning'>" + 
                               record.warning.escapeHTML() +

@@ -1036,16 +1036,11 @@ sub handle_row {
             $new_data{CULT} = sum @new_data{@cults};
 
             my %delta = map { $_, $new_data{$_} - $old_data{$_} } @fields;
-            my %pretty_delta = map { $_, ($delta{$_} ?
-                                          sprintf "%+d [%d]", $delta{$_}, $new_data{$_} :
-                                          '')} @fields;
-            if ($delta{PW}) {
-                $pretty_delta{PW} = sprintf "%+d [%d/%d/%d]", $delta{PW}, $new_data{P1}, $new_data{P2}, $new_data{P3};
-            }
+            my %pretty_delta = map { $_, { delta => $delta{$_},
+                                           value => $new_data{$_} } } @fields;
+            $pretty_delta{PW}{value} = sprintf "%d/%d/%d",  $new_data{P1}, $new_data{P2}, $new_data{P3};
 
-            if ($delta{CULT}) {
-                $pretty_delta{CULT} = sprintf "%+d [%d/%d/%d/%d]", $delta{CULT}, $new_data{FIRE}, $new_data{WATER}, $new_data{EARTH}, $new_data{AIR};
-            }
+            $pretty_delta{CULT}{value} = sprintf "%d/%d/%d/%d", $new_data{FIRE}, $new_data{WATER}, $new_data{EARTH}, $new_data{AIR};
 
             my $warn = '';
             if ($factions{$prefix}{SHOVEL}) {
