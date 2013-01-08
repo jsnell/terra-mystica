@@ -1,8 +1,11 @@
 div.faction-board {
     font: 14px Verdana;
+    background-color: #eee;
     border-style: solid;
-    margin: 2px;
-    padding: 3px;
+    border-width: 1px;
+    border-color: #444;
+    margin-bottom: 10px;
+    padding: 5px;
     width: 1024px;
     float: left;
 }
@@ -14,9 +17,13 @@ div.faction-info {
 
 div.pool {
     font: 14px Verdana;
+    background-color: #eee;
     border-style: solid;
+    border-width: 1px;
+    border-color: #444;
     margin: 2px;
-    padding: 3px;
+    margin-bottom: 10px;
+    padding: 5px;
     width: 1024px;
     min-height: 220px;
     float: left;
@@ -83,10 +90,19 @@ div.town {
     height: 80px;
 }
 
-table { border-style: solid }
+table {
+    border-style: none;
+    border-width: 1px;
+}
 
-canvas#map { border-style: solid }
-canvas#cults { border-style: solid }
+canvas#map {
+    border-style: none;
+    border-width: 1px;
+}
+canvas#cults {
+    border-style: none;
+    border-width: 1px;
+}
 
 canvas.action {
     float: left;

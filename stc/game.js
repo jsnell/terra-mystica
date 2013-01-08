@@ -430,10 +430,13 @@ function insertAction(parent, name, key) {
     renderAction(canvas, name, key);
 }
 
-function renderTile(div, name, record, faction) {
+function renderTile(div, name, record, faction, count) {
     div.insert(name);
     if (state.map[name] && state.map[name].C) {
         div.insert(" [#{C}c]".interpolate(state.map[name]));
+    }
+    if (count > 1) {
+        div.insert("(x" + count + ")");
     }
     div.insert("<hr>");
 
@@ -462,15 +465,19 @@ function renderTile(div, name, record, faction) {
 }
 
 function renderBonus(div, name, faction) {
-    renderTile(div, name, state.bonus_tiles[name], faction);
+    renderTile(div, name, state.bonus_tiles[name], faction, 1);
 }
 
-function renderFavor(div, name, faction) {
-    renderTile(div, name, state.favors[name], faction);
+function renderFavor(div, name, faction, count) {
+    renderTile(div, name, state.favors[name], faction, count);
 }
 
 function renderTown(div, name, faction, count) {
-    div.insert(name + " (x" + count + ")");
+    if (count != 1) {
+        div.insert(name + " (x" + count + ")");
+    } else {
+        div.insert(name);
+    }
 
     div.insert("<div>#{VP} vp</div>".interpolate(state.towns[name].gain));
     $H(state.towns[name].gain).each(function(elem, index) {
@@ -504,7 +511,7 @@ function renderTreasury(board, treasury, faction) {
             board.insert(new Element('div', {
                 'class': 'favor'}));
             var div = board.childElements().last();
-            renderFavor(div, name, faction);
+            renderFavor(div, name, faction, value);
             return;
         } else if (name.startsWith("TW")) {
             board.insert(new Element('div', {
@@ -522,7 +529,7 @@ function makeBoard(color, name, klass, style) {
         'style': style,
     });
     board.insert(new Element('div', {
-        'style': 'background-color: ' + colors[color] + '; color: ' +
+        'style': 'padding: 1px 1px 1px 5px; background-color: ' + colors[color] + '; color: ' +
             (color == 'black' ? '#ccc' : '#000')
     }).update(name));
 
