@@ -10,12 +10,12 @@ setup Nomads
 setup Mermaids
 setup Darklings
 
-Nomads: Free D -> F3
-Mermaids: Free D -> E4
-Darklings: Free D -> C1. Free D -> G5 
-Mermaids: Free D -> H4
-Nomads: Free D -> D3. Free D -> G4
-ChaosMagicians: Free D -> D7
+Nomads: Build F3
+Mermaids: Build E4
+Darklings: Build C1. Build G5 
+Mermaids: Build H4
+Nomads: Build D3. Build G4
+ChaosMagicians: Build D7
 
 # Bon9 -> Bon8
 # Bon8 -> Bon6
@@ -35,40 +35,40 @@ Darklings: income
 start
 
 # Round 1: Turn 1
-ChaosMagicians: upgrade ship
-Nomads: burn 4. Action ACT5. D -> F5
+ChaosMagicians: advance ship
+Nomads: burn 4. Action ACT5. Build F5
 Darklings: Leech 1
-Mermaids: Dig 1. D -> E5
+Mermaids: Dig 1. Build E5
 Nomads: Leech 1
 Darklings: Burn 4. Action ACT3
 
 # Round 1: Turn 2
-Chaosmagicians: D -> D6
-Nomads: Dig 1. D -> B2
-Mermaids: TP -> E4
+Chaosmagicians: Build D6
+Nomads: Dig 1. Build B2
+Mermaids: Upgrade E4 to TP
 Nomads: Leech 1
-Darklings: Dig 1. D -> D2
+Darklings: Dig 1. Build D2
 Nomads: Leech 1
 
 # Round 1: Turn 3
-Chaosmagicians: TP -> D6. -3c
-Nomads: D -> A5
+Chaosmagicians: Upgrade D6 to TP. -3c
+Nomads: Build A5
 Mermaids: Burn 3. Action ACT2
-Darklings: TP -> D2
+Darklings: Upgrade D2 to TP
 Nomads: Leech 1
 
 # Round 1: Turn 4
-Chaosmagicians: Burn 2. -2pw. +2c. TE -> D6. +Fav8. +Fav9
+Chaosmagicians: Burn 2. -2pw. +2c. Upgrade D6 to TE. +Fav8. +Fav9
 Nomads: Pass Bon2
-Mermaids: TE -> E4. +Fav6
+Mermaids: Upgrade E4 to TE. +Fav6
 Nomads: Leech 1
-Darklings: TP -> G5
+Darklings: Upgrade G5 to TP
 Nomads: Leech 2
 
 # Round 1: Turn 5
 Chaosmagicians: Pass Bon4
 Mermaids: P -> Water1
-Darklings: TE -> G5. +FAV7
+Darklings: Upgrade G5 to TE. +FAV7
 Nomads: Leech 2
 
 # Round 1: Turn 6
@@ -89,33 +89,33 @@ start
 
 # Round 2: Turn 1
 Nomads: Burn 1. Action ACT4
-Mermaids: Burn 2. Action ACT5. D -> F4
-Darklings: Dig 1. D -> E2
+Mermaids: Burn 2. Action ACT5. Build F4
+Darklings: Dig 1. Build E2
 Chaosmagicians: P -> Air1
 
 # Round 2: Turn 2
-Nomads: TP -> D3
+Nomads: Upgrade D3 to TP
 Darklings: Leech 3
 Mermaids: Leech 2
-Mermaids: D -> F2
+Mermaids: Build F2
 Darklings: Leech 1
-Darklings: TE -> D2. +FAV8
+Darklings: Upgrade D2 to TE. +FAV8
 Nomads: Leech 2
-Chaosmagicians: Burn 2. Action ACT6. D -> E8. C5:red
+Chaosmagicians: Burn 2. Action ACT6. Build E8. C5:red
 
 # Round 2: Turn 3
-Nomads: SH -> D3
+Nomads: Upgrade D3 to SH
 Darklings: Leech 3
 Mermaids: Leech 2
-Mermaids: Burn 2. -2pw. +2c. TP -> E5
+Mermaids: Burn 2. -2pw. +2c. Upgrade E5 to TP
 Nomads: Leech 1
 Darklings: Action ACT2
-Chaosmagicians: Burn 1. -1pw. +1c. D -> G2 
+Chaosmagicians: Burn 1. -1pw. +1c. Build G2 
 
 # Round 2: Turn 4
 Nomads: Leech 1
 Mermaids: Leech 1
-Nomads: Action ACTN. D -> E6
+Nomads: Action ACTN. Build E6
 Mermaids: Leech 3
 Mermaids: Action FAV6. +EARTH
 Darklings: Pass Bon8
@@ -139,40 +139,40 @@ Darklings: income
 start
 
 # Round 3: Turn 1
-Darklings: Dig 1. D -> G6.
-Chaosmagicians: TP -> G2
+Darklings: Dig 1. Build G6.
+Chaosmagicians: Upgrade G2 to TP
 Nomads: Leech 1
 Mermaids: Leech 1
-Nomads: Action ACTN. D -> F6
+Nomads: Action ACTN. Build F6
 Darklings: Leech 3
 Mermaids: Action ACT4
 
 # Round 3: Turn 2
-Darklings: Dig 1. -2pw. +2c. D -> F7
+Darklings: Dig 1. -2pw. +2c. Build F7
 Nomads: Leech 1
-Chaosmagicians: TE -> G2. +Fav7. +Fav11
+Chaosmagicians: Upgrade G2 to TE. +Fav7. +Fav11
 # Oops. This power leech was dropped in the accounting
 # Nomads: Leech 1
 Mermaids: Leech 1
-Nomads: Dig 1. D -> D4
-Mermaids: SA -> E4. +Fav5. +TW2
+Nomads: Dig 1. Build D4
+Mermaids: Upgrade E4 to SA. +Fav5. +TW2
 
 # Round 3: Turn 3
-Darklings: Dig 1. D -> H7
+Darklings: Dig 1. Build H7
 Chaosmagicians: P -> Earth2
-Nomads: TP -> F6
-Mermaids: D -> G3
+Nomads: Upgrade F6 to TP
+Mermaids: Build G3
 
 # Round 3: Turn 4
-Darklings: Dig 1. -2pw. +2c. D -> I10
+Darklings: Dig 1. -2pw. +2c. Build I10
 Chaosmagicians: Leech 1
 Chaosmagicians: Pass Bon5
-Nomads: -1pw. +1c. TP -> F5
+Nomads: -1pw. +1c. Upgrade F5 to TP
 Darklings: Leech 2
 Mermaids: Action Bon2. +Earth
 
 # Round 3: Turn 5
-Darklings: -2pw. +2c. D -> E10. +TW3
+Darklings: -2pw. +2c. Build E10. +TW3
 Nomads: Pass Bon7
 Mermaids: Action FAV6. +EARTH
 
@@ -193,7 +193,7 @@ Darklings: income
 start
 
 # Round 4: Turn 1
-Chaosmagicians: Action ACT6. D -> E7. I7:red
+Chaosmagicians: Action ACT6. Build E7. I7:red
 Nomads: Leech 2
 Mermaids: Leech 1
 Nomads: Action ACT4.
@@ -201,38 +201,38 @@ Mermaids: P -> FIRE1
 Darklings: Pass Bon6. -3pw. +3c
 
 # Round 4: Turn 2
-Chaosmagicians: D -> C5
+Chaosmagicians: Build C5
 Nomads: Action ACT1. bridge D3:C2
-Mermaids: Action ACT5. D -> H5
+Mermaids: Action ACT5. Build H5
 
 # Round 4: Turn 3
-Chaosmagicians: D -> I7
+Chaosmagicians: Build I7
 Mermaids: Leech 1
-Nomads: Action ACTN. D -> D5
+Nomads: Action ACTN. Build D5
 Chaosmagicians: Leech 2
-Mermaids: TP -> F4
+Mermaids: Upgrade F4 to TP
 Nomads: Leech 2
 
 # Round 4: Turn 4
-Chaosmagicians: D -> I5
-Nomads: TE -> F6. +Fav5
-Mermaids: D -> H2
+Chaosmagicians: Build I5
+Nomads: Upgrade F6 to TE. +Fav5
+Mermaids: Build H2
 
 # Round 4: Turn 5
-Chaosmagicians: D -> A12
-Nomads: TP -> F3
-Mermaids: Upgrade ship
+Chaosmagicians: Build A12
+Nomads: Upgrade F3 to TP
+Mermaids: Advance ship
 
 # Round 4: Turn 6
 Chaosmagicians: P -> FIRE2
-Nomads: TP -> D4. +TW3
+Nomads: Upgrade D4 to TP. +TW3
 Chaosmagicians: Leech 1
 Mermaids: Action FAV6. +FIRE
 
 # Round 4: Turn 7
 Chaosmagicians: Pass Bon2. -pw. +1c
 Nomads: Pass Bon8
-Mermaids: TP -> H4. +TW2
+Mermaids: Upgrade H4 to TP. +TW2
 Chaosmagicians: Leech 1
 
 # Round 4: Turn 8
@@ -253,46 +253,46 @@ start
 # Round 5: Turn 1
 Darklings: Burn 1. Action ACT4
 Chaosmagicians: Action ACT1. Bridge E8:D6
-Nomads: Action ACTN. D -> C2. +TW5. -2pw. +2c
-Mermaids: -2pw. +2c. TE -> E5. +FAV1
+Nomads: Action ACTN. Build C2. +TW5. -2pw. +2c
+Mermaids: -2pw. +2c. Upgrade E5 to TE. +FAV1
 
 # Round 5: Turn 2
-Darklings: SA -> D2. +FAV10
-Chaosmagicians: Action ACT5. D -> B6
-Nomads: SA -> F6. +FAV12. +TW5.
-Mermaids: SH -> H4.
+Darklings: Upgrade D2 to SA. +FAV10
+Chaosmagicians: Action ACT5. Build B6
+Nomads: Upgrade F6 to SA. +FAV12. +TW5.
+Mermaids: Upgrade H4 to SH.
 Chaosmagicians: Leech 1
 
 # Round 5: Turn 3
 Darklings: P -> Earth4
 Chaosmagicians: P -> Fire3
-Nomads: TE -> F3. +FAV4
+Nomads: Upgrade F3 to TE. +FAV4
 Chaosmagicians: Leech 2
-Mermaids: -2pw. +2c. D -> I4
+Mermaids: -2pw. +2c. Build I4
 Chaosmagicians: Leech 1
 
 # Round 5: Turn 4
-Darklings: TP -> C1
-Chaosmagicians: -2w. +2c. SA -> D6. +FAV5. +FAV3
+Darklings: Upgrade C1 to TP
+Chaosmagicians: -2w. +2c. Upgrade D6 to SA. +FAV5. +FAV3
 Nomads: Action ACT2
 Mermaids: Action FAV6. +FIRE
 
 # Round 5: Turn 5
-Darklings: Dig 2. D -> E9
+Darklings: Dig 2. Build E9
 Chaosmagicians: Leech 1
 Chaosmagicians: Action Bon2. +WATER
 Nomads: Pass Bon3
-Mermaids: -p. +w. burn 1. -3pw. +3c. TP -> I4
+Mermaids: -p. +w. burn 1. -3pw. +3c. Upgrade I4 to TP
 Chaosmagicians: Leech 1
 
 # Round 5: Turn 6
-Darklings: SH -> C1. +TW1. -3w. +3p.
+Darklings: Upgrade C1 to SH. +TW1. -3w. +3p.
 Chaosmagicians: P -> Air2
 Mermaids: Pass Bon4.
 
 # Round 5: Turn 7
 Darklings: -P. +Earth
-Chaosmagicians: -2pw. -2w. +4c. Upgrade ship
+Chaosmagicians: -2pw. -2w. +4c. Advance ship
 
 # Round 5: Turn 8
 Darklings: -p. +w. Pass Bon7
@@ -309,7 +309,7 @@ start
 
 # Round 6: Turn 1
 Nomads: Action ACT4
-Mermaids: Action ACT5. Dig 1. D -> H3
+Mermaids: Action ACT5. Dig 1. Build H3
 Darklings: -P. +EARTH
 
 
