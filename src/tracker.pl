@@ -725,12 +725,12 @@ sub command {
             $faction->{C} += $map{$type}{C};
             $map{$type}{C} = 0;
         }
-    } elsif ($command =~ /^(free\s+)?(\w+)->(\w+)$/) {
+    } elsif ($command =~ /^(\w+)->(\w+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
 
-        my $free = $1;
-        $type = uc $2;
-        my $where = uc $3;
+        my $free = ($round == 0);
+        $type = uc $1;
+        my $where = uc $2;
         die "Unknown location '$where'" if !$map{$where};
 
         my $oldtype = $map{$where}{building};

@@ -11,15 +11,15 @@ setup Engineers
 score SCORE4, SCORE2, SCORE8, SCORE7, SCORE6, SCORE5
 
 # Initial dwellings
-Nomads: Free D -> A5
-Auren: Free D -> F4
-Swarmlings: Free D -> H4
-Alchemists: Free D -> E5
-Engineers: Free D -> E7. Free D -> C5
-Alchemists: Free D -> E10
-Swarmlings: Free D -> G6
-Auren: Free D -> F2
-Nomads: Free D -> B4. Free D -> G7
+Nomads: D -> A5
+Auren: D -> F4
+Swarmlings: D -> H4
+Alchemists: D -> E5
+Engineers: D -> E7. D -> C5
+Alchemists: D -> E10
+Swarmlings: D -> G6
+Auren: D -> F2
+Nomads: D -> B4. D -> G7
 
 # Bonus tiles in reverse order
 Engineers: +Bon1

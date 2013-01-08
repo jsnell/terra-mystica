@@ -10,12 +10,12 @@ setup Nomads
 setup Mermaids
 setup Darklings
 
-Nomads: Free D -> F3
-Mermaids: Free D -> E4
-Darklings: Free D -> C1. Free D -> G5 
-Mermaids: Free D -> H4
-Nomads: Free D -> D3. Free D -> G4
-ChaosMagicians: Free D -> D7
+Nomads: D -> F3
+Mermaids: D -> E4
+Darklings: D -> C1. D -> G5 
+Mermaids: D -> H4
+Nomads: D -> D3. D -> G4
+ChaosMagicians: D -> D7
 
 # Bon9 -> Bon8
 # Bon8 -> Bon6
