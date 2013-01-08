@@ -180,6 +180,8 @@ Auren: Leech 3
 
 # Round 3. Turn 2
 Engineers: Action ACT4
+Nomads: Upgrade E8 to TP
+Engineers: Leech 1
 
 
 

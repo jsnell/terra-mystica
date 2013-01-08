@@ -576,12 +576,13 @@ function drawLedger() {
             var row = "<tr><td style='background-color:#{bg}; color: #{fg}'>#{faction}".interpolate(record);
             ["VP", "C", "W", "P", "PW", "CULT"].each(function(key) {
                 var elem = record[key];
+                if (key != "CULT") { elem.type = key };
                 if (!elem.delta) {
                     elem.delta = '';
                 } else if (elem.delta > 0) {
                     elem.delta = "+" + elem.delta;
                 }
-                row += "<td><span style='min-width: 3em; float: left'>#{delta}&#160;</span><span style='color: #999;'>#{value}</span>".
+                row += "<td><span style='min-width: 3em; float: left'>#{delta}&#160;</span><span style='color: #999;'>#{value} #{type}</span>".
                     interpolate(elem);
             });
             row += "<td>#{commands}</tr>".interpolate(record);

@@ -94,8 +94,9 @@ div#error {
 }
 
 table#ledger tr td {
-    padding-left: 2ex;
-    padding-right: 2ex;
+    padding-left: 1ex;
+    padding-right: 1ex;
+    font: 14px Verdana;
 }
 
 span.warning {

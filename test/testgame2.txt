@@ -311,6 +311,7 @@ start
 Nomads: Action ACT4
 Mermaids: Action ACT5. Dig 1. Build H3
 Darklings: -P. +EARTH
+Chaosmagicians: Action ACT1. Bridge B6:C5
 
 
 
