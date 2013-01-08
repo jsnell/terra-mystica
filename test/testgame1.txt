@@ -182,7 +182,12 @@ Auren: Leech 3
 Engineers: Action ACT4
 Nomads: Upgrade E8 to TP
 Engineers: Leech 1
-
-
+Auren: Upgrade G3 to TP
+Swarmlings: Leech 2
+Swarmlings: Action ACTS. upgrade H4 to TP
+Auren: Leech 2
+Alchemists: Upgrade E6 to TP
+Engineers: Leech 2
+Engineers: Upgrade D7 to TP. +TW2
 
 

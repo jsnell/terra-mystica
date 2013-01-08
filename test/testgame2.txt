@@ -313,40 +313,24 @@ Mermaids: Action ACT5. Dig 1. Build H3
 Darklings: -P. +EARTH
 Chaosmagicians: Action ACT1. Bridge B6:C5
 
+# Round 6: Turn 2
+Nomads: P -> AIR3
+Mermaids: P -> Water2
+Darklings: Convert pw to c. -P. +EARTH
+Chaosmagicians: Upgrade E8 to TP. +TW1
+Nomads: Leech 1
 
+# Round 6: Turn 3
+Nomads: P -> AIR4
+Mermaids: Action FAV6. +Earth
+Darklings: Upgrade F7 to TP
+Chaosmagicians: Upgrade E8 to TE. +Fav2. +Fav10
+Nomads: Leech 1
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Round 6: Turn 4
+Nomads: P -> Water3
+Mermaids: Dig 1. Build I2
+Darklings: Convert 1pw to 1c. Upgrade F7 to Te. +FAV12.
+Chaosmagicians: P -> Water4
 
 
