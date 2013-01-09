@@ -114,10 +114,24 @@ div#error {
     width: 800px;
 }
 
+table#ledger {
+    border-spacing: 0px;
+}
+
 table#ledger tr td {
-    padding-left: 1ex;
-    padding-right: 1ex;
+    margin: 0px;
     font: 14px Verdana;
+}
+
+table#ledger tr td.ledger-delta {
+    padding-left: 1ex;
+    padding-right: 0.5ex;
+}
+
+table#ledger tr td.ledger-value {
+    padding-right: 1ex;
+    padding-left: 0.5ex;
+    color: #bbb;
 }
 
 span.warning {

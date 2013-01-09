@@ -591,10 +591,10 @@ function drawLedger() {
                 } else if (elem.delta > 0) {
                     elem.delta = "+" + elem.delta;
                 }
-                row += "<td><span style='min-width: 3em; float: left'>#{delta}&#160;</span><span style='color: #999;'>#{value} #{type}</span>".
+                row += "<td class='ledger-delta'>#{delta}<td class='ledger-value'>#{value}&#160;#{type}</span>".
                     interpolate(elem);
             });
-            row += "<td>#{commands}</tr>".interpolate(record);
+            row += "<td class='ledger-delta'>#{commands}</tr>".interpolate(record);
             ledger.insert(row);
             if (record.warning) {
                 ledger.insert("<tr><td colspan=7><td><span class='warning'>" + 

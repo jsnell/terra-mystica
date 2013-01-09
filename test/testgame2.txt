@@ -333,4 +333,11 @@ Mermaids: Dig 1. Build I2
 Darklings: Convert 1pw to 1c. Upgrade F7 to Te. +FAV12.
 Chaosmagicians: send p to Water
 
+# Round 6: Turn 5
+Nomads: Action ACT2
+Mermaids: Convert 1p to 1c. Burn 1. Convert 2pw to 2c. Upgrade H3 to TP. -3c. +TW4. Convert 2pw to 2c
+Darklings: Convert 3w to 3c. Upgrade E2 to TP.
+Mermaids: Leech 1.
+
+
 

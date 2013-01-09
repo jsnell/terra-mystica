@@ -188,6 +188,11 @@ Swarmlings: Action ACTS. upgrade H4 to TP
 Auren: Leech 2
 Alchemists: Upgrade E6 to TP
 Engineers: Leech 2
+
+# Round 3. Turn 3
 Engineers: Upgrade D7 to TP. +TW2
 Alchemists: Leech 5
+Nomads: Action ACT3.
+Auren: Upgrade G3 to TE. Convert 6pw to 6c. +Fav12
+
 
