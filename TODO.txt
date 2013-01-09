@@ -3,12 +3,14 @@
 
 Partially implemented factions:
 - Engineer stronghold VP scoring
+- Fakir carpet flight, Dwarf tunneling
 
 Maybe:
 - Automatically pay higher price for non-adjacent TPs
 - Detect leeching opportunities:
   - Require an explicit leech / don't leech decision.
   - Detect invalid leech amounts
+- Track priest and bridge counts
 
 Out of scope:
 - Any other spatial elements

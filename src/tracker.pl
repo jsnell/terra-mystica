@@ -243,9 +243,82 @@ sub advance_track {
     }
 }
 
+sub adjust_resource {
+    my ($faction_name, $type, $delta) = @_;
+    my $faction = $factions{$faction_name};
+
+    if ($type eq 'GAIN_SHIP') {
+        for (1..$delta) {
+            my $track = $faction->{ship};
+            my $gain = $track->{advance_gain}[$track->{level}];
+            gain $faction_name, $gain;
+            $track->{level}++
+        }
+        $type = '';
+    } elsif ($type eq 'PW') {
+        if ($delta > 0) {
+            gain_power $faction_name, $delta;
+            $type = '';
+        } else {
+            $faction->{P1} -= $delta;
+            $faction->{P3} += $delta;
+        }
+    } else {
+        my $orig_value = $faction->{$type};
+
+        # Pseudo-resources not in the pool, but revealed by removing
+        # buildings.
+        if ($type !~ /^ACT.$/) {
+            $pool{$type} -= $delta;
+        }
+        $faction->{$type} += $delta;
+
+        if (exists $pool{$type} and $pool{$type} < 0) {
+            die "Not enough '$type' in pool\n";
+        }
+
+        if ($type =~ /^FAV/) {
+            if (!$faction->{GAIN_FAVOR}) {
+                die "Taking favor tile not allowed\n";
+            } else {
+                $faction->{GAIN_FAVOR}--;
+            }
+
+            gain $faction_name, $tiles{$type}{gain};
+        }
+
+        if ($type =~ /^TW/) {
+            gain $faction_name, $tiles{$type}{gain};
+        }
+
+        if (grep { $_ eq $type } @cults) {
+            if ($faction->{CULT}) {
+                $faction->{CULT} -= $delta;
+            }
+
+            my $new_value = $faction->{$type};
+            maybe_gain_power_from_cult $faction_name, $orig_value, $new_value;
+        }
+
+        for (1..$delta) {
+            maybe_score_current_score_tile $faction_name, $type;
+            maybe_gain_faction_special $faction_name, $type;
+        }
+    }
+
+    if ($type =~ /^BON/) {
+        $faction->{C} += $map{$type}{C};
+        $map{$type}{C} = 0;
+    }
+
+
+    if ($type and $faction->{$type} < 0) {
+        die "Not enough '$type' in $faction_name\n";
+    }
+}
+
 sub command {
     my ($faction_name, $command) = @_;
-    my $type;
     my $faction = $faction_name ? $factions{$faction_name} : undef;
 
     if ($command =~ /^([+-])(\d*)(\w+)$/) {
@@ -253,74 +326,9 @@ sub command {
         my ($sign, $count) = (($1 eq '+' ? 1 : -1),
                               ($2 eq '' ? 1 : $2));
         my $delta = $sign * $count;
-        $type = uc $3;
+        my $type = uc $3;
 
-        if ($type eq 'GAIN_SHIP') {
-            for (1..$delta) {
-                my $track = $faction->{ship};
-                my $gain = $track->{advance_gain}[$track->{level}];
-                gain $faction_name, $gain;
-                $track->{level}++
-            }
-            $type = '';
-        } elsif ($type eq 'PW') {
-            if ($sign > 0) {
-                gain_power $faction_name, $count;
-                $type = '';
-            } else {
-                $faction->{P1} += $count;
-                $faction->{P3} -= $count;
-                $type = 'P3';
-            }
-        } else {
-            my $orig_value = $faction->{$type};
-
-            # Pseudo-resources not in the pool, but revealed by removing
-            # buildings.
-            if ($type !~ /^ACT.$/) {
-                $pool{$type} -= $delta;
-            }
-            $faction->{$type} += $delta;
-
-            if (exists $pool{$type} and $pool{$type} < 0) {
-                die "Not enough '$type' in pool after command '$command'\n";
-            }
-
-            if ($type =~ /^FAV/) {
-                if (!$faction->{GAIN_FAVOR}) {
-                    die "Taking favor tile not allowed\n";
-                } else {
-                    $faction->{GAIN_FAVOR}--;
-                }
-
-                gain $faction_name, $tiles{$type}{gain};
-            }
-
-            if ($type =~ /^TW/) {
-                gain $faction_name, $tiles{$type}{gain};
-            }
-
-            if (grep { $_ eq $type } @cults) {
-                if ($faction->{CULT}) {
-                    $faction->{CULT} -= $delta;
-                }
-
-                my $new_value = $faction->{$type};
-                maybe_gain_power_from_cult $faction_name, $orig_value, $new_value;
-            }
-
-            if ($sign > 0) {
-                for (1..$count) {
-                    maybe_score_current_score_tile $faction_name, $type;
-                    maybe_gain_faction_special $faction_name, $type;
-                }
-            }
-        }
-
-        if ($type =~ /^BON/) {
-            $faction->{C} += $map{$type}{C};
-            $map{$type}{C} = 0;
-        }
+        adjust_resource $faction_name, $type, $delta;        
     }  elsif ($command =~ /^build (\w+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
 
@@ -431,9 +439,8 @@ sub command {
         command $faction_name, "+$to_count$to_type";
     } elsif ($command =~ /^burn (\d+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
-        $faction->{P2} -= 2*$1;
-        $faction->{P3} += $1;
-        $type = 'P2';
+        adjust_resource $faction_name, 'P2', -2*$1;
+        adjust_resource $faction_name, 'P3', $1;
     } elsif ($command =~ /^leech (\d+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
         my $pw = $1;
@@ -555,12 +562,6 @@ sub command {
         die "Invalid scoring tile setup: $setup\n" if @score_tiles != 6;
     } else {
         die "Could not parse command '$command'.\n";
-    }
-
-    if ($type and $faction_name) {
-        if ($faction->{$type} < 0) {
-            die "Not enough '$type' in $faction_name after command '$command'\n";
-        }
     }
 }
 
