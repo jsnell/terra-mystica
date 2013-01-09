@@ -380,13 +380,11 @@ sub command {
     } elsif ($command =~ /^send (p) to (\w+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
 
-        my $free = 0;
         my $cult = uc $2;
-        my $gain = { $cult => 1 };
-
         die "Unknown cult track $cult\n"
             if !grep { $_ eq $cult } @cults;
 
+        my $gain = { $cult => 1 };
         for (1..4) {
             my $where = "$cult$_";
             if (!$map{$where}{building}) {
