@@ -327,9 +327,9 @@ sub command {
         my $free = ($round == 0);
         my $where = uc $1;
         my $type = 'D';
-        die "Unknown location '$where'" if !$map{$where};
+        die "Unknown location '$where'\n" if !$map{$where};
 
-        die "'$where' already contains a $map{$where}{building}"
+        die "'$where' already contains a $map{$where}{building}\n"
             if $map{$where}{building};
 
         if ($faction->{FREE_D}) {
@@ -352,7 +352,7 @@ sub command {
         my $free = 0;
         my $type = uc $2;
         my $where = uc $1;
-        die "Unknown location '$where'" if !$map{$where};
+        die "Unknown location '$where'\n" if !$map{$where};
 
         my $color = $faction->{color};
         die "$where has wrong color ($color vs $map{$where}{color})\n" if
@@ -362,7 +362,7 @@ sub command {
         my $oldtype = $map{$where}{building};
 
         if ($oldtype ne $wanted_oldtype{$type}) {
-            die "$where contains ə $oldtype, wanted $wanted_oldtype{$type}"
+            die "$where contains ə $oldtype, wanted $wanted_oldtype{$type}\n"
         }
 
         if ($type eq 'TP' and $faction->{FREE_TP}) {
@@ -416,17 +416,17 @@ sub command {
         );
 
         if ($faction->{CONVERT_W_TO_P}) {
-            die "Can't convert more than 3 W to P" if $to_count > 3;
+            die "Can't convert more than 3 W to P\n" if $to_count > 3;
             $exchange_rates{w}{p} = 1;
             delete $faction->{CONVERT_W_TO_P};
         }
 
-        die "Can't convert from $from_type to $to_type"
+        die "Can't convert from $from_type to $to_type\n"
             if !$exchange_rates{$from_type}{$to_type};
 
         my $wanted_from_count =
             $to_count * $exchange_rates{$from_type}{$to_type};
-        die "Conversion to $to_count $to_type requires $wanted_from_count $from_type, not $from_count"
+        die "Conversion to $to_count $to_type requires $wanted_from_count $from_type, not $from_count\n"
             if  $wanted_from_count != $from_count;
         
         command $faction_name, "-$from_count$from_type";
@@ -506,11 +506,11 @@ sub command {
             pay $faction_name, $actions{$name}{cost};
             gain $faction_name, $actions{$name}{gain};
         } else {
-            die "Unknown action $name";
+            die "Unknown action $name\n";
         }
 
         if ($map{$where}{blocked}) {
-            die "Action space $where is blocked"
+            die "Action space $where is blocked\n"
         }
         $map{$where}{blocked} = 1;
     } elsif ($command =~ /^start$/) {
@@ -537,7 +537,7 @@ sub command {
     } elsif ($command =~ /^income$/) {
         die "Need faction for command $command\n" if !$faction_name;
 
-        die "Taking income twice for $faction_name" if
+        die "Taking income twice for $faction_name\n" if
             $faction->{income_taken};
 
         my %income = faction_income $faction_name;
