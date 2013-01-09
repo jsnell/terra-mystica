@@ -67,7 +67,7 @@ Nomads: Leech 2
 
 # Round 1: Turn 5
 Chaosmagicians: Pass Bon4
-Mermaids: P -> Water1
+Mermaids: send p to Water
 Darklings: Upgrade G5 to TE. +FAV7
 Nomads: Leech 2
 
@@ -91,7 +91,7 @@ start
 Nomads: Burn 1. Action ACT4
 Mermaids: Burn 2. Action ACT5. Build F4
 Darklings: Dig 1. Build E2
-Chaosmagicians: P -> Air1
+Chaosmagicians: send p to Air
 
 # Round 2: Turn 2
 Nomads: Upgrade D3 to TP
@@ -123,7 +123,7 @@ Chaosmagicians: Pass Bon3
 
 # Round 2: Turn 5
 Nomads: Action Bon2. +FIRE
-Mermaids: P -> Earth1
+Mermaids: send p to Earth
 
 # Round 2: Turn 6
 Nomads: Pass Bon6
@@ -159,7 +159,7 @@ Mermaids: Upgrade E4 to SA. +Fav5. +TW2
 
 # Round 3: Turn 3
 Darklings: Dig 1. Build H7
-Chaosmagicians: P -> Earth2
+Chaosmagicians: send p to Earth
 Nomads: Upgrade F6 to TP
 Mermaids: Build G3
 
@@ -177,7 +177,7 @@ Nomads: Pass Bon7
 Mermaids: Action FAV6. +EARTH
 
 # Round 3: Turn 6
-Darklings: P -> EARTH3
+Darklings: send p to EARTH
 Mermaids: Pass Bon3
 
 # Round 3: Turn 7
@@ -197,7 +197,7 @@ Chaosmagicians: Action ACT6. Build E7. Transform I7 to red
 Nomads: Leech 2
 Mermaids: Leech 1
 Nomads: Action ACT4.
-Mermaids: P -> FIRE1
+Mermaids: send p to FIRE
 Darklings: Pass Bon6. Convert 3pw to 3c
 
 # Round 4: Turn 2
@@ -224,7 +224,7 @@ Nomads: Upgrade F3 to TP
 Mermaids: Advance ship
 
 # Round 4: Turn 6
-Chaosmagicians: P -> FIRE2
+Chaosmagicians: send p to FIRE
 Nomads: Upgrade D4 to TP. +TW3
 Chaosmagicians: Leech 1
 Mermaids: Action FAV6. +FIRE
@@ -264,8 +264,8 @@ Mermaids: Upgrade H4 to SH.
 Chaosmagicians: Leech 1
 
 # Round 5: Turn 3
-Darklings: P -> Earth4
-Chaosmagicians: P -> Fire3
+Darklings: send p to Earth
+Chaosmagicians: send p to Fire
 Nomads: Upgrade F3 to TE. +FAV4
 Chaosmagicians: Leech 2
 Mermaids: Convert 2pw to 2c. Build I4
@@ -287,11 +287,11 @@ Chaosmagicians: Leech 1
 
 # Round 5: Turn 6
 Darklings: Upgrade C1 to SH. +TW1. Convert 3w to 3p.
-Chaosmagicians: P -> Air2
+Chaosmagicians: send p to Air
 Mermaids: Pass Bon4.
 
 # Round 5: Turn 7
-Darklings: -P. +Earth
+Darklings: send p to earth
 Chaosmagicians: Convert 2pw to 2c. Convert 2w to 2c. Advance ship
 
 # Round 5: Turn 8
@@ -310,27 +310,27 @@ start
 # Round 6: Turn 1
 Nomads: Action ACT4
 Mermaids: Action ACT5. Dig 1. Build H3
-Darklings: -P. +EARTH
+Darklings: send p to earth
 Chaosmagicians: Action ACT1. Bridge B6:C5
 
 # Round 6: Turn 2
-Nomads: P -> AIR3
-Mermaids: P -> Water2
-Darklings: Convert pw to c. -P. +EARTH
+Nomads: send p to AIR
+Mermaids: send p to Water
+Darklings: Convert pw to c. send p to earth
 Chaosmagicians: Upgrade E8 to TP. +TW1
 Nomads: Leech 1
 
 # Round 6: Turn 3
-Nomads: P -> AIR4
+Nomads: send p to AIR
 Mermaids: Action FAV6. +Earth
 Darklings: Upgrade F7 to TP
 Chaosmagicians: Upgrade E8 to TE. +Fav2. +Fav10
 Nomads: Leech 1
 
 # Round 6: Turn 4
-Nomads: P -> Water3
+Nomads: send p to Water
 Mermaids: Dig 1. Build I2
 Darklings: Convert 1pw to 1c. Upgrade F7 to Te. +FAV12.
-Chaosmagicians: P -> Water4
+Chaosmagicians: send p to Water
 
 

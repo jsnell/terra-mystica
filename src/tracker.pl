@@ -377,26 +377,30 @@ sub command {
         maybe_score_current_score_tile $faction_name, $type;
 
         $map{$where}{building} = $type;
-    } elsif ($command =~ /^(p)->(\w+)$/) {
+    } elsif ($command =~ /^send (p) to (\w+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
 
-        $type = uc $1;
         my $free = 0;
-        my $where = uc $2;
-        die "Unknown location '$where'" if !$map{$where};
+        my $cult = uc $2;
+        my $gain = { $cult => 1 };
 
-        my $oldtype = $map{$where}{building};
-        die "$where already contains a priest" if $oldtype;
+        die "Unknown cult track $cult\n"
+            if !grep { $_ eq $cult } @cults;
 
-        if (exists $map{$where}{gain}) {
-            gain $faction_name, $map{$where}{gain};
-            delete $map{$where}{gain};
+        for (1..4) {
+            my $where = "$cult$_";
+            if (!$map{$where}{building}) {
+                $gain = $map{$where}{gain};
+                delete $map{$where}{gain};
+                $map{$where}{building} = 'P';
+                $map{$where}{color} = $faction->{color};
+                last;
+            }
         }
 
-        $map{$where}{building} = $type;
-        $map{$where}{color} = $faction->{color};
+        gain $faction_name, $gain;
 
-        $faction->{$type}--;
+        command $faction_name, "-p";
     } elsif ($command =~ /^convert (\d+)?(\w+) to (\d+)?(\w+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
 

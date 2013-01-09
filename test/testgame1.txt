@@ -65,7 +65,7 @@ Alchemists: Leech 2
 Nomads: Upgrade G7 to SH.
 Swarmlings: Leech 3
 Auren: Action ACTA. +2FIRE
-Swarmlings: P -> FIRE1
+Swarmlings: Send P to FIRE
 Alchemists: Dig 1. Build F7
 Nomads: Leech 3
 Engineers: Upgrade E9 to TP
@@ -93,7 +93,7 @@ Engineers: Pass Bon6
 
 # Round 1. Turn 7
 
-Auren: P -> FIRE2
+Auren: send p to FIRE
 
 # Round 1. Turn 8
 
@@ -123,7 +123,7 @@ Auren: Action ACTA. +2AIR
 Swarmlings: Upgrade G6 to SH
 Nomads: Leech 3
 Alchemists: Leech 1
-Alchemists: p -> air1
+Alchemists: send p to air
 Engineers: Build F6
 Alchemists: Leech 4
 Nomads: Action ACTN. Build D5
@@ -134,7 +134,7 @@ Auren: Action FAV6. +AIR
 Swarmlings: Burn 3. Action ACT5. Build I11.
 Alchemists: Build D8
 Engineers: Leech 1
-Engineers: p -> earth1
+Engineers: send p to earth
 Nomads: Action ACT4
 Auren: Burn 3. Action ACT1. Bridge F4:G3
 
@@ -172,7 +172,7 @@ Engineers: Build D4
 Nomads: Leech 1
 Nomads: Action ACTN. Build C3
 Engineers: Leech 1
-Auren: P -> Water1
+Auren: send P to Water
 Swarmlings: Dig 1. Build H5.
 Auren: Leech 1
 Alchemists: Burn 2. Action ACT6. transform E4 to black. Build E6
