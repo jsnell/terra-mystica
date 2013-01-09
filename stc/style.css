@@ -131,7 +131,7 @@ table#ledger tr td.ledger-delta {
 table#ledger tr td.ledger-value {
     padding-right: 1ex;
     padding-left: 0.5ex;
-    color: #bbb;
+    color: #888;
 }
 
 span.warning {

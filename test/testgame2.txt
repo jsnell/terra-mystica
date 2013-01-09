@@ -345,6 +345,9 @@ Darklings: Leech 2
 Nomads: Advance ship
 Mermaids: pass
 Darklings: Dig 1. Transform E11 to black. convert 1 power to 1 coin. 
+Chaosmagicians: Convert 3 power to 3 coins. convert 3w to 3c. upgrade c5 to tp. -3c. +TW4
 
-
-
+# Round 6: Turn 7
+Nomads: Advance ship
+Darklings: Dig 1. Transform D8 to black
+Chaosmagicians: Convert 2pw to 2c. Dig 1. Build B4
