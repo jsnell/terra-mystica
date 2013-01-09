@@ -27,8 +27,8 @@ my %setups = (
                         enable_if => { SH => 1 },
                     },
                     exchange_rates => {
-                        c => { vp => 2 },
-                        vp => { c => 2 }
+                        C => { VP => 2 },
+                        VP => { C => 2 }
                     },
                     buildings => {
                         D => { cost => { W => 1, C => 2 },

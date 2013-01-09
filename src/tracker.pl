@@ -243,9 +243,41 @@ sub advance_track {
     }
 }
 
+my %building_aliases = (
+    DWELLING => 'D',
+    'TRADING POST' => 'TP',
+    TEMPLE => 'TE',
+    STRONGHOLD => 'SH',
+    SANCTUARY => 'SA',
+    );
+
+sub alias_building {
+    my $type = shift;
+
+    return $building_aliases{$type} // $type;
+}
+
+my %resource_aliases = (
+    PRIEST => 'P',
+    PRIESTS => 'P',
+    POWER => 'PW',
+    WORKER => 'W',
+    WORKERS => 'W',
+    COIN => 'C',
+    COINS => 'C',
+);
+
+sub alias_resource {
+    my $type = shift;
+
+    return $resource_aliases{$type} // $type;
+}
+
 sub adjust_resource {
     my ($faction_name, $type, $delta) = @_;
     my $faction = $factions{$faction_name};
+
+    $type = alias_resource $type;
 
     if ($type eq 'GAIN_SHIP') {
         for (1..$delta) {
@@ -355,11 +387,11 @@ sub command {
         my $color = $faction->{color};
 
         command $faction_name, "transform $where to $color";
-    } elsif ($command =~ /^upgrade (\w+) to (\w+)$/) {
+    } elsif ($command =~ /^upgrade (\w+) to ([\w ]+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
 
         my $free = 0;
-        my $type = uc $2;
+        my $type = alias_building uc $2;
         my $where = uc $1;
         die "Unknown location '$where'\n" if !$map{$where};
 
@@ -408,19 +440,19 @@ sub command {
         gain $faction_name, $gain;
 
         command $faction_name, "-p";
-    } elsif ($command =~ /^convert (\d+)?(\w+) to (\d+)?(\w+)$/) {
+    } elsif ($command =~ /^convert (\d+)?\s*(\w+) to (\d+)?\s*(\w+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
 
         my $from_count = $1 || 1;
-        my $from_type = $2;
+        my $from_type = alias_resource uc $2;
         my $to_count = $3 || 1;
-        my $to_type = $4;
+        my $to_type = alias_resource uc $4;
 
         my %exchange_rates = (
-            pw => { c => 1, w => 3, p => 5 },
-            w => { c => 1 },
-            p => { c => 1, w => 1 },
-            c => { vp => 3 }
+            PW => { C => 1, W => 3, P => 5 },
+            W => { C => 1 },
+            P => { C => 1, W => 1 },
+            C => { VP => 3 }
         );
 
         if ($faction->{exchange_rates}) {
@@ -434,7 +466,7 @@ sub command {
 
         if ($faction->{CONVERT_W_TO_P}) {
             die "Can't convert more than 3 W to P\n" if $to_count > 3;
-            $exchange_rates{w}{p} = 1;
+            $exchange_rates{W}{P} = 1;
             delete $faction->{CONVERT_W_TO_P};
         }
 
@@ -490,7 +522,7 @@ sub command {
         my $from = uc $1;
         my $to = uc $2;
         push @bridges, {from => $from, to => $to, color => $faction->{color}};
-    } elsif ($command =~ /^pass (\w+)$/) {
+    } elsif ($command =~ /^pass(?: (\w+))?$/) {
         die "Need faction for command $command\n" if !$faction_name;
         my $bon = $1;
 
@@ -510,7 +542,9 @@ sub command {
                 }
             }                
         }
-        command $faction_name, "+$bon"
+        if ($bon) {
+            command $faction_name, "+$bon"
+        }
     } elsif ($command =~ /^action (\w+)$/) {
         my $where = uc $1;
         my $name = $where;

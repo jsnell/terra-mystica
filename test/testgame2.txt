@@ -336,8 +336,15 @@ Chaosmagicians: send p to Water
 # Round 6: Turn 5
 Nomads: Action ACT2
 Mermaids: Convert 1p to 1c. Burn 1. Convert 2pw to 2c. Upgrade H3 to TP. -3c. +TW4. Convert 2pw to 2c
-Darklings: Convert 3w to 3c. Upgrade E2 to TP.
+Darklings: Convert 3w to 3c. Upgrade E2 to trading post
 Mermaids: Leech 1.
+Chaosmagicians: Convert 2pw to 2c. Upgrade D7 to TP. 
+Darklings: Leech 2
+
+# Round 6: Turn 6
+Nomads: Advance ship
+Mermaids: pass
+Darklings: Dig 1. Transform E11 to black. convert 1 power to 1 coin. 
 
 
 

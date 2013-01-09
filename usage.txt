@@ -1,10 +1,10 @@
-* Quick start
+* Commands
 
 Each line should start with the name of the faction that's doing
-stuff, followed by a colo. After this, you can have multiple commands
+stuff, followed by a colon. After this, you can have multiple commands
 that apply to that faction, separated by full stops. For example:
 
-Nomads: Dig 1. D -> E7
+  Nomads: Dig 1. Build E7
 
 The exact capitalization doesn't matter. 
 
@@ -14,7 +14,7 @@ The commands that you'd usually use are:
   Pass, return current bonus tile, and replace it with Bon2.
 
 - Leech 2
-  Have the Nomads trade 1 vp for 2 power
+  Trade 1 vp for 2 power
 
 - Action ACT5
   Take the power action 5 (or stronghold, bonus tile, or favor special
@@ -24,18 +24,18 @@ The commands that you'd usually use are:
   Trade workers / priests to shovels at the appropriate exchange rate.
   The shovels need to be spent by commands later on the same line.
 
-- D -> F5
+- Build F5
   Terraform the hex F5 into the correct terrain type, and build a dwelling
   there.
 
-- TP -> F5
+- Upgrade F5 to TP
   Replace the dwelling in F5 with a trading post (TE for temples, SH for
   strongholds, SA for sanctuaries).
 
-- P -> FIRE1
-  Send a priest to the first spot on the fire cult track.
+- Send P to FIRE
+  Send a priest to the first free spot on the fire cult track.
 
-- F5:black
+- Transform F5 to black
   Terraform F5 to black, but don't build anything there.
 
 - +FAV11
@@ -44,6 +44,10 @@ The commands that you'd usually use are:
 
 - Bridge E9:D6
   Build a bridge from E9 to D6.
+
+- Advance ship
+  Advance 1 step on the shipping track. "Advance dig" for improving the
+  shovel track.
 
 - Income
   Take all income (buildings, favors, bonus tiles, last turn's special
@@ -60,12 +64,3 @@ Since adjancy isn't tracked, there's no special representation of
 tunneling / carpet flight. Just use a command like "-2w. +4vp" to
 get the correct effect.
   
-- Alchemists:
-
-There's no special support for the VP / money conversion. Use a command
-like "-4vp. +2c".
-
-
-
-
-
