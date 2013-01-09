@@ -102,6 +102,7 @@ sub maybe_score_favor_tile {
     my ($faction_name, $type) = @_;
 
     for my $tile (keys %{$factions{$faction_name}}) {
+        next if !$factions{$faction_name}{$tile};
         if ($tile =~ /^FAV/) {
             my $scoring = $tiles{$tile}{vp};
             if ($scoring) {
@@ -120,8 +121,8 @@ sub maybe_gain_faction_special {
 
     my $enable_if = $faction->{special}{enable_if};
     if ($enable_if) {
-        for my $currency (keys %{$enable_if}) {
-            return if $faction->{$currency} != $enable_if->{$currency};
+        for my $building (keys %{$enable_if}) {
+            return if $faction->{buildings}{$building}{level} != $enable_if->{$building};
         }
     }
 
@@ -135,11 +136,11 @@ sub faction_income {
     my %total_income = map { $_, 0 } qw(C W P PW);
 
     my %buildings = %{$faction->{buildings}};
-    for my $building (keys %buildings) {
-        if (exists $buildings{$building}{income}) {
-            my %building_income = %{$buildings{$building}{income}};
+    for my $building (values %buildings) {
+        if (exists $building->{income}) {
+            my %building_income = %{$building->{income}};
             for my $type (keys %building_income) {
-                my $delta = $building_income{$type}[$faction->{$building}];
+                my $delta = $building_income{$type}[$building->{level}];
                 if ($delta) {
                     $total_income{$type} += $delta;
                 }
@@ -223,6 +224,23 @@ sub gain_power {
     }
 
     return $count;
+}
+
+sub advance_track {
+    my ($faction_name, $track_name, $track, $free) = @_;
+
+    if (!$free) {
+        pay $faction_name, $track->{advance_cost};
+    }
+    
+    if ($track->{advance_gain}) {
+        my $gain = $track->{advance_gain}[$track->{level}];
+        gain $faction_name, $gain;
+    }
+
+    if (++$track->{level} > $track->{max_level}) {
+        die "Can't advance $track_name from level $track->{level}\n"; 
+    }
 }
 
 sub command {
@@ -319,9 +337,7 @@ sub command {
             $faction->{FREE_D}--;
         }
 
-        if (!$free) {
-            pay $faction_name, $faction->{buildings}{$type}{cost};
-        }
+        advance_track $faction_name, $type, $faction->{buildings}{$type}, $free;
 
         maybe_score_favor_tile $faction_name, $type;
         maybe_score_current_score_tile $faction_name, $type;
@@ -330,13 +346,11 @@ sub command {
         my $color = $faction->{color};
 
         command $faction_name, "transform $where to $color";
-
-        $faction->{$type}--;
     } elsif ($command =~ /^upgrade (\w+) to (\w+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
 
         my $free = 0;
-        $type = uc $2;
+        my $type = uc $2;
         my $where = uc $1;
         die "Unknown location '$where'" if !$map{$where};
 
@@ -351,25 +365,18 @@ sub command {
             die "$where contains ə $oldtype, wanted $wanted_oldtype{$type}"
         }
 
-        $faction->{$oldtype}++;
-
-        gain $faction_name, $faction->{buildings}{$type}{gain};
-
         if ($type eq 'TP' and $faction->{FREE_TP}) {
             $free = 1;
             $faction->{FREE_TP}--;
         }
 
-        if (!$free) {
-            pay $faction_name, $faction->{buildings}{$type}{cost};
-        }
+        $faction->{buildings}{$oldtype}{level}--;
+        advance_track $faction_name, $type, $faction->{buildings}{$type}, $free;
 
         maybe_score_favor_tile $faction_name, $type;
         maybe_score_current_score_tile $faction_name, $type;
 
         $map{$where}{building} = $type;
-
-        $faction->{$type}--;
     } elsif ($command =~ /^(p)->(\w+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
 
@@ -478,7 +485,7 @@ sub command {
 
             if ($pass_vp) {
                 for my $type (keys %{$pass_vp}) {
-                    my $x = $pass_vp->{$type}[$faction->{$type}];
+                    my $x = $pass_vp->{$type}[$faction->{buildings}{$type}{level}];
                     command $faction_name, "+${x}vp";
                 }
             }                
@@ -539,17 +546,7 @@ sub command {
         my $type = lc $1;
         my $track = $faction->{$type};
 
-        pay $faction_name, $track->{advance_cost};
-
-        my $gain = $track->{advance_gain}[$track->{level}];
-
-        if (!$gain) {
-            die "Can't advance $type from level $track->{level}\n"; 
-        }
-        
-        gain $faction_name, $gain;
-
-        $track->{level}++;
+        advance_track $faction_name, $type, $track, 0;
     } elsif ($command =~ /^score (.*)/) {
         my $setup = uc $1;
         @score_tiles = split /,/, $setup;
@@ -595,7 +592,7 @@ sub handle_row {
     return if !@commands;
 
     if ($factions{$prefix} or $prefix eq '') {
-        my @fields = qw(VP C W P P1 P2 P3 PW D TP TE SH SA
+        my @fields = qw(VP C W P P1 P2 P3 PW
                         FIRE WATER EARTH AIR CULT);
         my %old_data = map { $_, $factions{$prefix}{$_} } @fields; 
 
