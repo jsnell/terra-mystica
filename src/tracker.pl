@@ -262,6 +262,7 @@ sub adjust_resource {
         } else {
             $faction->{P1} -= $delta;
             $faction->{P3} += $delta;
+            $type = 'P3';
         }
     } else {
         my $orig_value = $faction->{$type};
@@ -418,8 +419,18 @@ sub command {
         my %exchange_rates = (
             pw => { c => 1, w => 3, p => 5 },
             w => { c => 1 },
-            p => { c => 1, w => 1 }
+            p => { c => 1, w => 1 },
+            c => { vp => 3 }
         );
+
+        if ($faction->{exchange_rates}) {
+            for my $from_key (keys %{$faction->{exchange_rates}}) {
+                my $from = $faction->{exchange_rates}{$from_key};
+                for my $to_key (keys %{$from}) {
+                    $exchange_rates{$from_key}{$to_key} = $from->{$to_key};
+                }
+            }
+        }
 
         if ($faction->{CONVERT_W_TO_P}) {
             die "Can't convert more than 3 W to P\n" if $to_count > 3;

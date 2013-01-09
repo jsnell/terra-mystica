@@ -26,6 +26,10 @@ my %setups = (
                         SHOVEL => { PW => 2 },
                         enable_if => { SH => 1 },
                     },
+                    exchange_rates => {
+                        c => { vp => 2 },
+                        vp => { c => 2 }
+                    },
                     buildings => {
                         D => { cost => { W => 1, C => 2 },
                                income => { W => [ 1, 2, 3, 4, 5, 6, 7, 8, 8 ] } },
