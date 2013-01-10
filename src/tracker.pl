@@ -537,6 +537,9 @@ sub command {
 
         my $from = uc $1;
         my $to = uc $2;
+        $map{$from}{adjacent}{$to} = 1;
+        $map{$to}{adjacent}{$from} = 1;
+
         push @bridges, {from => $from, to => $to, color => $faction->{color}};
     } elsif ($command =~ /^pass(?: (\w+))?$/) {
         die "Need faction for command $command\n" if !$faction_name;
