@@ -354,4 +354,5 @@ Chaosmagicians: Convert 2pw to 2c. Dig 1. Build B4
 
 # Round 6: Turn 8
 Nomads: Action ACTN. Build A6
-
+Darklings: Dig 1. Transform G7 to brown
+Chaosmagicians: Burn 1. Convert 2pw to 2c. Build A9

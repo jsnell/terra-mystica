@@ -198,8 +198,11 @@ Swarmlings: Upgrade H4 to TE. +FAV9
 Auren: Leech 2
 Alchemists: Action ACT2
 
-# Round 3. Turn 3
+# Round 3. Turn 4
 Engineers: Upgrade D7 to TE. +FAV10
+Nomads: Upgrade E8 to TE. +FAV10
+Engineers: Leech 1
+Auren: Upgrade F2 to TP.
 
 
 
