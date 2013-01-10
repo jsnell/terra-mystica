@@ -7,8 +7,8 @@ Partially implemented factions:
 
 Maybe:
 - Detect leeching opportunities:
-  - Require an explicit leech / don't leech Detect.
-  - decision invalid leech amounts
+  - Require an explicit leech / don't leech Detect
+  - reject invalid leech amounts
 - Track priest and bridge counts
 
 Out of scope:

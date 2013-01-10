@@ -2,8 +2,16 @@
 
 use strict;
 
-use vars qw(%factions @factions);
+use vars qw(%factions @factions %building_strength);
 use Data::Dumper;
+
+our %building_strength = (
+    D => 1,
+    TP => 2,
+    TE => 2,
+    SH => 3,
+    SA => 3,
+);
 
 my %setups = (
     alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
@@ -681,19 +689,10 @@ sub setup {
 
     my $buildings = $faction->{buildings};
     $buildings->{D}{max_level} = 8;
-    $buildings->{D}{strength} = 1;
-
     $buildings->{TP}{max_level} = 4;
-    $buildings->{TP}{strength} = 2;
-
     $buildings->{SH}{max_level} = 1;
-    $buildings->{SH}{strength} = 3;
-
     $buildings->{TE}{max_level} = 3;
-    $buildings->{TE}{strength} = 2;
-
     $buildings->{SA}{max_level} = 1;
-    $buildings->{SA}{strength} = 3;
 
     for (0..2) {
         $buildings->{TE}{advance_gain}[$_]{GAIN_FAVOR} ||= 1;

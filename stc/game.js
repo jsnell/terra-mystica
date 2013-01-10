@@ -594,6 +594,19 @@ function drawLedger() {
                 row += "<td class='ledger-delta'>#{delta}<td class='ledger-value'>#{value}&#160;#{type}</span>".
                     interpolate(elem);
             });
+
+            var leech = "";
+            $H(record.leech).each(function (elem, index) {
+                if (elem.key == "black") {
+                    elem.color = "#888";
+                } else {
+                    elem.color = "#000";
+                }
+                elem.key = colors[elem.key];
+                leech += "<span style='color: #{color}; background-color: #{key}'>#{value}</span>&#160;".interpolate(elem);
+            });
+            row += "<td class='ledger-delta'>" + leech;
+
             row += "<td class='ledger-delta'>#{commands}</tr>".interpolate(record);
             ledger.insert(row);
             if (record.warning) {

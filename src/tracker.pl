@@ -17,6 +17,7 @@ my @error = ();
 my @score_tiles = ();
 my $round = 0;
 my @bridges = ();
+my %leech = ();
 
 my %pool = (
     # Resources
@@ -350,6 +351,20 @@ sub adjust_resource {
     }
 }
 
+sub note_leech {
+    my ($where, $color) = @_;
+
+    return if !$round;
+
+    for my $adjacent (keys %{$map{$where}{adjacent}}) {
+        if ($map{$adjacent}{building} and
+            $map{$adjacent}{color} ne $color) {
+            $leech{$map{$adjacent}{color}} +=
+                $building_strength{$map{$adjacent}{building}};
+        }
+    }
+}
+
 sub command {
     my ($faction_name, $command) = @_;
     my $faction = $faction_name ? $factions{$faction_name} : undef;
@@ -369,6 +384,7 @@ sub command {
         my $where = uc $1;
         my $type = 'D';
         die "Unknown location '$where'\n" if !$map{$where};
+        my $color = $faction->{color};
 
         die "'$where' already contains a $map{$where}{building}\n"
             if $map{$where}{building};
@@ -378,13 +394,14 @@ sub command {
             $faction->{FREE_D}--;
         }
 
+        note_leech $where, $color;
+
         advance_track $faction_name, $type, $faction->{buildings}{$type}, $free;
 
         maybe_score_favor_tile $faction_name, $type;
         maybe_score_current_score_tile $faction_name, $type;
 
         $map{$where}{building} = $type;
-        my $color = $faction->{color};
 
         command $faction_name, "transform $where to $color";
     } elsif ($command =~ /^upgrade (\w+) to ([\w ]+)$/) {
@@ -406,14 +423,7 @@ sub command {
             die "$where contains ə $oldtype, wanted $wanted_oldtype{$type}\n"
         }
 
-        my %leech = ();
-        for my $adjacent (keys %{$map{$where}{adjacent}}) {
-            if ($map{$adjacent}{building} and
-                $map{$adjacent}{color} ne $color) {
-                $leech{$map{$adjacent}{color}} +=
-                    $faction->{buildings}{$map{$adjacent}{building}}{strength};
-            }
-        }
+        note_leech $where, $color;
 
         if ($type eq 'TP') {
             if ($faction->{FREE_TP}) {
@@ -658,6 +668,8 @@ sub handle_row {
 
     return if !@commands;
 
+    %leech = ();
+
     if ($factions{$prefix} or $prefix eq '') {
         my @fields = qw(VP C W P P1 P2 P3 PW
                         FIRE WATER EARTH AIR CULT);
@@ -706,6 +718,7 @@ sub handle_row {
 
             push @ledger, { faction => $prefix,
                             warning => $warn,
+                            leech => { %leech },
                             commands => (join ". ", @commands),
                             map { $_, $pretty_delta{$_} } @fields};
 
