@@ -406,9 +406,25 @@ sub command {
             die "$where contains ə $oldtype, wanted $wanted_oldtype{$type}\n"
         }
 
-        if ($type eq 'TP' and $faction->{FREE_TP}) {
-            $free = 1;
-            $faction->{FREE_TP}--;
+        my %leech = ();
+        for my $adjacent (keys %{$map{$where}{adjacent}}) {
+            if ($map{$adjacent}{building} and
+                $map{$adjacent}{color} ne $color) {
+                $leech{$map{$adjacent}{color}} +=
+                    $faction->{buildings}{$map{$adjacent}{building}}{strength};
+            }
+        }
+
+        if ($type eq 'TP') {
+            if ($faction->{FREE_TP}) {
+                $free = 1;
+                $faction->{FREE_TP}--;
+            } else {
+                if (!keys %leech) {
+                    my $cost = $faction->{buildings}{$type}{advance_cost}{C};
+                    command $faction_name, "-${cost}c";
+                }
+            }
         }
 
         $faction->{buildings}{$oldtype}{level}--;

@@ -6,10 +6,9 @@ Partially implemented factions:
 - Fakir carpet flight, Dwarf tunneling
 
 Maybe:
-- Automatically pay higher price for non-adjacent TPs
 - Detect leeching opportunities:
-  - Require an explicit leech / don't leech decision.
-  - Detect invalid leech amounts
+  - Require an explicit leech / don't leech Detect.
+  - decision invalid leech amounts
 - Track priest and bridge counts
 
 Out of scope:

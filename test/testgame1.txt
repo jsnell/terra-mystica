@@ -45,7 +45,7 @@ Auren: Upgrade F4 to TP
 Engineers: Leech 1
 Swarmlings: Upgrade G6 to TP
 Nomads: Leech 1
-Alchemists: Upgrade E10 to TP. -3C
+Alchemists: Upgrade E10 to TP
 Engineers: Burn 4. Action ACT5. Build D7
 Alchemists: Leech 2
 
