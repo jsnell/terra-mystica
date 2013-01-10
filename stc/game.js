@@ -598,7 +598,7 @@ function drawLedger() {
             var leech = "";
             $H(record.leech).each(function (elem, index) {
                 if (elem.key == "black") {
-                    elem.color = "#888";
+                    elem.color = "#aaa";
                 } else {
                     elem.color = "#000";
                 }

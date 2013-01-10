@@ -769,6 +769,9 @@ if ($round > 0) {
     }
 
     current_score_tile->{active} = 1;
+}
+
+if (@score_tiles) {
     $tiles{$score_tiles[-1]}->{income_display} = '';
 }
 
