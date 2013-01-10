@@ -194,5 +194,14 @@ Engineers: Upgrade D7 to TP. +TW2
 Alchemists: Leech 5
 Nomads: Action ACT3.
 Auren: Upgrade G3 to TE. Convert 6pw to 6c. +Fav12
+Swarmlings: Upgrade H4 to TE. +FAV9
+Auren: Leech 2
+Alchemists: Action ACT2
+
+# Round 3. Turn 3
+Engineers: Upgrade D7 to TE. +FAV10
+
+
+
 
 
