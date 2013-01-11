@@ -36,6 +36,8 @@ start
 
 # Round 1: Turn 1
 ChaosMagicians: advance ship
+# Oops. There was an accounting mistake done here, only caught on round 6...
+ChaosMagicians: -1w
 Nomads: burn 4. Action ACT5. Build F5
 Darklings: Leech 1
 Mermaids: Dig 1. Build E5
@@ -370,5 +372,9 @@ Chaosmagicians: Pass
 # Round 6: Turn 11
 Nomads: Convert 1 power to 1 coin. Upgrade E6 to Trading post
 Darklings: Convert 3 power to 3 coins. Upgrade E9 to TP. 
+
+# Round 6: Turn 12
+# 
+Nomads: Burn 1. Convert 2pw to 2c. convert 1w to 1c. Upgrade D5 to TP.
 
 
