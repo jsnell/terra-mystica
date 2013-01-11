@@ -324,7 +324,7 @@ my %setups = (
                             income => { P => [ 0, 1 ] } },
                 }},
     chaosmagicians => { 
-        C => 15, W => 3, P1 => 5, P2 => 7,
+        C => 15, W => 4, P1 => 5, P2 => 7,
         FIRE => 2,
         color => 'red',
         ship => { 
