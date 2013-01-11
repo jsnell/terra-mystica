@@ -356,3 +356,19 @@ Chaosmagicians: Convert 2pw to 2c. Dig 1. Build B4
 Nomads: Action ACTN. Build A6
 Darklings: Dig 1. Transform G7 to brown
 Chaosmagicians: Burn 1. Convert 2pw to 2c. Build A9
+
+# Round 6: Turn 9
+Nomads: Advance ship
+Darklings: Convert 2 workers to 2 coins. Upgrade G6 to TP. 
+Chaosmagicians: send p to water
+
+# Round 6: Turn 10
+Nomads: Build B1
+Darklings: Convert 3 power to 3 coins. Upgrade E10 to TP.
+Chaosmagicians: Pass
+
+# Round 6: Turn 11
+Nomads: Convert 1 power to 1 coin. Upgrade E6 to Trading post
+Darklings: Convert 3 power to 3 coins. Upgrade E9 to TP. 
+
+

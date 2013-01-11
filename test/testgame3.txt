@@ -3,5 +3,19 @@ delete bon6
 
 score score6,score4,score5,score1,score8,score2
 
+setup Alchemists
+setup Witches
+setup Chaosmagicians
+setup Cultists
+setup Fakirs
+
+Alchemists: Build G5
+Witches: build F4
+Cultists: Build e6
+Fakirs: build f3. build g4
+Cultists: build b2
+
+
+
 
 

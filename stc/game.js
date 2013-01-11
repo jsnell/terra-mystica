@@ -13,6 +13,7 @@ var colors = {
     red: '#e04040',
     green: '#40a040',
     yellow: '#e0e040',
+    brown: '#a06040',
     blue: '#2080f0',
     black: '#000000',
     white: '#ffffff',
@@ -558,8 +559,10 @@ function drawFactions() {
         info.insert(new Element('div').update(
             "dig level #{dig.level}, ship level #{ship.level}".interpolate(faction)));
 
-        info.insert(new Element('div').update(
-            "<br>Income: #{C} c, #{W} w, #{P} p, #{PW} pw".interpolate(faction.income)));
+        if (faction.income) {
+            info.insert(new Element('div').update(
+                "<br>Income: #{C} c, #{W} w, #{P} p, #{PW} pw".interpolate(faction.income)));
+        }
 
         renderTreasury(container, faction, name);
         
