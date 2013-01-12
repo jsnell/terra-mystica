@@ -376,5 +376,16 @@ Darklings: Convert 3 power to 3 coins. Upgrade E9 to TP.
 # Round 6: Turn 12
 # 
 Nomads: Burn 1. Convert 2pw to 2c. convert 1w to 1c. Upgrade D5 to TP.
+Darklings: Pass
+
+Nomads: Pass
+
+# Final scoring
+
+Chaosmagicians: +16vp. +12vp
+Nomads: +1vp. +12vp. +18vp
+Mermaids: +1vp. +18vp. +6vp
+Darklings:  +10vp.
+
 
 

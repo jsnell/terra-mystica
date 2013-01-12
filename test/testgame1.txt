@@ -203,6 +203,25 @@ Engineers: Upgrade D7 to TE. +FAV10
 Nomads: Upgrade E8 to TE. +FAV10
 Engineers: Leech 1
 Auren: Upgrade F2 to TP.
+Swarmlings: Pass Bon1
+Alchemists: Send p to air
+
+# Round 3. Turn 5
+Engineers: Send p to water
+Nomads: Upgrade D5 to TP
+Engineers: Leech 2
+Auren: Action ACTA. +2AIR
+Alchemists: Upgrade E6 to Temple. +FAV4
+Engineers: Leech 2
+
+# Round 3. Turn 5
+Engineers: Convert 1 power to 1 coin. Action BON2. +WATER
+
+
+
+
+
+
 
 
 

@@ -14,6 +14,9 @@ Witches: build F4
 Cultists: Build e6
 Fakirs: build f3. build g4
 Cultists: build b2
+Witches: build E9
+Alchemists: build C1
+Chaosmagicians: build D7
 
 
 
