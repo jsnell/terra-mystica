@@ -1,5 +1,7 @@
 #!/usr/bin/perl -wl
 
+package terra_mystica;
+
 use strict;
 
 use vars qw(%factions @factions %building_strength);

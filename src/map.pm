@@ -1,3 +1,7 @@
+#!/usr/bin/perl -wl
+
+package terra_mystica;
+
 use vars qw(%map %reverse_map);
 use strict;
 
