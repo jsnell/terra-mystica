@@ -751,14 +751,17 @@ sub finalize {
 }
 
 sub evaluate_game {
+    my $row = 1;
+
     for (@_) {
         eval { handle_row $_ };
         if ($@) {
             chomp;
-            push @error, "Error on line $. [$_]:";
+            push @error, "Error on line $row [$_]:";
             push @error, "$@\n";
             last;
         }
+        $row++;
     }
 
     finalize;

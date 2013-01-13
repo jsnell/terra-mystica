@@ -9,15 +9,21 @@ chdir dirname $0;
 
 my $q = CGI->new;
 
-print "Content-type: text/plain\r\n";
-print "Cache-Control: no-cache\r\n";
-print "\r\n";
-
 my $id = $q->param('game');
 $id =~ s{.*/}{};
 $id =~ s{[^A-Za-z0-9]}{}g;
 
-local @ARGV = "../../data/write/$id";
+my $file = "../data/write/$id";
+
+if (!-f $file) {
+    die "Can't open $file";
+}
+
+local @ARGV = $file;
+
+print "Content-type: text/plain\r\n";
+print "Cache-Control: no-cache\r\n";
+print "\r\n";
 
 while (<>) {
     print "$_"

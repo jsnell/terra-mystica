@@ -111,7 +111,8 @@ canvas.action {
 div#error {
     background-color: #e33;
     font-weight: bold;
-    width: 800px;
+    width: 700px;
+    margin: 20px; 
 }
 
 table#ledger {

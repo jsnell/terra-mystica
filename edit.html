@@ -49,6 +49,7 @@
       var editor = ace.edit("editor");
       editor.getSession().setMode("ace/mode/sh");
       editor.commands.removeCommand("replace");
+      editor.commands.removeCommand("gotoline");
 
       editor.commands.addCommand({
           name: 'mySave',
@@ -58,6 +59,10 @@
 
       new Ajax.Request("/cgi-bin/edit.pl?game=" + id, {
           method:"get",
+          onFailure: function(transport) {
+             $("error").innerHTML = "Error opening game."
+             $("save-button").disable();             
+          },
           onSuccess: function(transport){
             try {
               editor.setValue(transport.responseText);
