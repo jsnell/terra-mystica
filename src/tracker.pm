@@ -552,6 +552,7 @@ sub command {
     } elsif ($command =~ /^pass(?: (\w+))?$/) {
         die "Need faction for command $command\n" if !$faction_name;
         my $bon = $1;
+        my $discard;
 
         $faction->{passed} = 1;
         for (keys %{$faction}) {
@@ -559,7 +560,7 @@ sub command {
 
             my $pass_vp  = $tiles{$_}{pass_vp};
             if (/^BON/) {
-                command $faction_name, "-$_";
+                $discard = $_;
             }
 
             if ($pass_vp) {
@@ -571,6 +572,9 @@ sub command {
         }
         if ($bon) {
             command $faction_name, "+$bon"
+        }
+        if ($discard) {
+            command $faction_name, "-$discard";
         }
     } elsif ($command =~ /^action (\w+)$/) {
         my $where = uc $1;
