@@ -47,6 +47,7 @@
       var id = document.location.pathname;
 
       var editor = ace.edit("editor");
+      var hash;
       editor.getSession().setMode("ace/mode/sh");
       editor.commands.removeCommand("replace");
       editor.commands.removeCommand("gotoline");
@@ -57,27 +58,7 @@
           exec: save
       });
 
-      new Ajax.Request("/cgi-bin/edit.pl?game=" + id, {
-          method:"get",
-          onFailure: function(transport) {
-             $("error").innerHTML = "Error opening game."
-             $("save-button").disable();             
-          },
-          onSuccess: function(transport){
-            try {
-              editor.setValue(transport.responseText);
-              editor.clearSelection();
-
-              var title = editor.getValue().match("# (.*)");
-              if (title && title[1]) {
-                 $("title").innerHTML += " (" + title[1] + ")";
-                 $("header").innerHTML += " (" + title[1] + ")";
-              }
-            } catch (e) {
-              handleException(e);
-            };
-          }
-      });
+      load();
     </script>
   </body>
 </html>

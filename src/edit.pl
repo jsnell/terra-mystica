@@ -1,9 +1,11 @@
 #!/usr/bin/perl -w
 
-use POSIX qw(chdir);
-use File::Basename qw(dirname);
 use CGI qw(:cgi);
+use Digest::SHA1  qw(sha1_hex);
 use Fatal qw(chdir open);
+use File::Basename qw(dirname);
+use File::Slurp;
+use JSON;
 
 chdir dirname $0;
 
@@ -19,12 +21,15 @@ if (!-f $file) {
     die "Can't open $file";
 }
 
-local @ARGV = $file;
+my $data = read_file($file);
 
-print "Content-type: text/plain\r\n";
+my $out = encode_json {
+    data => $data,
+    hash => sha1_hex($data),
+};
+
+print "Content-type: text/json\r\n";
 print "Cache-Control: no-cache\r\n";
 print "\r\n";
 
-while (<>) {
-    print "$_"
-}
+print $out;
