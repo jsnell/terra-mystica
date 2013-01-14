@@ -1,64 +1,175 @@
+#+TITLE: Usage
+#+AUTHOR: Juho Snellman
+#+EMAIL: jsnell@iki.fi
+
+* Setting up a game
+
+For now you'll need to ask Juho to create a game. You'll get two links:
+one for viewing the game, one for editing it. Anyone with the second link
+can change the game in arbitrary ways, so you might not want to share it
+too widely.
+
+During setup, you'll need the following sections in the game file:
+
+Remove randonly selected bonus tiles from the game, e.g.
+
+#+BEGIN_EXAMPLE
+  delete bon9
+  delete bon6
+#+END_EXAMPLE
+
+Tell which score tiles are in the game, and in which order:
+
+#+BEGIN_EXAMPLE
+  score score4, score2, score8, score7, score6, score5
+#+END_EXAMPLE
+
+Select the factions in play:
+
+#+BEGIN_EXAMPLE
+  # Faction selection
+  setup Nomads
+  setup Auren
+  setup Swarmlings
+#+END_EXAMPLE
+
+Place initial dwellings:
+
+#+BEGIN_EXAMPLE
+  Nomads: Build A5
+  Auren: Build F4
+  Swarmlings: Build H4. Build G6
+  Auren: Build F2
+  Nomads: Build B4. Build G7
+#+END_EXAMPLE
+
+Select initial bonus tiles:
+
+#+BEGIN_EXAMPLE
+  Swarmlings: +Bon8
+  Auren: +Bon2
+  Nomads: +Bon5
+#+END_EXAMPLE
+
+Get first round's income:
+
+#+BEGIN_EXAMPLE
+  # Round 1 income 
+  Nomads: income
+  Auren: income
+  Swarmlings: income
+#+END_EXAMPLE
+
+Start the game:
+
+#+BEGIN_EXAMPLE
+  start
+#+END_EXAMPLE
+
 * Commands
 
 Each line should start with the name of the faction that's doing
 stuff, followed by a colon. After this, you can have multiple commands
 that apply to that faction, separated by full stops. For example:
 
+#+BEGIN_EXAMPLE
   Nomads: Dig 1. Build E7
+#+END_EXAMPLE
 
 The exact capitalization doesn't matter. 
 
 The commands that you'd usually use are:
 
-- Pass Bon2
-  Pass, return current bonus tile, and replace it with Bon2.
+** =pass= /tile/
 
-- Leech 2
-  Trade 1 vp for 2 power
+Example: =pass bon2=
 
-- Action ACT5
-  Take the power action 5 (or stronghold, bonus tile, or favor special
-  action).
+Pass, return current bonus tile, and replace it with Bon2. When passing
+on the last turn.
 
-- Dig 1
-  Trade workers / priests to shovels at the appropriate exchange rate.
-  The shovels need to be spent by commands later on the same line.
+** =leech= /amount/
 
-- Build F5
-  Terraform the hex F5 into the correct terrain type, and build a dwelling
-  there.
+Example: =Leech 2=.
 
-- Upgrade F5 to TP
-  Replace the dwelling in F5 with a trading post (TE for temples, SH for
-  strongholds, SA for sanctuaries).
+Trade 1 vp for 2 power
 
-- Send P to FIRE
-  Send a priest to the first free spot on the fire cult track.
+** =action= /label/
 
-- Transform F5 to black
-  Terraform F5 to black, but don't build anything there.
+Example: =action act5.
 
-- +FAV11
-  Take the Favor tile #11. (TW3 for Town tile 3, you shouldn't take
-  Bonus tiles with +, but use the Pass command)
+Take the power action 5 (or stronghold, bonus
+tile, or favor special action).
 
-- Bridge E9:D6
-  Build a bridge from E9 to D6.
+** =dig= /amount/
 
-- Advance ship
-  Advance 1 step on the shipping track. "Advance dig" for improving the
-  shovel track.
+Example: =dig 1=. 
 
-- Income
-  Take all income (buildings, favors, bonus tiles, last turn's special
-  scoring tile). Note -- should be done just before starting a new round.
+Trade workers / priests to shovels at the appropriate exchange rate.
+The shovels need to be spent by commands later on the same line.
 
-- Start
-  Move to the next round.
+** =build= /location/
 
-* Notes on specific factions:
+Example: =build F5=
 
-- Dwarves, Fakirs:
+Terraform the hex F5 into the correct terrain type, and build a
+dwelling there.
+
+** =upgrade= /location/ to /building/
+
+Example: =upgrade F5 to TP=
+
+Replace the dwelling in F5 with a trading post (TE for temples, SH for
+strongholds, SA for sanctuaries).
+
+** =send P to= /cult/
+
+Example: =Send P to Fire=
+
+Send a priest to the first free spot on the fire cult track.
+
+** =transform= /location/ =to= /color/
+
+Example: =transform F5 to black=
+
+Terraform F5 to black, but don't build anything there.
+
+** + /amount/ /resource/ or - /amount/ /resource/
+
+Example: =+FAV11=
+
+Take the Favor tile #11. (TW3 for Town tile 3, you shouldn't take
+Bonus tiles with +, but use the Pass command). 
+
+Example: =-4w=
+
+Return 4 workers from the treasury to the pool.
+
+** =bridge= /location:location/
+
+Example: =Bridge E9:D6=
+
+Build a bridge from E9 to D6.
+
+** =advance= /track/
+
+Example: =advance ship=
+
+Advance 1 step on the shipping track. "Advance dig" for improving the
+shovel track.
+
+** =income=
+
+Take all income (buildings, favors, bonus tiles, last turn's special
+scoring tile). Note -- should be done just before starting a new round.
+
+** =start=
+
+Move to the next round.
+
+
+* Notes on specific factions
+
+** Dwarves, Fakirs
 
 Since adjancy isn't tracked, there's no special representation of
 tunneling / carpet flight. Just use a command like "-2w. +4vp" to
