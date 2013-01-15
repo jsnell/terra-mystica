@@ -13,9 +13,9 @@ my $q = CGI->new;
 
 my $id = $q->param('game');
 $id =~ s{.*/}{};
-$id =~ s{[^A-Za-z0-9]}{}g;
+$id =~ s{[^A-Za-z0-9_]}{}g;
 
-my $file = "../data/write/$id";
+my $file = "../../data/write/$id";
 
 if (!-f $file) {
     die "Can't open $file";
