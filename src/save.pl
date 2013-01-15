@@ -9,34 +9,42 @@ use File::Basename qw(dirname);
 use File::Slurp;
 use File::Temp qw(tempfile);
 use JSON;
-use tracker;
 
 chdir dirname $0;
+
+BEGIN { push @INC, "../../git/src"; }
+
+use tracker;
 
 my $q = CGI->new;
 
 my $id = $q->param('game');
 $id =~ s{.*/}{};
-$id =~ s{[^A-Za-z0-9]}{}g;
+$id =~ s{[^A-Za-z0-9_]}{}g;
 
 my $orig_hash = $q->param('orig-hash');
 my $new_content = $q->param('content');
 
-my $dir = "../data/write/";
+my $dir = "../../data/write/";
 
 sub save {
-    my $orig_content = read_file "$dir/$id";
+    chdir $dir;
+
+    my $orig_content = read_file $id;
     if (sha1_hex($orig_content) ne $orig_hash) {
-        print STDERR "[$orig_hash] [", sha1_hex($orig_content), "]";
+        print STDERR "Concurrent modification [$orig_hash] [", sha1_hex($orig_content), "]";
         die "Someone else made changes to the game. Please reload\n";
     }
 
     my ($fh, $filename) = tempfile("tmpfileXXXXXXX",
-                                   DIR=>$dir);
+                                   DIR=>".");
     print $fh $new_content;
     close $fh;
-    rename "$dir/$id", "$dir/$id.bak";
-    rename $filename, "$dir/$id";
+    chmod 0444, $filename;
+    rename "$id", "$id.bak";
+    rename $filename, "$id";
+
+    system "git commit -m 'change $id' $id > /dev/null";
 }
 
 my $res = terra_mystica::evaluate_game split /\n/, $new_content;
@@ -45,6 +53,7 @@ if (!@{$res->{error}}) {
     eval {
         save;
     }; if ($@) {
+        print STDERR "error: $@\n";
         $res->{error} = [ $@ ]
     }
 };
