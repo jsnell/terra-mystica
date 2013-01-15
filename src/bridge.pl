@@ -16,7 +16,7 @@ my $id = $q->param('game');
 $id =~ s{.*/}{};
 $id =~ s{[^A-Za-z0-9]}{}g;
 
-exec "/usr/bin/perl", "../src/tracker.pl", "../data/read/$id";
+exec "/usr/bin/perl", "../../git/src/tracker.pl", "../../data/read/$id";
 
 
 

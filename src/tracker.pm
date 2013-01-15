@@ -442,7 +442,7 @@ sub command {
         maybe_score_current_score_tile $faction_name, $type;
 
         $map{$where}{building} = $type;
-    } elsif ($command =~ /^send (p) to (\w+)$/) {
+    } elsif ($command =~ /^send (p|priest) to (\w+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
 
         my $cult = uc $2;
