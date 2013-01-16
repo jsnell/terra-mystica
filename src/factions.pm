@@ -301,7 +301,7 @@ my %setups = (
                     SA => { advance_cost => { W => 3, C => 6 },
                             income => { P => [ 0, 1 ] } },
                }},
-    dwarves => { C => 15, W => 3, P3 => 5, P2 => 7,
+    dwarves => { C => 15, W => 3, P1 => 5, P2 => 7,
                 EARTH => 2, color => 'gray',
                 ship => { 
                     level => 0, max_level => 0,
