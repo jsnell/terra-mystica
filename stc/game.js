@@ -118,7 +118,7 @@ function drawTemple(ctx, hex) {
     ctx.save();
 
     ctx.beginPath();
-    ctx.arc(loc[0], loc[1], 14, 0, Math.PI*2);
+    ctx.arc(loc[0], loc[1], 14, 0, Math.PI*2, false);
 
     fillBuilding(ctx, hex);
 
@@ -158,8 +158,8 @@ function drawSanctuary(ctx, hex) {
     ctx.save();
 
     ctx.beginPath();
-    ctx.arc(loc[0] - size, loc[1], 12, Math.PI / 2, -Math.PI / 2);
-    ctx.arc(loc[0] + size, loc[1], 12, -Math.PI / 2, Math.PI / 2);
+    ctx.arc(loc[0] - size, loc[1], 12, Math.PI / 2, -Math.PI / 2, false);
+    ctx.arc(loc[0] + size, loc[1], 12, -Math.PI / 2, Math.PI / 2, false);
     ctx.closePath();
     
     fillBuilding(ctx, hex);
@@ -298,7 +298,7 @@ function drawCults() {
 
                     ctx.save();
                     ctx.beginPath();
-                    ctx.arc(0, 10, 6, Math.PI * 2, 0);
+                    ctx.arc(0, 10, 6, Math.PI * 2, 0, false);
                     ctx.fillStyle = colors[faction.color];
                     ctx.fill();
                     ctx.stroke()
