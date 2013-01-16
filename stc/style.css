@@ -68,11 +68,11 @@ div.favor-oval {
 
 div.scoring {
     border-style: solid;
-    font: 12px Verdana;
+    font: 11px Verdana;
     margin: 2px;
     padding: 3px;
     width: 80px;
-    height: 70px;
+    height: 71px;
 }
 
 div.scoring-head {
