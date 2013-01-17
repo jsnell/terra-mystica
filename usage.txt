@@ -133,6 +133,18 @@ Example: =transform F5 to black=
 
 Terraform F5 to black, but don't build anything there.
 
+** =convert= /amount/ /resource/ to /amount/ /resource/
+
+Example: =convert 3pw to 1w=
+
+Convert between resources.
+
+** =burn= /amount/
+
+Example: =burn 2=
+
+Remove 2 power from bowl 2, and move 2 power from bowl 2 to 3.
+
 ** + /amount/ /resource/ or - /amount/ /resource/
 
 Example: =+FAV11=
