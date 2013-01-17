@@ -485,7 +485,7 @@ function renderTown(div, name, faction, count) {
         var key = elem.key;
         var value = elem.value;
 
-        if (key != "VP") {
+        if (key != "VP" && key != "KEY") {
             div.insert("<div>#{value} #{key}</div>".interpolate(elem));
         }
     });

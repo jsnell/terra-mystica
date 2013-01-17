@@ -89,11 +89,11 @@ our %tiles = (
                 req => 4, 
                 income => { SHOVEL => 1 } },    
 
-    TW1 => { gain => { VP => 5, C => 6 } },
-    TW2 => { gain => { VP => 7, W => 2 } },
-    TW3 => { gain => { VP => 9, P => 1 } },
-    TW4 => { gain => { VP => 6, PW => 8 } },
-    TW5 => { gain => { VP => 8, FIRE => 1, WATER => 1, EARTH => 1, AIR => 1 } }
+    TW1 => { gain => { KEY => 1, VP => 5, C => 6 } },
+    TW2 => { gain => { KEY => 1, VP => 7, W => 2 } },
+    TW3 => { gain => { KEY => 1, VP => 9, P => 1 } },
+    TW4 => { gain => { KEY => 1, VP => 6, PW => 8 } },
+    TW5 => { gain => { KEY => 1, VP => 8, FIRE => 1, WATER => 1, EARTH => 1, AIR => 1 } }
 );
 
 for (keys %tiles) {

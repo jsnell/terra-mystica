@@ -30,7 +30,7 @@ div.pool {
 }
 
 div.bonus {
-    font: 12px Verdana;
+    font: 11px Verdana;
     border-style: solid;
     background-color: #ffd;
     margin: 2px;
@@ -44,7 +44,7 @@ div.favor {
     float: left;
     background-color: #f0e0e0;
     border-style: solid;
-    font: 12px Verdana;
+    font: 11px Verdana;
     margin: 2px;
     padding: 3px;
     width: 80px;
@@ -57,7 +57,7 @@ div.favor-oval {
     background-color: #f0c040;
     margin: 2px;
     padding-top: 10px;
-    padding-left: 12px;
+    padding-left: 11px;
     width: 60px;
     height: 40px;
 
@@ -83,7 +83,7 @@ div.town {
     float: left;
     background-color: #def;
     border-style: solid;
-    font: 12px Verdana;
+    font: 11px Verdana;
     margin: 2px;
     padding: 3px;
     width: 60px;

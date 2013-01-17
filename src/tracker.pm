@@ -34,6 +34,7 @@ my %pool = (
     FIRE => 100,
     WATER => 100,
     AIR => 100,
+    KEY => 100,
 
     # Temporary pseudo-resources for tracking activation effects
     SHOVEL => 10000,
@@ -175,7 +176,7 @@ sub faction_income {
 }
 
 sub maybe_gain_power_from_cult {
-    my ($faction_name, $old_value, $new_value) = @_;
+    my ($faction_name, $cult, $old_value, $new_value) = @_;
     my $faction = $factions{$faction_name};
 
     if ($old_value <= 2 && $new_value > 2) {
@@ -188,7 +189,14 @@ sub maybe_gain_power_from_cult {
         command $faction_name, "+2pw";
     }
     if ($old_value <= 9 && $new_value > 9) {
+        command $faction_name, "-KEY";
         command $faction_name, "+3pw";
+        # Block others from this space
+        for (@factions) {
+            if ($_ ne $faction_name) {
+                $factions{$_}{"MAX_$cult"} = 9;
+            }
+        }
     }
 }
 
@@ -304,7 +312,15 @@ sub adjust_resource {
         if ($type !~ /^ACT.$/) {
             $pool{$type} -= $delta;
         }
+
         $faction->{$type} += $delta;
+
+        if (exists $faction->{"MAX_$type"}) {
+            my $max = $faction->{"MAX_$type"};
+            if ($faction->{$type} > $max) {
+                $faction->{$type} = $max;
+            }
+        }
 
         if (exists $pool{$type} and $pool{$type} < 0) {
             die "Not enough '$type' in pool\n";
@@ -330,7 +346,7 @@ sub adjust_resource {
             }
 
             my $new_value = $faction->{$type};
-            maybe_gain_power_from_cult $faction_name, $orig_value, $new_value;
+            maybe_gain_power_from_cult $faction_name, $type, $orig_value, $new_value;
         }
 
         for (1..$delta) {
