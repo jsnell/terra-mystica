@@ -395,7 +395,7 @@ my %setups = (
     halflings => { C => 15, W => 3, P1 => 3, P2 => 9,
                    EARTH => 1, AIR => 1, color => 'brown',
                    special => {
-                       SHOVEL => 1
+                       SHOVEL => { VP => 1 }
                    },
                    ship => { 
                        level => 0, max_level => 3,
