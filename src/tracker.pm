@@ -475,6 +475,7 @@ sub command {
                 delete $map{$where}{gain};
                 $map{$where}{building} = 'P';
                 $map{$where}{color} = $faction->{color};
+                $faction->{MAX_P}--;
                 last;
             }
         }
