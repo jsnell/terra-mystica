@@ -404,6 +404,7 @@ sub command {
         command $faction_name, "transform $where to $color";
     } elsif ($command =~ /^upgrade (\w+) to ([\w ]+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
+        die "Can't upgrade in setup phase\n" if !$round;
 
         my $free = 0;
         my $type = alias_building uc $2;
@@ -611,6 +612,8 @@ sub command {
                 $map{"BON$_"}{C}++;
             }
         }
+
+        push @ledger, { comment => "Start round $round" };
     } elsif ($command =~ /^setup (\w+)$/) {
         setup $1;
     } elsif ($command =~ /delete (\w+)$/) {
