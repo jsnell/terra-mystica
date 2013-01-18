@@ -178,4 +178,9 @@ scoring tile). Note -- should be done just before starting a new round.
 
 Move to the next round.
 
+** =finish=
+
+Do the final scoring.
+
+
 

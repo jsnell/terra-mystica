@@ -9,7 +9,7 @@ use factions;
 use map;
 use tiles;
 
-my @cults = qw(EARTH FIRE WATER AIR);
+my @cults = qw(FIRE WATER EARTH AIR);
 my @ledger = ();
 my @error = ();
 my @score_tiles = ();
@@ -62,6 +62,7 @@ for my $cult (@cults) {
 ## 
 
 sub command;
+sub handle_row;
 
 sub current_score_tile {
     if ($round > 0) {
@@ -431,6 +432,29 @@ sub check_reachable {
     die "$faction->{color} can't reach $where\n";
 }
 
+sub score_final_cults {
+    for my $cult (@cults) {
+        push @ledger, { comment => "Scoring $cult cult" };
+        my @levels = sort { $a <=> $b } map { $factions{$_}{$cult} // 0} keys %factions;
+        my %scores = ();
+        my %count = ();
+        $count{$_}++ for @levels;
+
+        $scores{pop @levels} += 8;
+        $scores{pop @levels} += 4;
+        $scores{pop @levels} += 2;
+        
+        for my $faction_name (keys %factions) {
+            my $level = $factions{$faction_name}{$cult};
+            next if !$level or !defined $scores{$level};
+            my $vp = $scores{$level} / $count{$level};
+            if ($vp) {
+                handle_row "$faction_name: +${vp}vp";
+            }
+        }
+    }
+}
+
 sub command {
     my ($faction_name, $command) = @_;
     my $faction = $faction_name ? $factions{$faction_name} : undef;
@@ -729,6 +753,8 @@ sub command {
         my $setup = uc $1;
         @score_tiles = split /,/, $setup;
         die "Invalid scoring tile setup: $setup\n" if @score_tiles != 6;
+    } elsif ($command =~ /^finish$/) {
+        score_final_cults;
     } else {
         die "Could not parse command '$command'.\n";
     }

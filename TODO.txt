@@ -1,11 +1,10 @@
-- Final cult track scoring
 - Automatic conversion of resources -> money -> VPs in endgame
 
 Maybe:
 - Detect leeching opportunities:
   - Require an explicit leech / don't leech Detect
   - reject invalid leech amounts
-- Track priest and bridge counts
+- Track bridge counts
 
 Out of scope:
 - Any other spatial elements
