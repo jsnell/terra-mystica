@@ -77,7 +77,7 @@ sub setup_direct_adjacencies {
 sub setup_hex_ranges {
     my ($from, $river_only) = @_;
     my %aux = ();
-    my $max = ($river_only ? 5 : 2);
+    my $max = ($river_only ? 6 : 2);
 
     return if $from =~ /^r/;
 
@@ -85,9 +85,9 @@ sub setup_hex_ranges {
     for my $range (0..$max) {
         for my $hex (keys %aux) {
             next if $aux{$hex} != $range - 1;
+            next if $river_only and $range != 0 and $hex !~ /^r/;
             for my $adj (keys %{$map{$hex}{adjacent}}) {
-                if (!exists $aux{$adj}) {
-                    # print "$from $adj $range";
+                if (!exists $aux{$adj}) { 
                     $aux{$adj} = $range;
                 }
             }
