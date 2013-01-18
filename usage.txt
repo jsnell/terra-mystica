@@ -179,11 +179,3 @@ scoring tile). Note -- should be done just before starting a new round.
 Move to the next round.
 
 
-* Notes on specific factions
-
-** Dwarves, Fakirs
-
-Since adjancy isn't tracked, there's no special representation of
-tunneling / carpet flight. Just use a command like "-2w. +4vp" to
-get the correct effect.
-  
