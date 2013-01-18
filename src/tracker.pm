@@ -3,7 +3,7 @@
 package terra_mystica;
 
 use strict;
-use List::Util qw(sum);
+use List::Util qw(sum max);
 
 use factions;
 use map;
@@ -423,7 +423,7 @@ sub check_reachable {
                 my $cost = $t->{cost}[$level];
                 my $gain = $t->{gain}[$level];
                 pay $faction_name, $cost;
-                gain $faction_name, $gain;        
+                gain $faction_name, $gain;
                 return;
             }
         }
@@ -432,27 +432,82 @@ sub check_reachable {
     die "$faction->{color} can't reach $where\n";
 }
 
+sub score_type_rankings {
+    my ($type, @scores) = @_;
+
+    my @levels = sort { $a <=> $b } map { $factions{$_}{$type} // 0} keys %factions;
+    my %scores = ();
+    my %count = ();
+    $count{$_}++ for @levels;
+
+    $scores{pop @levels} += $_ for @scores;
+        
+    for my $faction_name (keys %factions) {
+        my $level = $factions{$faction_name}{$type};
+        next if !$level or !defined $scores{$level};
+        my $vp = $scores{$level} / $count{$level};
+        if ($vp) {
+            handle_row "$faction_name: +${vp}vp";
+        }
+    }
+}
+
 sub score_final_cults {
     for my $cult (@cults) {
         push @ledger, { comment => "Scoring $cult cult" };
-        my @levels = sort { $a <=> $b } map { $factions{$_}{$cult} // 0} keys %factions;
-        my %scores = ();
-        my %count = ();
-        $count{$_}++ for @levels;
-
-        $scores{pop @levels} += 8;
-        $scores{pop @levels} += 4;
-        $scores{pop @levels} += 2;
-        
-        for my $faction_name (keys %factions) {
-            my $level = $factions{$faction_name}{$cult};
-            next if !$level or !defined $scores{$level};
-            my $vp = $scores{$level} / $count{$level};
-            if ($vp) {
-                handle_row "$faction_name: +${vp}vp";
-            }
-        }
+        score_type_rankings $cult, 8, 4, 2;
     }
+}
+
+sub compute_network_size {
+    my $faction_name = shift;
+    return if !$faction_name;
+    
+    my $faction = $factions{$faction_name};
+    my @locations = @{$faction->{locations}};
+    my %clique = ();
+    my ($range, $ship);
+
+    if ($faction->{teleport}) {
+        my $t = $faction->{teleport};
+        my $level = $t->{level};
+        $range = $t->{range}[$level];
+        $ship = 0;
+    } else {
+        $range = $faction->{ship}{level};        
+        $ship = 1;
+    }
+
+    my $handle;
+    $handle = sub {
+        my ($loc, $id) = @_;
+        return if exists $clique{$loc};
+
+        $clique{$loc} = $id;
+
+        for my $to (@locations) {
+            next if $loc eq $to;
+            if (exists $map{$loc}{adjacent}{$to} or
+                (exists $map{$loc}{range}{$ship}{$to} and
+                 $map{$loc}{range}{$ship}{$to} <= $range)) {
+                $handle->($to, $id);
+            };
+        }
+    };
+
+    my $n = 1;
+    $handle->($_, $n++) for @locations;
+
+    my %clique_sizes = ();
+    $clique_sizes{$_}++ for values %clique;
+
+    $faction->{network} = max values %clique_sizes;
+}
+
+sub score_final_networks {
+    compute_network_size $_ for keys %factions;
+    push @ledger, { comment => "Scoring largest network" };
+    score_type_rankings 'network', 18, 12, 6;
 }
 
 sub command {
@@ -755,6 +810,7 @@ sub command {
         die "Invalid scoring tile setup: $setup\n" if @score_tiles != 6;
     } elsif ($command =~ /^finish$/) {
         score_final_cults;
+        score_final_networks;
     } else {
         die "Could not parse command '$command'.\n";
     }
