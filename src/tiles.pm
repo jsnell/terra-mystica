@@ -12,7 +12,7 @@ our %actions = (
     ACTG => { cost => {}, gain => { SHOVEL => 2} },
     ACTS => { cost => {}, gain => { FREE_TP => 1 } },
     ACTN => { cost => {}, gain => { FREE_TF => 1 } },
-    ACTP => { cost => {}, gain => { FREE_D => 1 } },
+    ACTW => { cost => {}, gain => { FREE_D => 1 } },
     BON1 => { cost => {}, gain => { SHOVEL => 1 } },
     BON2 => { cost => {}, gain => { CULT => 1 } },
     FAV6 => { cost => {}, gain => { CULT => 1 } },
