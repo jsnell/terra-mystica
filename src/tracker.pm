@@ -287,9 +287,10 @@ sub adjust_resource {
 
     $type = alias_resource $type;
 
-    if ($type eq 'GAIN_SHIP') {
+    if ($type =~ 'GAIN_(TELEPORT|SHIP)') {
+        my $track_name = lc $1;
         for (1..$delta) {
-            my $track = $faction->{ship};
+            my $track = $faction->{$track_name};
             my $gain = $track->{advance_gain}[$track->{level}];
             gain $faction_name, $gain;
             $track->{level}++
@@ -380,6 +381,56 @@ sub note_leech {
     }
 }
 
+sub check_reachable {
+    my ($faction_name, $where) = @_;
+    my $faction = $factions{$faction_name};
+
+    return if $round == 0;
+
+    my $range = $faction->{ship}{level};
+    if ($faction->{ship}{max_level}) {
+        # XXX hack.
+        $range++ if $faction->{BON4};
+    }
+
+    # Direct adjancies first (can't use tunneling / carpet flight bonus
+    # if it isn't needed).
+    for my $loc (@{$faction->{locations}}) {
+        if ($map{$where}{adjacent}{$loc}) {
+            return;
+        }
+    }
+
+    # Ships
+    if ($range) {
+        for my $loc (@{$faction->{locations}}) {
+            if (exists $map{$where}{range}{1}{$loc} and 
+                $map{$where}{range}{1}{$loc} <= $range) {
+                return;
+            }
+        }
+    }
+
+    if ($faction->{teleport}) {
+        my $t = $faction->{teleport};
+        my $level = $t->{level};
+        my $range = $t->{range}[$level];
+
+        for my $loc (@{$faction->{locations}}) {
+            if (exists $map{$where}{range}{0}{$loc} and 
+                $map{$where}{range}{0}{$loc} <= $range) {
+                my $cost = $t->{cost}[$level];
+                my $gain = $t->{gain}[$level];
+                pay $faction_name, $cost;
+                gain $faction_name, $gain;        
+                return;
+            }
+        }
+    }
+
+    die "$faction->{color} can't reach $where\n";
+}
+
 sub command {
     my ($faction_name, $command) = @_;
     my $faction = $faction_name ? $factions{$faction_name} : undef;
@@ -411,14 +462,15 @@ sub command {
 
         note_leech $where, $color;
 
+        command $faction_name, "transform $where to $color";
+
         advance_track $faction_name, $type, $faction->{buildings}{$type}, $free;
 
         maybe_score_favor_tile $faction_name, $type;
         maybe_score_current_score_tile $faction_name, $type;
 
         $map{$where}{building} = $type;
-
-        command $faction_name, "transform $where to $color";
+        push @{$faction->{locations}}, $where;
     } elsif ($command =~ /^upgrade (\w+) to ([\w ]+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
         die "Can't upgrade in setup phase\n" if !$round;
@@ -539,6 +591,8 @@ sub command {
     } elsif ($command =~ /^transform (\w+) to (\w+)$/) {
         my $where = uc $1;
         my $color = lc $2;
+        check_reachable $faction_name, $where;
+
         if ($faction->{FREE_TF}) {
             command $faction_name, "-FREE_TF";            
         } else {
@@ -785,9 +839,16 @@ sub finalize {
     if (@score_tiles) {
         $tiles{$score_tiles[-1]}->{income_display} = '';
     }
+
+    for my $hex (values %map) {
+        delete $hex->{adjacent};
+        delete $hex->{range};
+    }
     
     for my $faction (@factions) {
+        delete $factions{$faction}{locations};
         delete $factions{$faction}{buildings};
+        delete $factions{$faction}{teleport};
     }
 }
 
@@ -820,4 +881,5 @@ sub evaluate_game {
         bonus_tiles => { map({$_, $tiles{$_}} grep { /^BON/ } keys %tiles ) },
         favors => { map({$_, $tiles{$_}} grep { /^FAV/ } keys %tiles ) },
     }
+
 }

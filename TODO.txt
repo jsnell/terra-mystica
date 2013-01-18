@@ -1,10 +1,6 @@
 - Final cult track scoring
 - Automatic conversion of resources -> money -> VPs in endgame
 
-Partially implemented factions:
-- Engineer stronghold VP scoring
-- Fakir carpet flight, Dwarf tunneling
-
 Maybe:
 - Detect leeching opportunities:
   - Require an explicit leech / don't leech Detect
@@ -13,7 +9,6 @@ Maybe:
 
 Out of scope:
 - Any other spatial elements
-  - Automatic detection of valid / invalid build locations
   - Automatic founding of towns
   - Final network scoring
   - Tracking of active player

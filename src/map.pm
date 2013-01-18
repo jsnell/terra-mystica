@@ -20,6 +20,7 @@ my @map = qw(brown gray green blue yellow red brown black red green blue red bla
 
 sub setup_base_map {
     my $ri = 0;
+    my $river = 0;
     for my $row ('A'..'I') {
         my $col = 1;
         for my $ci (0..13) {
@@ -31,7 +32,14 @@ sub setup_base_map {
                 $map{"$row$col"}{col} = $ci;
                 $reverse_map{$ri}{$ci} = "$row$col";
                 $col++;
-           }
+            } else {
+                my $key = "r$river";
+                $map{"$key"}{color} = 'white';
+                $map{"$key"}{row} = $ri;
+                $map{"$key"}{col} = $ci;
+                $reverse_map{$ri}{$ci} = "$key";
+                $river++;
+            }
         }
         $ri++;
     }
@@ -66,7 +74,36 @@ sub setup_direct_adjacencies {
     }
 }
 
+sub setup_hex_ranges {
+    my ($from, $river_only) = @_;
+    my %aux = ();
+    my $max = ($river_only ? 5 : 2);
+
+    return if $from =~ /^r/;
+
+    $aux{$from} = -1;
+    for my $range (0..$max) {
+        for my $hex (keys %aux) {
+            next if $aux{$hex} != $range - 1;
+            for my $adj (keys %{$map{$hex}{adjacent}}) {
+                if (!exists $aux{$adj}) {
+                    # print "$from $adj $range";
+                    $aux{$adj} = $range;
+                }
+            }
+        }
+    }
+
+    $map{$from}{range}{$river_only} = { %aux };
+}
+
+sub setup_ranges {
+    setup_hex_ranges $_, 0 for keys %map;
+    setup_hex_ranges $_, 1 for keys %map;
+}
+
 setup_base_map;
 setup_direct_adjacencies;
+setup_ranges;
 
 1;

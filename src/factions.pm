@@ -253,6 +253,12 @@ my %setups = (
                 ship => { 
                     level => 0, max_level => 0,
                 },
+                teleport => {
+                    level => 0, max_level => 1,
+                    cost => [ { P => 1 }, { P => 1 } ],
+                    gain => [ { VP => 4 }, { VP => 4 } ],
+                    range => [ 1, 2 ],
+                },
                 dig => {
                     level => 0, max_level => 1,
                     cost => [ { W => 3 }, { W => 2 } ],
@@ -268,6 +274,7 @@ my %setups = (
                     TE => { advance_cost => { W => 2, C => 5 },
                             income => { P => [ 0, 1, 2, 3 ] } },
                     SH => { advance_cost => { W => 4, C => 10 },
+                            advance_gain => [ { GAIN_TELEPORT => 1 } ],
                             income => { P => [ 0, 1 ] } },
                     SA => { advance_cost => { W => 4, C => 6 },
                             income => { P => [ 0, 1 ] } },
@@ -306,6 +313,12 @@ my %setups = (
                 ship => { 
                     level => 0, max_level => 0,
                 },
+                teleport => {
+                    level => 0, max_level => 1,
+                    cost => [ { W => 2 }, { W => 1 } ],
+                    gain => [ { VP => 4 }, { VP => 4 } ],
+                    range => [ 1, 1 ],
+                },
                 dig => {
                     level => 0, max_level => 2,
                     cost => [ { W => 3 }, { W => 2 }, { W => 1 } ],
@@ -321,6 +334,7 @@ my %setups = (
                     TE => { advance_cost => { W => 2, C => 5 },
                             income => { P => [ 0, 1, 2, 3 ] } },
                     SH => { advance_cost => { W => 4, C => 6 },
+                            advance_gain => [ { GAIN_TELEPORT => 1 } ],
                             income => { PW => [ 0, 2 ] } },
                     SA => { advance_cost => { W => 4, C => 6 },
                             income => { P => [ 0, 1 ] } },

@@ -179,6 +179,10 @@ function drawHex(ctx, elem) {
         return;
     }
 
+    if (hex.color == 'white') {
+        return;
+    }
+
     makeHexPath(ctx, hex);
 
     ctx.save();
