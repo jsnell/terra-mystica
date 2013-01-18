@@ -458,11 +458,15 @@ sub command {
         if ($faction->{FREE_D}) {
             $free = 1;
             $faction->{FREE_D}--;
+            # XXX ugly hack -- the two separate functionalities of the
+            # Witch Stronghold are coupled together here.
+            die "Can't transform terrain when using witch stronghold\n"
+                if $map{$where}{color} ne $faction->{color}
+        } else {
+            command $faction_name, "transform $where to $color";
         }
 
         note_leech $where, $color;
-
-        command $faction_name, "transform $where to $color";
 
         advance_track $faction_name, $type, $faction->{buildings}{$type}, $free;
 
