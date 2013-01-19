@@ -9,6 +9,5 @@ Maybe:
 Out of scope:
 - Any other spatial elements
   - Automatic founding of towns
-  - Final network scoring
   - Tracking of active player
 

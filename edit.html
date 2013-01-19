@@ -26,6 +26,11 @@
         width: 800px;
         border-style: solid;
     }
+    #fallback-editor {
+        height: 600px;
+        width: 800px;
+        display: none;
+    };
     </style>
     <link rel="stylesheet" type="text/css" href="/stc/style.css">
   </head>
@@ -38,27 +43,16 @@
     <div id="wrapper">
       <div id="editor"></div>
     </div>
+    <div>
+      <textarea id="fallback-editor"></textarea>
+    </div>
     
     <input type="button" value="Save" onClick="javascript:save()" id="save-button"/>
 
     <script src="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 
     <script>
-      var id = document.location.pathname;
-
-      var editor = ace.edit("editor");
-      var hash;
-      editor.getSession().setMode("ace/mode/sh");
-      editor.commands.removeCommand("replace");
-      editor.commands.removeCommand("gotoline");
-
-      editor.commands.addCommand({
-          name: 'mySave',
-          bindKey: { win: 'Ctrl-S',  mac: 'Command-S' },
-          exec: save
-      });
-
-      load();
+      init();
     </script>
   </body>
 </html>
