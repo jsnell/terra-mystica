@@ -676,6 +676,10 @@ sub command {
         my $color = lc $2;
         check_reachable $faction_name, $where;
 
+        if ($map{$where}{building}) {
+            die "Can't transform $where to $color, already contains a building\n"
+        }
+
         if ($faction->{FREE_TF}) {
             command $faction_name, "-FREE_TF";            
         } else {
