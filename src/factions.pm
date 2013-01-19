@@ -38,7 +38,7 @@ my %setups = (
                     },
                     exchange_rates => {
                         C => { VP => 2 },
-                        VP => { C => 2 }
+                        VP => { C => 1 }
                     },
                     buildings => {
                         D => { advance_cost => { W => 1, C => 2 },
@@ -451,7 +451,7 @@ my %setups = (
                   dig => {
                       level => 0, max_level => 2,
                       cost => [ { W => 3 }, { W => 2 }, { W => 1 } ],
-                      advance_cost => { W => 2, C => 1, P => 1 },
+                      advance_cost => { W => 2, C => 5, P => 1 },
                       advance_gain => [ { VP => 6 },
                                         { VP => 6 } ]
                   },
