@@ -44,6 +44,7 @@ my %pool = (
     CULT => 10000,
     GAIN_FAVOR => 10000,
     GAIN_SHIP => 10000,
+    GAIN_TW => 10000,
     CONVERT_W_TO_P => 3,
 );
 
@@ -63,6 +64,7 @@ for my $cult (@cults) {
 
 sub command;
 sub handle_row;
+sub detect_towns_from;
 
 sub current_score_tile {
     if ($round > 0) {
@@ -84,7 +86,11 @@ sub gain {
 
     for my $currency (keys %{$cost}) {
         my $amount = $cost->{$currency};
-        command $faction_name, "+${amount}$currency";            
+        if ($amount < 0) {
+            command $faction_name, "${amount}$currency";
+        } else {
+            command $faction_name, "+${amount}$currency";
+        }
     }
 }
 
@@ -336,9 +342,21 @@ sub adjust_resource {
             }
 
             gain $faction_name, $tiles{$type}{gain};
+
+            # Hack
+            if ($type eq 'FAV5') {
+                for my $loc (@{$faction->{locations}}) {
+                    detect_towns_from $faction_name, $loc;
+                }
+            }
         }
 
         if ($type =~ /^TW/) {
+            if (!$faction->{GAIN_TW}) {
+                die "Taking town tile not allowed\n";
+            } else {
+                $faction->{GAIN_TW}--;
+            }
             gain $faction_name, $tiles{$type}{gain};
         }
 
@@ -510,6 +528,74 @@ sub score_final_networks {
     score_type_rankings 'network', 18, 12, 6;
 }
 
+sub adjacent_own_buildings {
+    my ($faction, $where) = @_;
+
+    my @adjacent = keys %{$map{$where}{adjacent}};
+    return grep {
+        $map{$_}{building} and ($map{$_}{color} eq $faction->{color});
+    } @adjacent;
+}
+
+sub add_to_town {
+    my ($faction, $where, $tid) = @_;
+
+    $map{$where}{town} = $tid;
+
+    for my $adjacent (adjacent_own_buildings $faction, $where) {
+        if (!$map{$adjacent}{town}) {
+            add_to_town($faction, $adjacent, $tid);
+        }
+    }
+}
+
+sub detect_towns_from {
+    my ($faction_name, $where) = @_;
+    return if !$faction_name;
+    my $faction = $factions{$faction_name};
+    
+    return if $map{$where}{town};
+    return if !$map{$where}{building};
+    return if $map{$where}{color} ne $faction->{color};
+
+    my @adjacent = keys %{$map{$where}{adjacent}};
+
+    # Merge building to existing town
+    for my $adjacent (adjacent_own_buildings $faction, $where) {
+        if ($map{$adjacent}{town}) {
+            add_to_town $faction, $where, $map{$adjacent}{town};
+        }
+    }
+
+    return if $map{$where}{town};
+
+    my %reachable = ();
+    my $power = 0;
+    my $count = 0;
+
+    my $handle;
+    $handle = sub {
+        my ($loc) = @_;
+        return if exists $reachable{$loc};
+
+        $reachable{$loc} = 1;
+        $power += $building_strength{$map{$loc}{building}};
+        $count++;
+        $count++ if $map{$loc}{building} eq 'SA';
+
+        for my $adjacent (adjacent_own_buildings $faction, $loc) {
+            $handle->($adjacent);
+        }
+    };
+
+    $handle->($where);
+
+    if ($power >= $faction->{TOWN_SIZE} and $count >= 4) {
+        $map{$_}{town} = 1 for keys %reachable;
+        command $faction_name, "+GAIN_TW";
+    }
+}
+
 sub command {
     my ($faction_name, $command) = @_;
     my $faction = $faction_name ? $factions{$faction_name} : undef;
@@ -554,6 +640,8 @@ sub command {
 
         $map{$where}{building} = $type;
         push @{$faction->{locations}}, $where;
+
+        detect_towns_from $faction_name, $where;
     } elsif ($command =~ /^upgrade (\w+) to ([\w ]+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
         die "Can't upgrade in setup phase\n" if !$round;
@@ -595,6 +683,8 @@ sub command {
         maybe_score_current_score_tile $faction_name, $type;
 
         $map{$where}{building} = $type;
+
+        detect_towns_from $faction_name, $where;
     } elsif ($command =~ /^send (p|priest) to (\w+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
 
@@ -693,6 +783,8 @@ sub command {
         } 
 
         $map{$where}{color} = $color;
+
+        detect_towns_from $faction_name, $where;
     } elsif ($command =~ /^dig (\d+)/) {
         my $cost = $faction->{dig}{cost}[$faction->{dig}{level}];
         my $gain = $faction->{dig}{gain}[$faction->{dig}{level}];
@@ -709,6 +801,22 @@ sub command {
         $map{$to}{adjacent}{$from} = 1;
 
         push @bridges, {from => $from, to => $to, color => $faction->{color}};
+
+        detect_towns_from $faction_name, $from;
+        detect_towns_from $faction_name, $to;
+    } elsif ($command =~ /^connect (\w+):(\w+)$/) {
+        die "Need faction for command $command\n" if !$faction_name;
+        die "Only mermaids can use 'connect'\n" if $faction_name ne 'mermaids';
+
+        my $from = uc $1;
+        my $to = uc $2;
+        $map{$from}{adjacent}{$to} = 1;
+        $map{$to}{adjacent}{$from} = 1;
+
+        die "$to and $from must be one river space away\n" if
+            $map{$from}{range}{1}{$to} ne 1;
+
+        detect_towns_from $faction_name, $from;
     } elsif ($command =~ /^pass(?: (\w+))?$/) {
         die "Need faction for command $command\n" if !$faction_name;
         my $bon = $1;
@@ -897,6 +1005,10 @@ sub handle_row {
 
             if ($factions{$prefix}{GAIN_FAVOR}) {
                 $warn = "favor not taken by $prefix\n";
+            }
+
+            if ($factions{$prefix}{GAIN_TW}) {
+                $warn = "town tile not taken by $prefix\n";
             }
 
             push @ledger, { faction => $prefix,

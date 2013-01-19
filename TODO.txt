@@ -2,12 +2,10 @@
 
 Maybe:
 - Detect leeching opportunities:
-  - Require an explicit leech / don't leech Detect
+  - Require an explicit leech / don't leech
   - reject invalid leech amounts
 - Track bridge counts
 
 Out of scope:
-- Any other spatial elements
-  - Automatic founding of towns
-  - Tracking of active player
+- Tracking of active player
 

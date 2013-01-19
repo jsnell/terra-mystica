@@ -216,7 +216,8 @@ function drawHex(ctx, elem) {
     } else {
         ctx.strokeStyle = "#000";
     }
-    drawText(ctx, id, loc[0] - 9, loc[1] + 25, "12px Verdana");
+    drawText(ctx, id, loc[0] - 9, loc[1] + 25,
+             hex.town ? "bold 12px Verdana" : "12px Verdana");
     ctx.restore();
 }
 

@@ -37,7 +37,7 @@ our %tiles = (
     FAV3 => { gain => { EARTH => 3 }, income => {} },
     FAV4 => { gain => { AIR => 3 }, income => {} },
 
-    FAV5 => { gain => { FIRE => 2 }, income => {} }, # Town
+    FAV5 => { gain => { FIRE => 2, TOWN_SIZE => -1 }, income => {} },
     FAV6 => { gain => { WATER => 2 }, income => {} },
     FAV7 => { gain => { EARTH => 2 }, income => { W => 1, PW => 1} },
     FAV8 => { gain => { AIR => 2 }, income => { PW => 4} },

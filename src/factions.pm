@@ -510,6 +510,7 @@ sub setup {
     }
 
     $faction->{SHOVEL} = 0;
+    $faction->{TOWN_SIZE} = 7;
 
     push @factions, $faction_name;
 }
