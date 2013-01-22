@@ -895,8 +895,8 @@ sub command {
         }
 
         push @ledger, { comment => "Start round $round" };
-    } elsif ($command =~ /^setup (\w+)$/) {
-        setup $1;
+    } elsif ($command =~ /^setup (\w+)(?: for (\S+))?$/) {
+        setup $1, $2;
     } elsif ($command =~ /delete (\w+)$/) {
         delete $pool{uc $1};
     } elsif ($command =~ /^income$/) {

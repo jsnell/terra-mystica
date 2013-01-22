@@ -28,9 +28,9 @@ Select the factions in play:
 
 #+BEGIN_EXAMPLE
   # Faction selection
-  setup Nomads
-  setup Auren
-  setup Swarmlings
+  setup Nomads for Alice
+  setup Auren for Bob
+  setup Swarmlings for Charlie
 #+END_EXAMPLE
 
 Place initial dwellings:
@@ -182,8 +182,12 @@ Move to the next round.
 
 Do the final scoring.
 
+** =setup= /faction/ for /player/
 
+Example: =setup Nomads for Alice=
 
+Add this faction to the game. The player name is optional, you also do just
+=setup Nomads=.
 
 * Notes on specific factions
 

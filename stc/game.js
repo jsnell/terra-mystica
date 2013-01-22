@@ -576,7 +576,7 @@ function drawFactions() {
         }
 
         var container = new Element('div', { 'class': 'faction-board' });
-        var board = makeBoard(color, name, '', style);
+        var board = makeBoard(color, faction.display, '', style);
         container.insert(board);
         var info = new Element('div', {'class': 'faction-info' });
         board.insert(info);

@@ -18,6 +18,7 @@ our %building_strength = (
 my %setups = (
     alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
                     WATER => 1, FIRE => 1, color => 'black',
+                    display => "Alchemists",
                     ship => { 
                         level => 0, max_level => 3,
                         advance_cost => { C => 4, P => 1 },
@@ -58,6 +59,7 @@ my %setups = (
         C => 15, W => 1, P => 1, P1 => 5, P2 => 7,
         WATER => 1, EARTH => 1,
         color => 'black',
+        display => "Darklings",
         ship => { 
             level => 0, max_level => 3,
             advance_cost => { C => 4, P => 1 },
@@ -88,6 +90,7 @@ my %setups = (
     auren => { C => 15, W => 3, P1 => 5, P2 => 7,
                WATER => 1, AIR => 1,
                color => 'green',
+               display => "Auren",
                ship => { 
                    level => 0, max_level => 3,
                    advance_cost => { C => 4, P => 1 },
@@ -121,6 +124,7 @@ my %setups = (
                  special => {
                      map(("TW$_", { VP => 5 }), 1..5)
                  },
+                 display => "Witches",
                  ship => { 
                      level => 0, max_level => 3,
                      advance_cost => { C => 4, P => 1 },
@@ -153,6 +157,7 @@ my %setups = (
         C => 15, W => 3, P1 => 3, P2 => 9,
         WATER => 2,
         color => 'blue',
+        display => "Mermaids",
         ship => { 
             level => 1, max_level => 4,
             advance_cost => { C => 4, P => 1 },
@@ -187,6 +192,7 @@ my %setups = (
     swarmlings => { C => 20, W => 8, P1 => 3, P2 => 9,
                     FIRE => 1, EARTH => 1,
                     WATER => 1, AIR => 1, color => 'blue',
+                    display => "Swarmlings",
                     ship => { 
                         level => 0, max_level => 3,
                         advance_cost => { C => 4, P => 1 },
@@ -220,6 +226,7 @@ my %setups = (
                     }},
     nomads => { C => 15, W => 2, P1 => 5, P2 => 7,
                 FIRE => 1, EARTH => 1, color => 'yellow',
+                display => "Nomads",
                 ship => { 
                     level => 0, max_level => 3,
                     advance_cost => { C => 4, P => 1 },
@@ -250,6 +257,7 @@ my %setups = (
                 }},
     fakirs => { C => 15, W => 3, P1 => 7, P2 => 5,
                 FIRE => 1, AIR => 1, color => 'yellow',
+                display => "Fakirs",
                 ship => { 
                     level => 0, max_level => 0,
                 },
@@ -280,6 +288,7 @@ my %setups = (
                             income => { P => [ 0, 1 ] } },
                 }},
     engineers => { C => 10, W => 2, P1 => 3, P2 => 9, color => 'gray',
+                   display => "Engineers",
                    ship => { 
                        level => 0, max_level => 3,
                        advance_cost => { C => 4, P => 1 },
@@ -310,6 +319,7 @@ my %setups = (
                }},
     dwarves => { C => 15, W => 3, P1 => 5, P2 => 7,
                 EARTH => 2, color => 'gray',
+                display => "Dwarves",
                 ship => { 
                     level => 0, max_level => 0,
                 },
@@ -343,6 +353,7 @@ my %setups = (
         C => 15, W => 4, P1 => 5, P2 => 7,
         FIRE => 2,
         color => 'red',
+        display => "Chaos Magicians",
         ship => { 
             level => 0, max_level => 3,
             advance_cost => { C => 4, P => 1 },
@@ -378,6 +389,7 @@ my %setups = (
     },
     giants => { C => 15, W => 3, P1 => 5, P2 => 7,
                 FIRE => 1, AIR => 1, color => 'red',
+                display => "Giants",
                 ship => { 
                     level => 0, max_level => 3,
                     advance_cost => { C => 4, P => 1 },
@@ -408,6 +420,7 @@ my %setups = (
                 }},
     halflings => { C => 15, W => 3, P1 => 3, P2 => 9,
                    EARTH => 1, AIR => 1, color => 'brown',
+                   display => "Halflings",
                    special => {
                        SHOVEL => { VP => 1 }
                    },
@@ -441,6 +454,7 @@ my %setups = (
                }},
     cultists => { C => 15, W => 3, P1 => 5, P2 => 7,
                   EARTH => 1, FIRE => 1, color => 'brown',
+                  display => "Cultists",
                   ship => { 
                       level => 0, max_level => 3,
                       advance_cost => { C => 4, P => 1 },
@@ -472,7 +486,7 @@ my %setups = (
 );
 
 sub setup {
-    my $faction_name = lc shift;
+    my ($faction_name, $player) = @_;
 
     die "Unknown faction: $faction_name\n" if !$setups{$faction_name};
 
@@ -511,6 +525,9 @@ sub setup {
 
     $faction->{SHOVEL} = 0;
     $faction->{TOWN_SIZE} = 7;
+    if ($player) {
+        $faction->{display} .= " ($player)";
+    }
 
     push @factions, $faction_name;
 }
