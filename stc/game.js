@@ -339,7 +339,29 @@ function drawCults() {
 
             ctx.restore();
         };
-    }    
+
+        ctx.save();
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = 1;
+        ctx.translate(0, 60.5);
+        ctx.moveTo(0, 0); ctx.lineTo(250, 0);
+        ctx.moveTo(0, 3); ctx.lineTo(250, 3);
+        ctx.moveTo(0, 6); ctx.lineTo(250, 6);
+
+        ctx.translate(0, 120);
+        ctx.moveTo(0, 0); ctx.lineTo(250, 0);
+        ctx.moveTo(0, 3); ctx.lineTo(250, 3);
+
+        ctx.translate(0, 80);
+        ctx.moveTo(0, 0); ctx.lineTo(250, 0);
+        ctx.moveTo(0, 3); ctx.lineTo(250, 3);
+
+        ctx.translate(0, 80);
+        ctx.moveTo(0, 0); ctx.lineTo(250, 0);
+
+        ctx.stroke();
+        ctx.restore();
+    }
 }
 
 function renderAction(canvas, name, key) {
