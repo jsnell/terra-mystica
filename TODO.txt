@@ -1,4 +1,7 @@
 - Automatic conversion of resources -> money -> VPs in endgame
+- Display a terrain wheel
+- Test editor on IE8
+- Add optional player names
 
 Maybe:
 - Detect leeching opportunities:
