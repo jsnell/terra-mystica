@@ -417,10 +417,10 @@ function renderAction(canvas, name, key) {
             drawText(ctx, "7c", 15, 15, "10px Verdana");
         },
         "ACT5": function() {
-            drawText(ctx, "sh", 15, 15, "10px Verdana");
+            drawText(ctx, "shov", 15, 15, "10px Verdana");
         },
         "ACT6": function() {
-            drawText(ctx, "2sh", 15, 15, "10px Verdana");
+            drawText(ctx, "2shov", 15, 15, "10px Verdana");
         },
         "ACTA": function() {
             drawText(ctx, "2cult", 15, 15, "10px Verdana");
@@ -432,7 +432,7 @@ function renderAction(canvas, name, key) {
             drawText(ctx, "tp", 15, 15, "10px Verdana");
         },
         "BON1": function() {
-            drawText(ctx, "sh", 15, 15, "10px Verdana");
+            drawText(ctx, "shov", 15, 15, "10px Verdana");
         },
         "BON2": function() {
             drawText(ctx, "cult", 15, 15, "10px Verdana");
