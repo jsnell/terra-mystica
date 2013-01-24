@@ -382,6 +382,7 @@ function renderAction(canvas, name, key) {
     ctx.strokeStyle = '#000';
     ctx.lineWidth = 2;
 
+    ctx.translate(0.5, 0.5);
     ctx.moveTo(0, 10);
     ctx.lineTo(10, 0);
     ctx.lineTo(20, 0);
@@ -397,7 +398,7 @@ function renderAction(canvas, name, key) {
     ctx.stroke();
 
     if (!name.startsWith("FAV") && !name.startsWith("BON")) {
-        drawText(ctx, name, 1, 45, "12px Georgia");
+        drawText(ctx, name, 1, 45, "10px Verdana");
     }
 
     ctx.save();
@@ -406,21 +407,27 @@ function renderAction(canvas, name, key) {
     var data = {
         "ACT1": function() {
             drawText(ctx, "br", 15, 15, "10px Verdana");
+            drawText(ctx, "-3PW", 15, 55, "10px Verdana");
         },
         "ACT2": function() {
-            drawText(ctx, "p", 15, 15, "10px Verdana");
+            drawText(ctx, "P", 15, 15, "10px Verdana");
+            drawText(ctx, "-3PW", 15, 55, "10px Verdana");
         },
         "ACT3": function() {
-            drawText(ctx, "2w", 15, 15, "10px Verdana");
+            drawText(ctx, "2W", 15, 15, "10px Verdana");
+            drawText(ctx, "-4PW", 15, 55, "10px Verdana");
         },
         "ACT4": function() {
-            drawText(ctx, "7c", 15, 15, "10px Verdana");
+            drawText(ctx, "7C", 15, 15, "10px Verdana");
+            drawText(ctx, "-4PW", 15, 55, "10px Verdana");
         },
         "ACT5": function() {
             drawText(ctx, "shov", 15, 15, "10px Verdana");
+            drawText(ctx, "-4PW", 15, 55, "10px Verdana");
         },
         "ACT6": function() {
             drawText(ctx, "2shov", 15, 15, "10px Verdana");
+            drawText(ctx, "-6PW", 15, 55, "10px Verdana");
         },
         "ACTA": function() {
             drawText(ctx, "2cult", 15, 15, "10px Verdana");
@@ -429,7 +436,10 @@ function renderAction(canvas, name, key) {
             drawText(ctx, "tf", 15, 15, "10px Verdana");
         },
         "ACTS": function() {
-            drawText(ctx, "tp", 15, 15, "10px Verdana");
+            drawText(ctx, "TP", 15, 15, "10px Verdana");
+        },
+        "ACTW": function() {
+            drawText(ctx, "D", 15, 15, "10px Verdana");
         },
         "BON1": function() {
             drawText(ctx, "shov", 15, 15, "10px Verdana");
@@ -453,7 +463,7 @@ function renderAction(canvas, name, key) {
 
 function insertAction(parent, name, key) {
     parent.insert(new Element('canvas', {
-        'class': 'action', 'width': 40, 'height': 50}));
+        'class': 'action', 'width': 40, 'height': 80}));
     var canvas = parent.childElements().last();
     renderAction(canvas, name, key);
 }
