@@ -12,7 +12,7 @@ div.faction-board {
 
 div.faction-info {
     float: left;
-    width: 250px;
+    width: 300px;
 }
 
 div.pool {
@@ -113,6 +113,20 @@ div#error {
     font-weight: bold;
     width: 700px;
     margin: 20px; 
+}
+
+table.income-table {
+    border-spacing: 0px;
+    margin-top: 10px;
+    font: 14px Verdana;    
+}
+
+table.income-table tr td {
+    padding-right: 1ex;
+}
+
+table.income-table tr.subincome {
+    color: #888;
 }
 
 table#ledger {

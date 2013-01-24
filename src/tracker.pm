@@ -143,14 +143,20 @@ sub faction_income {
 
     my %total_income = map { $_, 0 } qw(C W P PW);
 
+    my %total_building_income = %total_income;
+    my %total_favor_income = %total_income;
+    my %total_bonus_income = %total_income;
+    my %total_scoring_income = %total_income;
+
     my %buildings = %{$faction->{buildings}};
+
     for my $building (values %buildings) {
         if (exists $building->{income}) {
             my %building_income = %{$building->{income}};
             for my $type (keys %building_income) {
                 my $delta = $building_income{$type}[$building->{level}];
                 if ($delta) {
-                    $total_income{$type} += $delta;
+                    $total_building_income{$type} += $delta;
                 }
             }
         }
@@ -161,10 +167,14 @@ sub faction_income {
             next;
         }
 
-        if ($tile =~ /^BON|FAV/) {
+        if ($tile =~ /^(BON|FAV)/) {
             my $tile_income = $tiles{$tile}{income};
             for my $type (keys %{$tile_income}) {
-                $total_income{$type} += $tile_income->{$type};
+                if ($tile =~ /^BON/ and $faction->{passed}) {
+                    $total_bonus_income{$type} += $tile_income->{$type};
+                } elsif ($tile =~ /^FAV/) {
+                    $total_favor_income{$type} += $tile_income->{$type};
+                }
             }
         }
     }
@@ -175,8 +185,28 @@ sub faction_income {
 
         my $mul = int($faction->{$scoring->{cult}} / $scoring->{req});
         for my $type (keys %scoring_income) {
-            $total_income{$type} += $scoring_income{$type} * $mul;
+            $total_scoring_income{$type} += $scoring_income{$type} * $mul;
         }        
+    }
+
+    $faction->{income_breakdown} = {};
+
+    $faction->{income_breakdown}{bonus} = \%total_bonus_income;
+    $faction->{income_breakdown}{scoring} = \%total_scoring_income;
+    $faction->{income_breakdown}{favors} = \%total_favor_income;
+    $faction->{income_breakdown}{buildings} = \%total_building_income;
+
+    for my $subincome (values %{$faction->{income_breakdown}}) {
+        my $total = 0;
+        for my $type (keys %{$subincome}) {
+            $total_income{$type} += $subincome->{$type};
+            if (grep { $type eq $_} qw(C W P PW)) {
+                $total += $subincome->{$type};
+            }
+        }
+        if (!$total) {
+            $subincome = undef;
+        }
     }
 
     return %total_income;
@@ -905,6 +935,10 @@ sub command {
         die "Taking income twice for $faction_name\n" if
             $faction->{income_taken};
 
+        if ($round == 0) {
+            $faction->{passed} = 1;
+        }
+
         my %income = faction_income $faction_name;
         gain $faction_name, \%income;
         
@@ -1026,11 +1060,11 @@ sub handle_row {
 }
 
 sub finalize {
-    if ($round > 0) {
-        for my $faction (@factions) {
-            $factions{$faction}{income} = { faction_income $faction };
-        }
+    for my $faction (@factions) {
+        $factions{$faction}{income} = { faction_income $faction };
+    }
         
+    if ($round > 0) {
         for (0..($round-2)) {
             $tiles{$score_tiles[$_]}->{old} = 1;
         }

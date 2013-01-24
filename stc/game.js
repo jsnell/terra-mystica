@@ -596,9 +596,27 @@ function drawFactions() {
         info.insert(new Element('div').update(
             "dig level #{dig.level}, ship level #{ship.level}".interpolate(faction)));
 
+        var income = new Element('table', {'class': 'income-table'});
+        info.insert(income);
+
         if (faction.income) {
-            info.insert(new Element('div').update(
-                "<br>Income: #{C} c, #{W} w, #{P} p, #{PW} pw".interpolate(faction.income)));
+            income.insert(new Element('tr').update(
+                "<tr><td>Income:<td>total<td>#{C}c<td>#{W}w<td>#{P}p<td>#{PW}pw</tr>".
+                    interpolate(faction.income)));
+            income.insert("<tr><td colspan='7'><hr></tr>");
+        }
+
+        if (faction.income_breakdown) {
+            $H(faction.income_breakdown).each(function(elem, ind) {
+                if (!elem.value) {
+                    return;
+                }
+
+                elem.value.key = elem.key;
+                income.insert(new Element('tr').update(
+                    "<tr><td><td>#{key}<td>#{C}<td>#{W}<td>#{P}<td>#{PW}</tr>".
+                        interpolate(elem.value)));
+            });
         }
 
         renderTreasury(container, faction, name);
