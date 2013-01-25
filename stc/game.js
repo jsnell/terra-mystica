@@ -489,7 +489,21 @@ function renderTile(div, name, record, faction, count) {
         div.insert("<div>#{key} &gt;&gt; #{value} vp</div>".interpolate(elem));
     });
     $H(record.pass_vp).each(function (elem, index) {
-        div.insert("<div>pass-vp: #{key}</div>".interpolate(elem));
+        var stride = elem.value[1] - elem.value[0];
+        for (var i = 1; i < elem.value.length; ++i) {
+            if (elem.value[i-1] + stride != elem.value[i]) {
+                stride = null;
+                break;
+            }
+        }
+
+        if (stride) {
+            elem.value = "*" + stride;
+        } else {
+            elem.value = " [" + elem.value + "]";
+        }
+
+        div.insert("<div>pass-vp:#{key}#{value}</div>".interpolate(elem));
     });
     if (record.action) {
         insertAction(div, name, name + "/" + faction);
