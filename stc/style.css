@@ -108,6 +108,12 @@ canvas.action {
     float: left;
 }
 
+canvas.colorcycle {
+    float: left;
+    margin: 2px;
+    padding: 6px;
+}
+
 div#error {
     background-color: #e33;
     font-weight: bold;

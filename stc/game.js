@@ -574,6 +574,40 @@ function makeBoard(color, name, klass, style) {
     return board;
 }
 
+var cycle = [ "red", "yellow", "brown", "black", "blue", "green", "gray" ]; 
+
+function renderColorCycle(parent, startColor) {
+    parent.insert(new Element('canvas', {
+        'class': 'colorcycle', 'width': 80, 'height': 80}));
+    var canvas = parent.childElements().last();
+
+    if (!canvas.getContext) {
+        return;
+    }
+
+    var ctx = canvas.getContext("2d");
+
+    ctx.save()
+    ctx.translate(40, 41);
+
+    var base = cycle.indexOf(startColor);
+
+    for (var i = 0; i < 7; ++i) {
+        ctx.save()
+        ctx.beginPath();
+        ctx.arc(0, -30, 10, Math.PI * 2, 0, false);
+
+        ctx.fillStyle = bgcolors[cycle[(base + i) % 7]];
+        ctx.fill();
+    
+        ctx.stroke();
+        ctx.restore();
+        ctx.rotate(Math.PI * 2 / 7);
+    }
+
+    ctx.restore();
+}
+
 function drawFactions() {
     state.order.each(function(name) {
         name = name;
@@ -619,6 +653,7 @@ function drawFactions() {
             });
         }
 
+        renderColorCycle(container, faction.color);
         renderTreasury(container, faction, name);
         
         $("factions").insert(container);
