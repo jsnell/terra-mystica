@@ -93,6 +93,12 @@ Example: =Leech 2=.
 
 Trade 1 vp for 2 power
 
+** =decline=
+
+Example: =decline=.
+
+Decline all outstanding trades of vp to power
+
 ** =action= /label/
 
 Example: =action act5.

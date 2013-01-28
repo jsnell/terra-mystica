@@ -121,6 +121,16 @@ div#error {
     margin: 20px; 
 }
 
+div#action_required {
+    background-color: #eee;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
+    border-style: solid;
+    border-width: 1px;
+    max-width: 700px;
+}
+
 table.income-table {
     border-spacing: 0px;
     margin-top: 10px;

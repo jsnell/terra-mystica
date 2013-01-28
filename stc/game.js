@@ -749,6 +749,37 @@ function drawScoringTiles() {
     });
 }
 
+function coloredFactionSpan(faction_name) {
+    record = {};
+    record.bg = colors[state.factions[faction_name].color];
+    record.fg = (record.bg == '#000000' ? '#ccc' : '#000');
+    record.display = state.factions[faction_name].display;
+
+    return "<span style='background-color:#{bg}; color: #{fg}'>#{display}</span>".interpolate(record);
+}
+
+function drawActionRequired() {
+    state.action_required.each(function(record) {
+        if (record.type == 'full') {
+            record.pretty = 'should take an action';
+        } else if (record.type == 'leech') {
+            record.from_faction_span = coloredFactionSpan(record.from_faction);
+            record.pretty = 'may gain #{amount} power from #{from_faction_span}'.interpolate(record);
+        } else if (record.type == 'transform') {
+            record.pretty = 'may use #{amount} shovels'.interpolate(record);
+        } else if (record.type == 'cult') {
+            record.pretty = 'may advance on a cult track'.interpolate(record);
+        } else {
+            record.pretty = '?';
+        }
+
+        record.faction_span = coloredFactionSpan(record.faction);
+
+        var row = new Element("div", {'style': 'margin: 3px'}).update("#{faction_span} #{pretty}</div>".interpolate(record));
+        $("action_required").insert(row);
+    });
+}
+
 function draw() {
     state.error.each(function(row) {
         $("error").insert("<div>" + row.escapeHTML() + "</div>");
@@ -757,6 +788,7 @@ function draw() {
     drawMap();
     drawCults();
     drawScoringTiles();
+    drawActionRequired();
     drawFactions();
     drawLedger();
 }

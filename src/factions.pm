@@ -493,6 +493,7 @@ sub setup {
     my $faction = $factions{$faction_name} = $setups{$faction_name};    
 
     $faction->{name} = $faction_name;
+    $faction->{start_player} = 1 if !@factions;
 
     if ($factions_by_color{$faction->{color}}) {
         my $other_name = $factions_by_color{$faction->{color}}->{name};
@@ -538,6 +539,18 @@ sub setup {
     }
 
     push @factions, $faction_name;
+}
+
+sub factions_in_order_from {
+    my $faction = shift;
+    die "Internal error" if !$factions{$faction};
+
+    my @f = @factions;
+    while ($f[-1] ne $faction) {
+        push @f, shift @f;
+    }
+    
+    @f;
 }
 
 1;

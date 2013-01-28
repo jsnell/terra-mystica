@@ -3,7 +3,7 @@
 package terra_mystica;
 
 use strict;
-use List::Util qw(sum max);
+use List::Util qw(sum max min);
 
 use factions;
 use map;
@@ -16,6 +16,8 @@ my @score_tiles = ();
 my $round = 0;
 my @bridges = ();
 my %leech = ();
+my $action_taken;
+my @action_required = ();
 
 my %pool = (
     # Resources
@@ -420,11 +422,25 @@ sub note_leech {
     return if !$round;
 
     for my $adjacent (keys %{$map{$where}{adjacent}}) {
+        my $map_color = $map{$adjacent}{color};
         if ($map{$adjacent}{building} and
-            $map{$adjacent}{color} ne $color) {
-            $leech{$map{$adjacent}{color}} +=
+            $map_color ne $color) {
+            $leech{$map_color} +=
                 $building_strength{$map{$adjacent}{building}};
+            $leech{$map_color} = min $leech{$map_color}, 5;
         }
+    }
+
+    for my $faction_name (factions_in_order_from $from_faction->{name}) {
+        my $faction = $factions{$faction_name};
+        my $color = $faction->{color}; 
+        next if !$leech{$color};
+        my $amount = $leech{$color};
+
+        push @action_required, { type => 'leech',
+                                 from_faction => $from_faction->{name},
+                                 amount => $amount, 
+                                 faction => $faction->{name} };
     }
 }
 
@@ -670,6 +686,7 @@ sub command {
         push @{$faction->{locations}}, $where;
 
         detect_towns_from $faction_name, $where;
+        $action_taken++;
     } elsif ($command =~ /^upgrade (\w+) to ([\w ]+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
         die "Can't upgrade in setup phase\n" if !$round;
@@ -713,6 +730,7 @@ sub command {
         $map{$where}{building} = $type;
 
         detect_towns_from $faction_name, $where;
+        $action_taken++;
     } elsif ($command =~ /^send (p|priest) to (\w+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
 
@@ -736,6 +754,7 @@ sub command {
         gain $faction_name, $gain;
 
         adjust_resource $faction_name, "P", -1;
+        $action_taken++;
     } elsif ($command =~ /^convert (\d+)?\s*(\w+) to (\d+)?\s*(\w+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
 
@@ -786,9 +805,34 @@ sub command {
         my $actual_pw = gain_power $faction_name, $pw;
         my $vp = $actual_pw - 1;
 
-        if ($actual_pw > 0) {
-            adjust_resource $faction_name, 'VP', -$vp;
+        my $found_leech_record = 0;
+        for (@action_required) {
+            next if $_->{faction} ne $faction_name;
+            next if $_->{type} ne 'leech';
+            next if $_->{amount} ne $pw and $_->{amount} ne $actual_pw;
+
+            if ($_->{from_faction} eq 'cultists') {
+                push @action_required, { type => 'cult',
+                                         amount => 1, 
+                                         faction => 'cultists' };
+            }
+
+            $_ = '';
+            $found_leech_record = 1;
+            last;
         }
+
+        if ($found_leech_record) {
+            @action_required = grep { $_ ne '' } @action_required;
+
+            if ($actual_pw > 0) {
+                adjust_resource $faction_name, 'VP', -$vp;
+            }
+        } else {
+            # die "Invalid leech of $pw\n";
+        }
+    } elsif ($command =~ /^decline$/) { 
+        @action_required = grep { $_->{faction} ne $faction_name or $_->{type} ne 'leech' } @action_required;       
     } elsif ($command =~ /^transform (\w+) to (\w+)$/) {
         my $where = uc $1;
         my $color = lc $2;
@@ -813,6 +857,7 @@ sub command {
         $map{$where}{color} = $color;
 
         detect_towns_from $faction_name, $where;
+        $action_taken++;
     } elsif ($command =~ /^dig (\d+)/) {
         my $cost = $faction->{dig}{cost}[$faction->{dig}{level}];
         my $gain = $faction->{dig}{gain}[$faction->{dig}{level}];
@@ -832,6 +877,7 @@ sub command {
 
         detect_towns_from $faction_name, $from;
         detect_towns_from $faction_name, $to;
+        $action_taken++;
     } elsif ($command =~ /^connect (\w+):(\w+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
         die "Only mermaids can use 'connect'\n" if $faction_name ne 'mermaids';
@@ -895,6 +941,8 @@ sub command {
         if ($discard) {
             adjust_resource $faction_name, uc $discard, -1;
         }
+
+        $action_taken++;
     } elsif ($command =~ /^action (\w+)$/) {
         my $where = uc $1;
         my $name = $where;
@@ -913,6 +961,7 @@ sub command {
             die "Action space $where is blocked\n"
         }
         $map{$where}{blocked} = 1;
+        $action_taken++;
     } elsif ($command =~ /^start$/) {
         $round++;
 
@@ -932,6 +981,10 @@ sub command {
         }
 
         push @ledger, { comment => "Start round $round" };
+
+        my ($start_player) = grep { $_->{start_player} } values %factions;
+        push @action_required, { type => 'full',
+                                 faction => $start_player->{name} };
     } elsif ($command =~ /^setup (\w+)(?: for (\S+))?$/) {
         setup $1, $2;
     } elsif ($command =~ /delete (\w+)$/) {
@@ -949,7 +1002,13 @@ sub command {
         my %income = faction_income $faction_name;
         gain $faction_name, \%income;
         
-        $faction->{income_taken} = 1
+        $faction->{income_taken} = 1;
+
+        if ($faction->{SHOVEL}) {
+            push @action_required, { type => 'transform',
+                                     amount => $faction->{SHOVEL}, 
+                                     faction => $faction->{name} };
+        }
     } elsif ($command =~ /^advance (ship|dig)/) {
         die "Need faction for command $command\n" if !$faction_name;
 
@@ -957,6 +1016,7 @@ sub command {
         my $track = $faction->{$type};
 
         advance_track $faction_name, $type, $track, 0;
+        $action_taken++;
     } elsif ($command =~ /^score (.*)/) {
         my $setup = uc $1;
         @score_tiles = split /,/, $setup;
@@ -1001,6 +1061,7 @@ sub handle_row {
     return if !@commands;
 
     %leech = ();
+    $action_taken = 0;
 
     if ($factions{$prefix} or $prefix eq '') {
         my @fields = qw(VP C W P P1 P2 P3 PW
@@ -1052,12 +1113,38 @@ sub handle_row {
                 $warn = "town tile not taken by $prefix\n";
             }
 
+            if ($action_taken and $round > 0) {
+
+                {
+                    my $last = (grep { $_->{type} eq 'full' } @action_required)[-1];
+                    if ($last) {
+                        $last = $last->{faction};
+                        $warn = "'$prefix' took an action, expected '$last'" if $prefix ne $last;
+                    }
+                }
+
+                @action_required = grep { $_->{faction} ne $prefix } @action_required;
+
+                my $next = undef;
+                my @f = factions_in_order_from $prefix;
+                for (@f) {
+                    if (!$factions{$_}{passed}) {
+                        $next = $_;
+                        last;
+                    }
+                }
+
+                if (defined $next) {
+                    push @action_required, { type => 'full',
+                                             faction => $next };
+                }
+            }
+
             push @ledger, { faction => $prefix,
                             warning => $warn,
                             leech => { %leech },
                             commands => (join ". ", @commands),
                             map { $_, $pretty_delta{$_} } @fields};
-
         }
     } else {
         die "Unknown prefix: '$prefix' (expected one of ".
@@ -1123,6 +1210,7 @@ sub evaluate_game {
         score_tiles => [ map({$tiles{$_}} @score_tiles ) ],
         bonus_tiles => { map({$_, $tiles{$_}} grep { /^BON/ } keys %tiles ) },
         favors => { map({$_, $tiles{$_}} grep { /^FAV/ } keys %tiles ) },
+        action_required => \@action_required,
     }
 
 }
