@@ -651,7 +651,9 @@ sub command {
         my $delta = $sign * $count;
         my $type = uc $3;
 
-        adjust_resource $faction_name, $type, $delta;        
+        adjust_resource $faction_name, $type, $delta;
+
+        @action_required = grep { $_->{faction} ne $faction_name or $_->{type} ne 'cult' } @action_required;       
     }  elsif ($command =~ /^build (\w+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
 
