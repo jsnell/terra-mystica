@@ -180,7 +180,7 @@ sub faction_income {
     }
 
     my $scoring = current_score_tile;
-    if ($scoring) {
+    if ($scoring and $round != 6) {
         my %scoring_income = %{$scoring->{income}};
 
         my $mul = int($faction->{$scoring->{cult}} / $scoring->{req});
@@ -864,6 +864,15 @@ sub command {
                     command $faction_name, '+3vp';
                 }
             }            
+        }
+
+        my $first_to_pass = 1;
+        for (values %factions) {
+            $first_to_pass = 0 if $_->{passed};
+        }
+        if ($first_to_pass) {
+            $_->{start_player} = 0 for values %factions;
+            $faction->{start_player} = 1;
         }
 
         $faction->{passed} = 1;

@@ -627,14 +627,20 @@ function drawFactions() {
         name = name;
         var faction = state.factions[name];
         var color = faction.color;
+        var title = faction.display;
 
         var style ='float: left; margin-right: 20px; ';
         if (faction.passed) {
             style += 'opacity: 0.5';
+            title += ", passed";
+        }
+
+        if (faction.start_player) {
+            title += ", start player";
         }
 
         var container = new Element('div', { 'class': 'faction-board' });
-        var board = makeBoard(color, faction.display, '', style);
+        var board = makeBoard(color, title, '', style);
         container.insert(board);
         var info = new Element('div', {'class': 'faction-info' });
         board.insert(info);
