@@ -65,6 +65,7 @@ for my $cult (@cults) {
 sub command;
 sub handle_row;
 sub detect_towns_from;
+sub adjust_resource;
 
 sub current_score_tile {
     if ($round > 0) {
@@ -77,7 +78,7 @@ sub pay {
 
     for my $currency (keys %{$cost}) {
         my $amount = $cost->{$currency};
-        command $faction_name, "-${amount}$currency";            
+        adjust_resource $faction_name, $currency, -$amount;
     }
 }
 
@@ -86,11 +87,7 @@ sub gain {
 
     for my $currency (keys %{$cost}) {
         my $amount = $cost->{$currency};
-        if ($amount < 0) {
-            command $faction_name, "${amount}$currency";
-        } else {
-            command $faction_name, "+${amount}$currency";
-        }
+        adjust_resource $faction_name, $currency, $amount;
     }
 }
 
@@ -101,7 +98,7 @@ sub maybe_score_current_score_tile {
     if ($scoring) {
         my $gain = $scoring->{vp}{$type};
         if ($gain) {
-            command $faction_name, "+${gain}vp"
+            adjust_resource $faction_name, 'VP', $gain;
         }
     }
 }
@@ -116,7 +113,7 @@ sub maybe_score_favor_tile {
             if ($scoring) {
                 my $gain = $scoring->{$type};
                 if ($gain) {
-                    command $faction_name, "+${gain}vp"
+                    adjust_resource $faction_name, 'VP', $gain;
                 }
             }
         }
@@ -217,17 +214,17 @@ sub maybe_gain_power_from_cult {
     my $faction = $factions{$faction_name};
 
     if ($old_value <= 2 && $new_value > 2) {
-        command $faction_name, "+1pw";
+        adjust_resource $faction_name, 'PW', 1;
     }
     if ($old_value <= 4 && $new_value > 4) {
-        command $faction_name, "+2pw";
+        adjust_resource $faction_name, 'PW', 2;
     }
     if ($old_value <= 6 && $new_value > 6) {
-        command $faction_name, "+2pw";
+        adjust_resource $faction_name, 'PW', 2;
     }
     if ($old_value <= 9 && $new_value > 9) {
-        command $faction_name, "-KEY";
-        command $faction_name, "+3pw";
+        adjust_resource $faction_name, 'KEY', -1;
+        adjust_resource $faction_name, 'PW', 3;
         # Block others from this space
         for (@factions) {
             if ($_ ne $faction_name) {
@@ -417,7 +414,8 @@ sub adjust_resource {
 }
 
 sub note_leech {
-    my ($where, $color) = @_;
+    my ($where, $from_faction) = @_;
+    my $color = $from_faction->{color};
 
     return if !$round;
 
@@ -622,7 +620,7 @@ sub detect_towns_from {
 
     if ($power >= $faction->{TOWN_SIZE} and $count >= 4) {
         $map{$_}{town} = 1 for keys %reachable;
-        command $faction_name, "+GAIN_TW";
+        adjust_resource $faction_name, "GAIN_TW", 1;
     }
 }
 
@@ -661,7 +659,7 @@ sub command {
             command $faction_name, "transform $where to $color";
         }
 
-        note_leech $where, $color;
+        note_leech $where, $faction;
 
         advance_track $faction_name, $type, $faction->{buildings}{$type}, $free;
 
@@ -692,7 +690,7 @@ sub command {
             die "$where contains ə $oldtype, wanted $wanted_oldtype{$type}\n"
         }
 
-        note_leech $where, $color;
+        note_leech $where, $faction;
 
         if ($type eq 'TP') {
             if ($faction->{FREE_TP}) {
@@ -701,7 +699,7 @@ sub command {
             } else {
                 if (!keys %leech) {
                     my $cost = $faction->{buildings}{$type}{advance_cost}{C};
-                    command $faction_name, "-${cost}c";
+                    adjust_resource $faction_name, "C", -${cost};
                 }
             }
         }
@@ -737,7 +735,7 @@ sub command {
 
         gain $faction_name, $gain;
 
-        command $faction_name, "-p";
+        adjust_resource $faction_name, "P", -1;
     } elsif ($command =~ /^convert (\d+)?\s*(\w+) to (\d+)?\s*(\w+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
 
@@ -775,9 +773,9 @@ sub command {
             $to_count * $exchange_rates{$from_type}{$to_type};
         die "Conversion to $to_count $to_type requires $wanted_from_count $from_type, not $from_count\n"
             if  $wanted_from_count != $from_count;
-        
-        command $faction_name, "-$from_count$from_type";
-        command $faction_name, "+$to_count$to_type";
+
+        adjust_resource $faction_name, $from_type, -$from_count;
+        adjust_resource $faction_name, $to_type, $to_count;
     } elsif ($command =~ /^burn (\d+)$/) {
         die "Need faction for command $command\n" if !$faction_name;
         adjust_resource $faction_name, 'P2', -2*$1;
@@ -789,7 +787,7 @@ sub command {
         my $vp = $actual_pw - 1;
 
         if ($actual_pw > 0) {
-            command $faction_name, "-${vp}VP";
+            adjust_resource $faction_name, 'VP', -$vp;
         }
     } elsif ($command =~ /^transform (\w+) to (\w+)$/) {
         my $where = uc $1;
@@ -801,7 +799,7 @@ sub command {
         }
 
         if ($faction->{FREE_TF}) {
-            command $faction_name, "-FREE_TF";            
+            adjust_resource $faction_name, 'FREE_TF', -1;
         } else {
             my $color_difference = color_difference $map{$where}{color}, $color;
 
@@ -809,7 +807,7 @@ sub command {
                 $color_difference = 2;
             }
 
-            command $faction_name, "-${color_difference}SHOVEL";
+            adjust_resource $faction_name, 'SHOVEL', -$color_difference;
         } 
 
         $map{$where}{color} = $color;
@@ -819,7 +817,7 @@ sub command {
         my $cost = $faction->{dig}{cost}[$faction->{dig}{level}];
         my $gain = $faction->{dig}{gain}[$faction->{dig}{level}];
 
-        command $faction_name, "+${1}SHOVEL";
+        adjust_resource $faction_name, 'SHOVEL', $1;
         pay $faction_name, $cost for 1..$1;
         gain $faction_name, $gain for 1..$1;
     } elsif ($command =~ /^bridge (\w+):(\w+)$/) {
@@ -861,7 +859,7 @@ sub command {
                     $map{$bridge->{from}}{color} eq $color and
                     $map{$bridge->{to}}{building} and
                     $map{$bridge->{to}}{color} eq $color) {
-                    command $faction_name, '+3vp';
+                    adjust_resource $faction_name, 'VP', 3;
                 }
             }            
         }
@@ -887,15 +885,15 @@ sub command {
             if ($pass_vp) {
                 for my $type (keys %{$pass_vp}) {
                     my $x = $pass_vp->{$type}[$faction->{buildings}{$type}{level}];
-                    command $faction_name, "+${x}vp";
+                    adjust_resource $faction_name, 'VP', $x;
                 }
             }                
         }
         if ($bon) {
-            command $faction_name, "+$bon"
+            adjust_resource $faction_name, uc $bon, 1;
         }
         if ($discard) {
-            command $faction_name, "-$discard";
+            adjust_resource $faction_name, uc $discard, -1;
         }
     } elsif ($command =~ /^action (\w+)$/) {
         my $where = uc $1;

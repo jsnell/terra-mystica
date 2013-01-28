@@ -4,7 +4,7 @@ package terra_mystica;
 
 use strict;
 
-use vars qw(%factions @factions %building_strength);
+use vars qw(%factions %factions_by_color @factions %building_strength);
 use Data::Dumper;
 
 our %building_strength = (
@@ -491,6 +491,14 @@ sub setup {
     die "Unknown faction: $faction_name\n" if !$setups{$faction_name};
 
     my $faction = $factions{$faction_name} = $setups{$faction_name};    
+
+    $faction->{name} = $faction_name;
+
+    if ($factions_by_color{$faction->{color}}) {
+        my $other_name = $factions_by_color{$faction->{color}}->{name};
+        die "Can't add $faction_name, $other_name already in use\n";
+    }
+    $factions_by_color{$faction->{color}} = $faction;
 
     $faction->{P} ||= 0;
     $faction->{P1} ||= 0;
