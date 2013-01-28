@@ -759,6 +759,10 @@ function coloredFactionSpan(faction_name) {
 }
 
 function drawActionRequired() {
+    if (!$("action_required")) {
+        return;
+    }
+
     state.action_required.each(function(record) {
         if (record.type == 'full') {
             record.pretty = 'should take an action';
