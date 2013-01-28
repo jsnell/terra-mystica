@@ -750,14 +750,14 @@ function drawScoringTiles() {
 }
 
 function draw() {
+    state.error.each(function(row) {
+        $("error").insert("<div>" + row.escapeHTML() + "</div>");
+    });
+
     drawMap();
     drawCults();
     drawScoringTiles();
     drawFactions();
     drawLedger();
-
-    state.error.each(function(row) {
-        $("error").insert("<div>" + row.escapeHTML() + "</div>");
-    });
 }
 
