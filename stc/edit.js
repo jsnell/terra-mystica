@@ -160,6 +160,8 @@ function drawActionRequired(state) {
         return;
     }
 
+    $("action_required").innerHTML = '';
+
     state.action_required.each(function(record) {
         if (record.type == 'full') {
             record.pretty = 'should take an action';
