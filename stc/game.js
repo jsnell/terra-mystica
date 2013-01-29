@@ -650,6 +650,17 @@ function drawFactions() {
         info.insert(new Element('div').update(
             "dig level #{dig.level}, ship level #{ship.level}".interpolate(faction)));
 
+        info.insert("<div></div>");
+        var buildings = new Element('table', {'class': 'income-table'});
+        info.insert(buildings);
+
+        ['D', 'TP', 'TE', 'SH', 'SA'].each(function(key) {
+            record = faction.buildings[key];
+            record.key = key;
+            buildings.insert(new Element('tr').update(
+                "<td>#{key}<td>#{level}/#{max_level}<td>#{advance_cost.C}c<td>#{advance_cost.W}w".interpolate(record)));
+        });
+
         var income = new Element('table', {'class': 'income-table'});
         info.insert(income);
 

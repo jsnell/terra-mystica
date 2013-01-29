@@ -1196,7 +1196,6 @@ sub finalize {
     
     for my $faction (@factions) {
         delete $factions{$faction}{locations};
-        delete $factions{$faction}{buildings};
         delete $factions{$faction}{teleport};
     }
 }
