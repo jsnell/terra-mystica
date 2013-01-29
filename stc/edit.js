@@ -171,9 +171,29 @@ function drawActionRequired(state) {
             record.from_faction_span = coloredFactionSpan(state, record.from_faction);
             record.pretty = 'may gain #{amount} power from #{from_faction_span}'.interpolate(record);
         } else if (record.type == 'transform') {
-            record.pretty = 'may use #{amount} shovels'.interpolate(record);
+            if (record.amount == 1) {
+                record.pretty = 'may use a shovel'.interpolate(record);
+            } else {
+                record.pretty = 'may use #{amount} shovels'.interpolate(record);
+            }
         } else if (record.type == 'cult') {
-            record.pretty = 'may advance on a cult track'.interpolate(record);
+            if (record.amount == 1) {
+                record.pretty = 'may advance 1 step on a cult track'.interpolate(record);
+            } else {
+                record.pretty = 'may advance #{amount} steps on cult tracks'.interpolate(record);
+            }
+        } else if (record.type == 'town') {
+            if (record.amount == 1) {
+                record.pretty = 'may form a town'.interpolate(record);
+            } else {
+                record.pretty = 'may form #{amount} towns'.interpolate(record);
+            }
+        } else if (record.type == 'favor') {
+            if (record.amount == 1) {
+                record.pretty = 'may take a favor tile'.interpolate(record);
+            } else {
+                record.pretty = 'may take #{amount} favor tiles'.interpolate(record);
+            }
         } else {
             record.pretty = '?';
         }

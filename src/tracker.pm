@@ -1090,6 +1090,7 @@ sub handle_row {
 
             $pretty_delta{CULT}{value} = sprintf "%d/%d/%d/%d", $new_data{FIRE}, $new_data{WATER}, $new_data{EARTH}, $new_data{AIR};
 
+            my @extra_action_required = ();
             my $warn = '';
             if ($factions{$prefix}{SHOVEL}) {
                  $warn = "Unused shovels for $prefix\n";
@@ -1105,14 +1106,29 @@ sub handle_row {
 
             if ($factions{$prefix}{CULT}) {
                 $warn = "Unused cult advance for $prefix\n";
+                push @extra_action_required, {
+                    type => 'cult',
+                    amount => $factions{$prefix}{CULT}, 
+                    faction => $prefix
+                };
             }
 
             if ($factions{$prefix}{GAIN_FAVOR}) {
                 $warn = "favor not taken by $prefix\n";
+                push @extra_action_required, {
+                    type => 'favor',
+                    amount => $factions{$prefix}{GAIN_FAVOR}, 
+                    faction => $prefix
+                };
             }
 
             if ($factions{$prefix}{GAIN_TW}) {
                 $warn = "town tile not taken by $prefix\n";
+                push @extra_action_required, {
+                    type => 'town',
+                    amount => $factions{$prefix}{GAIN_TW}, 
+                    faction => $prefix
+                };
             }
 
             if ($action_taken and $round > 0) {
@@ -1126,6 +1142,7 @@ sub handle_row {
                 }
 
                 @action_required = grep { $_->{faction} ne $prefix } @action_required;
+                push @action_required, @extra_action_required;
 
                 my $next = undef;
                 my @f = factions_in_order_from $prefix;
