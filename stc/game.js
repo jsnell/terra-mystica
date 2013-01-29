@@ -622,6 +622,15 @@ function renderColorCycle(parent, startColor) {
     ctx.restore();
 }
 
+function rowFromArray(array) {
+    var tr = new Element("tr");
+    array.each(function(elem) {
+        tr.insert(new Element("td").update(elem));
+    });
+
+    return tr;
+}
+
 function drawFactions() {
     state.order.each(function(name) {
         name = name;
@@ -654,12 +663,20 @@ function drawFactions() {
         var buildings = new Element('table', {'class': 'income-table'});
         info.insert(buildings);
 
-        ['D', 'TP', 'TE', 'SH', 'SA'].each(function(key) {
+        var b = ['D', 'TP', 'TE', 'SH', 'SA'];
+        var count = [];
+        var cost = [];
+
+        b.each(function(key) {
             record = faction.buildings[key];
             record.key = key;
-            buildings.insert(new Element('tr').update(
-                "<td>#{key}<td>#{level}/#{max_level}<td>#{advance_cost.C}c<td>#{advance_cost.W}w".interpolate(record)));
+            count.push("#{level}/#{max_level}".interpolate(record));
+            cost.push("#{advance_cost.C}c, #{advance_cost.W}w".interpolate(record));
         });
+
+        buildings.insert(rowFromArray(b));
+        buildings.insert(rowFromArray(count));
+        buildings.insert(rowFromArray(cost));
 
         var income = new Element('table', {'class': 'income-table'});
         info.insert(income);
