@@ -7,6 +7,10 @@ use File::Basename qw(dirname);
 use File::Slurp;
 use JSON;
 
+BEGIN { push @INC, "../../git/src"; }
+
+use tracker;
+
 chdir dirname $0;
 
 my $q = CGI->new;
@@ -23,9 +27,13 @@ if (!-f $file) {
 
 my $data = read_file($file);
 
+my $res = terra_mystica::evaluate_game split /\n/, $data;
+
 my $out = encode_json {
     data => $data,
     hash => sha1_hex($data),
+    action_required => $res->{action_required},
+    factions => $res->{factions},
 };
 
 print "Content-type: text/json\r\n";

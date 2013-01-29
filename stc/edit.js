@@ -116,6 +116,8 @@ function load() {
                     $("title").innerHTML += " (" + title[1] + ")";
                     $("header").innerHTML += " (" + title[1] + ")";
                 }
+
+                drawActionRequired(res);
             } catch (e) {
                 handleException(e);
             };
