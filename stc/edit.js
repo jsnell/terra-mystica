@@ -89,6 +89,7 @@ function save() {
                 if (res.error.size() == 0) {
                     hash = res.hash;
                 }
+                drawActionRequired(res);
                 $("save-button").enable();
             } catch (e) {
                 handleException(e);
@@ -119,5 +120,63 @@ function load() {
                 handleException(e);
             };
         }
+    });
+}
+
+var colors = {
+    red: '#e04040',
+    green: '#40a040',
+    yellow: '#e0e040',
+    brown: '#a06040',
+    blue: '#2080f0',
+    black: '#000000',
+    white: '#ffffff',
+    gray: '#808080',
+    orange: '#f0c040',
+};
+
+var bgcolors = {
+    red: '#f08080',
+    green: '#80f080',
+    yellow: '#f0f080',
+    blue: '#60c0f0',
+    black: '#404040',
+    white: '#ffffff',
+    gray: '#c0c0c0',
+    brown: '#b08040',
+};
+
+function coloredFactionSpan(state, faction_name) {
+    record = {};
+    record.bg = colors[state.factions[faction_name].color];
+    record.fg = (record.bg == '#000000' ? '#ccc' : '#000');
+    record.display = state.factions[faction_name].display;
+
+    return "<span style='background-color:#{bg}; color: #{fg}'>#{display}</span>".interpolate(record);
+}
+
+function drawActionRequired(state) {
+    if (!$("action_required")) {
+        return;
+    }
+
+    state.action_required.each(function(record) {
+        if (record.type == 'full') {
+            record.pretty = 'should take an action';
+        } else if (record.type == 'leech') {
+            record.from_faction_span = coloredFactionSpan(state, record.from_faction);
+            record.pretty = 'may gain #{amount} power from #{from_faction_span}'.interpolate(record);
+        } else if (record.type == 'transform') {
+            record.pretty = 'may use #{amount} shovels'.interpolate(record);
+        } else if (record.type == 'cult') {
+            record.pretty = 'may advance on a cult track'.interpolate(record);
+        } else {
+            record.pretty = '?';
+        }
+
+        record.faction_span = coloredFactionSpan(state, record.faction);
+
+        var row = new Element("div", {'style': 'margin: 3px'}).update("#{faction_span} #{pretty}</div>".interpolate(record));
+        $("action_required").insert(row);
     });
 }
