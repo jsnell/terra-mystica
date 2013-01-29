@@ -849,7 +849,7 @@ sub command {
         } else {
             my $color_difference = color_difference $map{$where}{color}, $color;
 
-            if ($faction_name eq 'Giants' and $color_difference != 0) {
+            if ($faction_name eq 'giants' and $color_difference != 0) {
                 $color_difference = 2;
             }
 
