@@ -138,11 +138,21 @@ table.income-table {
 }
 
 table.income-table tr td {
-    padding-right: 1ex;
+    padding-right: 2ex;
 }
 
-table.income-table tr.subincome {
-    color: #888;
+table.building-table {
+    border-spacing: 0px;
+    margin-top: 10px;
+    font: 14px Verdana;    
+}
+
+table.building-table tr td {
+    padding-right: 2ex;
+}
+
+table.building-table tr td:nth-child(odd) {
+    background-color: #dcdcdc;
 }
 
 table#ledger {

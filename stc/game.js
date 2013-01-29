@@ -660,7 +660,7 @@ function drawFactions() {
             "dig level #{dig.level}, ship level #{ship.level}".interpolate(faction)));
 
         info.insert("<div></div>");
-        var buildings = new Element('table', {'class': 'income-table'});
+        var buildings = new Element('table', {'class': 'building-table'});
         info.insert(buildings);
 
         var b = ['D', 'TP', 'TE', 'SH', 'SA'];
@@ -671,7 +671,7 @@ function drawFactions() {
             record = faction.buildings[key];
             record.key = key;
             count.push("#{level}/#{max_level}".interpolate(record));
-            cost.push("#{advance_cost.C}c, #{advance_cost.W}w".interpolate(record));
+            cost.push("#{advance_cost.C}c,&#160;#{advance_cost.W}w".interpolate(record));
         });
 
         buildings.insert(rowFromArray(b));
