@@ -225,6 +225,11 @@ sub maybe_gain_power_from_cult {
         adjust_resource $faction_name, 'PW', 2;
     }
     if ($old_value <= 9 && $new_value > 9) {
+        if ($faction->{KEY} < 1) {
+            $faction->{$cult} = 9;
+            return;
+        }
+
         adjust_resource $faction_name, 'KEY', -1;
         adjust_resource $faction_name, 'PW', 3;
         # Block others from this space
