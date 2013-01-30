@@ -622,13 +622,33 @@ function renderColorCycle(parent, startColor) {
     ctx.restore();
 }
 
-function rowFromArray(array) {
-    var tr = new Element("tr");
+function rowFromArray(array, style) {
+    var tr = new Element("tr", {'style': style});
     array.each(function(elem) {
         tr.insert(new Element("td").update(elem));
     });
 
     return tr;
+}
+
+function toggleIncome(id) {
+    var table = $(id);
+
+    table.childElements().each(function (elem, index) {
+        if (index != 0) {
+            elem.style.display = (elem.style.display == 'none' ? '' : 'none');
+        }
+    });
+}
+
+function toggleBuildings(id) {
+    var table = $(id);
+
+    table.childElements().each(function (elem, index) {
+        if (index > 1) {
+            elem.style.display = (elem.style.display == 'none' ? '' : 'none');
+        }
+    });
 }
 
 function drawFactions() {
@@ -660,7 +680,9 @@ function drawFactions() {
             "dig level #{dig.level}, ship level #{ship.level}".interpolate(faction)));
 
         info.insert("<div></div>");
-        var buildings = new Element('table', {'class': 'building-table'});
+
+        var buildings_id = "buildings-" + name;
+        var buildings = new Element('table', {'class': 'building-table', 'id': buildings_id});
         info.insert(buildings);
 
         var b = ['D', 'TP', 'TE', 'SH', 'SA'];
@@ -674,30 +696,30 @@ function drawFactions() {
             cost.push("#{advance_cost.C}c,&#160;#{advance_cost.W}w".interpolate(record));
         });
 
-        buildings.insert(rowFromArray(b));
-        buildings.insert(rowFromArray(count));
-        buildings.insert(rowFromArray(cost));
+        buildings.insert(rowFromArray(b, '').insert("<td><a href='javascript:toggleBuildings(\"" + buildings_id + "\")'>+</a>"));
+        buildings.insert(rowFromArray(count, ''));
+        buildings.insert(rowFromArray(cost, 'display: none'));
 
-        var income = new Element('table', {'class': 'income-table'});
+        var income_id = "income-" + name;
+        var income = new Element('table', {'class': 'income-table', 'id': income_id});
         info.insert(income);
 
         if (faction.income) {
             income.insert(new Element('tr').update(
-                "<tr><td>Income:<td>total<td>#{C}c<td>#{W}w<td>#{P}p<td>#{PW}pw</tr>".
+                ("<tr><td>Income:<td>total<td>#{C}c<td>#{W}w<td>#{P}p<td>#{PW}pw<td><a href='javascript:toggleIncome(\"" + income_id + "\")'>+</a></tr>").
                     interpolate(faction.income)));
-            income.insert("<tr><td colspan='7'><hr></tr>");
         }
 
         if (faction.income_breakdown) {
+            income.insert(Element('tr', {'style': 'display: none'}).update("<td colspan=6><hr>"));
             $H(faction.income_breakdown).each(function(elem, ind) {
                 if (!elem.value) {
                     return;
                 }
 
                 elem.value.key = elem.key;
-                income.insert(new Element('tr').update(
-                    "<tr><td><td>#{key}<td>#{C}<td>#{W}<td>#{P}<td>#{PW}</tr>".
-                        interpolate(elem.value)));
+                var row = new Element('tr', {'style': 'display: none'});
+                income.insert(row.update("<td><td>#{key}<td>#{C}<td>#{W}<td>#{P}<td>#{PW}".interpolate(elem.value)));
             });
         }
 
