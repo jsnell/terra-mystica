@@ -7,6 +7,8 @@ var Browser = Class.create({
   initialize: function() {
     var userAgent = navigator.userAgent.toLowerCase();
     this.version = (userAgent.match( /.+(?:rv|it|ra|ie)[\/: ]([\d.]+)/ ) || [])[1];
+    this.android = /android/.test( userAgent );
+    this.ios = /iPhone|iPad|iPod/.test( userAgent );
     this.webkit = /webkit/.test( userAgent );
     this.opera = /opera/.test( userAgent );
     this.msie = /msie/.test( userAgent ) && !/opera/.test( userAgent );
@@ -18,6 +20,9 @@ var browser = new Browser();
 
 function init() {
     if (browser.msie && browser.version < 9) {
+        fallback = true;
+    }
+    if (browser.android || browser.ios) {
         fallback = true;
     }
 
