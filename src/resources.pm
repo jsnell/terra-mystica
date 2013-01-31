@@ -6,7 +6,7 @@ use scoring;
 use towns;
 use tiles;
 
-use vars qw(%pool);
+use vars qw(%pool %bonus_coins);
 
 our %pool = (
     # Resources
@@ -41,10 +41,12 @@ our %pool = (
 
 $pool{"ACT$_"}++ for 1..6;
 $pool{"BON$_"}++ for 1..9;
-$map{"BON$_"}{C} = 0 for 1..9;
 $pool{"FAV$_"}++ for 1..4;
 $pool{"FAV$_"} += 3 for 5..12;
 $pool{"TW$_"} += 2 for 1..5;
+
+our %bonus_coins = ();
+$bonus_coins{"BON$_"}{C} = 0 for 1..9;
 
 sub adjust_resource;
 
@@ -60,31 +62,29 @@ my %resource_aliases = (
 
 sub alias_resource {
     my $type = shift;
-
     return $resource_aliases{$type} // $type;
 }
 
 sub pay {
-    my ($faction_name, $cost) = @_;
+    my ($faction, $cost) = @_;
 
     for my $currency (keys %{$cost}) {
         my $amount = $cost->{$currency};
-        adjust_resource $faction_name, $currency, -$amount;
+        adjust_resource $faction, $currency, -$amount;
     }
 }
 
 sub gain {
-    my ($faction_name, $cost) = @_;
+    my ($faction, $cost) = @_;
 
     for my $currency (keys %{$cost}) {
         my $amount = $cost->{$currency};
-        adjust_resource $faction_name, $currency, $amount;
+        adjust_resource $faction, $currency, $amount;
     }
 }
 
 sub maybe_gain_faction_special {
-    my ($faction_name, $type) = @_;
-    my $faction = $factions{$faction_name};
+    my ($faction, $type) = @_;
 
     my $enable_if = $faction->{special}{enable_if};
     if ($enable_if) {
@@ -93,12 +93,11 @@ sub maybe_gain_faction_special {
         }
     }
 
-    gain $faction_name, $faction->{special}{$type};
+    gain $faction, $faction->{special}{$type};
 }
 
 sub gain_power {
-    my ($faction_name, $count) = @_;
-    my $faction = $factions{$faction_name};
+    my ($faction, $count) = @_;
 
     for (1..$count) {
         if ($faction->{P1}) {
@@ -116,17 +115,16 @@ sub gain_power {
 }
 
 sub maybe_gain_power_from_cult {
-    my ($faction_name, $cult, $old_value, $new_value) = @_;
-    my $faction = $factions{$faction_name};
+    my ($faction, $cult, $old_value, $new_value) = @_;
 
     if ($old_value <= 2 && $new_value > 2) {
-        adjust_resource $faction_name, 'PW', 1;
+        adjust_resource $faction, 'PW', 1;
     }
     if ($old_value <= 4 && $new_value > 4) {
-        adjust_resource $faction_name, 'PW', 2;
+        adjust_resource $faction, 'PW', 2;
     }
     if ($old_value <= 6 && $new_value > 6) {
-        adjust_resource $faction_name, 'PW', 2;
+        adjust_resource $faction, 'PW', 2;
     }
     if ($old_value <= 9 && $new_value > 9) {
         if ($faction->{KEY} < 1) {
@@ -134,11 +132,11 @@ sub maybe_gain_power_from_cult {
             return;
         }
 
-        adjust_resource $faction_name, 'KEY', -1;
-        adjust_resource $faction_name, 'PW', 3;
+        adjust_resource $faction, 'KEY', -1;
+        adjust_resource $faction, 'PW', 3;
         # Block others from this space
         for (@factions) {
-            if ($_ ne $faction_name) {
+            if ($_ ne $faction->{name}) {
                 $factions{$_}{"MAX_$cult"} = 9;
             }
         }
@@ -146,15 +144,15 @@ sub maybe_gain_power_from_cult {
 }
 
 sub advance_track {
-    my ($faction_name, $track_name, $track, $free) = @_;
+    my ($faction, $track_name, $track, $free) = @_;
 
     if (!$free) {
-        pay $faction_name, $track->{advance_cost};
+        pay $faction, $track->{advance_cost};
     }
     
     if ($track->{advance_gain}) {
         my $gain = $track->{advance_gain}[$track->{level}];
-        gain $faction_name, $gain;
+        gain $faction, $gain;
     }
 
     if (++$track->{level} > $track->{max_level}) {
@@ -163,8 +161,7 @@ sub advance_track {
 }
 
 sub adjust_resource {
-    my ($faction_name, $type, $delta) = @_;
-    my $faction = $factions{$faction_name};
+    my ($faction, $type, $delta) = @_;
 
     $type = alias_resource $type;
 
@@ -173,13 +170,13 @@ sub adjust_resource {
         for (1..$delta) {
             my $track = $faction->{$track_name};
             my $gain = $track->{advance_gain}[$track->{level}];
-            gain $faction_name, $gain;
+            gain $faction, $gain;
             $track->{level}++
         }
         $type = '';
     } elsif ($type eq 'PW') {
         if ($delta > 0) {
-            gain_power $faction_name, $delta;
+            gain_power $faction, $delta;
             $type = '';
         } else {
             $faction->{P1} -= $delta;
@@ -215,12 +212,12 @@ sub adjust_resource {
                 $faction->{GAIN_FAVOR}--;
             }
 
-            gain $faction_name, $tiles{$type}{gain};
+            gain $faction, $tiles{$type}{gain};
 
             # Hack
             if ($type eq 'FAV5') {
                 for my $loc (@{$faction->{locations}}) {
-                    detect_towns_from $faction_name, $loc;
+                    detect_towns_from $faction, $loc;
                 }
             }
         }
@@ -231,7 +228,7 @@ sub adjust_resource {
             } else {
                 $faction->{GAIN_TW}--;
             }
-            gain $faction_name, $tiles{$type}{gain};
+            gain $faction, $tiles{$type}{gain};
         }
 
         if (grep { $_ eq $type } @cults) {
@@ -240,23 +237,22 @@ sub adjust_resource {
             }
 
             my $new_value = $faction->{$type};
-            maybe_gain_power_from_cult $faction_name, $type, $orig_value, $new_value;
+            maybe_gain_power_from_cult $faction, $type, $orig_value, $new_value;
         }
 
         for (1..$delta) {
-            maybe_score_current_score_tile $faction_name, $type;
-            maybe_gain_faction_special $faction_name, $type;
+            maybe_score_current_score_tile $faction, $type;
+            maybe_gain_faction_special $faction, $type;
         }
     }
 
     if ($type =~ /^BON/) {
-        $faction->{C} += $map{$type}{C};
-        $map{$type}{C} = 0;
+        $faction->{C} += $bonus_coins{$type}{C};
+        $bonus_coins{$type}{C} = 0;
     }
 
-
     if ($type and $faction->{$type} < 0) {
-        die "Not enough '$type' in $faction_name\n";
+        die "Not enough '$type' in ".($faction->{name})."\n";
     }
 }
 

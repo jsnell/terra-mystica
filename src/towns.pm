@@ -1,5 +1,8 @@
 package terra_mystica;
+
 use strict;
+
+use map;
 
 sub add_to_town {
     my ($faction, $where, $tid) = @_;
@@ -14,10 +17,8 @@ sub add_to_town {
 }
 
 sub detect_towns_from {
-    my ($faction_name, $where) = @_;
-    return if !$faction_name;
-    my $faction = $factions{$faction_name};
-    
+    my ($faction, $where) = @_;
+
     return if $map{$where}{town};
     return if !$map{$where}{building};
     return if $map{$where}{color} ne $faction->{color};
@@ -56,7 +57,7 @@ sub detect_towns_from {
 
     if ($power >= $faction->{TOWN_SIZE} and $count >= 4) {
         $map{$_}{town} = 1 for keys %reachable;
-        adjust_resource($faction_name, "GAIN_TW", 1);
+        adjust_resource($faction, "GAIN_TW", 1);
     }
 }
 

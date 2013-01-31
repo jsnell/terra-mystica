@@ -20,7 +20,7 @@ sub take_income_for_faction;
 sub command_adjust_resources {
     my ($faction, $delta, $type) = @_;
 
-    adjust_resource $faction->{name}, $type, $delta;
+    adjust_resource $faction, $type, $delta;
 
     @action_required = grep {
         $_->{faction} ne $faction->{name} or $_->{type} ne 'cult'
@@ -52,21 +52,20 @@ sub command_build {
 
     note_leech $where, $faction;
 
-    advance_track $faction_name, $type, $faction->{buildings}{$type}, $free;
+    advance_track $faction, $type, $faction->{buildings}{$type}, $free;
 
-    maybe_score_favor_tile $faction_name, $type;
-    maybe_score_current_score_tile $faction_name, $type;
+    maybe_score_favor_tile $faction, $type;
+    maybe_score_current_score_tile $faction, $type;
 
     $map{$where}{building} = $type;
     push @{$faction->{locations}}, $where;
 
-    detect_towns_from $faction_name, $where;
+    detect_towns_from $faction, $where;
     $action_taken++;
 }
 
 sub command_upgrade {
     my ($faction, $where, $type) = @_;
-    my $faction_name = $faction->{name};
 
     die "Unknown location '$where'\n" if !$map{$where};
 
@@ -92,45 +91,44 @@ sub command_upgrade {
         } else {
             if (!keys %leech) {
                 my $cost = $faction->{buildings}{$type}{advance_cost}{C};
-                adjust_resource $faction_name, "C", -${cost};
+                adjust_resource $faction, "C", -${cost};
             }
         }
     }
 
     $faction->{buildings}{$oldtype}{level}--;
-    advance_track $faction_name, $type, $faction->{buildings}{$type}, $free;
+    advance_track $faction, $type, $faction->{buildings}{$type}, $free;
 
-    maybe_score_favor_tile $faction_name, $type;
-    maybe_score_current_score_tile $faction_name, $type;
+    maybe_score_favor_tile $faction, $type;
+    maybe_score_current_score_tile $faction, $type;
 
     $map{$where}{building} = $type;
 
-    detect_towns_from $faction_name, $where;
+    detect_towns_from $faction, $where;
     $action_taken++;
 }
 
 sub command_send {
     my ($faction, $cult) = @_;
-    my $faction_name = $faction->{name};
 
     die "Unknown cult track $cult\n" if !grep { $_ eq $cult } @cults;
 
     my $gain = { $cult => 1 };
     for (1..4) {
         my $where = "$cult$_";
-        if (!$map{$where}{building}) {
-            $gain = $map{$where}{gain};
-            delete $map{$where}{gain};
-            $map{$where}{building} = 'P';
-            $map{$where}{color} = $faction->{color};
+        if (!$cults{$where}{building}) {
+            $gain = $cults{$where}{gain};
+            delete $cults{$where}{gain};
+            $cults{$where}{building} = 'P';
+            $cults{$where}{color} = $faction->{color};
             $faction->{MAX_P}--;
             last;
         }
     }
 
-    gain $faction_name, $gain;
+    gain $faction, $gain;
 
-    adjust_resource $faction_name, "P", -1;
+    adjust_resource $faction, "P", -1;
     $action_taken++;
 }
 
@@ -138,7 +136,6 @@ sub command_convert {
     my ($faction,
         $from_count, $from_type,
         $to_count, $to_type) = @_;
-    my $faction_name = $faction->{name};
 
     my %exchange_rates = (
         PW => { C => 1, W => 3, P => 5 },
@@ -170,15 +167,15 @@ sub command_convert {
     die "Conversion to $to_count $to_type requires $wanted_from_count $from_type, not $from_count\n"
         if  $wanted_from_count != $from_count;
 
-    adjust_resource $faction_name, $from_type, -$from_count;
-    adjust_resource $faction_name, $to_type, $to_count;
+    adjust_resource $faction, $from_type, -$from_count;
+    adjust_resource $faction, $to_type, $to_count;
 }
 
 sub command_leech {
     my ($faction, $pw) = @_;
     my $faction_name = $faction->{name};
 
-    my $actual_pw = gain_power $faction_name, $pw;
+    my $actual_pw = gain_power $faction, $pw;
     my $vp = $actual_pw - 1;
 
     my $found_leech_record = 0;
@@ -202,7 +199,7 @@ sub command_leech {
         @action_required = grep { $_ ne '' } @action_required;
 
         if ($actual_pw > 0) {
-            adjust_resource $faction_name, 'VP', -$vp;
+            adjust_resource $faction, 'VP', -$vp;
         }
     } else {
         # die "Invalid leech of $pw\n";
@@ -213,14 +210,14 @@ sub command_transform {
     my ($faction, $where, $color) = @_;
     my $faction_name = $faction->{name};
 
-    check_reachable $faction_name, $where;
+    check_reachable $faction, $where;
 
     if ($map{$where}{building}) {
         die "Can't transform $where to $color, already contains a building\n"
     }
 
     if ($faction->{FREE_TF}) {
-        adjust_resource $faction_name, 'FREE_TF', -1;
+        adjust_resource $faction, 'FREE_TF', -1;
     } else {
         my $color_difference = color_difference $map{$where}{color}, $color;
 
@@ -228,26 +225,25 @@ sub command_transform {
             $color_difference = 2;
         }
 
-        adjust_resource $faction_name, 'SHOVEL', -$color_difference;
+        adjust_resource $faction, 'SHOVEL', -$color_difference;
     } 
 
     $map{$where}{color} = $color;
 
-    detect_towns_from $faction_name, $where;
+    detect_towns_from $faction, $where;
     $action_taken++;
 }
 
 sub command_bridge {        
     my ($faction, $from, $to) = @_;
-    my $faction_name = $faction->{name};
 
     $map{$from}{adjacent}{$to} = 1;
     $map{$to}{adjacent}{$from} = 1;
 
     push @bridges, {from => $from, to => $to, color => $faction->{color}};
 
-    detect_towns_from $faction_name, $from;
-    detect_towns_from $faction_name, $to;
+    detect_towns_from $faction, $from;
+    detect_towns_from $faction, $to;
     $action_taken++;
 }
 
@@ -267,7 +263,7 @@ sub command_pass {
                 $map{$bridge->{from}}{color} eq $color and
                 $map{$bridge->{to}}{building} and
                 $map{$bridge->{to}}{color} eq $color) {
-                adjust_resource $faction_name, 'VP', 3;
+                adjust_resource $faction, 'VP', 3;
             }
         }            
     }
@@ -293,16 +289,16 @@ sub command_pass {
         if ($pass_vp) {
             for my $type (keys %{$pass_vp}) {
                 my $x = $pass_vp->{$type}[$faction->{buildings}{$type}{level}];
-                adjust_resource $faction_name, 'VP', $x;
+                adjust_resource $faction, 'VP', $x;
             }
         }                
     }
 
     if ($bon) {
-        adjust_resource $faction_name, $bon, 1;
+        adjust_resource $faction, $bon, 1;
     }
     if ($discard) {
-        adjust_resource $faction_name, $discard, -1;
+        adjust_resource $faction, $discard, -1;
     }
 
     $action_taken++;
@@ -318,8 +314,8 @@ sub command_action {
     }
 
     if ($actions{$name}) {
-        pay $faction_name, $actions{$name}{cost};
-        gain $faction_name, $actions{$name}{gain};
+        pay $faction, $actions{$name}{cost};
+        gain $faction, $actions{$name}{gain};
     } else {
         die "Unknown action $name\n";
     }
@@ -345,7 +341,7 @@ sub command_start {
     $map{$_}{blocked} = 0 for keys %map;
     for (1..9) {
         if ($pool{"BON$_"}) {
-            $map{"BON$_"}{C}++;
+            $bonus_coins{"BON$_"}{C}++;
         }
     }
 
@@ -368,15 +364,14 @@ sub command_connect {
     die "$to and $from must be one river space away\n" if
         $map{$from}{range}{1}{$to} ne 1;
 
-    detect_towns_from $faction_name, $from;
+    detect_towns_from $faction, $from;
 }
 
 sub command_advance {
     my ($faction, $type) = @_;
-    my $faction_name = $faction->{name};
 
     my $track = $faction->{$type};
-    advance_track $faction_name, $type, $track, 0;
+    advance_track $faction, $type, $track, 0;
     $action_taken++;
 }
 
@@ -412,8 +407,8 @@ sub command {
                         $to_count, $to_type);
     } elsif ($command =~ /^burn (\d+)$/) {
         $assert_faction->();
-        adjust_resource $faction_name, 'P2', -2*$1;
-        adjust_resource $faction_name, 'P3', $1;
+        adjust_resource $faction, 'P2', -2*$1;
+        adjust_resource $faction, 'P3', $1;
     } elsif ($command =~ /^leech (\d+)$/) {
         command_leech $assert_faction->(), $1;
     } elsif ($command =~ /^decline$/) { 
@@ -428,9 +423,9 @@ sub command {
         my $cost = $faction->{dig}{cost}[$faction->{dig}{level}];
         my $gain = $faction->{dig}{gain}[$faction->{dig}{level}];
 
-        adjust_resource $faction_name, 'SHOVEL', $1;
-        pay $faction_name, $cost for 1..$1;
-        gain $faction_name, $gain for 1..$1;
+        adjust_resource $faction, 'SHOVEL', $1;
+        pay $faction, $cost for 1..$1;
+        gain $faction, $gain for 1..$1;
     } elsif ($command =~ /^bridge (\w+):(\w+)$/) {
         command_bridge $assert_faction->(), uc $1, uc $2;
     } elsif ($command =~ /^connect (\w+):(\w+)$/) {

@@ -107,8 +107,7 @@ sub setup_ranges {
 
 
 sub check_reachable {
-    my ($faction_name, $where) = @_;
-    my $faction = $factions{$faction_name};
+    my ($faction, $where) = @_;
 
     return if $round == 0;
 
@@ -147,8 +146,8 @@ sub check_reachable {
                 $map{$where}{range}{0}{$loc} <= $range) {
                 my $cost = $t->{cost}[$level];
                 my $gain = $t->{gain}[$level];
-                pay($faction_name, $cost);
-                gain($faction_name, $gain);
+                pay($faction, $cost);
+                gain($faction, $gain);
                 return;
             }
         }
@@ -167,10 +166,8 @@ sub adjacent_own_buildings {
 }
 
 sub compute_network_size {
-    my $faction_name = shift;
-    return if !$faction_name;
-    
-    my $faction = $factions{$faction_name};
+    my $faction = shift;
+
     my @locations = @{$faction->{locations}};
     my %clique = ();
     my ($range, $ship);

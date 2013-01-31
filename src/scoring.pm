@@ -1,9 +1,12 @@
 package terra_mystica;
 
 use strict;
-use tiles;
 
 use vars qw(@score_tiles);
+our @score_tiles = ();
+
+use cults;
+use tiles;
 
 sub adjust_resource;
 sub command;
@@ -16,28 +19,28 @@ sub current_score_tile {
 }
 
 sub maybe_score_current_score_tile {
-    my ($faction_name, $type) = @_;
+    my ($faction, $type) = @_;
 
     my $scoring = current_score_tile;
     if ($scoring) {
         my $gain = $scoring->{vp}{$type};
         if ($gain) {
-            adjust_resource $faction_name, 'VP', $gain;
+            adjust_resource $faction, 'VP', $gain;
         }
     }
 }
 
 sub maybe_score_favor_tile {
-    my ($faction_name, $type) = @_;
+    my ($faction, $type) = @_;
 
-    for my $tile (keys %{$factions{$faction_name}}) {
-        next if !$factions{$faction_name}{$tile};
+    for my $tile (keys %{$faction}) {
+        next if !$faction->{$tile};
         if ($tile =~ /^FAV/) {
             my $scoring = $tiles{$tile}{vp};
             if ($scoring) {
                 my $gain = $scoring->{$type};
                 if ($gain) {
-                    adjust_resource $faction_name, 'VP', $gain;
+                    adjust_resource $faction, 'VP', $gain;
                 }
             }
         }
@@ -72,7 +75,7 @@ sub score_final_cults {
 }
 
 sub score_final_networks {
-    compute_network_size $_ for keys %factions;
+    compute_network_size $factions{$_} for @factions;
     push @ledger, { comment => "Scoring largest network" };
     score_type_rankings 'network', 18, 12, 6;
 }

@@ -157,7 +157,7 @@ sub take_income_for_faction {
     }
 
     my %income = faction_income $faction_name;
-    gain $faction_name, \%income;
+    gain $faction, \%income;
         
     $faction->{income_taken} = 1;
 
@@ -194,6 +194,15 @@ sub finalize {
         delete $factions{$faction}{locations};
         delete $factions{$faction}{teleport};
     }
+
+    for my $key (keys %cults) {
+        $map{$key} = $cults{$key};
+    }
+
+    for my $key (keys %bonus_coins) {
+        $map{$key} = $bonus_coins{$key};
+        $tiles{$key}{bonus_coins} = $bonus_coins{$key};
+    }
 }
 
 sub evaluate_game {
@@ -226,6 +235,7 @@ sub evaluate_game {
         bonus_tiles => { map({$_, $tiles{$_}} grep { /^BON/ } keys %tiles ) },
         favors => { map({$_, $tiles{$_}} grep { /^FAV/ } keys %tiles ) },
         action_required => \@action_required,
+        cults => \%cults,
     }
 
 }
