@@ -20,7 +20,7 @@ sub print_json {
 my $res = evaluate_game <>;
 print_json $res;
 
-if ($res->{error}) {
+if (scalar @{$res->{error}}) {
     print STDERR $_ for @{$res->{error}};
     exit 1;
 }
