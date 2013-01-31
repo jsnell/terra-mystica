@@ -650,6 +650,42 @@ sub detect_towns_from {
     }
 }
 
+sub score_final_resources_for_faction {
+    my $faction_name = shift;
+    my $faction = $factions{$faction_name};
+
+    for (1..($faction->{P2} / 2)) {
+        command $faction_name, "burn 1";
+    }
+
+    for (1..($faction->{P3})) {
+        command $faction_name, "convert 1pw to 1c";
+    }
+
+    for (1..($faction->{P})) {
+        command $faction_name, "convert 1p to 1c";
+    }
+
+    for (1..($faction->{W})) {
+        command $faction_name, "convert 1w to 1c";
+    }
+
+    my $rate = $faction->{exchange_rates}{C}{VP} // 3;
+    my $vp = int($faction->{C} / $rate);
+    my $c = $vp * $rate;
+    if ($vp) {
+        command $faction_name, "convert ${c}C to ${vp}VP";
+    }
+}
+
+sub score_final_resources {
+    push @ledger, { comment => "Converting resources to VPs" };
+
+    for (@factions) {
+        handle_row "$_: score_resources";
+    }
+}
+
 sub command {
     my ($faction_name, $command) = @_;
     my $faction = $faction_name ? $factions{$faction_name} : undef;
@@ -1036,6 +1072,9 @@ sub command {
     } elsif ($command =~ /^finish$/) {
         score_final_cults;
         score_final_networks;
+        score_final_resources;
+    } elsif ($command =~ /^score_resources$/) {
+        score_final_resources_for_faction $faction_name;
     } else {
         die "Could not parse command '$command'.\n";
     }
