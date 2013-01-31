@@ -148,7 +148,8 @@ table.building-table {
 }
 
 table.building-table tr td {
-    padding-right: 2ex;
+    padding-right: 1ex;
+    padding-left: 1ex;
 }
 
 table.building-table tr td:nth-child(odd) {
