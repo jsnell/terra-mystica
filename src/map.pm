@@ -21,6 +21,7 @@ my @map = qw(brown gray green blue yellow red brown black red green blue red bla
              yellow blue brown x x x blue black x gray brown gray E
              red black gray blue red green yellow brown gray x blue green red E);
 
+# Initialize %map, with the correct coordinates, from the above raw data.
 sub setup_base_map {
     my $ri = 0;
     my $river = 0;
@@ -48,6 +49,8 @@ sub setup_base_map {
     }
 }
 
+# Set up the a list of directly adjacent hexes. Store it under the
+# 'adjacent' hash key.
 sub setup_direct_adjacencies {
     sub record_adjacent {
         my ($this, $other) = @_;
@@ -77,6 +80,9 @@ sub setup_direct_adjacencies {
     }
 }
 
+# For each hex, set up a hash table 'range' > other-hex > mode, stating
+# the distance from that hex to other-hex, when traveling via mode.
+# 1 for river, 0 for like the crow flies.
 sub setup_hex_ranges {
     my ($from, $river_only) = @_;
     my %aux = ();
@@ -105,7 +111,10 @@ sub setup_ranges {
     setup_hex_ranges $_, 1 for keys %map;
 }
 
-
+# Check whether a faction can reach a given hex (directly, by ship, or
+# by teleporting).
+#
+# If the faction needs to teleport, also pay the teleport cost here.
 sub check_reachable {
     my ($faction, $where) = @_;
 
@@ -156,6 +165,8 @@ sub check_reachable {
     die "$faction->{color} can't reach $where\n";
 }
 
+# Given a faction and a hex, return a list of all directly adjacent hexes
+# that contain a building of that faction.
 sub adjacent_own_buildings {
     my ($faction, $where) = @_;
 
@@ -165,6 +176,8 @@ sub adjacent_own_buildings {
     } @adjacent;
 }
 
+# Given a faction, compute the largest contiguous blob of buildings
+# (taking into account river travel / teleporting).
 sub compute_network_size {
     my $faction = shift;
 
@@ -182,6 +195,11 @@ sub compute_network_size {
         $ship = 1;
     }
 
+    # A depth-first search that marks all buildings that are
+    # transitively directly adjacent to a given hex. Each building
+    # will be assigned to the clique that matches the original
+    # building from which the depth-first search started. A building
+    # already in a clique won't change to another one.
     my $handle;
     $handle = sub {
         my ($loc, $id) = @_;
@@ -199,15 +217,19 @@ sub compute_network_size {
         }
     };
 
+    # Trigger the search for each building.
     my $n = 1;
     $handle->($_, $n++) for @locations;
 
+    # Find the clique with the most members.
     my %clique_sizes = ();
     $clique_sizes{$_}++ for values %clique;
 
+    # And that's the size of the network.
     $faction->{network} = max values %clique_sizes;
 }
 
+# The terraforming color wheel.
 my @colors = qw(yellow brown black blue green gray red);
 my %colors = map { ($colors[$_], $_) } 0..$#colors;
 
@@ -222,6 +244,13 @@ sub color_difference {
     return $diff;
 }
 
+# Given a faction and a hex, figure out who can leach power when a
+# building is built or upgraded, and how much. (Note: won't take into
+# account the amount of power tokens the receiver has. That's taken
+# care of when the power is received).
+#
+# Not entirely sure where this function should be. It's here mostly
+# because it's spatial... Maybe split in two?
 sub note_leech {
     my ($where, $from_faction) = @_;
     my $color = $from_faction->{color};
@@ -255,7 +284,6 @@ sub note_leech {
 	$leech{$_} += $this_leech{$_};
     }
 }
-
 
 setup_base_map;
 setup_direct_adjacencies;
