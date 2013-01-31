@@ -2,11 +2,14 @@
 
 package terra_mystica;
 
-use vars qw(%map %reverse_map);
 use strict;
 
+use factions;
+
+use vars qw(%map %reverse_map @bridges);
 our %map = ();
 our %reverse_map = ();
+our @bridges = ();
 
 my @map = qw(brown gray green blue yellow red brown black red green blue red black E
              yellow x x brown black x x yellow black x x yellow E
@@ -100,6 +103,127 @@ sub setup_hex_ranges {
 sub setup_ranges {
     setup_hex_ranges $_, 0 for keys %map;
     setup_hex_ranges $_, 1 for keys %map;
+}
+
+
+sub check_reachable {
+    my ($faction_name, $where) = @_;
+    my $faction = $factions{$faction_name};
+
+    return if $round == 0;
+
+    my $range = $faction->{ship}{level};
+    if ($faction->{ship}{max_level}) {
+        # XXX hack.
+        $range++ if $faction->{BON4};
+    }
+
+    # Direct adjancies first (can't use tunneling / carpet flight bonus
+    # if it isn't needed).
+    for my $loc (@{$faction->{locations}}) {
+        if ($map{$where}{adjacent}{$loc}) {
+            return;
+        }
+    }
+
+    # Ships
+    if ($range) {
+        for my $loc (@{$faction->{locations}}) {
+            if (exists $map{$where}{range}{1}{$loc} and 
+                $map{$where}{range}{1}{$loc} <= $range) {
+                return;
+            }
+        }
+    }
+
+    if ($faction->{teleport}) {
+        my $t = $faction->{teleport};
+        my $level = $t->{level};
+        my $range = $t->{range}[$level];
+
+        # XXX: shouldn't do payment here.
+        for my $loc (@{$faction->{locations}}) {
+            if (exists $map{$where}{range}{0}{$loc} and 
+                $map{$where}{range}{0}{$loc} <= $range) {
+                my $cost = $t->{cost}[$level];
+                my $gain = $t->{gain}[$level];
+                pay($faction_name, $cost);
+                gain($faction_name, $gain);
+                return;
+            }
+        }
+    }
+
+    die "$faction->{color} can't reach $where\n";
+}
+
+sub adjacent_own_buildings {
+    my ($faction, $where) = @_;
+
+    my @adjacent = keys %{$map{$where}{adjacent}};
+    return grep {
+        $map{$_}{building} and ($map{$_}{color} eq $faction->{color});
+    } @adjacent;
+}
+
+sub compute_network_size {
+    my $faction_name = shift;
+    return if !$faction_name;
+    
+    my $faction = $factions{$faction_name};
+    my @locations = @{$faction->{locations}};
+    my %clique = ();
+    my ($range, $ship);
+
+    if ($faction->{teleport}) {
+        my $t = $faction->{teleport};
+        my $level = $t->{level};
+        $range = $t->{range}[$level];
+        $ship = 0;
+    } else {
+        $range = $faction->{ship}{level};        
+        $ship = 1;
+    }
+
+    my $handle;
+    $handle = sub {
+        my ($loc, $id) = @_;
+        return if exists $clique{$loc};
+
+        $clique{$loc} = $id;
+
+        for my $to (@locations) {
+            next if $loc eq $to;
+            if (exists $map{$loc}{adjacent}{$to} or
+                (exists $map{$loc}{range}{$ship}{$to} and
+                 $map{$loc}{range}{$ship}{$to} <= $range)) {
+                $handle->($to, $id);
+            };
+        }
+    };
+
+    my $n = 1;
+    $handle->($_, $n++) for @locations;
+
+    my %clique_sizes = ();
+    $clique_sizes{$_}++ for values %clique;
+
+    $faction->{network} = max values %clique_sizes;
+}
+
+my @colors = qw(yellow brown black blue green gray red);
+my %colors = ();
+$colors{$colors[$_]} = $_ for 0..$#colors;
+
+sub color_difference {
+    my ($a, $b) = @_;
+    my $diff = abs $colors{$a} - $colors{$b};
+
+    if ($diff > 3) {
+        $diff = 7 - $diff;
+    }
+
+    return $diff;
 }
 
 setup_base_map;
