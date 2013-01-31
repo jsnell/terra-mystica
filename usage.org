@@ -55,9 +55,7 @@ Get first round's income:
 
 #+BEGIN_EXAMPLE
   # Round 1 income 
-  Nomads: income
-  Auren: income
-  Swarmlings: income
+  income
 #+END_EXAMPLE
 
 Start the game:
@@ -176,9 +174,16 @@ Advance 1 step on the shipping track. "Advance dig" for improving the
 shovel track.
 
 ** =income=
+#+BEGIN_EXAMPLE
+  income
+#+END_EXAMPLE
+#+BEGIN_EXAMPLE
+  Nomads: income
+#+END_EXAMPLE
 
 Take all income (buildings, favors, bonus tiles, last turn's special
-scoring tile). Note -- should be done just before starting a new round.
+scoring tile) for either all players (if no faction specified), or a
+specific faction. Note -- should be done just before starting a new round.
 
 ** =start=
 

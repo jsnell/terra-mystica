@@ -682,6 +682,28 @@ sub score_final_resources {
     }
 }
 
+sub take_income_for_faction {
+    my $faction_name = shift;
+    my $faction = $factions{$faction_name};
+    die "Taking income twice for $faction_name\n" if
+        $faction->{income_taken};
+
+    if ($round == 0) {
+        $faction->{passed} = 1;
+    }
+
+    my %income = faction_income $faction_name;
+    gain $faction_name, \%income;
+        
+    $faction->{income_taken} = 1;
+
+    if ($faction->{SHOVEL}) {
+        push @action_required, { type => 'transform',
+                                 amount => $faction->{SHOVEL}, 
+                                 faction => $faction->{name} };
+    }
+}
+
 sub command {
     my ($faction_name, $command) = @_;
     my $faction = $faction_name ? $factions{$faction_name} : undef;
@@ -1034,24 +1056,12 @@ sub command {
     } elsif ($command =~ /delete (\w+)$/) {
         delete $pool{uc $1};
     } elsif ($command =~ /^income$/) {
-        die "Need faction for command $command\n" if !$faction_name;
-
-        die "Taking income twice for $faction_name\n" if
-            $faction->{income_taken};
-
-        if ($round == 0) {
-            $faction->{passed} = 1;
-        }
-
-        my %income = faction_income $faction_name;
-        gain $faction_name, \%income;
-        
-        $faction->{income_taken} = 1;
-
-        if ($faction->{SHOVEL}) {
-            push @action_required, { type => 'transform',
-                                     amount => $faction->{SHOVEL}, 
-                                     faction => $faction->{name} };
+        if ($faction_name) {
+            take_income_for_faction $faction_name;
+        } else {
+            for (@factions) {
+                handle_row "$_: income";
+            }
         }
     } elsif ($command =~ /^advance (ship|dig)/) {
         die "Need faction for command $command\n" if !$faction_name;
@@ -1139,7 +1149,9 @@ sub handle_row {
             my $warn = '';
             if ($factions{$prefix}{SHOVEL}) {
                  $warn = "Unused shovels for $prefix\n";
-                 $factions{$prefix}{SHOVEL} = 0;
+                 if (!$factions{$prefix}{passed}) {
+                     $factions{$prefix}{SHOVEL} = 0;
+                 }
             }
 
             if ($factions{$prefix}{FREE_TF}) {
