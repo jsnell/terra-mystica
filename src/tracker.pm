@@ -23,10 +23,6 @@ our $round = 0;
 
 ## 
 
-sub command;
-sub handle_row;
-sub adjust_resource;
-
 sub faction_income {
     my $faction_name = shift;
     my $faction = $factions{$faction_name};
