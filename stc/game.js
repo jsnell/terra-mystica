@@ -675,7 +675,7 @@ function drawFactions() {
         board.insert(info);
 
         info.insert(new Element('div').update(
-            "#{C} c, #{W} w, #{P} p, #{VP} vp, #{P1}/#{P2}/#{P3} pw".interpolate(faction)));
+            "#{C} c, #{W} w, #{P}<span style='color:#888'>/#{MAX_P}</span> p, #{VP} vp, #{P1}/#{P2}/#{P3} pw".interpolate(faction)));
         info.insert(new Element('div').update(
             "dig level #{dig.level}, ship level #{ship.level}".interpolate(faction)));
 
