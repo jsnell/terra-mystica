@@ -514,7 +514,7 @@ sub score_type_rankings {
 
     $scores{pop @levels} += $_ for @scores;
         
-    for my $faction_name (keys %factions) {
+    for my $faction_name (@factions) {
         my $level = $factions{$faction_name}{$type};
         next if !$level or !defined $scores{$level};
         my $vp = $scores{$level} / $count{$level};
