@@ -423,6 +423,7 @@ sub adjust_resource {
 sub note_leech {
     my ($where, $from_faction) = @_;
     my $color = $from_faction->{color};
+    my %this_leech = ();
 
     return if !$round;
 
@@ -430,22 +431,26 @@ sub note_leech {
         my $map_color = $map{$adjacent}{color};
         if ($map{$adjacent}{building} and
             $map_color ne $color) {
-            $leech{$map_color} +=
+            $this_leech{$map_color} +=
                 $building_strength{$map{$adjacent}{building}};
-            $leech{$map_color} = min $leech{$map_color}, 5;
+            $this_leech{$map_color} = min $this_leech{$map_color}, 5;
         }
     }
 
     for my $faction_name (factions_in_order_from $from_faction->{name}) {
         my $faction = $factions{$faction_name};
         my $color = $faction->{color}; 
-        next if !$leech{$color};
-        my $amount = $leech{$color};
+        next if !$this_leech{$color};
+        my $amount = $this_leech{$color};
 
         push @action_required, { type => 'leech',
                                  from_faction => $from_faction->{name},
                                  amount => $amount, 
                                  faction => $faction->{name} };
+    }
+
+    for (keys %this_leech) {
+	$leech{$_} += $this_leech{$_};
     }
 }
 
@@ -1099,6 +1104,7 @@ sub handle_row {
             my $warn = '';
             if ($factions{$prefix}{SHOVEL}) {
                  $warn = "Unused shovels for $prefix\n";
+                 $factions{$prefix}{SHOVEL} = 0;
             }
 
             if ($factions{$prefix}{FREE_TF}) {
