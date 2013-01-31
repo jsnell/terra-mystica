@@ -1,0 +1,216 @@
+#+TITLE: Usage
+#+AUTHOR: Juho Snellman
+#+EMAIL: jsnell@iki.fi
+
+* Setting up a game
+
+For now you'll need to ask Juho to create a game. You'll get two links:
+one for viewing the game, one for editing it. Anyone with the second link
+can change the game in arbitrary ways, so you might not want to share it
+too widely.
+
+During setup, you'll need the following sections in the game file:
+
+Remove randonly selected bonus tiles from the game, e.g.
+
+#+BEGIN_EXAMPLE
+  delete bon9
+  delete bon6
+#+END_EXAMPLE
+
+Tell which score tiles are in the game, and in which order:
+
+#+BEGIN_EXAMPLE
+  score score4, score2, score8, score7, score6, score5
+#+END_EXAMPLE
+
+Select the factions in play:
+
+#+BEGIN_EXAMPLE
+  # Faction selection
+  setup Nomads for Alice
+  setup Auren for Bob
+  setup Swarmlings for Charlie
+#+END_EXAMPLE
+
+Place initial dwellings:
+
+#+BEGIN_EXAMPLE
+  Nomads: Build A5
+  Auren: Build F4
+  Swarmlings: Build H4. Build G6
+  Auren: Build F2
+  Nomads: Build B4. Build G7
+#+END_EXAMPLE
+
+Select initial bonus tiles:
+
+#+BEGIN_EXAMPLE
+  Swarmlings: +Bon8
+  Auren: +Bon2
+  Nomads: +Bon5
+#+END_EXAMPLE
+
+Get first round's income:
+
+#+BEGIN_EXAMPLE
+  # Round 1 income 
+  Nomads: income
+  Auren: income
+  Swarmlings: income
+#+END_EXAMPLE
+
+Start the game:
+
+#+BEGIN_EXAMPLE
+  start
+#+END_EXAMPLE
+
+* Commands
+
+Each line should start with the name of the faction that's doing
+stuff, followed by a colon. After this, you can have multiple commands
+that apply to that faction, separated by full stops. For example:
+
+#+BEGIN_EXAMPLE
+  Nomads: Dig 1. Build E7
+#+END_EXAMPLE
+
+The exact capitalization doesn't matter. 
+
+The commands that you'd usually use are:
+
+** =pass= /tile/
+
+Example: =pass bon2=
+
+Pass, return current bonus tile, and replace it with Bon2. When passing
+on the last turn.
+
+** =leech= /amount/
+
+Example: =Leech 2=.
+
+Trade 1 vp for 2 power
+
+** =decline=
+
+Example: =decline=.
+
+Decline all outstanding trades of vp to power
+
+** =action= /label/
+
+Example: =action act5=
+
+Take the power action 5 (or stronghold, bonus
+tile, or favor special action).
+
+** =dig= /amount/
+
+Example: =dig 1=. 
+
+Trade workers / priests to shovels at the appropriate exchange rate.
+The shovels need to be spent by commands later on the same line.
+
+** =build= /location/
+
+Example: =build F5=
+
+Terraform the hex F5 into the correct terrain type, and build a
+dwelling there.
+
+** =upgrade= /location/ to /building/
+
+Example: =upgrade F5 to TP=
+
+Replace the dwelling in F5 with a trading post (TE for temples, SH for
+strongholds, SA for sanctuaries).
+
+** =send P to= /cult/
+
+Example: =Send P to Fire=
+
+Send a priest to the first free spot on the fire cult track.
+
+** =transform= /location/ =to= /color/
+
+Example: =transform F5 to black=
+
+Terraform F5 to black, but don't build anything there.
+
+** =convert= /amount/ /resource/ to /amount/ /resource/
+
+Example: =convert 3pw to 1w=
+
+Convert between resources.
+
+** =burn= /amount/
+
+Example: =burn 2=
+
+Remove 2 power from bowl 2, and move 2 power from bowl 2 to 3.
+
+** + /amount/ /resource/ or - /amount/ /resource/
+
+Example: =+FAV11=
+
+Take the Favor tile #11. (TW3 for Town tile 3, you shouldn't take
+Bonus tiles with +, but use the Pass command). 
+
+Example: =-4w=
+
+Return 4 workers from the treasury to the pool.
+
+** =bridge= /location:location/
+
+Example: =Bridge E9:D6=
+
+Build a bridge from E9 to D6.
+
+** =advance= /track/
+
+Example: =advance ship=
+
+Advance 1 step on the shipping track. "Advance dig" for improving the
+shovel track.
+
+** =income=
+
+Take all income (buildings, favors, bonus tiles, last turn's special
+scoring tile). Note -- should be done just before starting a new round.
+
+** =start=
+
+Move to the next round.
+
+** =finish=
+
+Do the final scoring.
+
+** =setup= /faction/ for /player/
+
+Example: =setup Nomads for Alice=
+
+Add this faction to the game. The player name is optional, you also do just
+=setup Nomads=.
+
+* Notes on specific factions
+
+** Mermaids
+
+The mermaid special town founding ability can't be used automatically,
+but must be triggered manually. Use the =connect= command to mark
+hexes that should be considered adjacent for this purpose. For example
+if the mermaids declare the river hex between F2 and E4 as the one
+they want to skip, use the command =connect F2:E4=). If you want to
+connect to multiple hexes bordering that river hex, you need to issue
+separate commands. 
+
+The tracker doesn't yet check these commands for validity -- e.g. it
+doesn't check that one town has these special connections over only
+one river hex.
+
+
+
+
