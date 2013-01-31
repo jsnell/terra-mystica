@@ -22,6 +22,9 @@ sub command_adjust_resources {
 
     adjust_resource $faction, $type, $delta;
 
+    # Small hack: always remove the notifier for a cultist special cult
+    # increase. Needs to be done like this, since we don't want + / - to
+    # count as full actions.
     @action_required = grep {
         $_->{faction} ne $faction->{name} or $_->{type} ne 'cult'
     } @action_required;       
@@ -33,8 +36,9 @@ sub command_build {
 
     my $free = ($round == 0);
     my $type = 'D';
-    die "Unknown location '$where'\n" if !$map{$where};
     my $color = $faction->{color};
+
+    die "Unknown location '$where'\n" if !$map{$where};
 
     die "'$where' already contains a $map{$where}{building}\n"
         if $map{$where}{building};
@@ -42,10 +46,12 @@ sub command_build {
     if ($faction->{FREE_D}) {
         $free = 1;
         $faction->{FREE_D}--;
-        # XXX ugly hack -- the two separate functionalities of the
-        # Witch Stronghold are coupled together here.
-        die "Can't transform terrain when using witch stronghold\n"
-            if $map{$where}{color} ne $faction->{color}
+    }
+
+    if ($faction->{TELEPORT_NO_TF}) {
+        $faction->{TELEPORT_NO_TF}--;
+        die "Transforming terrain forbidden during this action\n"
+            if $map{$where}{color} ne $color;
     } else {
         command $faction_name, "transform $where to $color";
     }
@@ -216,17 +222,17 @@ sub command_transform {
         die "Can't transform $where to $color, already contains a building\n"
     }
 
+    my $color_difference = color_difference $map{$where}{color}, $color;
+
+    if ($faction_name eq 'giants' and $color_difference != 0) {
+        $color_difference = 2;
+    }
+
     if ($faction->{FREE_TF}) {
         adjust_resource $faction, 'FREE_TF', -1;
     } else {
-        my $color_difference = color_difference $map{$where}{color}, $color;
-
-        if ($faction_name eq 'giants' and $color_difference != 0) {
-            $color_difference = 2;
-        }
-
         adjust_resource $faction, 'SHOVEL', -$color_difference;
-    } 
+    }
 
     $map{$where}{color} = $color;
 
@@ -467,48 +473,53 @@ sub command {
 
 sub detect_incomplete_state {
     my ($prefix) = @_;
+    my $faction = $factions{$prefix};
 
     my @extra_action_required = ();
     my $warn = '';
 
-    if ($factions{$prefix}{SHOVEL}) {
+    if ($faction->{SHOVEL}) {
         $warn = "Unused shovels for $prefix\n";
-        if (!$factions{$prefix}{passed}) {
-            $factions{$prefix}{SHOVEL} = 0;
+        if (!$faction->{passed}) {
+            $faction->{SHOVEL} = 0;
         }
     }
 
-    if ($factions{$prefix}{FREE_TF}) {
+    if ($faction->{FORBID_TF}) {
+        delete $faction->{FORBID_TF};
+    }
+
+    if ($faction->{FREE_TF}) {
         $warn = "Unused free terraform for $prefix\n";
     }
 
-    if ($factions{$prefix}{FREE_TP}) {
+    if ($faction->{FREE_TP}) {
         $warn = "Unused free trading post for $prefix\n";
     }
 
-    if ($factions{$prefix}{CULT}) {
+    if ($faction->{CULT}) {
         $warn = "Unused cult advance for $prefix\n";
         push @extra_action_required, {
             type => 'cult',
-            amount => $factions{$prefix}{CULT}, 
+            amount => $faction->{CULT}, 
             faction => $prefix
         };
     }
 
-    if ($factions{$prefix}{GAIN_FAVOR}) {
+    if ($faction->{GAIN_FAVOR}) {
         $warn = "favor not taken by $prefix\n";
         push @extra_action_required, {
             type => 'favor',
-            amount => $factions{$prefix}{GAIN_FAVOR}, 
+            amount => $faction->{GAIN_FAVOR}, 
             faction => $prefix
         };
     }
 
-    if ($factions{$prefix}{GAIN_TW}) {
+    if ($faction->{GAIN_TW}) {
         $warn = "town tile not taken by $prefix\n";
         push @extra_action_required, {
             type => 'town',
-            amount => $factions{$prefix}{GAIN_TW}, 
+            amount => $faction->{GAIN_TW}, 
             faction => $prefix
         };
     }

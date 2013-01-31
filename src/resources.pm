@@ -32,6 +32,7 @@ our %pool = (
     FREE_TF => 10000,
     FREE_TP => 10000,
     FREE_D => 10000,
+    TELEPORT_NO_TF => 10000,
     CULT => 10000,
     GAIN_FAVOR => 10000,
     GAIN_SHIP => 10000,
