@@ -465,6 +465,70 @@ sub command {
     }
 }
 
+sub detect_incomplete_state {
+    my ($prefix) = @_;
+
+    my @extra_action_required = ();
+    my $warn = '';
+
+    if ($factions{$prefix}{SHOVEL}) {
+        $warn = "Unused shovels for $prefix\n";
+        if (!$factions{$prefix}{passed}) {
+            $factions{$prefix}{SHOVEL} = 0;
+        }
+    }
+
+    if ($factions{$prefix}{FREE_TF}) {
+        $warn = "Unused free terraform for $prefix\n";
+    }
+
+    if ($factions{$prefix}{FREE_TP}) {
+        $warn = "Unused free trading post for $prefix\n";
+    }
+
+    if ($factions{$prefix}{CULT}) {
+        $warn = "Unused cult advance for $prefix\n";
+        push @extra_action_required, {
+            type => 'cult',
+            amount => $factions{$prefix}{CULT}, 
+            faction => $prefix
+        };
+    }
+
+    if ($factions{$prefix}{GAIN_FAVOR}) {
+        $warn = "favor not taken by $prefix\n";
+        push @extra_action_required, {
+            type => 'favor',
+            amount => $factions{$prefix}{GAIN_FAVOR}, 
+            faction => $prefix
+        };
+    }
+
+    if ($factions{$prefix}{GAIN_TW}) {
+        $warn = "town tile not taken by $prefix\n";
+        push @extra_action_required, {
+            type => 'town',
+            amount => $factions{$prefix}{GAIN_TW}, 
+            faction => $prefix
+        };
+    }
+
+    ($warn, @extra_action_required);
+}
+
+sub next_faction_in_turn {
+    my $faction_name = shift;
+    my @f = factions_in_order_from $faction_name;
+
+    for (@f) {
+        if (!$factions{$_}{passed}) {
+            return $_;
+        }
+    }
+
+    undef;
+}
+
 sub handle_row {
     local $_ = shift;
 
@@ -499,114 +563,63 @@ sub handle_row {
     %leech = ();
     $action_taken = 0;
 
-    if ($factions{$prefix} or $prefix eq '') {
-        my @fields = qw(VP C W P P1 P2 P3 PW
-                        FIRE WATER EARTH AIR CULT);
-        my %old_data = map { $_, $factions{$prefix}{$_} } @fields; 
-
-        for my $command (@commands) {
-            command $prefix, lc $command;
-        }
-
-        my %new_data = map { $_, $factions{$prefix}{$_} } @fields;
-
-        if ($prefix) {
-            $old_data{PW} = $old_data{P2} + 2 * $old_data{P3};
-            $new_data{PW} = $new_data{P2} + 2 * $new_data{P3};
-
-            $old_data{CULT} = sum @old_data{@cults};
-            $new_data{CULT} = sum @new_data{@cults};
-
-            my %delta = map { $_, $new_data{$_} - $old_data{$_} } @fields;
-            my %pretty_delta = map { $_, { delta => $delta{$_},
-                                           value => $new_data{$_} } } @fields;
-            $pretty_delta{PW}{value} = sprintf "%d/%d/%d",  $new_data{P1}, $new_data{P2}, $new_data{P3};
-
-            $pretty_delta{CULT}{value} = sprintf "%d/%d/%d/%d", $new_data{FIRE}, $new_data{WATER}, $new_data{EARTH}, $new_data{AIR};
-
-            my @extra_action_required = ();
-            my $warn = '';
-            if ($factions{$prefix}{SHOVEL}) {
-                 $warn = "Unused shovels for $prefix\n";
-                 if (!$factions{$prefix}{passed}) {
-                     $factions{$prefix}{SHOVEL} = 0;
-                 }
-            }
-
-            if ($factions{$prefix}{FREE_TF}) {
-                $warn = "Unused free terraform for $prefix\n";
-            }
-
-            if ($factions{$prefix}{FREE_TP}) {
-                $warn = "Unused free trading post for $prefix\n";
-            }
-
-            if ($factions{$prefix}{CULT}) {
-                $warn = "Unused cult advance for $prefix\n";
-                push @extra_action_required, {
-                    type => 'cult',
-                    amount => $factions{$prefix}{CULT}, 
-                    faction => $prefix
-                };
-            }
-
-            if ($factions{$prefix}{GAIN_FAVOR}) {
-                $warn = "favor not taken by $prefix\n";
-                push @extra_action_required, {
-                    type => 'favor',
-                    amount => $factions{$prefix}{GAIN_FAVOR}, 
-                    faction => $prefix
-                };
-            }
-
-            if ($factions{$prefix}{GAIN_TW}) {
-                $warn = "town tile not taken by $prefix\n";
-                push @extra_action_required, {
-                    type => 'town',
-                    amount => $factions{$prefix}{GAIN_TW}, 
-                    faction => $prefix
-                };
-            }
-
-            if ($action_taken and $round > 0) {
-
-                {
-                    my $last = (grep { $_->{type} eq 'full' } @action_required)[-1];
-                    if ($last) {
-                        $last = $last->{faction};
-                        $warn = "'$prefix' took an action, expected '$last'" if $prefix ne $last;
-                    }
-                }
-
-                @action_required = grep { $_->{faction} ne $prefix } @action_required;
-                push @action_required, @extra_action_required;
-
-                my $next = undef;
-                my @f = factions_in_order_from $prefix;
-                for (@f) {
-                    if (!$factions{$_}{passed}) {
-                        $next = $_;
-                        last;
-                    }
-                }
-
-                if (defined $next) {
-                    push @action_required, { type => 'full',
-                                             faction => $next };
-                }
-            }
-
-            push @ledger, { faction => $prefix,
-                            warning => $warn,
-                            leech => { %leech },
-                            commands => (join ". ", @commands),
-                            map { $_, $pretty_delta{$_} } @fields};
-        }
-    } else {
-        die "Unknown prefix: '$prefix' (expected one of ".
+    if (!($factions{$prefix} or $prefix eq '')) {
+        die "Unknown faction: '$prefix' (expected one of ".
             (join ", ", keys %factions).
             ")\n";
     }
+
+    my @fields = qw(VP C W P P1 P2 P3 PW
+                        FIRE WATER EARTH AIR CULT);
+    my %old_data = map { $_, $factions{$prefix}{$_} } @fields; 
+
+    for my $command (@commands) {
+        command $prefix, lc $command;
+    }
+
+    if (!$prefix) {
+        return;
+    }
+
+    my %new_data = map { $_, $factions{$prefix}{$_} } @fields;
+
+    $old_data{PW} = $old_data{P2} + 2 * $old_data{P3};
+    $new_data{PW} = $new_data{P2} + 2 * $new_data{P3};
+
+    $old_data{CULT} = sum @old_data{@cults};
+    $new_data{CULT} = sum @new_data{@cults};
+
+    my %delta = map { $_, $new_data{$_} - $old_data{$_} } @fields;
+    my %pretty_delta = map { $_, { delta => $delta{$_},
+                                   value => $new_data{$_} } } @fields;
+    $pretty_delta{PW}{value} = sprintf "%d/%d/%d",  $new_data{P1}, $new_data{P2}, $new_data{P3};
+
+    $pretty_delta{CULT}{value} = sprintf "%d/%d/%d/%d", $new_data{FIRE}, $new_data{WATER}, $new_data{EARTH}, $new_data{AIR};
+
+    my ($warn, @extra_action_required) = detect_incomplete_state $prefix;
+
+    if ($action_taken and $round > 0) {
+        my $last = (grep { $_->{type} eq 'full' } @action_required)[-1];
+        if ($last) {
+            $last = $last->{faction};
+            $warn = "'$prefix' took an action, expected '$last'" if $prefix ne $last;
+        }
+
+        @action_required = grep { $_->{faction} ne $prefix } @action_required;
+        push @action_required, @extra_action_required;
+
+        my $next = next_faction_in_turn $prefix;
+        if (defined $next) {
+            push @action_required, { type => 'full',
+                                     faction => $next };
+        }
+    }
+
+    push @ledger, { faction => $prefix,
+                    warning => $warn,
+                    leech => { %leech },
+                    commands => (join ". ", @commands),
+                    map { $_, $pretty_delta{$_} } @fields};
 }
 
 1;
