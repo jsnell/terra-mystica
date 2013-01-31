@@ -209,8 +209,7 @@ sub compute_network_size {
 }
 
 my @colors = qw(yellow brown black blue green gray red);
-my %colors = ();
-$colors{$colors[$_]} = $_ for 0..$#colors;
+my %colors = map { ($colors[$_], $_) } 0..$#colors;
 
 sub color_difference {
     my ($a, $b) = @_;
@@ -222,6 +221,41 @@ sub color_difference {
 
     return $diff;
 }
+
+sub note_leech {
+    my ($where, $from_faction) = @_;
+    my $color = $from_faction->{color};
+    my %this_leech = ();
+
+    return if !$round;
+
+    for my $adjacent (keys %{$map{$where}{adjacent}}) {
+        my $map_color = $map{$adjacent}{color};
+        if ($map{$adjacent}{building} and
+            $map_color ne $color) {
+            $this_leech{$map_color} +=
+                $building_strength{$map{$adjacent}{building}};
+            $this_leech{$map_color} = min $this_leech{$map_color}, 5;
+        }
+    }
+
+    for my $faction_name (factions_in_order_from $from_faction->{name}) {
+        my $faction = $factions{$faction_name};
+        my $color = $faction->{color}; 
+        next if !$this_leech{$color};
+        my $amount = $this_leech{$color};
+
+        push @action_required, { type => 'leech',
+                                 from_faction => $from_faction->{name},
+                                 amount => $amount, 
+                                 faction => $faction->{name} };
+    }
+
+    for (keys %this_leech) {
+	$leech{$_} += $this_leech{$_};
+    }
+}
+
 
 setup_base_map;
 setup_direct_adjacencies;

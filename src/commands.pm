@@ -2,9 +2,11 @@ package terra_mystica;
 
 use strict;
 
+use buildings;
 use cults;
 use factions;
 use map;
+use income;
 use resources;
 use scoring;
 use tiles;
@@ -12,10 +14,7 @@ use towns;
 
 my $action_taken;
 
-sub alias_building;
 sub handle_row;
-sub note_leech;
-sub take_income_for_faction;
 
 sub command_adjust_resources {
     my ($faction, $delta, $type) = @_;
@@ -75,8 +74,6 @@ sub command_upgrade {
 
     die "Unknown location '$where'\n" if !$map{$where};
 
-    my $free = 0;
-
     my $color = $faction->{color};
     die "$where has wrong color ($color vs $map{$where}{color})\n" if
         $map{$where}{color} ne $color;
@@ -90,6 +87,7 @@ sub command_upgrade {
 
     note_leech $where, $faction;
 
+    my $free = 0;
     if ($type eq 'TP') {
         if ($faction->{FREE_TP}) {
             $free = 1;

@@ -4,16 +4,7 @@ package terra_mystica;
 
 use strict;
 
-use vars qw(%factions %factions_by_color @factions %building_strength);
-use Data::Dumper;
-
-our %building_strength = (
-    D => 1,
-    TP => 2,
-    TE => 2,
-    SH => 3,
-    SA => 3,
-);
+use vars qw(%factions %factions_by_color @factions);
 
 my %setups = (
     alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
