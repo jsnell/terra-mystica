@@ -529,26 +529,27 @@ sub next_faction_in_turn {
     undef;
 }
 
-sub handle_row {
+sub clean_commands {
     local $_ = shift;
+    my $prefix = '';
 
-    # Comment
+    # Remove comments
     if (s/#(.*)//) {
         if ($1 ne '') {
             push @ledger, { comment => $1 };
         }
     }
 
+    # Clean up whitespace
     s/\s+/ /g;
 
-    my $prefix = '';
-
+    # Parse the prefix
     if (s/^(.*?)://) {
         $prefix = lc $1;
     }
 
+    # Split subcommands, and clean them up
     my @commands = split /[.]/, $_;
-
     for (@commands) {
         s/^\s+//;
         s/\s+$//;
@@ -556,66 +557,100 @@ sub handle_row {
         s/(\w)\s(\W)/$1$2/g;
     }
 
-    @commands = grep { /\S/ } @commands;
+    return ($prefix, grep { /\S/ } @commands);
+}
+
+sub pretty_resource_delta {
+    for my $x (@_) {
+        $x->{PW} = $x->{P2} + 2 * $x->{P3};
+        $x->{CULT} += $x->{$_} for @cults;
+    }
+
+    my (%old_data) = %{+shift};
+    my (%new_data) = %{+shift};
+
+    my @fields = keys %old_data;
+    my %delta = map { $_, $new_data{$_} - $old_data{$_} } @fields;
+
+    my %pretty_delta = map { $_, { delta => $delta{$_},
+                                   value => $new_data{$_} } } @fields;
+    $pretty_delta{PW}{value} = sprintf "%d/%d/%d", @new_data{'P1','P2','P3'};
+    $pretty_delta{CULT}{value} = sprintf "%d/%d/%d/%d", @new_data{@cults};
+
+    %pretty_delta;
+}
+
+sub maybe_advance_to_next_player {
+    my $faction_name = shift;
+
+    # Check whether the action is incomplete in some way, or if somebody
+    # needs to react.
+    my ($warn, @extra_action_required) = detect_incomplete_state $faction_name;
+
+    if (!$action_taken or !$round) {
+        return $warn
+    }
+
+    my $last  = (grep { $_->{type} eq 'full' } @action_required)[-1];
+    if ($last) {
+        $last = $last->{faction};
+        if ($faction_name ne $last) {
+            $warn = "'$faction_name' took an action, expected '$last'"
+        }
+    }
+
+    # Remove all of this faction's todo items
+    @action_required = grep { $_->{faction} ne $faction_name } @action_required;
+    # And then possibly add new ones if there was something wrong with the
+    # action.
+    push @action_required, @extra_action_required;
+
+    # Advance to the next player, unless everyone has passed
+    my $next = next_faction_in_turn $faction_name;
+    if (defined $next) {
+        push @action_required, { type => 'full',
+                                 faction => $next };
+    }
+
+    return $warn;
+}
+
+sub handle_row {
+    my ($faction_name, @commands) = clean_commands @_;
 
     return if !@commands;
+
+    if (!($factions{$faction_name} or $faction_name eq '')) {
+        my $faction_list = join ", ", @factions;
+        die "Unknown faction: '$faction_name' (expected one of $faction_list)\n";
+    }
 
     %leech = ();
     $action_taken = 0;
 
-    if (!($factions{$prefix} or $prefix eq '')) {
-        die "Unknown faction: '$prefix' (expected one of ".
-            (join ", ", keys %factions).
-            ")\n";
+    # Store the resource counts for computing a delta
+    my @fields = qw(VP C W P P1 P2 P3 PW FIRE WATER EARTH AIR CULT);
+    my %old_data = ();
+    if ($faction_name) {
+        %old_data = map { $_, $factions{$faction_name}{$_} } @fields; 
     }
 
-    my @fields = qw(VP C W P P1 P2 P3 PW
-                        FIRE WATER EARTH AIR CULT);
-    my %old_data = map { $_, $factions{$prefix}{$_} } @fields; 
-
+    # Execute commands.
     for my $command (@commands) {
-        command $prefix, lc $command;
+        command $faction_name, lc $command;
     }
 
-    if (!$prefix) {
+    if (!$faction_name) {
         return;
     }
 
-    my %new_data = map { $_, $factions{$prefix}{$_} } @fields;
+    # Compute the delta
+    my %new_data = map { $_, $factions{$faction_name}{$_} } @fields;
+    my %pretty_delta = pretty_resource_delta \%old_data, \%new_data;
 
-    $old_data{PW} = $old_data{P2} + 2 * $old_data{P3};
-    $new_data{PW} = $new_data{P2} + 2 * $new_data{P3};
+    my $warn = maybe_advance_to_next_player $faction_name;
 
-    $old_data{CULT} = sum @old_data{@cults};
-    $new_data{CULT} = sum @new_data{@cults};
-
-    my %delta = map { $_, $new_data{$_} - $old_data{$_} } @fields;
-    my %pretty_delta = map { $_, { delta => $delta{$_},
-                                   value => $new_data{$_} } } @fields;
-    $pretty_delta{PW}{value} = sprintf "%d/%d/%d",  $new_data{P1}, $new_data{P2}, $new_data{P3};
-
-    $pretty_delta{CULT}{value} = sprintf "%d/%d/%d/%d", $new_data{FIRE}, $new_data{WATER}, $new_data{EARTH}, $new_data{AIR};
-
-    my ($warn, @extra_action_required) = detect_incomplete_state $prefix;
-
-    if ($action_taken and $round > 0) {
-        my $last = (grep { $_->{type} eq 'full' } @action_required)[-1];
-        if ($last) {
-            $last = $last->{faction};
-            $warn = "'$prefix' took an action, expected '$last'" if $prefix ne $last;
-        }
-
-        @action_required = grep { $_->{faction} ne $prefix } @action_required;
-        push @action_required, @extra_action_required;
-
-        my $next = next_faction_in_turn $prefix;
-        if (defined $next) {
-            push @action_required, { type => 'full',
-                                     faction => $next };
-        }
-    }
-
-    push @ledger, { faction => $prefix,
+    push @ledger, { faction => $faction_name,
                     warning => $warn,
                     leech => { %leech },
                     commands => (join ". ", @commands),
