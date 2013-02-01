@@ -51,21 +51,6 @@ div.favor {
     height: 80px;
 }
 
-div.favor-oval {
-    font: 10px Verdana;
-    border-style: solid;
-    background-color: #f0c040;
-    margin: 2px;
-    padding-top: 10px;
-    padding-left: 11px;
-    width: 60px;
-    height: 40px;
-
-    -moz-border-radius: 60px / 40px;
-    -webkit-border-radius: 60px / 40px;
-    border-radius: 60px / 40px;
-}
-
 div.scoring {
     border-style: solid;
     font: 11px Verdana;
