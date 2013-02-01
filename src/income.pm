@@ -59,6 +59,8 @@ sub faction_income {
         }        
     }
 
+    # XXX: Nasty. Mutate the faction every time this function gets called,
+    # rather than return the breakdown.
     $faction->{income_breakdown} = {};
 
     $faction->{income_breakdown}{bonus} = \%total_bonus_income;
