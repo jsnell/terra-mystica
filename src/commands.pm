@@ -462,6 +462,10 @@ sub command {
         score_final_cults;
         score_final_networks;
         score_final_resources;
+        for (@factions) {
+            $factions{$_}{passed} = 0;
+        }
+        @action_required = ( { type => 'gameover' } );
     } elsif ($command =~ /^score_resources$/) {
         score_final_resources_for_faction $faction_name;
     } else {

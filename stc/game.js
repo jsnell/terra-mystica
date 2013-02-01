@@ -844,11 +844,17 @@ function drawActionRequired() {
             } else {
                 record.pretty = 'may take #{amount} favor tiles'.interpolate(record);
             }
+        } else if (record.type == 'gameover') {
+            record.pretty = 'The game is over';
         } else {
             record.pretty = '?';
         }
 
-        record.faction_span = coloredFactionSpan(record.faction);
+	if (record.faction) {
+            record.faction_span = coloredFactionSpan(record.faction);
+	} else {
+	    record.faction_span = "";
+	}
 
         var row = new Element("div", {'style': 'margin: 3px'}).update("#{faction_span} #{pretty}</div>".interpolate(record));
         $("action_required").insert(row);
