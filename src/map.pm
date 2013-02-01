@@ -248,15 +248,12 @@ sub color_difference {
 # building is built or upgraded, and how much. (Note: won't take into
 # account the amount of power tokens the receiver has. That's taken
 # care of when the power is received).
-#
-# Not entirely sure where this function should be. It's here mostly
-# because it's spatial... Maybe split in two?
-sub note_leech {
-    my ($where, $from_faction) = @_;
+sub compute_leech {
+    my ($from_faction, $where) = @_;
     my $color = $from_faction->{color};
     my %this_leech = ();
 
-    return if !$round;
+    return () if !$round;
 
     for my $adjacent (keys %{$map{$where}{adjacent}}) {
         my $map_color = $map{$adjacent}{color};
@@ -268,21 +265,7 @@ sub note_leech {
         }
     }
 
-    for my $faction_name (factions_in_order_from $from_faction->{name}) {
-        my $faction = $factions{$faction_name};
-        my $color = $faction->{color}; 
-        next if !$this_leech{$color};
-        my $amount = $this_leech{$color};
-
-        push @action_required, { type => 'leech',
-                                 from_faction => $from_faction->{name},
-                                 amount => $amount, 
-                                 faction => $faction->{name} };
-    }
-
-    for (keys %this_leech) {
-	$leech{$_} += $this_leech{$_};
-    }
+    return %this_leech;
 }
 
 setup_base_map;

@@ -55,7 +55,7 @@ sub command_build {
         command $faction_name, "transform $where to $color";
     }
 
-    note_leech $where, $faction;
+    note_leech $faction, $where;
 
     advance_track $faction, $type, $faction->{buildings}{$type}, $free;
 
@@ -85,7 +85,7 @@ sub command_upgrade {
         die "$where contains ə $oldtype, wanted $wanted_oldtype{$type}\n"
     }
 
-    note_leech $where, $faction;
+    note_leech $faction, $where;
 
     my $free = 0;
     if ($type eq 'TP') {

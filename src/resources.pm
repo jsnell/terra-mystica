@@ -257,4 +257,28 @@ sub adjust_resource {
     }
 }
 
+# Record any possible leech events from a build by a faction int the given
+# hex. 
+sub note_leech {
+    my ($from_faction, $where) = @_;
+    my %this_leech = compute_leech @_;
+
+    # Note -- the exact turn order matters when the cultists are in play.
+    for my $faction_name (factions_in_order_from $from_faction->{name}) {
+        my $faction = $factions{$faction_name};
+        my $color = $faction->{color}; 
+        next if !$this_leech{$color};
+        my $amount = $this_leech{$color};
+
+        push @action_required, { type => 'leech',
+                                 from_faction => $from_faction->{name},
+                                 amount => $amount, 
+                                 faction => $faction->{name} };
+    }
+
+    for (keys %this_leech) {
+	$leech{$_} += $this_leech{$_};
+    }
+}
+
 1;
