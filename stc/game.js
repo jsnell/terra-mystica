@@ -18,7 +18,7 @@ var colors = {
     black: '#000000',
     white: '#ffffff',
     gray: '#808080',
-    orange: '#f0c040',
+    orange: '#f0c040'
 };
 
 var bgcolors = {
@@ -29,7 +29,7 @@ var bgcolors = {
     black: '#404040',
     white: '#ffffff',
     gray: '#c0c0c0',
-    brown: '#b08040',
+    brown: '#b08040'
 };
 
 function drawText(ctx, text, x, y, font) {
@@ -449,7 +449,7 @@ function renderAction(canvas, name, key) {
         },
         "FAV6": function() {
             drawText(ctx, "cult", 15, 15, "10px Verdana");
-        },
+        }
     };
 
     if (data[name]) {
@@ -578,7 +578,7 @@ function renderTreasury(board, treasury, faction) {
 function makeBoard(color, name, klass, style) {
     var board = new Element('div', {
         'class': klass,
-        'style': style,
+        'style': style
     });
     board.insert(new Element('div', {
         'style': 'padding: 1px 1px 1px 5px; background-color: ' + colors[color] + '; color: ' +
@@ -705,9 +705,10 @@ function drawFactions() {
         info.insert(income);
 
         if (faction.income) {
-            income.insert(new Element('tr').update(
-                ("<tr><td>Income:<td>total<td>#{C}c<td>#{W}w<td>#{P}p<td>#{PW}pw<td><a href='javascript:toggleIncome(\"" + income_id + "\")'>+</a></tr>").
-                    interpolate(faction.income)));
+	    var row = new Element('tr');
+	    row.update("<td>Income:<td>total<td>#{C}c<td>#{W}w<td>#{P}p<td>#{PW}pw".interpolate(faction.income));
+	    row.insert(new Element('td').update("<a href='javascript:toggleIncome(\"" + income_id + "\")'>+</a>"));
+            income.insert(row);
         }
 
         if (faction.income_breakdown) {
