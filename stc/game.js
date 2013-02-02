@@ -844,6 +844,10 @@ function drawActionRequired() {
             } else {
                 record.pretty = 'may take #{amount} favor tiles'.interpolate(record);
             }
+        } else if (record.type == 'dwelling') {
+            record.pretty = 'should place a dwelling';
+        } else if (record.type == 'bonus') {
+            record.pretty = 'should pick a bonus tile';
         } else if (record.type == 'gameover') {
             record.pretty = 'The game is over';
         } else {

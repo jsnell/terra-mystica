@@ -4,7 +4,9 @@ package terra_mystica;
 
 use strict;
 
-use vars qw(%factions %factions_by_color @factions);
+use vars qw(%factions %factions_by_color @factions @setup_order);
+
+our @setup_order = ();
 
 my %setups = (
     alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
@@ -498,6 +500,7 @@ sub setup {
     $faction->{P3} ||= 0;
 
     $faction->{VP} = 20;
+    $faction->{KEY} = 0;
 
     $faction->{MAX_P} = 7;
 
@@ -530,6 +533,18 @@ sub setup {
     }
 
     push @factions, $faction_name;
+
+    @setup_order = @factions;
+    push @setup_order, reverse @factions;
+    push @setup_order, 'nomads' if $factions{nomads};
+
+    if ($factions{chaosmagicians}) {
+        @setup_order = grep { $_ ne 'chaosmagicians' } @setup_order;
+        push @setup_order, 'chaosmagicians';
+    }
+    push @setup_order, reverse @factions;
+
+    @action_required = ({ type => 'dwelling', faction => $setup_order[0] });
 }
 
 sub factions_in_order_from {

@@ -18,8 +18,16 @@ sub handle_row;
 
 sub command_adjust_resources {
     my ($faction, $delta, $type) = @_;
+    my $faction_name = $faction->{name};
 
     adjust_resource $faction, $type, $delta;
+
+    if (!$round) {
+        if ($faction_name ne $setup_order[0]) {
+            die "Expected $setup_order[0] to pick bonus, not $faction_name\n"
+        }
+        shift @setup_order;
+    }
 
     # Small hack: always remove the notifier for a cultist special cult
     # increase. Needs to be done like this, since we don't want + / - to
@@ -41,6 +49,13 @@ sub command_build {
 
     die "'$where' already contains a $map{$where}{building}\n"
         if $map{$where}{building};
+
+    if (!$round) {
+        if ($faction_name ne $setup_order[0]) {
+            die "Expected $setup_order[0] to place building, not $faction_name\n"
+        }
+        shift @setup_order;
+    }
 
     if ($faction->{FREE_D}) {
         $free = 1;
@@ -600,7 +615,18 @@ sub maybe_advance_to_next_player {
     # needs to react.
     my ($warn, @extra_action_required) = detect_incomplete_state $faction_name;
 
-    if (!$action_taken or !$round) {
+    if (!$round) {
+        if (@setup_order) {
+            my $type = (@setup_order <= @factions ? 'bonus' : 'dwelling');
+            @action_required = ({ type => $type, faction => $setup_order[0] });
+            return $warn;
+        } else {
+            @action_required = ();
+            return $warn;
+        }
+    }
+
+    if (!$action_taken) {
         return $warn
     }
 
