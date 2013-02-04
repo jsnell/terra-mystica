@@ -784,7 +784,7 @@ function drawLedger() {
 
 function drawScoringTiles() {
     var container = $("scoring");
-    state.score_tiles.each(function(record) {
+    state.score_tiles.each(function(record, index) {
         var style = '';
         if (record.active) {
             style = 'background-color: #ffcccc';
@@ -792,10 +792,13 @@ function drawScoringTiles() {
             style = 'opacity: 0.5';
         }
         var tile = new Element('div', {'class': 'scoring', 'style': style});
+        tile.insert(new Element('div', {'style': 'float: right; border-style: solid; border-width: 1px; '}).update("r" + (index + 1)));
         tile.insert(new Element('div').update(
             "<div class='scoring-head'>vp:</div><div>#{vp_display}</div>".interpolate(record)));
-        tile.insert(new Element('div').update(
+	if (record.income_display) {
+            tile.insert(new Element('div').update(
             "<div class='scoring-head'>income:</div><div>#{income_display}</div>".interpolate(record)));
+	}
         container.insert(tile);
     });
 }
