@@ -1,14 +1,31 @@
-- Automatic conversion of resources -> money -> VPs in endgame
-- Display a terrain wheel
-- Test editor on IE8
-- Add optional player names
+Definitely:
+- User accounts:
+  - Login via OAuth using Google (and maybe Facebook?) account
+  - Allow marking factions as belonging to a specific account
+  - Allow marking accounts as admins of a specific game
+  - Show link to edit page for admins of each game
+  - Have a page that lists all games an account plays in / admins
+    - Probably also show the summary of what actions are waiting in the game
+- UI for creating games
+  - Only for logged in users
+  - Automatically set up the bonus tiles / scoring tiles (can still be edited)
+  - Figure out the namespace issues for PBF vs. private PBEM games
+- Fix the strange simultaneous favor tile / town sequencing 
+- Rationalize reference to resources (right now there are competing forms:
+  "1w", "1 w", "1 W". 
+- Color-code all references to cults
 
 Maybe:
-- Detect leeching opportunities:
-  - Require an explicit leech / don't leech
-  - reject invalid leech amounts
-- Track bridge counts
+- Always require an explicit leech / don't leech decision
+- Reject invalid leech amounts
+- Track unused bridge count
+- Timetravel: Make each comment in ledger a link -- target shows the
+  full state of the game at that moment. (For visualizing the flow of
+  the game afterwards).
+- Add more info to the building slideout. At least the production added
+  by next building of that sort. Maybe also the one-time gains from building
+  it.
 
 Out of scope:
-- Tracking of active player
-
+- General UI for entering moves
+- Email notifications
