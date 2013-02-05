@@ -463,7 +463,11 @@ sub command {
         if ($faction_name) {
             take_income_for_faction $faction_name;
         } else {
-            for (@factions) {
+	    my ($start_player) = grep { $_->{start_player} } values %factions;
+	    my @order = factions_in_order_from $start_player->{name};
+	    my $a = pop @order;
+	    unshift @order, $a;
+            for (@order) {
                 handle_row "$_: income";
             }
         }
