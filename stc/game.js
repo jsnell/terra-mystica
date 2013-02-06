@@ -774,7 +774,7 @@ function drawLedger() {
             row += "<td class='ledger-delta'>#{commands}</tr>".interpolate(record);
             ledger.insert(row);
             if (record.warning) {
-                ledger.insert("<tr><td colspan=7><td><span class='warning'>" + 
+                ledger.insert("<tr><td colspan=14><td><span class='warning'>" + 
                               record.warning.escapeHTML() +
                               "</span></tr>")
             }

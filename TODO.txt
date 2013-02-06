@@ -14,6 +14,7 @@ Definitely:
 - Rationalize reference to resources (right now there are competing forms:
   "1w", "1 w", "1 W". 
 - Color-code all references to cults
+- Fix potential css / js caching issues
 
 Maybe:
 - Always require an explicit leech / don't leech decision
