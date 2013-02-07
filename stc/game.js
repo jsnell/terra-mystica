@@ -199,7 +199,7 @@ function drawHex(ctx, elem) {
 
     if (hex.building == 'D') {
         drawDwelling(ctx, hex);
-    } else if (hex.building == 'TP') {
+    } else if (hex.building == 'TP' || hex.building == 'TH') {
         drawTradingPost(ctx, hex);
     } else if (hex.building == 'TE') {
         drawTemple(ctx, hex);
