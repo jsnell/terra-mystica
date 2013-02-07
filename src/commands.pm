@@ -13,6 +13,7 @@ use tiles;
 use towns;
 
 my $action_taken;
+my @warn = ();
 
 sub handle_row;
 
@@ -217,7 +218,7 @@ sub command_leech {
     if ($found_leech_record) {
         @action_required = grep { $_ ne '' } @action_required;
     } else {
-        # die "Invalid leech of $pw\n";
+	push @warn, "invalid leech amount $pw (accepting anyway)";
     }
 
     if ($actual_pw > 0) {
@@ -497,7 +498,7 @@ sub detect_incomplete_state {
     my $faction = $factions{$prefix};
 
     my @extra_action_required = ();
-    my $warn = '';
+    my $warn = (@warn ? $warn[0] : '');
 
     if ($faction->{SHOVEL}) {
         $warn = "Unused shovels for $prefix\n";
@@ -669,6 +670,7 @@ sub handle_row {
     }
 
     %leech = ();
+    @warn = ();
     $action_taken = 0;
 
     # Store the resource counts for computing a delta
