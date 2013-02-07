@@ -216,12 +216,12 @@ sub command_leech {
 
     if ($found_leech_record) {
         @action_required = grep { $_ ne '' } @action_required;
-
-        if ($actual_pw > 0) {
-            adjust_resource $faction, 'VP', -$vp;
-        }
     } else {
         # die "Invalid leech of $pw\n";
+    }
+
+    if ($actual_pw > 0) {
+	adjust_resource $faction, 'VP', -$vp;
     }
 }
 
