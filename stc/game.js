@@ -692,7 +692,11 @@ function drawFactions() {
         b.each(function(key) {
             record = faction.buildings[key];
             record.key = key;
-            count.push("#{level}/#{max_level}".interpolate(record));
+            var text = "#{level}/#{max_level}".interpolate(record);
+            if (record.level == record.max_level && record.max_level > 3) {
+                text = "<span style='color: red'>" + text + "</span>";
+            }
+            count.push(text);
             cost.push("#{advance_cost.C}c,&#160;#{advance_cost.W}w".interpolate(record));
         });
 
