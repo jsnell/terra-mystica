@@ -33,7 +33,7 @@ sub finalize {
         
         current_score_tile->{active} = 1;
     }
-    
+
     if (@score_tiles) {
         $tiles{$score_tiles[-1]}->{income_display} = '';
     }
@@ -46,6 +46,10 @@ sub finalize {
     for my $faction (@factions) {
         delete $factions{$faction}{locations};
         delete $factions{$faction}{teleport};
+        if ($round == 6) {
+            delete $factions{$faction}{income};
+            delete $factions{$faction}{income_breakdown};
+        }
     }
 
     for my $key (keys %cults) {
