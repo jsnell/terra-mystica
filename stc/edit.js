@@ -1,4 +1,4 @@
-var fallback = false;
+var fallback = true;
 var id = document.location.pathname;
 var editor = null;
 
@@ -59,7 +59,9 @@ function setEditorContent(data) {
         editor.setValue(data);
         editor.clearSelection();
     } else {
+        $("fallback-editor").focus();
         $("fallback-editor").value = data;
+        $("fallback-editor").scrollTop = 9999;
     }
 }
 
