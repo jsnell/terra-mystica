@@ -439,7 +439,7 @@ my %setups = (
                                            PW => [ 0, 1, 2, 4, 6] } },
                        TE => { advance_cost => { W => 2, C => 5 },
                                income => { P => [ 0, 1, 2, 3 ] } },
-                       SH => { advance_cost => { W => 4, C => 6 },
+                       SH => { advance_cost => { W => 4, C => 8 },
                                advance_gain => [ { SHOVEL => 3 } ],
                                income => { PW => [ 0, 2 ] } },
                        SA => { advance_cost => { W => 4, C => 6 },
