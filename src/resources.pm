@@ -273,10 +273,12 @@ sub note_leech {
         my $color = $faction->{color}; 
         next if !$this_leech{$color};
         my $amount = $this_leech{$color};
+        my $actual = min $this_leech{$color}, $faction->{P1} * 2 + $faction->{P2};
 
         push @action_required, { type => 'leech',
                                  from_faction => $from_faction->{name},
-                                 amount => $amount, 
+                                 amount => $amount,
+                                 actual => $actual,
                                  faction => $faction->{name} };
     }
 

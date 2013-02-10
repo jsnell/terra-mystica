@@ -852,6 +852,9 @@ function drawActionRequired() {
         } else if (record.type == 'leech') {
             record.from_faction_span = coloredFactionSpan(record.from_faction);
             record.pretty = 'may gain #{amount} power from #{from_faction_span}'.interpolate(record);
+            if (record.actual != record.amount) {
+                record.pretty += " (actually #{actual} power)".interpolate(record);
+            }
         } else if (record.type == 'transform') {
             if (record.amount == 1) {
                 record.pretty = 'may use a shovel'.interpolate(record);
