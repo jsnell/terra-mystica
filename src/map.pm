@@ -156,7 +156,7 @@ sub check_reachable {
                 my $cost = $t->{cost}[$level];
                 my $gain = $t->{gain}[$level];
                 pay($faction, $cost);
-                gain($faction, $gain);
+                gain($faction, $gain, 'faction');
                 return;
             }
         }

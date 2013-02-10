@@ -76,11 +76,11 @@ sub pay {
 }
 
 sub gain {
-    my ($faction, $cost) = @_;
+    my ($faction, $cost, $source) = @_;
 
     for my $currency (keys %{$cost}) {
         my $amount = $cost->{$currency};
-        adjust_resource $faction, $currency, $amount;
+        adjust_resource $faction, $currency, $amount, $source;
     }
 }
 
@@ -94,7 +94,7 @@ sub maybe_gain_faction_special {
         }
     }
 
-    gain $faction, $faction->{special}{$type};
+    gain $faction, $faction->{special}{$type}, 'faction';
 }
 
 sub gain_power {
@@ -153,7 +153,7 @@ sub advance_track {
     
     if ($track->{advance_gain}) {
         my $gain = $track->{advance_gain}[$track->{level}];
-        gain $faction, $gain;
+        gain $faction, $gain, "advance_$track_name";
     }
 
     if (++$track->{level} > $track->{max_level}) {
@@ -162,16 +162,20 @@ sub advance_track {
 }
 
 sub adjust_resource {
-    my ($faction, $type, $delta) = @_;
+    my ($faction, $type, $delta, $source) = @_;
 
     $type = alias_resource $type;
+
+    if ($type eq 'VP') {
+        $faction->{vp_source}{$source || 'unknown'} += $delta;
+    }
 
     if ($type =~ 'GAIN_(TELEPORT|SHIP)') {
         my $track_name = lc $1;
         for (1..$delta) {
             my $track = $faction->{$track_name};
             my $gain = $track->{advance_gain}[$track->{level}];
-            gain $faction, $gain;
+            gain $faction, $gain, "advance_$track_name";
             $track->{level}++
         }
         $type = '';
@@ -213,7 +217,7 @@ sub adjust_resource {
                 $faction->{GAIN_FAVOR}--;
             }
 
-            gain $faction, $tiles{$type}{gain};
+            gain $faction, $tiles{$type}{gain}, $type;
 
             # Hack
             if ($type eq 'FAV5') {
@@ -229,7 +233,7 @@ sub adjust_resource {
             } else {
                 $faction->{GAIN_TW}--;
             }
-            gain $faction, $tiles{$type}{gain};
+            gain $faction, $tiles{$type}{gain}, 'TW';
         }
 
         if (grep { $_ eq $type } @cults) {

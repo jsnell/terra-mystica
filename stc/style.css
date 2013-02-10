@@ -141,6 +141,9 @@ table.building-table tr td:nth-child(odd) {
     background-color: #dcdcdc;
 }
 
+table.vp-breakdown {
+};
+
 table#ledger {
     border-spacing: 0px;
 }

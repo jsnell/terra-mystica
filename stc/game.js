@@ -651,6 +651,10 @@ function toggleBuildings(id) {
     });
 }
 
+function toggleVP(id) {
+    $(id).style.display = ($(id).style.display == 'none' ? '' : 'none');
+}
+
 function drawFactions() {
     state.order.each(function(name) {
         name = name;
@@ -674,8 +678,21 @@ function drawFactions() {
         var info = new Element('div', {'class': 'faction-info' });
         board.insert(info);
 
+        if (faction.vp_source) {
+            var vp_id = faction.name + "/vp";
+            var vp_breakdown = new Element('table', {'id': vp_id,
+                                                     'style': 'display: none',
+                                                     'class': 'vp-breakdown'});
+            board.insert(vp_breakdown);
+            vp_breakdown.insert("<tr><td colspan=2><b>VP breakdown</b></td></tr>")
+            $H(faction.vp_source).sortBy(function(a) { return -a.value}).each(function(record) {
+                vp_breakdown.insert("<tr><td>#{key}<td>#{value}</tr>".interpolate(record));
+            });
+        }
+
+        faction.vp_id = vp_id;
         info.insert(new Element('div').update(
-            "#{C} c, #{W} w, #{P}<span style='color:#888'>/#{MAX_P}</span> p, #{VP} vp, #{P1}/#{P2}/#{P3} pw".interpolate(faction)));
+            "#{C} c, #{W} w, #{P}<span style='color:#888'>/#{MAX_P}</span> p, <a href='javascript:toggleVP(\"#{name}/vp\")'>#{VP} vp</a>, #{P1}/#{P2}/#{P3} pw".interpolate(faction)));
         info.insert(new Element('div').update(
             "dig level #{dig.level}, ship level #{ship.level}".interpolate(faction)));
 

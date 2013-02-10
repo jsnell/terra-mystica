@@ -18,10 +18,10 @@ my @warn = ();
 sub handle_row;
 
 sub command_adjust_resources {
-    my ($faction, $delta, $type) = @_;
+    my ($faction, $delta, $type, $source) = @_;
     my $faction_name = $faction->{name};
 
-    adjust_resource $faction, $type, $delta;
+    adjust_resource $faction, $type, $delta, $source;
 
     if (!$round) {
         if ($faction_name ne $setup_order[0]) {
@@ -187,8 +187,8 @@ sub command_convert {
     die "Conversion to $to_count $to_type requires $wanted_from_count $from_type, not $from_count\n"
         if  $wanted_from_count != $from_count;
 
-    adjust_resource $faction, $from_type, -$from_count;
-    adjust_resource $faction, $to_type, $to_count;
+    adjust_resource $faction, $from_type, -$from_count, "convert";
+    adjust_resource $faction, $to_type, $to_count, "convert";
 }
 
 sub command_leech {
@@ -222,7 +222,7 @@ sub command_leech {
     }
 
     if ($actual_pw > 0) {
-	adjust_resource $faction, 'VP', -$vp;
+	adjust_resource $faction, 'VP', -$vp, 'leech';
     }
 }
 
@@ -283,7 +283,7 @@ sub command_pass {
                 $map{$bridge->{from}}{color} eq $color and
                 $map{$bridge->{to}}{building} and
                 $map{$bridge->{to}}{color} eq $color) {
-                adjust_resource $faction, 'VP', 3;
+                adjust_resource $faction, 'VP', 3, 'SH';
             }
         }            
     }
@@ -309,7 +309,7 @@ sub command_pass {
         if ($pass_vp) {
             for my $type (keys %{$pass_vp}) {
                 my $x = $pass_vp->{$type}[$faction->{buildings}{$type}{level}];
-                adjust_resource $faction, 'VP', $x;
+                adjust_resource $faction, 'VP', $x, $_;
             }
         }                
     }
@@ -404,11 +404,11 @@ sub command {
         $faction;
     };
 
-    if ($command =~ /^([+-])(\d*)(\w+)$/) {
+    if ($command =~ /^([+-])(\d*)(\w+)(?: for (\w+))?$/) {
         my ($sign, $count) = (($1 eq '+' ? 1 : -1),
                               ($2 eq '' ? 1 : $2));
         my $delta = $sign * $count;
-        command_adjust_resources $assert_faction->(), $delta, uc $3;
+        command_adjust_resources $assert_faction->(), $delta, uc $3, $4;
     }  elsif ($command =~ /^build (\w+)$/) {
         command_build $assert_faction->(), uc $1;
     } elsif ($command =~ /^upgrade (\w+) to ([\w ]+)$/) {
@@ -445,7 +445,7 @@ sub command {
 
         adjust_resource $faction, 'SHOVEL', $1;
         pay $faction, $cost for 1..$1;
-        gain $faction, $gain for 1..$1;
+        gain $faction, $gain, 'faction' for 1..$1;
     } elsif ($command =~ /^bridge (\w+):(\w+)$/) {
         command_bridge $assert_faction->(), uc $1, uc $2;
     } elsif ($command =~ /^connect (\w+):(\w+)$/) {

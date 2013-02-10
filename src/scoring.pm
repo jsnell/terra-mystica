@@ -25,7 +25,7 @@ sub maybe_score_current_score_tile {
     if ($scoring) {
         my $gain = $scoring->{vp}{$type};
         if ($gain) {
-            adjust_resource $faction, 'VP', $gain;
+            adjust_resource $faction, 'VP', $gain, $scoring->{vp_display};
         }
     }
 }
@@ -40,7 +40,7 @@ sub maybe_score_favor_tile {
             if ($scoring) {
                 my $gain = $scoring->{$type};
                 if ($gain) {
-                    adjust_resource $faction, 'VP', $gain;
+                    adjust_resource $faction, 'VP', $gain, $tile;
                 }
             }
         }
@@ -62,7 +62,7 @@ sub score_type_rankings {
         next if !$level or !defined $scores{$level};
         my $vp = $scores{$level} / $count{$level};
         if ($vp) {
-            handle_row("$faction_name: +${vp}vp");
+            handle_row("$faction_name: +${vp}vp for $type");
         }
     }
 }

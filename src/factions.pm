@@ -499,7 +499,7 @@ sub setup {
     $faction->{P2} ||= 0;
     $faction->{P3} ||= 0;
 
-    $faction->{VP} = 20;
+    $faction->{VP} = $faction->{vp_source}{initial} = 20;
     $faction->{KEY} = 0;
 
     $faction->{MAX_P} = 7;
