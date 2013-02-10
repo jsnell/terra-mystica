@@ -758,11 +758,13 @@ function drawFactions() {
 
 function drawLedger() {
     var ledger = $("ledger");
-    state.ledger.each(function(record) {
+    state.ledger.each(function(record, index) {
         if (record.comment) {
-            ledger.insert("<tr><td><td colspan=9><b>" + 
+            ledger.insert("<tr><td><td colspan=13><b>" + 
                           record.comment.escapeHTML() +
-                          "</b></tr>")
+                          "</b>" + 
+                          "<td><a href='" + showHistory(index + 1) +
+                          "'>show history</a></tr>");
         } else {
             record.bg = colors[state.factions[record.faction].color];
             record.fg = (record.bg == '#000000' ? '#ccc' : '#000');
@@ -801,6 +803,12 @@ function drawLedger() {
             }
         }
     });
+}
+
+function showHistory(row) {
+    var loc = document.location.href;
+    loc = loc.replace(/;.*/, '');
+    return loc + ";max-row=" + row;
 }
 
 function drawScoringTiles() {

@@ -17,7 +17,8 @@ sub print_json {
     print $out;
 }
 
-my $res = evaluate_game <>;
+my @rows = <>;
+my $res = evaluate_game { rows => @rows };
 print_json $res;
 
 if (scalar @{$res->{error}}) {

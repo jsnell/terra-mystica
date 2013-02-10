@@ -63,10 +63,12 @@ sub finalize {
 }
 
 sub evaluate_game {
+    my $data = shift;
     my $row = 1;
     my @error = ();
+    my $history_view = 0;
 
-    for (@_) {
+    for (@{$data->{rows}}) {
         eval { handle_row $_ };
         if ($@) {
             chomp;
@@ -75,6 +77,15 @@ sub evaluate_game {
             last;
         }
         $row++;
+
+        if (defined $data->{max_row}) {
+            my $max = $data->{max_row};
+            if (@ledger >= $max) {
+                push @error, "Showing historical game state (up to row $max)";
+                $history_view = @ledger;
+                last;
+            }
+        }
     }
 
     finalize;
@@ -92,6 +103,7 @@ sub evaluate_game {
         bonus_tiles => { map({$_, $tiles{$_}} grep { /^BON/ } keys %tiles ) },
         favors => { map({$_, $tiles{$_}} grep { /^FAV/ } keys %tiles ) },
         action_required => \@action_required,
+        history_view => $history_view,
         cults => \%cults,
     }
 

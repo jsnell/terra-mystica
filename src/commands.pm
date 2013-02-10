@@ -14,6 +14,8 @@ use towns;
 
 my $action_taken;
 my @warn = ();
+my $turn = 0;
+my $min_active_order = 0;
 
 sub handle_row;
 
@@ -349,6 +351,8 @@ sub command_action {
 
 sub command_start {
     $round++;
+    $turn = 0;
+    $min_active_order = 0;
 
     for my $faction_name (@factions) {
         my $faction = $factions{$faction_name};
@@ -367,9 +371,15 @@ sub command_start {
 
     push @ledger, { comment => "Start round $round" };
 
-    my ($start_player) = grep { $_->{start_player} } values %factions;
+    my @order = factions_in_turn_order;
+    my $i = 0;
+    for (@order) {
+        $factions{$_}{order} = $i++;
+    }
+
+    my $start_player = $order[0];
     push @action_required, { type => 'full',
-                             faction => $start_player->{name} };
+                             faction => $start_player };
 }
 
 sub command_connect {
@@ -464,10 +474,12 @@ sub command {
         if ($faction_name) {
             take_income_for_faction $faction_name;
         } else {
-	    my ($start_player) = grep { $_->{start_player} } values %factions;
-	    my @order = factions_in_order_from $start_player->{name};
-	    my $a = pop @order;
-	    unshift @order, $a;
+            my @order = factions_in_turn_order;
+            if (!exists $ledger[-1]->{comment}) {
+                push @ledger, {
+                    comment => sprintf "Round %d income", $round + 1
+                };
+            }
             for (@order) {
                 handle_row "$_: income";
             }
@@ -613,6 +625,23 @@ sub pretty_resource_delta {
     %pretty_delta;
 }
 
+sub maybe_advance_turn {
+    my ($faction_name, $next) = @_;
+
+    if ($factions{$faction_name}{order} > $min_active_order) {
+        return;
+    }
+
+    $min_active_order = min map { $_->{order}
+    } grep { (!$_->{passed}) or ($_->{name} eq $faction_name)
+    } values %factions;
+
+    $turn++;
+
+    return if exists $ledger[-1]->{comment};
+    push @ledger, { comment => "Round $round, turn $turn" };
+}
+
 sub maybe_advance_to_next_player {
     my $faction_name = shift;
 
@@ -654,6 +683,7 @@ sub maybe_advance_to_next_player {
     if (defined $next) {
         push @action_required, { type => 'full',
                                  faction => $next };
+        maybe_advance_turn $faction_name;
     }
 
     return $warn;
@@ -694,12 +724,12 @@ sub handle_row {
     my %pretty_delta = pretty_resource_delta \%old_data, \%new_data;
 
     my $warn = maybe_advance_to_next_player $faction_name;
-
-    push @ledger, { faction => $faction_name,
-                    warning => $warn,
-                    leech => { %leech },
-                    commands => (join ". ", @commands),
-                    map { $_, $pretty_delta{$_} } @fields};
+    my $info = { faction => $faction_name,
+                 leech => { %leech },
+                 warning => $warn,
+                 commands => (join ". ", @commands),
+                 map { $_, $pretty_delta{$_} } @fields};
+    push @ledger, $info;
 }
 
 1;

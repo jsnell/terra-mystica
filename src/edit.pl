@@ -27,7 +27,7 @@ if (!-f $file) {
 
 my $data = read_file($file);
 
-my $res = terra_mystica::evaluate_game split /\n/, $data;
+my $res = terra_mystica::evaluate_game { rows => [ split /\n/, $data ] };
 
 my $out = encode_json {
     data => $data,

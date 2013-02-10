@@ -559,4 +559,13 @@ sub factions_in_order_from {
     @f;
 }
 
+sub factions_in_turn_order {
+    my ($start_player) = grep { $_->{start_player} } values %factions;
+    my @order = factions_in_order_from $start_player->{name};
+    my $a = pop @order;
+    unshift @order, $a;
+
+    return @order;
+}
+
 1;

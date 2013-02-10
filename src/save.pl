@@ -47,7 +47,7 @@ sub save {
     system "git commit -m 'change $id' $id > /dev/null";
 }
 
-my $res = terra_mystica::evaluate_game split /\n/, $new_content;
+my $res = terra_mystica::evaluate_game { rows => [ split /\n/, $new_content ] };
 
 if (!@{$res->{error}}) {
     eval {
