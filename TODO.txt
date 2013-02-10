@@ -15,6 +15,10 @@ Definitely:
   "1w", "1 w", "1 W". 
 - Color-code all references to cults
 - Fix potential css / js caching issues
+- Make naming match official rulebook terms
+  - Shovel -> spade
+  - Trading post -> Trading house
+  - Others?
 
 Maybe:
 - Always require an explicit leech / don't leech decision

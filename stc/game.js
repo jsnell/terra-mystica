@@ -908,5 +908,9 @@ function draw() {
     drawActionRequired();
     drawFactions();
     drawLedger();
+
+    if (state.history_view > 0) {
+        $("root").style.backgroundColor = "#ffeedd";
+    }
 }
 
