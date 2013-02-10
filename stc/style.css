@@ -1,3 +1,7 @@
+p {
+    max-width: 50ex;
+}
+
 div.faction-board {
     font: 14px Verdana;
     background-color: #eee;

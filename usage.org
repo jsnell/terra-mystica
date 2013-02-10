@@ -1,6 +1,7 @@
 #+TITLE: Usage
 #+AUTHOR: Juho Snellman
 #+EMAIL: jsnell@iki.fi
+#+STYLE: <link rel="stylesheet" type="text/css" href="stc/org.css" />
 
 * Setting up a game
 
@@ -225,6 +226,64 @@ separate commands.
 The tracker doesn't yet check these commands for validity -- e.g. it
 doesn't check that one town has these special connections over only
 one river hex.
+
+
+
+
+
+** Darklings
+
+To use the power of the Darkling Stronghold, use a command like
+=convert 3w to 3p=. Note that this special exchange rate is only valid
+until the end of the line on which the Stronghold was built.
+
+** Nomads
+
+The sandstorm ability of the Nomad Stronghold has some limits that
+aren't yet automatically checked. Specifically, it needs direct land
+adjacency. No ships, no bridges. The human moderator and other players
+should check that this constraint isn't broken.
+
+** Dwarves / Fakirs
+
+The system will automatically detect if the Dwarves / Fakirs may use
+their special tunneling or carpet flight, and handles the resource costs
+and VP gains without any additional input.
+
+Note that a strict reading of the rules doesn't allow for using
+these abilities when spending spades from a scoring tile, nor using
+the power twice (for separate hexes) when gaining two spades from
+ACT6. These constraints are not automatically checked.
+
+** Chaos Magicians
+
+When using the Chaos Magician Stronghold, please put all 3 actions
+(taking the action, and the two extra actions that follow) on the same
+line. The system doesn't actually track this ability, and gets
+confused about turn order if the commands are split on multiple lines.
+
+* Known issues and workarounds
+
+** FAV5 tile
+
+Problem: The tracker doesn't correctly account for a situation where:
+taking FAV5 triggers a formation of the town, the player has a fire
+cult level of 8 or 9 before taking the favor tile, and doesn't have
+sufficient keys to advance to the 10 spot. The end result is supposed
+to be that the player may advance to the 10 spot immediately.
+
+Solution: Just add a single =+FIRE= command after taking the town tile.
+
+** TW5 tile
+
+Problem: When taking the TW5 tile, a player who is on the 9 spot on
+multiple tracks can't choose which cult track to advance to 10 on. Instead
+the game will advance him to 10 on an arbitrary track.
+
+Solution: Before taking the town tile, move the player down a step on
+the cult tracks he doesn't want to advance to 10 on (for example
+=-WATER=). Note that you should do this adjustment first, doing it
+after taking the town tile will unjustly award 3 power to the player.
 
 
 

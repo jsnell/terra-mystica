@@ -1,0 +1,12 @@
+div#content {
+    margin-left: 5ex;
+}
+
+p {
+    max-width: 65ex;
+}
+
+pre {
+    font-family: monospace;
+    max-width: 80ex;
+}
