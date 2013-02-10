@@ -125,11 +125,20 @@ Example: =upgrade F5 to TP=
 Replace the dwelling in F5 with a trading post (TE for temples, SH for
 strongholds, SA for sanctuaries).
 
-** =send P to= /cult/
+** =send P to= /cult/ =for= /amount/
 
 Example: =Send P to Fire=
 
 Send a priest to the first free spot on the fire cult track.
+
+By default the best available slot on the track is used. The optional
+"for X" part of the command can be used to use a different slot, or
+no slot at all.
+
+Example: =Send P to Water for 1=
+
+Send a priest to the water cult, taking just one level of advancement
+(even if 2 or 3 slots are still remaining).
 
 ** =transform= /location/ =to= /color/
 
@@ -183,7 +192,8 @@ shovel track.
 
 Take all income (buildings, favors, bonus tiles, last turn's special
 scoring tile) for either all players (if no faction specified), or a
-specific faction. Note -- should be done just before starting a new round.
+specific faction
+. Note -- should be done just before starting a new round.
 
 ** =start=
 

@@ -131,7 +131,7 @@ sub command_upgrade {
 }
 
 sub command_send {
-    my ($faction, $cult) = @_;
+    my ($faction, $cult, $amount) = @_;
 
     die "Unknown cult track $cult\n" if !grep { $_ eq $cult } @cults;
 
@@ -139,6 +139,10 @@ sub command_send {
     for (1..4) {
         my $where = "$cult$_";
         if (!$cults{$where}{building}) {
+            if ($amount) {
+                next if $cults{$where}{gain}{$cult} != $amount;
+            }
+
             $gain = $cults{$where}{gain};
             delete $cults{$where}{gain};
             $cults{$where}{building} = 'P';
@@ -146,6 +150,10 @@ sub command_send {
             $faction->{MAX_P}--;
             last;
         }
+    }
+
+    if ($amount) {
+        die "No $amount spot on $cult track\n" if $gain->{$cult} != $amount;
     }
 
     gain $faction, $gain;
@@ -424,8 +432,8 @@ sub command {
     } elsif ($command =~ /^upgrade (\w+) to ([\w ]+)$/) {
         die "Can't upgrade in setup phase\n" if !$round;
         command_upgrade $assert_faction->(), uc $1, alias_building uc $2;
-    } elsif ($command =~ /^send (p|priest) to (\w+)$/) {
-        command_send $assert_faction->(), uc $2;
+    } elsif ($command =~ /^send (p|priest) to (\w+)(?: for (\d+))?$/) {
+        command_send $assert_faction->(), uc $2, $3;
     } elsif ($command =~ /^convert (\d+)?\s*(\w+) to (\d+)?\s*(\w+)$/) {
         my $from_count = $1 || 1;
         my $from_type = alias_resource uc $2;
