@@ -78,6 +78,7 @@ sub pay {
 sub gain {
     my ($faction, $cost, $source) = @_;
 
+    my @c = sort { $b eq 'KEY' } keys %{$cost};
     for my $currency (keys %{$cost}) {
         my $amount = $cost->{$currency};
         adjust_resource $faction, $currency, $amount, $source;
