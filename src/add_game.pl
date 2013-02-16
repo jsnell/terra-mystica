@@ -25,22 +25,22 @@ if (-f $read) {
     die "Game $id already exists\n";
 }
 
-open WRITE, ">", "$write";
+open my $writefd, ">", "$write";
 
-print WRITE "# Game $id\n\n";
+print $writefd "# Game $id\n\n";
 
 my @bon = shuffle map { "Bon$_" } 1..9;
 my @score = shuffle map { "Score$_" } 1..8;
 
 for (0..4) {
-    print WRITE "delete $bon[$_]\n";
+    print $writefd "delete $bon[$_]\n";
 }
 
-print "\n";
-print WRITE "score ", join  ",", @score[0..5];
-print "\n";
+print $writefd "\n";
+print $writefd "score ", join  ",", @score[0..5];
+print $writefd "\n";
 
-close WRITE;
+close $writefd;
 
 system("ln -s ../$write $read");
 system("git add $read $write");
