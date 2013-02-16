@@ -477,7 +477,13 @@ sub command {
     } elsif ($command =~ /^setup (\w+)(?: for (\S+))?$/) {
         setup $1, $2;
     } elsif ($command =~ /delete (\w+)$/) {
-        delete $pool{uc $1};
+        my $name = uc $1;
+        push @ledger, { comment => "Removing tile $name" };
+        if ($pool{$name} <= 1) {
+            delete $pool{$name};
+        } else {
+            $pool{$name}--;
+        }
     } elsif ($command =~ /^income$/) {
         if ($faction_name) {
             take_income_for_faction $faction_name;
@@ -498,6 +504,11 @@ sub command {
         my $setup = uc $1;
         @score_tiles = split /,/, $setup;
         die "Invalid scoring tile setup: $setup\n" if @score_tiles != 6;
+        for my $i (0..$#score_tiles) {
+            my $r = $i + 1;
+            my $desc = $tiles{$score_tiles[$i]}{vp_display};
+            push @ledger, { comment => "Round $r scoring: $score_tiles[$i], $desc" };
+        }
     } elsif ($command =~ /^finish$/) {
         score_final_cults;
         score_final_networks;
