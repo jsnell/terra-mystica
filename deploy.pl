@@ -3,7 +3,7 @@
 use File::Copy;
 use File::Slurp qw(slurp);
 use File::Temp qw(tempfile);
-use Fatal qw(open chmod rename);
+use Fatal qw(open chmod rename symlink);
 
 my $target = shift;
 
@@ -12,10 +12,18 @@ die "Usage: $0 target\n" if !$target or @ARGV;
 die "Directory $target does not exist" if !-d $target;
 
 my $tag = qx(git rev-parse HEAD);
+my $devel = ($target eq 'www-devel');
 
 sub copy_with_mode {
     my ($mode, $from, $to) = @_;
     die if -d $to;
+
+    if ($devel) {
+        if (!-l $to) {
+            symlink "$ENV{PWD}/$from", $to;
+        }
+        return 
+    }
 
     copy $from, "$to.tmp" or die "Error copying $from to $to: $!";
     chmod $mode, "$to.tmp";
@@ -23,6 +31,7 @@ sub copy_with_mode {
 }
 
 sub deploy_docs {
+    return if $devel;
     system "emacs --batch --file=usage.org --funcall org-export-as-html-batch";
     rename "usage.html", "$target/usage.html"
 }
@@ -68,6 +77,14 @@ sub deploy_html {
     for my $f (qw(game.html
                   edit.html
                   index.html)) {
+        my $to = "$target/$f";
+        if ($devel) {
+            if (!-l $to) {
+                symlink "$ENV{PWD}/$f", $to;
+            }
+            next;
+        }
+
         my $data = slurp "$f";
         $data =~ s{=(['"])(/stc/.*)\1}{=$1$2?tag=$tag$1}g;
         
@@ -76,9 +93,9 @@ sub deploy_html {
         print $fh $data;
         close $fh;
         chmod 0444, $filename;
-        rename $filename, "$target/$f";
+        rename $filename, $to;
 
-        copy "$f", "$target/$f"
+        copy "$f", $to
     }
 }
 
