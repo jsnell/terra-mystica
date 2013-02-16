@@ -24,7 +24,7 @@ sub copy_with_mode {
 
 sub deploy_docs {
     system "emacs --batch --file=usage.org --funcall org-export-as-html-batch";
-    copy "usage.html", "$target/"
+    rename "usage.html", "$target/usage.html"
 }
 
 sub deploy_cgi {
