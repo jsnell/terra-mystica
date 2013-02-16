@@ -12,8 +12,6 @@ use JSON;
 
 chdir dirname $0;
 
-BEGIN { push @INC, "../../git/src"; }
-
 use tracker;
 
 my $q = CGI->new;

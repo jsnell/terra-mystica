@@ -9,8 +9,6 @@ use JSON;
 
 chdir dirname $0;
 
-BEGIN { push @INC, "../../git/src"; }
-
 use tracker;
 
 print "Content-type: text/javascript\r\n";

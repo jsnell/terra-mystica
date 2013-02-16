@@ -6,8 +6,6 @@ use strict;
 use JSON;
 use File::Basename qw(dirname);
 
-BEGIN { push @INC, dirname $0; }
-
 use tracker;
 
 sub print_status {

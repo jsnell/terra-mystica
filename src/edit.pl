@@ -7,8 +7,6 @@ use File::Basename qw(dirname);
 use File::Slurp;
 use JSON;
 
-BEGIN { push @INC, "../../git/src"; }
-
 use tracker;
 
 chdir dirname $0;
