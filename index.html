@@ -1,19 +1,34 @@
 <html>
   <head>
     <title>Terra Mystica</title>
-    <meta http-equiv="cache-control" content="no-cache">
     <script type="text/javascript" language="javascript"
-            src="/stc/prototype-1.7.1.js">
+            src="/stc/prototype-1.6.0.3.js">
     </script>
     <link rel="stylesheet" type="text/css" href="/stc/style.css">
   </head>
-  <body>
-    <div id="games"></div>
+  <body style="padding: 5ex">
+    <p>
+    This is an unofficial automated moderator tool
+    for <a href="http://www.terra-mystica-spiel.de/en/index.php">Terra
+    Mystica</a>, a game by Helge Ostertag and Jens Dr&ouml;gem&uuml;ller
+    published by Feuerland Spiele.
+    </p>
+
+    <p>
+    See the <a href="http://terra.snellman.net/usage.html">instructions</a>
+    for more information on using the moderator. For information on rules,
+    please refer to the original manual.
+    </p>
+
+    <h4>Games</h4>
+    <div id="games">The list of games is currently loading</div>
+
     <script language="javascript">
       var state = null;
       var id = document.location.pathname;
 
       function listGames() {
+         $(games).innerHTML = "";
          state.each(function(elem) {
             $(games).insert("<div><a href='/game/#{id}'>Game #{id}</a></div>"
                .interpolate(elem));
