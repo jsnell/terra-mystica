@@ -1,3 +1,7 @@
+html {
+    font-family: Georgia, Serif
+}
+
 div#content {
     margin-left: 5ex;
 }
