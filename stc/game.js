@@ -467,6 +467,14 @@ function renderAction(canvas, name, key) {
     ctx.restore();
 }
 
+function cultStyle(name) {
+    if (cult_bgcolor[name]) {
+        return "style='background-color:" + cult_bgcolor[name] + "'";
+    }
+
+    return "";
+}
+
 function insertAction(parent, name, key) {
     parent.insert(new Element('canvas', {
         'class': 'action', 'width': 40, 'height': 80}));
@@ -489,7 +497,8 @@ function renderTile(div, name, record, faction, count) {
     }
 
     $H(record.gain).each(function (elem, index) {
-        div.insert("<div>#{value} #{key}</div>".interpolate(elem));
+        elem.style = cultStyle(elem.key);
+        div.insert("<div><span #{style}>#{value} #{key}</span></div>".interpolate(elem));
     });
     $H(record.vp).each(function (elem, index) {
         div.insert("<div>#{key} &gt;&gt; #{value} vp</div>".interpolate(elem));
@@ -541,9 +550,10 @@ function renderTown(div, name, faction, count) {
     $H(state.towns[name].gain).each(function(elem, index) {
         var key = elem.key;
         var value = elem.value;
+        elem.style = cultStyle(key);
 
         if (key != "VP" && key != "KEY") {
-            div.insert("<div>#{value} #{key}</div>".interpolate(elem));
+            div.insert("<div><span #{style}>#{value} #{key}</span></div>".interpolate(elem));
         }
     });
 }
@@ -822,7 +832,7 @@ function drawScoringTiles() {
     state.score_tiles.each(function(record, index) {
         var style = '';
         if (record.active) {
-            style = 'background-color: #ffcccc';
+            style = 'background-color: #d0ffd0';
         } else if (record.old) {
             style = 'opacity: 0.5';
         }
@@ -831,8 +841,9 @@ function drawScoringTiles() {
         tile.insert(new Element('div').update(
             "<div class='scoring-head'>vp:</div><div>#{vp_display}</div>".interpolate(record)));
 	if (record.income_display) {
+            record.style = cultStyle(record.cult);
             tile.insert(new Element('div').update(
-            "<div class='scoring-head'>income:</div><div>#{income_display}</div>".interpolate(record)));
+                "<div class='scoring-head'>income:</div><div><span #{style}>#{income_display}</span></div>".interpolate(record)));
 	}
         container.insert(tile);
     });
