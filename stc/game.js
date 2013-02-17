@@ -558,8 +558,22 @@ function renderTown(div, name, faction, count) {
     });
 }
 
+function naturalSortKey(val) {
+    if (val.key == "FAV10") {
+        return "FAVA";
+    }
+    if (val.key == "FAV11") {
+        return "FAVB";
+    }
+    if (val.key == "FAV12") {
+        return "FAVC";
+    }
+
+    return val.key;
+}
+
 function renderTreasury(board, treasury, faction) {
-    $H(treasury).sortBy(function(elem) { return elem.key}).each(function(elem, index) {
+    $H(treasury).sortBy(naturalSortKey).each(function(elem, index) {
         var name = elem.key;
         var value = elem.value;
 
