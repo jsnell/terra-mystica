@@ -27,7 +27,7 @@ my %setups = (
                                           { VP => 6 } ]
                     },
                     special => {
-                        SHOVEL => { PW => 2 },
+                        SPADE => { PW => 2 },
                         enable_if => { SH => 1 },
                     },
                     exchange_rates => {
@@ -415,7 +415,7 @@ my %setups = (
                    EARTH => 1, AIR => 1, color => 'brown',
                    display => "Halflings",
                    special => {
-                       SHOVEL => { VP => 1 }
+                       SPADE => { VP => 1 }
                    },
                    ship => { 
                        level => 0, max_level => 3,
@@ -440,7 +440,7 @@ my %setups = (
                        TE => { advance_cost => { W => 2, C => 5 },
                                income => { P => [ 0, 1, 2, 3 ] } },
                        SH => { advance_cost => { W => 4, C => 8 },
-                               advance_gain => [ { SHOVEL => 3 } ],
+                               advance_gain => [ { SPADE => 3 } ],
                                income => { PW => [ 0, 2 ] } },
                        SA => { advance_cost => { W => 4, C => 6 },
                                income => { P => [ 0, 1 ] } },
@@ -526,7 +526,7 @@ sub setup {
         $building->{level} = 0;
     }
 
-    $faction->{SHOVEL} = 0;
+    $faction->{SPADE} = 0;
     $faction->{TOWN_SIZE} = 7;
     if ($player) {
         $faction->{display} .= " ($player)";

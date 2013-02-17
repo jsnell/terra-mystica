@@ -255,7 +255,7 @@ sub command_transform {
     if ($faction->{FREE_TF}) {
         adjust_resource $faction, 'FREE_TF', -1;
     } else {
-        adjust_resource $faction, 'SHOVEL', -$color_difference;
+        adjust_resource $faction, 'SPADE', -$color_difference;
     }
 
     $map{$where}{color} = $color;
@@ -461,7 +461,7 @@ sub command {
         my $cost = $faction->{dig}{cost}[$faction->{dig}{level}];
         my $gain = $faction->{dig}{gain}[$faction->{dig}{level}];
 
-        adjust_resource $faction, 'SHOVEL', $1;
+        adjust_resource $faction, 'SPADE', $1;
         pay $faction, $cost for 1..$1;
         gain $faction, $gain, 'faction' for 1..$1;
     } elsif ($command =~ /^bridge (\w+):(\w+)$/) {
@@ -531,10 +531,10 @@ sub detect_incomplete_state {
     my @extra_action_required = ();
     my $warn = (@warn ? $warn[0] : '');
 
-    if ($faction->{SHOVEL}) {
-        $warn = "Unused shovels for $prefix\n";
+    if ($faction->{SPADE}) {
+        $warn = "Unused spades for $prefix\n";
         if (!$faction->{passed}) {
-            $faction->{SHOVEL} = 0;
+            $faction->{SPADE} = 0;
         }
     }
 

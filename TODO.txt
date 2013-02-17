@@ -14,7 +14,6 @@ Definitely:
 - Rationalize reference to resources (right now there are competing forms:
   "1w", "1 w", "1 W". 
 - Color-code all references to cults
-- Fix potential css / js caching issues
 - Make naming match official rulebook terms
   - Shovel -> spade
   - Trading post -> Trading house
@@ -24,9 +23,6 @@ Maybe:
 - Always require an explicit leech / don't leech decision
 - Reject invalid leech amounts
 - Track unused bridge count
-- Timetravel: Make each comment in ledger a link -- target shows the
-  full state of the game at that moment. (For visualizing the flow of
-  the game afterwards).
 - Add more info to the building slideout. At least the production added
   by next building of that sort. Maybe also the one-time gains from building
   it.

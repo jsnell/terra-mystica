@@ -28,7 +28,7 @@ our %pool = (
     KEY => 100,
 
     # Temporary pseudo-resources for tracking activation effects
-    SHOVEL => 10000,
+    SPADE => 10000,
     FREE_TF => 10000,
     FREE_TP => 10000,
     FREE_D => 10000,

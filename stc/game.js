@@ -32,6 +32,13 @@ var bgcolors = {
     brown: '#b08040'
 };
 
+var cult_bgcolor = {
+    FIRE: "#f88",
+    WATER: "#ccf",
+    EARTH: "#b84",
+    AIR: "#f0f0f0"
+};
+
 function drawText(ctx, text, x, y, font) {
     ctx.save();
     ctx.fillStyle = ctx.strokeStyle;
@@ -261,7 +268,6 @@ function drawCults() {
         var ctx = canvas.getContext("2d");
 
         var cults = ["FIRE", "WATER", "EARTH", "AIR"];
-        var bgcolor = ["#f88", "#ccf", "#b84", "#f0f0f0"];
         var x_offset = 0;
 
         var width = 250 / 4;
@@ -280,7 +286,7 @@ function drawCults() {
             ctx.lineTo(width, height);
             ctx.lineTo(width, 0);
             ctx.closePath();
-            ctx.fillStyle = bgcolor[j];
+            ctx.fillStyle = cult_bgcolor[cult];
             ctx.fill();
 
             drawText(ctx, cult, 5, 15, "15px Verdana");
@@ -422,11 +428,11 @@ function renderAction(canvas, name, key) {
             drawText(ctx, "-4PW", 15, 55, "10px Verdana");
         },
         "ACT5": function() {
-            drawText(ctx, "shov", 15, 15, "10px Verdana");
+            drawText(ctx, "spd", 15, 15, "10px Verdana");
             drawText(ctx, "-4PW", 15, 55, "10px Verdana");
         },
         "ACT6": function() {
-            drawText(ctx, "2shov", 15, 15, "10px Verdana");
+            drawText(ctx, "2 spd", 15, 15, "10px Verdana");
             drawText(ctx, "-6PW", 15, 55, "10px Verdana");
         },
         "ACTA": function() {
@@ -442,7 +448,7 @@ function renderAction(canvas, name, key) {
             drawText(ctx, "D", 15, 15, "10px Verdana");
         },
         "BON1": function() {
-            drawText(ctx, "shov", 15, 15, "10px Verdana");
+            drawText(ctx, "spd", 15, 15, "10px Verdana");
         },
         "BON2": function() {
             drawText(ctx, "cult", 15, 15, "10px Verdana");
@@ -857,9 +863,9 @@ function drawActionRequired() {
             }
         } else if (record.type == 'transform') {
             if (record.amount == 1) {
-                record.pretty = 'may use a shovel'.interpolate(record);
+                record.pretty = 'may use a spade'.interpolate(record);
             } else {
-                record.pretty = 'may use #{amount} shovels'.interpolate(record);
+                record.pretty = 'may use #{amount} spades'.interpolate(record);
             }
         } else if (record.type == 'cult') {
             if (record.amount == 1) {
