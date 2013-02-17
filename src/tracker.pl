@@ -6,7 +6,10 @@ use strict;
 use JSON;
 use File::Basename qw(dirname);
 
-BEGIN { push @INC, dirname $0; }
+BEGIN {
+    my $target = shift @ARGV;
+    unshift @INC, "$target/cgi-bin/";
+}
 
 use tracker;
 
