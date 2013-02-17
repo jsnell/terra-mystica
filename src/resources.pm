@@ -218,6 +218,10 @@ sub adjust_resource {
                 $faction->{GAIN_FAVOR}--;
             }
 
+            if ($faction->{$type} > 1) {
+                die "Can't take two copies of $type\n";
+            }
+
             gain $faction, $tiles{$type}{gain}, $type;
 
             # Hack
