@@ -38,8 +38,8 @@ for (@ARGV) {
                 print diff \$aj, \$bj;
             }
         } else {
-            my $aj = to_json($aa, { pretty => 1 });
-            my $bj = to_json($bb, { pretty => 1 });
+            my $aj = to_json($aa, { pretty => 1, canonical => 1 });
+            my $bj = to_json($bb, { pretty => 1, canonical => 1 });
             if ($aj ne $bj) {
                 print diff \$aj, \$bj;
             }
