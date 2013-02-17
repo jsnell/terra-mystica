@@ -15,7 +15,7 @@ use towns;
 my $action_taken;
 my @warn = ();
 my $turn = 0;
-my $min_active_order = 0;
+my $printed_turn = 0;
 
 sub handle_row;
 
@@ -359,8 +359,8 @@ sub command_action {
 
 sub command_start {
     $round++;
-    $turn = 0;
-    $min_active_order = 0;
+    $turn = 1;
+    $printed_turn = 0;
 
     for my $faction_name (@factions) {
         my $faction = $factions{$faction_name};
@@ -644,21 +644,34 @@ sub pretty_resource_delta {
     %pretty_delta;
 }
 
-sub maybe_advance_turn {
-    my ($faction_name, $next) = @_;
+sub print_turn_ledger_comment {
+    $printed_turn = $turn;
 
-    if ($factions{$faction_name}{order} > $min_active_order) {
+    return if exists $ledger[-1]->{comment};
+
+    push @ledger, {
+        comment => "Round $round, turn $turn"
+    };
+}
+
+sub maybe_advance_turn {
+    my ($faction_name) = @_;
+
+    if ($printed_turn != $turn) {
+        print_turn_ledger_comment;
+    }
+
+    my $max_order = max map {
+        $_->{order}
+    } grep {
+        (!$_->{passed}) or ($_->{name} eq $faction_name)
+    } values %factions;
+
+    if ($factions{$faction_name}{order} != $max_order) {
         return;
     }
 
-    $min_active_order = min map { $_->{order}
-    } grep { (!$_->{passed}) or ($_->{name} eq $faction_name)
-    } values %factions;
-
     $turn++;
-
-    return if exists $ledger[-1]->{comment};
-    push @ledger, { comment => "Round $round, turn $turn" };
 }
 
 sub maybe_advance_to_next_player {
