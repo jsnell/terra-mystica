@@ -33,7 +33,7 @@
         <td>
           <div id="scoring"></div>
     </table>
-    <div id="action_required"></div>
+    <div id="action_required"><img src="/stc/spinner.gif"></img> loading ... </div>
     <div id="factions"></div>
     <table id="ledger">
       <col></col>
@@ -63,6 +63,10 @@
       var id = document.location.pathname;
       new Ajax.Request("/cgi-bin/bridge.pl?game=" + id, {
           method:"get",
+          onFailure: function(transport){
+             state = transport.responseText.evalJSON();
+             failed();
+          },
           onSuccess: function(transport){
             state = transport.responseText.evalJSON();
             try {

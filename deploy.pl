@@ -67,6 +67,7 @@ sub deploy_stc {
                   game.js
                   prototype-1.7.1.js
                   org.css
+                  spinner.gif
                   style.css)) {
         copy_with_mode 0444, "stc/$f", "$target/stc/$f";
     }

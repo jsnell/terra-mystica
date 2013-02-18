@@ -932,6 +932,7 @@ function drawActionRequired() {
 }
 
 function draw() {
+    $("action_required").innerHTML = "";
     state.error.each(function(row) {
         $("error").insert("<div>" + row.escapeHTML() + "</div>");
     });
@@ -948,3 +949,13 @@ function draw() {
     }
 }
 
+function failed() {
+    $("action_required").innerHTML = "";
+    if (state.error) {
+        state.error.each(function(row) {
+            $("error").insert("<div>" + row.escapeHTML() + "</div>");
+        });
+    } else {
+        $("error").insert("Couldn't load game");
+    }
+}
