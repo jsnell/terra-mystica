@@ -261,7 +261,7 @@ sub compute_leech {
             $map_color ne $color) {
             $this_leech{$map_color} +=
                 $building_strength{$map{$adjacent}{building}};
-            $this_leech{$map_color} = min $this_leech{$map_color}, 5;
+            $this_leech{$map_color} = $this_leech{$map_color};
         }
     }
 
