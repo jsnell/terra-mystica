@@ -14,6 +14,14 @@ die "Directory $target does not exist" if !-d $target;
 my $tag = qx(git rev-parse HEAD);
 my $devel = ($target eq 'www-devel');
 
+if (!$devel) {
+    system "git", "diff", "--exit-code";
+
+    if ($?) {
+        die "Uncommitted changes, can't deploy";
+    }
+}
+
 sub copy_with_mode {
     my ($mode, $from, $to) = @_;
     die if -d $to;
