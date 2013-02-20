@@ -152,7 +152,7 @@ my %setups = (
         color => 'blue',
         display => "Mermaids",
         ship => { 
-            level => 1, max_level => 4,
+            level => 1, max_level => 5,
             advance_cost => { C => 4, P => 1 },
             advance_gain => [ { VP => 0 },
                               { VP => 2 },
