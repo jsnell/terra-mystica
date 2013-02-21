@@ -80,7 +80,7 @@ sub evaluate_game {
 
         if (defined $data->{max_row} and $data->{max_row}) {
             my $max = $data->{max_row};
-            if (@ledger >= $max) {
+            if (@ledger >= ($max -1)) {
                 push @error, "Showing historical game state (up to row $max)";
                 $history_view = @ledger;
                 last;
