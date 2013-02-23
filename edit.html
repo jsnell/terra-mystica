@@ -13,24 +13,9 @@
             src="/stc/edit.js">
     </script>
     <style type="text/css" media="screen">
-    #editor { 
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        font-size: 14pt;
-    }
-    #wrapper {
-        position: relative;
-        height: 500px;
-        width: 800px;
-        border-style: solid;
-    }
     #fallback-editor {
         height: 600px;
         width: 800px;
-        display: none;
     };
     </style>
     <link rel="stylesheet" type="text/css" href="/stc/style.css">
@@ -43,16 +28,14 @@
 
     <div id="action_required"></div>
 
-    <div id="wrapper">
-      <div id="editor"></div>
-    </div>
     <div>
       <textarea id="fallback-editor"></textarea>
     </div>
     
     <input type="button" value="Save" onClick="javascript:save()" id="save-button"/>
 
-    <script src="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+    <div id="links">
+    </div>
 
     <script>
       init();

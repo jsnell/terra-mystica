@@ -10,6 +10,9 @@
             src="/stc/game.js">
     </script>
     <script type="text/javascript" language="javascript"
+            src="/stc/faction.js">
+    </script>
+    <script type="text/javascript" language="javascript"
             src="/stc/debug.js">
     </script>
     <link rel="stylesheet" type="text/css" href="/stc/style.css">
@@ -33,7 +36,11 @@
         <td>
           <div id="scoring"></div>
     </table>
+    <div id="preview_status"></div>
+    <pre id="preview_commands"></pre>
     <div id="action_required"><img src="/stc/spinner.gif"></img> loading ... </div>
+
+    <div id="move_entry"></div>
     <div id="factions"></div>
     <table id="ledger">
       <col></col>
@@ -44,24 +51,15 @@
       <col span=2 ></col>
       <col span=2 style='background-color: #e0e0f0'></col>
     </table>
+
     <script language="javascript">
       var state = null;
-      var id = document.location.pathname;
-      new Ajax.Request("/cgi-bin/bridge.pl?game=" + id, {
-          method:"get",
-          onFailure: function(transport){
-             state = transport.responseText.evalJSON();
-             failed();
-          },
-          onSuccess: function(transport){
-            state = transport.responseText.evalJSON();
-            try {
-              draw();
-            } catch (e) {
-              handleException(e);
-            };
-          }
-      });
+      var pathname = document.location.pathname.sub("/faction/", "");
+      var path = pathname.split("/");
+      var params = { "game": path[0], "faction": path[1], "key": path[2] };
+
+      var currentFaction = params.faction;
+      preview();
     </script>
   </body>
 </html>

@@ -172,4 +172,17 @@ span.warning {
     background-color: #e88;
 }
 
+div#preview_status {
+    font: 14px Verdana;
+    font-weight: bold;
+}
 
+pre#preview_commands {
+    width: 60ex;
+    background-color: #eee;
+    margin-left: 20px;
+}
+
+div#move_entry {
+    margin-bottom: 10px;
+}

@@ -46,7 +46,8 @@ sub deploy_docs {
 
 sub deploy_cgi {
     mkdir "$target/cgi-bin";
-    for my $f (qw(bridge.pl
+    for my $f (qw(append.pl
+                  bridge.pl
                   edit.pl
                   gamelist.pl
                   save.pl)) {
@@ -72,6 +73,7 @@ sub deploy_stc {
     mkdir "$target/stc";
     for my $f (qw(debug.js
                   edit.js
+                  faction.js
                   game.js
                   prototype-1.7.1.js
                   org.css
@@ -85,6 +87,7 @@ sub deploy_stc {
 sub deploy_html {
     for my $f (qw(game.html
                   edit.html
+                  faction.html
                   index.html)) {
         my $to = "$target/$f";
         if ($devel) {

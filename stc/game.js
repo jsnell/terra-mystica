@@ -252,6 +252,7 @@ function drawBridge(ctx, from, to, color) {
 function drawMap() {
     var canvas = $("map");
     if (canvas.getContext) {
+        canvas.width = canvas.width;
         var ctx = canvas.getContext("2d");
 
         state.bridges.each(function(bridge, index) {
@@ -265,6 +266,7 @@ function drawMap() {
 function drawCults() {
     var canvas = $("cults");
     if (canvas.getContext) {
+        canvas.width = canvas.width;
         var ctx = canvas.getContext("2d");
 
         var cults = ["FIRE", "WATER", "EARTH", "AIR"];
@@ -686,6 +688,8 @@ function toggleVP(id) {
 }
 
 function drawFactions() {
+    $("factions").innerHTML = "";
+
     state.order.each(function(name) {
         name = name;
         var faction = state.factions[name];
@@ -788,6 +792,8 @@ function drawFactions() {
 
 function drawLedger() {
     var ledger = $("ledger");
+    ledger.innerHTML = "";
+
     state.ledger.each(function(record, index) {
         if (record.comment) {
             ledger.insert("<tr><td><td colspan=13><b>" + 
@@ -843,6 +849,8 @@ function showHistory(row) {
 
 function drawScoringTiles() {
     var container = $("scoring");
+    container.innerHTML = "";
+
     state.score_tiles.each(function(record, index) {
         var style = '';
         if (record.active) {
@@ -873,11 +881,17 @@ function coloredFactionSpan(faction_name) {
 }
 
 function drawActionRequired() {
-    if (!$("action_required")) {
+    var parent = $("action_required");
+
+    if (!parent) {
         return;
     }
 
-    state.action_required.each(function(record) {
+    parent.innerHTML = "";
+
+    var needMoveEntry = false;
+
+    state.action_required.each(function(record, index) {
         if (record.type == 'full') {
             record.pretty = 'should take an action';
         } else if (record.type == 'leech') {
@@ -927,12 +941,66 @@ function drawActionRequired() {
 	}
 
         var row = new Element("div", {'style': 'margin: 3px'}).update("#{faction_span} #{pretty}</div>".interpolate(record));
-        $("action_required").insert(row);
+        parent.insert(row);
+
+        if (currentFaction && record.faction == currentFaction) {
+            addFactionInput(parent, record, index);
+            needMoveEntry = true;
+        }
     });
+
+    if (needMoveEntry && $(move_entry).innerHTML == "") {
+        var input = new Element("textarea", {"id": "move_entry_input",
+                                             "onInput": "javascript:moveEntryInputChanged()",
+                                             "style": "font-family: monospace; width: 60ex; height: 6em;" } );
+        $(move_entry).insert(input);
+        $(move_entry).insert("<div style='padding-left: 2em'><button id='move_entry_action' onclick='javascript:save()'>Save</button></div>")
+    }
+}
+
+function addFactionInput(parent, record, index) {
+    if (record.type == "leech") {
+        $(parent).insert("<div id='leech-" + index + "' style='padding-left: 2em'><button onclick='javascript:acceptLeech(" + index + ")'>Accept</a> <button onclick='javascript:declineLeech(" + index + ")'>Decline</button></div>")
+    }
+}
+
+function acceptLeech(index) {
+    var record = state.action_required[index];
+    $("leech-" + index).style.display = "none";
+    $(move_entry_input).value += "Leech #{amount} from #{from_faction}\n".interpolate(record);
+        moveEntryInputChanged();
+}
+
+function declineLeech(index) {
+    var record = state.action_required[index];
+    $("leech-" + index).style.display = "none";
+    $(move_entry_input).value += "Decline #{amount} from #{from_faction}\n".interpolate(record);
+        moveEntryInputChanged();
+}
+
+function moveEntryInputChanged() {
+    $(move_entry_input).oninput = null;
+    $(move_entry_action).innerHTML = "Preview";
+    $(move_entry_action).onclick = preview;
+} 
+
+function moveEntryAfterPreview() {
+    if ($("move_entry_action")) {
+        $("move_entry_action").disabled = false;
+
+        if ($("error").innerHTML == "") {
+            $("move_entry_action").innerHTML = "Save";
+            $("move_entry_action").onclick = save;
+        }
+    }
+    if ($("move_entry_input")) {
+        $("move_entry_input").disabled = false;
+        $("move_entry_input").oninput = moveEntryInputChanged;
+    }
 }
 
 function draw() {
-    $("action_required").innerHTML = "";
+    $("error").innerHTML = "";
     state.error.each(function(row) {
         $("error").insert("<div>" + row.escapeHTML() + "</div>");
     });

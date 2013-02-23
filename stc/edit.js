@@ -19,30 +19,7 @@ var Browser = Class.create({
 var browser = new Browser();
 
 function init() {
-    if (browser.msie && browser.version < 9) {
-        fallback = true;
-    }
-    if (browser.android || browser.ios) {
-        fallback = true;
-    }
-
-    if (fallback) {
-        $("wrapper").style.display = "none";
-        $("fallback-editor").style.display = "block";
-    } else {
-        editor = ace.edit("editor");
-        var hash;
-        editor.getSession().setMode("ace/mode/sh");
-        editor.commands.removeCommand("replace");
-        editor.commands.removeCommand("gotoline");
-
-        editor.commands.addCommand({
-            name: 'mySave',
-            bindKey: { win: 'Ctrl-S',  mac: 'Command-S' },
-            exec: save
-        });
-    }
-
+    $("fallback-editor").style.display = "block";
     load();
 }
 
@@ -125,6 +102,17 @@ function load() {
                 }
 
                 drawActionRequired(res);
+
+                if (res.factions) {
+                    $("links").innerHTML = "<h4>Edit links</h4>";
+                    $H(res.factions).each(function (elem) {
+                        var div = new Element("div", {"style": "margin-left: 20px" });
+                        var link = new Element("a", {"href": elem.value.edit_link});
+                        link.update(elem.key);
+                        div.insert(link);
+                        $("links").insert(div);
+                    });
+                }
             } catch (e) {
                 handleException(e);
             };

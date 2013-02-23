@@ -202,7 +202,7 @@ sub command_convert {
 }
 
 sub command_leech {
-    my ($faction, $pw) = @_;
+    my ($faction, $pw, $from) = @_;
     my $faction_name = $faction->{name};
 
     my $actual_pw = gain_power $faction, $pw;
@@ -213,6 +213,8 @@ sub command_leech {
         next if $_->{faction} ne $faction_name;
         next if $_->{type} ne 'leech';
         next if $_->{amount} ne $pw and $_->{amount} ne $actual_pw;
+
+        next if $from and $from ne $_->{from_faction};
 
         if ($_->{from_faction} eq 'cultists') {
             push @action_required, { type => 'cult',
@@ -228,11 +230,35 @@ sub command_leech {
     if ($found_leech_record) {
         @action_required = grep { $_ ne '' } @action_required;
     } else {
-	push @warn, "invalid leech amount $pw (accepting anyway)";
+        if (!$from) {
+            push @warn, "invalid leech amount $pw (accepting anyway)";
+        } else {
+            die "invalid leech amount $pw from $from\n";
+        }
     }
 
     if ($actual_pw > 0) {
 	adjust_resource $faction, 'VP', -$vp, 'leech';
+    }
+}
+
+sub command_decline {
+    my ($faction, $amount, $from) = @_;
+
+    if (!$amount) {
+        # Decline all
+        @action_required = grep {
+            $_->{faction} ne $faction->{name} or $_->{type} ne 'leech'
+        } @action_required;
+    } else {
+        my $count = @action_required;
+        @action_required = grep {
+            !($_->{faction} eq $faction->{name} and
+              $_->{type} eq 'leech' and
+              $_->{amount} eq $amount and
+              $_->{from_faction} eq $from)
+        } @action_required;
+        die "Invalid decline amount $amount from $from\n" if ($count == @action_required);
     }
 }
 
@@ -447,13 +473,10 @@ sub command {
         $assert_faction->();
         adjust_resource $faction, 'P2', -2*$1;
         adjust_resource $faction, 'P3', $1;
-    } elsif ($command =~ /^leech (\d+)$/) {
-        command_leech $assert_faction->(), $1;
-    } elsif ($command =~ /^decline$/) { 
-        $assert_faction->();
-        @action_required = grep {
-            $_->{faction} ne $faction_name or $_->{type} ne 'leech'
-        } @action_required;       
+    } elsif ($command =~ /^leech (\d+)(?: from (\w+))?$/) {
+        command_leech $assert_faction->(), $1, $2;
+    } elsif ($command =~ /^decline(?: (\d+) from (\w+))?$/) { 
+        command_decline $assert_faction->(), $1, $2;
     } elsif ($command =~ /^transform (\w+) to (\w+)$/) {
         command_transform $assert_faction->(), uc $1, lc $2;
     } elsif ($command =~ /^dig (\d+)/) {

@@ -19,6 +19,8 @@ my $id = $q->param('game');
 $id =~ s{.*/}{};
 $id =~ s{[^A-Za-z0-9]}{}g;
 my $max_row = $q->param('max-row');
+my $preview = $q->param('preview');
+my $preview_faction = $q->param('preview-faction');
 
 sub print_json {
     my $data = shift;
@@ -30,6 +32,8 @@ sub print_json {
 if (-f "../../data/read/$id") {
     print "\r\n";
     my @rows = read_file("../../data/read/$id");
+    push @rows, (map { "$preview_faction: $_" } split /\n/, $preview);
+
     my $res = terra_mystica::evaluate_game { rows => \@rows, max_row => $max_row };
     print_json $res;
 } else {
