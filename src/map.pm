@@ -233,8 +233,16 @@ sub compute_network_size {
 my @colors = qw(yellow brown black blue green gray red);
 my %colors = map { ($colors[$_], $_) } 0..$#colors;
 
+sub assert_color {
+    for (@_) {
+        die "Invalid color '$_'\n" if !exists $colors{$_};
+    }
+    
+    @_;
+}
+
 sub color_difference {
-    my ($a, $b) = @_;
+    my ($a, $b) = assert_color @_;
     my $diff = abs $colors{$a} - $colors{$b};
 
     if ($diff > 3) {
