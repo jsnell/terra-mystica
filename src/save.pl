@@ -14,6 +14,7 @@ chdir dirname $0;
 
 use exec_timer;
 use tracker;
+use lockfile;
 
 my $q = CGI->new;
 
@@ -25,6 +26,7 @@ my $orig_hash = $q->param('orig-hash');
 my $new_content = $q->param('content');
 
 my $dir = "../../data/write/";
+my $lockfile = lockfile::get "$dir/lock";
 
 sub save {
     chdir $dir;
@@ -40,11 +42,12 @@ sub save {
     print $fh $new_content;
     close $fh;
     chmod 0444, $filename;
-    rename "$id", "$id.bak";
     rename $filename, "$id";
 
     system "git commit -m 'change $id' $id > /dev/null";
 }
+
+lockfile::lock $lockfile;
 
 my $res = terra_mystica::evaluate_game { rows => [ split /\n/, $new_content ] };
 
@@ -56,6 +59,8 @@ if (!@{$res->{error}}) {
         $res->{error} = [ $@ ]
     }
 };
+
+lockfile::unlock $lockfile;
 
 print "Content-type: text/json\r\n";
 print "Cache-Control: no-cache\r\n";

@@ -12,7 +12,9 @@ use JSON;
 
 chdir dirname $0;
 
+use exec_timer;
 use tracker;
+use lockfile;
 
 my $q = CGI->new;
 
@@ -28,6 +30,7 @@ my $preview = $q->param('preview');
 my $append = join "\n", (map { "$faction_name: $_" } grep { /\S/ } split /\n/, $preview);
 
 my $dir = "../../data/write/";
+my $lockfile = lockfile::get "$dir/lock";
 chdir $dir;
 
 sub save {
@@ -36,7 +39,6 @@ sub save {
     print $fh $new_content;
     close $fh;
     chmod 0444, $filename;
-    rename "$id", "$id.bak";
     rename $filename, "$id";
 
     system "git commit -m 'change $id' $id > /dev/null";
@@ -70,6 +72,8 @@ print "Content-type: text/json\r\n";
 print "Cache-Control: no-cache\r\n";
 print "\r\n";
 
+lockfile::lock $lockfile;
+
 verify_key;
 
 my $res = terra_mystica::evaluate_game { rows => [ split /\n/, $new_content ] };
@@ -82,6 +86,8 @@ if (!@{$res->{error}}) {
         $res->{error} = [ $@ ]
     }
 };
+
+lockfile::unlock $lockfile;
 
 my $out = encode_json {
     error => $res->{error},

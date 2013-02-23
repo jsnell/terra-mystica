@@ -60,6 +60,7 @@ sub deploy_cgi {
                   exec_timer.pm
                   factions.pm
                   income.pm
+                  lockfile.pm
                   map.pm
                   resources.pm
                   scoring.pm
