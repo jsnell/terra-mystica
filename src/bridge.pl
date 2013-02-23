@@ -33,7 +33,9 @@ sub print_json {
 if (-f "../../data/read/$id") {
     print "\r\n";
     my @rows = read_file("../../data/read/$id");
-    push @rows, (map { "$preview_faction: $_" } split /\n/, $preview);
+    if (defined $preview) {
+        push @rows, (map { "$preview_faction: $_" } split /\n/, $preview);
+    }
 
     my $res = terra_mystica::evaluate_game { rows => \@rows, max_row => $max_row };
     print_json $res;
