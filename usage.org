@@ -86,17 +86,27 @@ Example: =pass bon2=
 Pass, return current bonus tile, and replace it with Bon2. When passing
 on the last turn.
 
-** =leech= /amount/
+** =leech= /amount/ from /faction/
 
 Example: =Leech 2=.
 
 Trade 1 vp for 2 power
 
-** =decline=
+Example: =Leech 1 from fakirs=
+
+Trade no vps for 1 power, using the opportunity provided by the Fakirs
+rather than some other faction (in case there are multiple opportunities
+available).
+
+** =decline /amount/ from /faction/=
 
 Example: =decline=.
 
 Decline all outstanding trades of vp to power
+
+Example: =decline 1 from cultists=
+
+Decline just the offer of 1 power from the cultists.
 
 ** =action= /label/
 
