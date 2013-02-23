@@ -10,6 +10,7 @@ use JSON;
 chdir dirname $0;
 
 use tracker;
+use exec_timer;
 
 print "Content-type: text/javascript\r\n";
 print "Cache-Control: no-cache\r\n";

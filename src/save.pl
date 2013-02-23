@@ -12,6 +12,7 @@ use JSON;
 
 chdir dirname $0;
 
+use exec_timer;
 use tracker;
 
 my $q = CGI->new;

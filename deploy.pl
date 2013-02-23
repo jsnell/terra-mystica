@@ -57,6 +57,7 @@ sub deploy_cgi {
     for my $f (qw(buildings.pm
                   commands.pm
                   cults.pm
+                  exec_timer.pm
                   factions.pm
                   income.pm
                   map.pm
