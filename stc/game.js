@@ -803,11 +803,17 @@ function drawLedger() {
 
     state.ledger.each(function(record, index) {
         if (record.comment) {
-            ledger.insert("<tr><td><td colspan=13><b>" + 
-                          record.comment.escapeHTML() +
-                          "</b>" + 
-                          "<td><a href='" + showHistory(index + 1) +
-                          "'>show history</a></tr>");
+            if (currentFaction) {
+                ledger.insert("<tr><td><td colspan=13><b>" + 
+                              record.comment.escapeHTML() +
+                              "</b></tr>");
+            } else {
+                ledger.insert("<tr><td><td colspan=13><b>" + 
+                              record.comment.escapeHTML() +
+                              "</b>" + 
+                              "<td><a href='" + showHistory(index + 1) +
+                              "'>show history</a></tr>");
+            }
         } else {
             record.bg = colors[state.factions[record.faction].color];
             record.fg = (record.bg == '#000000' ? '#ccc' : '#000');
