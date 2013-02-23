@@ -30,9 +30,13 @@ function previewOrSave(save) {
         onSuccess: function(transport){
             state = transport.responseText.evalJSON();
             if (save) {
-                $("preview_status").innerHTML = "Executed the following commands for " + currentFaction;
-                $("move_entry").innerHTML = "";
-                preview(false);
+                if (state.error.size() > 0) {
+                    failed();
+                } else {
+                    $("preview_status").innerHTML = "Executed the following commands for " + currentFaction;
+                    $("move_entry").innerHTML = "";
+                    preview(false);
+                }
             } else {
                 try {
                     draw();

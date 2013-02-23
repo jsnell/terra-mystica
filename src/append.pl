@@ -74,7 +74,14 @@ print "\r\n";
 
 lockfile::lock $lockfile;
 
-verify_key;
+eval {
+    verify_key;
+}; if ($@) {
+    print encode_json {
+        error => [ $@ ],
+    };
+    exit;
+};
 
 my $res = terra_mystica::evaluate_game { rows => [ split /\n/, $new_content ] };
 
