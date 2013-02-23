@@ -47,6 +47,7 @@
     <script language="javascript">
       var state = null;
       var id = document.location.pathname;
+      var currentFaction = "";
       new Ajax.Request("/cgi-bin/bridge.pl?game=" + id, {
           method:"get",
           onFailure: function(transport){

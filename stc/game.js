@@ -690,7 +690,14 @@ function toggleVP(id) {
 function drawFactions() {
     $("factions").innerHTML = "";
 
-    state.order.each(function(name) {
+    var order = state.order;
+    if (currentFaction && order.indexOf(currentFaction) >= 0) {
+        while (order[0] != currentFaction) {
+            order.push(order.shift());
+        }
+    }
+
+    order.each(function(name) {
         name = name;
         var faction = state.factions[name];
         var color = faction.color;
@@ -880,6 +887,8 @@ function coloredFactionSpan(faction_name) {
     return "<span style='background-color:#{bg}; color: #{fg}'>#{display}</span>".interpolate(record);
 }
 
+var allowSaving = false;
+
 function drawActionRequired() {
     var parent = $("action_required");
 
@@ -890,6 +899,8 @@ function drawActionRequired() {
     parent.innerHTML = "";
 
     var needMoveEntry = false;
+
+    allowSaving = true;
 
     state.action_required.each(function(record, index) {
         if (record.type == 'full') {
@@ -946,6 +957,7 @@ function drawActionRequired() {
         if (currentFaction && record.faction == currentFaction) {
             addFactionInput(parent, record, index);
             needMoveEntry = true;
+            allowSaving = false;
         }
     });
 
@@ -954,7 +966,7 @@ function drawActionRequired() {
                                              "onInput": "javascript:moveEntryInputChanged()",
                                              "style": "font-family: monospace; width: 60ex; height: 6em;" } );
         $(move_entry).insert(input);
-        $(move_entry).insert("<div style='padding-left: 2em'><button id='move_entry_action' onclick='javascript:save()'>Save</button></div>")
+        $(move_entry).insert("<div style='padding-left: 2em'><button id='move_entry_action' onclick='javascript:preview()'>Preview</button></div>")
     }
 }
 
@@ -988,7 +1000,7 @@ function moveEntryAfterPreview() {
     if ($("move_entry_action")) {
         $("move_entry_action").disabled = false;
 
-        if ($("error").innerHTML == "") {
+        if ($("error").innerHTML == "" && allowSaving) {
             $("move_entry_action").innerHTML = "Save";
             $("move_entry_action").onclick = save;
         }
