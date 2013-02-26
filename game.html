@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Terra Mystica</title>
+    <title id="title">Terra Mystica</title>
     <meta http-equiv="cache-control" content="no-cache">
     <script type="text/javascript" language="javascript"
             src="/stc/prototype-1.7.1.js">
@@ -46,7 +46,8 @@
     </table>
     <script language="javascript">
       var state = null;
-      var id = document.location.pathname;
+      var id = document.location.pathname.sub(/.*\//, "");
+      $("title").innerHTML += " - " + id + "";
       var currentFaction = "";
       new Ajax.Request("/cgi-bin/bridge.pl?game=" + id, {
           method:"get",
