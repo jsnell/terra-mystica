@@ -272,6 +272,8 @@ sub command_transform {
         die "Can't transform $where to $color, already contains a building\n"
     }
 
+    $color = alias_color $color;
+
     my $color_difference = color_difference $map{$where}{color}, $color;
 
     if ($faction_name eq 'giants' and $color_difference != 0) {
@@ -555,6 +557,11 @@ sub detect_incomplete_state {
     my $warn = (@warn ? $warn[0] : '');
 
     if ($faction->{SPADE}) {
+        push @extra_action_required, {
+            type => 'transform',
+            amount => $faction->{SPADE}, 
+            faction => $prefix
+        };
         $warn = "Unused spades for $prefix\n";
         if (!$faction->{passed}) {
             $faction->{SPADE} = 0;
