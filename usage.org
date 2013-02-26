@@ -272,6 +272,20 @@ When using the Chaos Magician Stronghold, please put all 3 actions
 line. The system doesn't actually track this ability, and gets
 confused about turn order if the commands are split on multiple lines.
 
+** Giants
+
+It's possible for Giants to receive a single spade from a cult scoring
+bonus, and be unable to spend it (due to always needing exactly
+two spades for any transforming). To advance, throw away the spade with
+=-SPADE=.
+
+** Engineers
+
+There's no special command for the Engineer special ability (build a
+bridge with 2 workers). Just pay the 2 workers manually with =-2w= and
+build a bridge with =bridge XX:YY=.
+
+
 * Known issues and workarounds
 
 ** FAV5 tile

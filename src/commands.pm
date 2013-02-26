@@ -38,6 +38,14 @@ sub command_adjust_resources {
     @action_required = grep {
         $_->{faction} ne $faction->{name} or $_->{type} ne 'cult'
     } @action_required;       
+
+    # Handle throwing away spades with "-SPADE", e.g. if you are playing
+    # Giants.
+    if ($type eq 'SPADE' and $faction->{SPADE} < 1) {
+        @action_required = grep {
+            $_->{faction} ne $faction->{name} or $_->{type} ne 'transform'
+        } @action_required;
+    }
 }
 
 sub command_build {
