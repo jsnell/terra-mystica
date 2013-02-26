@@ -256,6 +256,14 @@ sub color_difference {
     return $diff;
 }
 
+sub alias_color {
+    my $color = shift;
+    if ($color eq "grey") {
+        return "gray";
+    }
+    $color;
+}
+
 # Given a faction and a hex, figure out who can leach power when a
 # building is built or upgraded, and how much. (Note: won't take into
 # account the amount of power tokens the receiver has. That's taken
