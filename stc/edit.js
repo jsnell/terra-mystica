@@ -170,9 +170,9 @@ function drawActionRequired(state) {
             }
         } else if (record.type == 'transform') {
             if (record.amount == 1) {
-                record.pretty = 'may use a shovel'.interpolate(record);
+                record.pretty = 'may use a spade'.interpolate(record);
             } else {
-                record.pretty = 'may use #{amount} shovels'.interpolate(record);
+                record.pretty = 'may use #{amount} spades'.interpolate(record);
             }
         } else if (record.type == 'cult') {
             if (record.amount == 1) {
