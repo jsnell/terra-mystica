@@ -122,8 +122,12 @@ sub check_reachable {
 
     my $range = $faction->{ship}{level};
     if ($faction->{ship}{max_level}) {
-        # XXX hack.
-        $range++ if $faction->{BON4};
+        if ($faction->{BON4} and !
+            # Bon4 doesn't apply in phase III
+            $faction->{passed}) {
+            # XXX hack.
+            $range++ 
+        }
     }
 
     # Direct adjancies first (can't use tunneling / carpet flight bonus
