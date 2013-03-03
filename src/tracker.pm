@@ -23,9 +23,13 @@ our $round = 0;
 our $turn = 0;
 
 sub finalize {
+    my $delete_email = shift;
+
     for my $faction (@factions) {
-        $factions{$faction}{income} = { faction_income $faction };
-        delete $factions{$faction}{email};
+        $factions{$faction}{income} = { faction_income $faction };        
+        if ($delete_email) {
+            delete $factions{$faction}{email};
+        }
     }
         
     if ($round > 0) {
@@ -91,7 +95,7 @@ sub evaluate_game {
         }
     }
 
-    finalize;
+    finalize $data->{delete_email} // 1;
 
     return {
         order => \@factions,

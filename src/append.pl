@@ -83,7 +83,10 @@ eval {
     exit;
 };
 
-my $res = terra_mystica::evaluate_game { rows => [ split /\n/, $new_content ] };
+my $res = terra_mystica::evaluate_game {
+    rows => [ split /\n/, $new_content ],
+    delete_email => 0
+};
 
 if (!@{$res->{error}}) {
     eval {
