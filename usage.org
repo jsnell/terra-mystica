@@ -67,9 +67,14 @@ Start the game:
 
 * Commands
 
-Each line should start with the name of the faction that's doing
-stuff, followed by a colon. After this, you can have multiple commands
-that apply to that faction, separated by full stops. For example:
+When using the full admin interface, each line should start with the
+name of the faction that's doing stuff, followed by a colon. When
+using the more limited per-faction interface, no such prefix should
+be added -- it'll automatically apply the commands to the current
+faction.
+
+After this, you can have multiple commands that apply to that faction,
+separated by full stops. For example:
 
 #+BEGIN_EXAMPLE
   Nomads: Dig 1. Build E7
@@ -220,6 +225,14 @@ Example: =setup Nomads for Alice=
 
 Add this faction to the game. The player name is optional, you also do just
 =setup Nomads=.
+
+** =email= /email addresses/
+
+Example: =email p1@example.com,p2@example.com=
+
+List email addresses associated with the game. Currently the only
+use for these addresses is the "send email" functionality for the
+per-faction interface.
 
 * Notes on specific factions
 

@@ -98,6 +98,7 @@ lockfile::unlock $lockfile;
 
 my $out = encode_json {
     error => $res->{error},
+    email => $terra_mystica::email,
     action_required => $res->{action_required},
 };
 print $out;

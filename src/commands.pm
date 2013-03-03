@@ -17,6 +17,8 @@ my @warn = ();
 my $turn = 0;
 my $printed_turn = 0;
 
+use vars qw($email);
+
 sub handle_row;
 
 sub command_adjust_resources {
@@ -552,6 +554,8 @@ sub command {
         @action_required = ( { type => 'gameover' } );
     } elsif ($command =~ /^score_resources$/) {
         score_final_resources_for_faction $faction_name;
+    } elsif ($command =~ /^email (.*)/) {
+        $email = $1;
     } else {
         die "Could not parse command '$command'.\n";
     }
@@ -648,6 +652,10 @@ sub clean_commands {
     # Parse the prefix
     if (s/^(.*?)://) {
         $prefix = lc $1;
+    }
+
+    if (/^email/) {
+        return $prefix, $_;
     }
 
     # Split subcommands, and clean them up

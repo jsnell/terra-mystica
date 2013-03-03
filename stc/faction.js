@@ -34,7 +34,11 @@ function previewOrSave(save) {
                     failed();
                 } else {
                     $("preview_status").innerHTML = "Executed the following commands for " + currentFaction;
-                    $("move_entry").innerHTML = "";
+                    if (state.email) {
+                        $("move_entry").update(new Element("a", {"href": makeMailToLink()}).update("Send email"));
+                    } else {
+                        $("move_entry").innerHTML = "";
+                    }
                     preview(false);
                 }
             } else {
@@ -56,3 +60,22 @@ function preview() {
 function save() {
     previewOrSave(true);
 }
+
+function makeMailToLink() {
+    var newline = "%0D%0A";
+    var status = $(preview_status).innerHTML;
+    var moves = $(preview_commands).textContent.split(/\n/).map(function (x) {
+        return "  " + x;
+    }).join(newline);
+    var actions = $(action_required).childElements().map(function (x) {
+        return "  " + x.textContent
+    }).join(newline)
+
+    var moves = status + ":" + newline + moves + newline + newline + "Actions required:" + newline + actions;
+
+    var link = "mailto:?subject=Terra Mystica PBEM (" + params.game + ")&to=" + state.email + "&body=" + moves;
+
+    return link;
+}
+
+
