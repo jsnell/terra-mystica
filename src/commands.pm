@@ -297,6 +297,15 @@ sub command_transform {
 
     if ($faction->{FREE_TF}) {
         adjust_resource $faction, 'FREE_TF', -1;
+        my $ok = 0;
+        for my $from (@{$faction->{locations}}) {
+            next if $map{$where}{bridge}{$from};
+            if ($map{$where}{adjacent}{$from}) {
+                $ok = 1;
+                last;
+            }
+        }
+        die "ActN requires direct non-bridge adjacency" if !$ok;
     } else {
         adjust_resource $faction, 'SPADE', -$color_difference;
     }
@@ -312,6 +321,9 @@ sub command_bridge {
 
     $map{$from}{adjacent}{$to} = 1;
     $map{$to}{adjacent}{$from} = 1;
+
+    $map{$from}{bridge}{$to} = 1;
+    $map{$to}{bridge}{$from} = 1;
 
     push @bridges, {from => $from, to => $to, color => $faction->{color}};
 

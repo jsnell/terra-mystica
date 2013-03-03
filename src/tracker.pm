@@ -41,6 +41,7 @@ sub finalize {
     for my $hex (values %map) {
         delete $hex->{adjacent};
         delete $hex->{range};
+        delete $hex->{bridge};
     }
     
     for my $faction (@factions) {
