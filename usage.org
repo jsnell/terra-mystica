@@ -219,20 +219,25 @@ Move to the next round.
 
 Do the final scoring.
 
-** =setup= /faction/ for /player/
+** =setup= /faction/ for /player/ email /address/
 
 Example: =setup Nomads for Alice=
 
 Add this faction to the game. The player name is optional, you also do just
 =setup Nomads=.
 
+Example: =setup Nomads for Alice email alice@example.com=
+
+For a PBEM game, associate the email address with this faction. Gets
+added to the list of addresses that the "send email" functionality sends
+email to, except those sent by this faction.
+
 ** =email= /email addresses/
 
-Example: =email p1@example.com,p2@example.com=
+Example: =email alice@example.com,bob@example.com,charlie@example.com=
 
-List email addresses associated with the game. Currently the only
-use for these addresses is the "send email" functionality for the
-per-faction interface.
+List the email addresses associated with the game. These addresses
+get added to all emails sent by the game.
 
 * Notes on specific factions
 

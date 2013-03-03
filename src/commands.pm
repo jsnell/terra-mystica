@@ -525,8 +525,8 @@ sub command {
         command_action $assert_faction->(), uc $1;
     } elsif ($command =~ /^start$/) {
         command_start;
-    } elsif ($command =~ /^setup (\w+)(?: for (\S+))?$/) {
-        setup $1, $2;
+    } elsif ($command =~ /^setup (\w+)(?: for (\S+?))?(?: email (\S+))?$/) {
+        setup $1, $2, $3;
     } elsif ($command =~ /delete (\w+)$/) {
         my $name = uc $1;
         push @ledger, { comment => "Removing tile $name" };
@@ -670,12 +670,13 @@ sub clean_commands {
         $prefix = lc $1;
     }
 
-    if (/^email/) {
-        return $prefix, $_;
+    my @commands = $_;
+    if ($prefix) {
+        # Split subcommands
+        @commands = split /[.]/, $_;
     }
 
-    # Split subcommands, and clean them up
-    my @commands = split /[.]/, $_;
+    # Clean them up
     for (@commands) {
         s/^\s+//;
         s/\s+$//;

@@ -479,7 +479,7 @@ my %setups = (
 );
 
 sub setup {
-    my ($faction_name, $player) = @_;
+    my ($faction_name, $player, $email) = @_;
 
     die "Unknown faction: $faction_name\n" if !$setups{$faction_name};
 
@@ -487,6 +487,7 @@ sub setup {
 
     $faction->{name} = $faction_name;
     $faction->{start_player} = 1 if !@factions;
+    $faction->{email} = $email;
 
     if ($factions_by_color{$faction->{color}}) {
         my $other_name = $factions_by_color{$faction->{color}}->{name};

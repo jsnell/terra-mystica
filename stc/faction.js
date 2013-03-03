@@ -65,16 +65,16 @@ function makeMailToLink() {
     var newline = "%0D%0A";
     var status = $(preview_status).innerHTML;
     var moves = $(preview_commands).textContent.split(/\n/).map(function (x) {
-        return "  " + x;
+        return "  " + encodeURIComponent(x);
     }).join(newline);
     var actions = $(action_required).childElements().map(function (x) {
-        return "  " + x.textContent
+        return "  " + encodeURIComponent(x.textContent);
     }).join(newline)
     var footer = "Round #{round}, turn #{turn}".interpolate(state);
 
     var moves = status + ":" + newline + moves + newline + newline + "Actions required:" + newline + actions + newline + newline + footer;
 
-    var link = "mailto:?subject=Re: Terra Mystica PBEM (" + params.game + ")&to=" + state.email + "&body=" + moves;
+    var link = "mailto:?subject=Re: Terra Mystica PBEM (" + params.game + ")&to=" + encodeURIComponent(state.email) + "&body=" + moves;
 
     return link;
 }

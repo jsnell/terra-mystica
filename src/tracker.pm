@@ -25,6 +25,7 @@ our $turn = 0;
 sub finalize {
     for my $faction (@factions) {
         $factions{$faction}{income} = { faction_income $faction };
+        delete $factions{$faction}{email};
     }
         
     if ($round > 0) {
