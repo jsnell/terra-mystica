@@ -734,8 +734,26 @@ function drawFactions() {
         faction.vp_id = vp_id;
         info.insert(new Element('div').update(
             "#{C} c, #{W} w, #{P}<span style='color:#888'>/#{MAX_P}</span> p, <a href='javascript:toggleVP(\"#{name}/vp\")'>#{VP} vp</a>, #{P1}/#{P2}/#{P3} pw".interpolate(faction)));
-        info.insert(new Element('div').update(
-            "dig level #{dig.level}, ship level #{ship.level}".interpolate(faction)));
+        if (faction.BON4 > 0) {
+            faction.ship_bonus = " (+1)";
+        }
+
+        var levels = [];
+
+        if (faction.dig.max_level > 0) {
+            var dig = "dig level #{dig.level}<span style='color:#888'>/#{dig.max_level}</span>".interpolate(faction);
+            levels.push(dig);
+        }
+
+        if (faction.ship.max_level > 0) {
+            var ship = "ship level #{ship.level}<span style='color:#888'>/#{ship.max_level}</span>".interpolate(faction);
+            if (faction.BON4 > 0) {
+                ship += " (+1)";
+            }
+            levels.push(ship);
+        }
+
+        info.insert(new Element('div').update(levels.join(", ")));
 
         info.insert("<div></div>");
 
