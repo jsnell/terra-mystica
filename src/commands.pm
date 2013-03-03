@@ -261,14 +261,19 @@ sub command_decline {
             $_->{faction} ne $faction->{name} or $_->{type} ne 'leech'
         } @action_required;
     } else {
-        my $count = @action_required;
-        @action_required = grep {
-            !($_->{faction} eq $faction->{name} and
-              $_->{type} eq 'leech' and
-              $_->{amount} eq $amount and
-              $_->{from_faction} eq $from)
-        } @action_required;
-        die "Invalid decline amount $amount from $from\n" if ($count == @action_required);
+        my $declined = 0;
+        for (@action_required) {
+            if ($_->{faction} eq $faction->{name} and
+                $_->{type} eq 'leech' and
+                $_->{amount} eq $amount and
+                $_->{from_faction} eq $from) {
+                $_ = '';
+                $declined = 1;
+                last;
+            }
+        }
+        @action_required = grep { $_ ne '' } @action_required;
+        die "Invalid decline ($amount from $from)\n" if !$declined;
     }
 }
 
