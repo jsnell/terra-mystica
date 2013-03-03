@@ -73,7 +73,7 @@ function makeMailToLink() {
 
     var moves = status + ":" + newline + moves + newline + newline + "Actions required:" + newline + actions;
 
-    var link = "mailto:?subject=Terra Mystica PBEM (" + params.game + ")&to=" + state.email + "&body=" + moves;
+    var link = "mailto:?subject=Re: Terra Mystica PBEM (" + params.game + ")&to=" + state.email + "&body=" + moves;
 
     return link;
 }
