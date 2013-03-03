@@ -14,7 +14,6 @@ use towns;
 
 my $action_taken;
 my @warn = ();
-my $turn = 0;
 my $printed_turn = 0;
 
 use vars qw($email);

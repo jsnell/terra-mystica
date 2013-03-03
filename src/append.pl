@@ -100,5 +100,7 @@ my $out = encode_json {
     error => $res->{error},
     email => $terra_mystica::email,
     action_required => $res->{action_required},
+    round => $terra_mystica::round,
+    turn => $terra_mystica::turn,
 };
 print $out;

@@ -70,8 +70,9 @@ function makeMailToLink() {
     var actions = $(action_required).childElements().map(function (x) {
         return "  " + x.textContent
     }).join(newline)
+    var footer = "Round #{round}, turn #{turn}".interpolate(state);
 
-    var moves = status + ":" + newline + moves + newline + newline + "Actions required:" + newline + actions;
+    var moves = status + ":" + newline + moves + newline + newline + "Actions required:" + newline + actions + newline + newline + footer;
 
     var link = "mailto:?subject=Re: Terra Mystica PBEM (" + params.game + ")&to=" + state.email + "&body=" + moves;
 

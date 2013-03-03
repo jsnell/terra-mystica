@@ -5,7 +5,7 @@ package terra_mystica;
 use strict;
 use List::Util qw(sum max min);
 
-use vars qw($round @ledger @action_required %leech);
+use vars qw($round $turn @ledger @action_required %leech);
 
 use commands;
 use cults;
@@ -20,6 +20,7 @@ our %leech = ();
 our @action_required = ();
 our @ledger = ();
 our $round = 0;
+our $turn = 0;
 
 sub finalize {
     for my $faction (@factions) {
