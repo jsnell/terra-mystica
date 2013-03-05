@@ -476,19 +476,19 @@ sub command {
         $faction;
     };
 
-    if ($command =~ /^([+-])(\d*)(\w+)(?: for (\w+))?$/) {
+    if ($command =~ /^([+-])(\d*)(\w+)(?: for (\w+))?$/i) {
         my ($sign, $count) = (($1 eq '+' ? 1 : -1),
                               ($2 eq '' ? 1 : $2));
         my $delta = $sign * $count;
-        command_adjust_resources $assert_faction->(), $delta, uc $3, $4;
-    }  elsif ($command =~ /^build (\w+)$/) {
+        command_adjust_resources $assert_faction->(), $delta, uc $3, lc $4;
+    }  elsif ($command =~ /^build (\w+)$/i) {
         command_build $assert_faction->(), uc $1;
-    } elsif ($command =~ /^upgrade (\w+) to ([\w ]+)$/) {
+    } elsif ($command =~ /^upgrade (\w+) to ([\w ]+)$/i) {
         die "Can't upgrade in setup phase\n" if !$round;
         command_upgrade $assert_faction->(), uc $1, alias_building uc $2;
-    } elsif ($command =~ /^send (p|priest) to (\w+)(?: for (\d+))?$/) {
+    } elsif ($command =~ /^send (p|priest) to (\w+)(?: for (\d+))?$/i) {
         command_send $assert_faction->(), uc $2, $3;
-    } elsif ($command =~ /^convert (\d+)?\s*(\w+) to (\d+)?\s*(\w+)$/) {
+    } elsif ($command =~ /^convert (\d+)?\s*(\w+) to (\d+)?\s*(\w+)$/i) {
         my $from_count = $1 || 1;
         my $from_type = alias_resource uc $2;
         my $to_count = $3 || 1;
@@ -497,17 +497,17 @@ sub command {
         command_convert($assert_faction->(),
                         $from_count, $from_type,
                         $to_count, $to_type);
-    } elsif ($command =~ /^burn (\d+)$/) {
+    } elsif ($command =~ /^burn (\d+)$/i) {
         $assert_faction->();
         adjust_resource $faction, 'P2', -2*$1;
         adjust_resource $faction, 'P3', $1;
-    } elsif ($command =~ /^leech (\d+)(?: from (\w+))?$/) {
-        command_leech $assert_faction->(), $1, $2;
-    } elsif ($command =~ /^decline(?: (\d+) from (\w+))?$/) { 
-        command_decline $assert_faction->(), $1, $2;
-    } elsif ($command =~ /^transform (\w+) to (\w+)$/) {
+    } elsif ($command =~ /^leech (\d+)(?: from (\w+))?$/i) {
+        command_leech $assert_faction->(), $1, lc $2;
+    } elsif ($command =~ /^decline(?: (\d+) from (\w+))?$/i) { 
+        command_decline $assert_faction->(), $1, lc $2;
+    } elsif ($command =~ /^transform (\w+) to (\w+)$/i) {
         command_transform $assert_faction->(), uc $1, lc $2;
-    } elsif ($command =~ /^dig (\d+)/) {
+    } elsif ($command =~ /^dig (\d+)/i) {
         $assert_faction->();
         my $cost = $faction->{dig}{cost}[$faction->{dig}{level}];
         my $gain = $faction->{dig}{gain}[$faction->{dig}{level}];
@@ -515,19 +515,19 @@ sub command {
         adjust_resource $faction, 'SPADE', $1;
         pay $faction, $cost for 1..$1;
         gain $faction, $gain, 'faction' for 1..$1;
-    } elsif ($command =~ /^bridge (\w+):(\w+)$/) {
+    } elsif ($command =~ /^bridge (\w+):(\w+)$/i) {
         command_bridge $assert_faction->(), uc $1, uc $2;
-    } elsif ($command =~ /^connect (\w+):(\w+)$/) {
+    } elsif ($command =~ /^connect (\w+):(\w+)$/i) {
         command_connect $assert_faction->(), uc $1, uc $2;
-    } elsif ($command =~ /^pass(?: (\w+))?$/) {
+    } elsif ($command =~ /^pass(?: (\w+))?$/i) {
         command_pass $assert_faction->(), uc ($1 // '');
-    } elsif ($command =~ /^action (\w+)$/) {
+    } elsif ($command =~ /^action (\w+)$/i) {
         command_action $assert_faction->(), uc $1;
-    } elsif ($command =~ /^start$/) {
+    } elsif ($command =~ /^start$/i) {
         command_start;
-    } elsif ($command =~ /^setup (\w+)(?: for (\S+?))?(?: email (\S+))?$/) {
-        setup $1, $2, $3;
-    } elsif ($command =~ /delete (\w+)$/) {
+    } elsif ($command =~ /^setup (\w+)(?: for (\S+?))?(?: email (\S+))?$/i) {
+        setup lc $1, $2, $3;
+    } elsif ($command =~ /delete (\w+)$/i) {
         my $name = uc $1;
         push @ledger, { comment => "Removing tile $name" };
         if ($pool{$name} <= 1) {
@@ -535,7 +535,7 @@ sub command {
         } else {
             $pool{$name}--;
         }
-    } elsif ($command =~ /^income$/) {
+    } elsif ($command =~ /^income$/i) {
         if ($faction_name) {
             take_income_for_faction $faction_name;
         } else {
@@ -549,9 +549,9 @@ sub command {
                 handle_row "$_: income";
             }
         }
-    } elsif ($command =~ /^advance (ship|dig)/) {
-        command_advance $assert_faction->(), $1;
-    } elsif ($command =~ /^score (.*)/) {
+    } elsif ($command =~ /^advance (ship|dig)/i) {
+        command_advance $assert_faction->(), lc $1;
+    } elsif ($command =~ /^score (.*)/i) {
         my $setup = uc $1;
         @score_tiles = split /,/, $setup;
         die "Invalid scoring tile setup: $setup\n" if @score_tiles != 6;
@@ -560,7 +560,7 @@ sub command {
             my $desc = $tiles{$score_tiles[$i]}{vp_display};
             push @ledger, { comment => "Round $r scoring: $score_tiles[$i], $desc" };
         }
-    } elsif ($command =~ /^finish$/) {
+    } elsif ($command =~ /^finish$/i) {
         score_final_cults;
         score_final_networks;
         score_final_resources;
@@ -568,9 +568,9 @@ sub command {
             $factions{$_}{passed} = 0;
         }
         @action_required = ( { type => 'gameover' } );
-    } elsif ($command =~ /^score_resources$/) {
+    } elsif ($command =~ /^score_resources$/i) {
         score_final_resources_for_faction $faction_name;
-    } elsif ($command =~ /^email (.*)/) {
+    } elsif ($command =~ /^email (.*)/i) {
         $email = $1;
     } else {
         die "Could not parse command '$command'.\n";
@@ -807,7 +807,7 @@ sub handle_row {
 
     # Execute commands.
     for my $command (@commands) {
-        command $faction_name, lc $command;
+        command $faction_name, $command;
     }
 
     if (!$faction_name) {
