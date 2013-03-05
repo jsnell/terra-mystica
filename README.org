@@ -1,0 +1,10 @@
+#+TITLE: README
+#+AUTHOR: Juho Snellman
+#+EMAIL: jsnell@iki.fi
+#+STYLE: <link rel="stylesheet" type="text/css" href="stc/org.css" />
+
+A PBEM moderator for the boardgame Terra Mystica.
+
+- Written in Perl and JavaScript
+- Uses git as the backing storage for games, no database
+
