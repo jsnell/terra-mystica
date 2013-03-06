@@ -306,6 +306,13 @@ build a bridge with =bridge XX:YY=.
 
 * Known issues and workarounds
 
+** Outlook
+
+The "send email" link doesn't work with Outlook, due to it using semicolon
+as the address separator rather than the standard comma. The workaround
+is to toggle the =Allow comma as address separator= option in Outlook,
+as described here <http://support.microsoft.com/kb/820868>.
+
 ** FAV5 tile
 
 Problem: The tracker doesn't correctly account for a situation where:
@@ -326,6 +333,7 @@ Solution: Before taking the town tile, move the player down a step on
 the cult tracks he doesn't want to advance to 10 on (for example
 =-WATER=). Note that you should do this adjustment first, doing it
 after taking the town tile will unjustly award 3 power to the player.
+
 
 
 
