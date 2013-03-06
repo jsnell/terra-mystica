@@ -308,10 +308,12 @@ build a bridge with =bridge XX:YY=.
 
 ** Outlook
 
-The "send email" link doesn't work with Outlook, due to it using semicolon
-as the address separator rather than the standard comma. The workaround
-is to toggle the =Allow comma as address separator= option in Outlook,
-as described here <http://support.microsoft.com/kb/820868>.
+Problem: The "send email" link doesn't work with Outlook.
+
+Solution: The reason is Outlook's use of the semicolon as the address
+separator rather than the standard comma. The workaround is to toggle
+the =Allow comma as address separator= option in Outlook, as described
+here <http://support.microsoft.com/kb/820868>.
 
 ** FAV5 tile
 
