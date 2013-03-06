@@ -764,7 +764,7 @@ sub maybe_advance_to_next_player {
     if ($last) {
         $last = $last->{faction};
         if ($faction_name ne $last) {
-            $warn = "'$faction_name' took an action, expected '$last'"
+            die "'$faction_name' took an action, expected '$last'\n"
         }
     }
 
