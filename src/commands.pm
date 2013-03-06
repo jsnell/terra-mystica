@@ -225,7 +225,8 @@ sub command_leech {
 
         next if $from and $from ne $_->{from_faction};
 
-        if ($_->{from_faction} eq 'cultists') {
+        if ($_->{from_faction} eq 'cultists' and
+            !$factions{cultists}{leech_cult_gained}{$_->{leech_id}}++) {
             push @action_required, { type => 'cult',
                                      amount => 1, 
                                      faction => 'cultists' };
