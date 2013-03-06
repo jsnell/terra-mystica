@@ -307,14 +307,23 @@ function drawCults() {
                         return;
                     }
 
-                    ctx.translate(9, 0);
+                    ctx.translate(12, 0);
 
                     ctx.save();
                     ctx.beginPath();
-                    ctx.arc(0, 10, 6, Math.PI * 2, 0, false);
+                    ctx.arc(0, 10, 8, Math.PI * 2, 0, false);
                     ctx.fillStyle = colors[faction.color];
                     ctx.fill();
                     ctx.stroke()
+                    ctx.restore();
+
+                    ctx.save();
+                    ctx.strokeStyle = (faction.color == 'black' ? '#ccc' : '#000');
+                    ctx.textAlign = 'center';
+                    var l = name[0].toUpperCase();
+                    if (name == 'cultists') { l  = 'c' }
+                    drawText(ctx, l, -2, 14,
+                             "bold 10px Verdana");
                     ctx.restore();
                 });
 
