@@ -349,6 +349,7 @@ function drawCults() {
         };
 
         ctx.save();
+        ctx.beginPath();
         ctx.strokeStyle = "#000";
         ctx.lineWidth = 1;
         ctx.translate(0, 60.5);
