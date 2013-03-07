@@ -1051,6 +1051,10 @@ function draw() {
         $("error").insert("<div>" + row.escapeHTML() + "</div>");
     });
 
+    if ($("main-data")) {
+        $("main-data").style.display = "block";
+    }
+
     drawMap();
     drawCults();
     drawScoringTiles();
