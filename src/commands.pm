@@ -109,7 +109,7 @@ sub command_upgrade {
     my $oldtype = $map{$where}{building};
 
     if ($oldtype ne $wanted_oldtype{$type}) {
-        die "$where contains ə $oldtype, wanted $wanted_oldtype{$type}\n"
+        die "$where contains $oldtype, wanted $wanted_oldtype{$type}\n"
     }
 
     note_leech $faction, $where;
