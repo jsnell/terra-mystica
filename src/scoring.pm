@@ -62,7 +62,7 @@ sub score_type_rankings {
         next if !$level or !defined $scores{$level};
         my $vp = $scores{$level} / $count{$level};
         if ($vp) {
-            handle_row("$faction_name: +${vp}vp for $type");
+            handle_row_internal($faction_name, "+${vp}vp for $type");
         }
     }
 }
@@ -108,7 +108,7 @@ sub score_final_resources {
     push @ledger, { comment => "Converting resources to VPs" };
 
     for (@factions) {
-        handle_row("$_: score_resources");
+        handle_row_internal($_, "score_resources");
     }
 }
 

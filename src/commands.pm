@@ -19,19 +19,13 @@ my $printed_turn = 0;
 use vars qw($email);
 
 sub handle_row;
+sub handle_row_internal;
 
 sub command_adjust_resources {
     my ($faction, $delta, $type, $source) = @_;
     my $faction_name = $faction->{name};
 
     adjust_resource $faction, $type, $delta, $source;
-
-    if (!$round) {
-        if ($faction_name ne $setup_order[0]) {
-            die "Expected $setup_order[0] to pick bonus, not $faction_name\n"
-        }
-        shift @setup_order;
-    }
 
     # Small hack: always remove the notifier for a cultist special cult
     # increase. Needs to be done like this, since we don't want + / - to
@@ -353,11 +347,10 @@ sub command_pass {
         }            
     }
 
-    my $first_to_pass = 1;
-    for (values %factions) {
-        $first_to_pass = 0 if $_->{passed};
-    }
-    if ($first_to_pass) {
+    my $passed_count = grep { $_->{passed} } values %factions;
+    my $first_to_pass = $passed_count == 0;
+
+    if ($round and $first_to_pass) {
         $_->{start_player} = 0 for values %factions;
         $faction->{start_player} = 1;
     }
@@ -376,10 +369,17 @@ sub command_pass {
                 my $x = $pass_vp->{$type}[$faction->{buildings}{$type}{level}];
                 adjust_resource $faction, 'VP', $x, $_;
             }
-        }                
+        }         
     }
 
     if ($bon) {
+        if (!$round) {
+            if ($faction_name ne $setup_order[0]) {
+                die "Expected $setup_order[0] to pick bonus, not $faction_name\n"
+            }
+            shift @setup_order;
+        }
+
         adjust_resource $faction, $bon, 1;
     }
     if ($discard) {
@@ -468,6 +468,41 @@ sub command_advance {
     $action_taken++;
 }
 
+sub command_finish {
+    score_final_cults;
+    score_final_networks;
+    score_final_resources;
+    for (@factions) {
+        $factions{$_}{passed} = 0;
+    }
+    @action_required = ( { type => 'gameover' } );
+}
+
+sub command_income {
+    my $faction_name = shift;
+    if ($faction_name) {
+        take_income_for_faction $faction_name;
+    } else {
+        my @order = factions_in_turn_order;
+        if (!exists $ledger[-1]->{comment}) {
+            push @ledger, {
+                comment => sprintf "Round %d income", $round + 1
+            };
+        }
+        for (@order) {
+            handle_row_internal $_, "income_for_faction";
+        }
+    }
+}
+
+sub non_leech_action_required {
+    return scalar grep { $_->{type} ne 'leech' } @action_required;
+}
+
+sub full_action_required {
+    return scalar grep { $_->{type} eq 'full' } @action_required;
+}
+
 sub command {
     my ($faction_name, $command) = @_;
     my $faction = $faction_name ? $factions{$faction_name} : undef;
@@ -479,9 +514,16 @@ sub command {
 
     if ($command =~ /^([+-])(\d*)(\w+)(?: for (\w+))?$/i) {
         my ($sign, $count) = (($1 eq '+' ? 1 : -1),
-                              ($2 eq '' ? 1 : $2));
+                              ($2 eq '' ? 1 : $2));        
         my $delta = $sign * $count;
-        command_adjust_resources $assert_faction->(), $delta, uc $3, lc $4;
+        my $type = uc $3;
+
+        if (!$round and $type =~ /BON/) {
+            handle_row_internal $faction_name, "pass $type";
+            return 0;
+        }
+
+        command_adjust_resources $assert_faction->(), $delta, $type, lc $4;
     }  elsif ($command =~ /^build (\w+)$/i) {
         command_build $assert_faction->(), uc $1;
     } elsif ($command =~ /^upgrade (\w+) to ([\w ]+)$/i) {
@@ -525,6 +567,7 @@ sub command {
     } elsif ($command =~ /^action (\w+)$/i) {
         command_action $assert_faction->(), uc $1;
     } elsif ($command =~ /^start$/i) {
+        return 0 if full_action_required;
         command_start;
     } elsif ($command =~ /^setup (\w+)(?: for (\S+?))?(?: email (\S+))?$/i) {
         setup lc $1, $2, $3;
@@ -537,19 +580,12 @@ sub command {
             $pool{$name}--;
         }
     } elsif ($command =~ /^income$/i) {
-        if ($faction_name) {
-            take_income_for_faction $faction_name;
-        } else {
-            my @order = factions_in_turn_order;
-            if (!exists $ledger[-1]->{comment}) {
-                push @ledger, {
-                    comment => sprintf "Round %d income", $round + 1
-                };
-            }
-            for (@order) {
-                handle_row "$_: income";
-            }
+        return 0 if non_leech_action_required;
+        for (@factions) {
+            command_income $_ if !$factions{$_}{income_taken};
         }
+    } elsif ($command =~ /^income_for_faction$/i) {
+        command_income $faction_name;
     } elsif ($command =~ /^advance (ship|dig)/i) {
         command_advance $assert_faction->(), lc $1;
     } elsif ($command =~ /^score (.*)/i) {
@@ -562,13 +598,8 @@ sub command {
             push @ledger, { comment => "Round $r scoring: $score_tiles[$i], $desc" };
         }
     } elsif ($command =~ /^finish$/i) {
-        score_final_cults;
-        score_final_networks;
-        score_final_resources;
-        for (@factions) {
-            $factions{$_}{passed} = 0;
-        }
-        @action_required = ( { type => 'gameover' } );
+        return 0 if non_leech_action_required;
+        command_finish;
     } elsif ($command =~ /^score_resources$/i) {
         score_final_resources_for_faction $faction_name;
     } elsif ($command =~ /^email (.*)/i) {
@@ -576,6 +607,8 @@ sub command {
     } else {
         die "Could not parse command '$command'.\n";
     }
+
+    1;
 }
 
 sub detect_incomplete_state {
@@ -785,8 +818,8 @@ sub maybe_advance_to_next_player {
     return $warn;
 }
 
-sub handle_row {
-    my ($faction_name, @commands) = clean_commands @_;
+sub handle_row_internal {
+    my ($faction_name, @commands) = @_;
 
     return if !@commands;
 
@@ -806,9 +839,11 @@ sub handle_row {
         %old_data = map { $_, $factions{$faction_name}{$_} } @fields; 
     }
 
+    my $print = 0;
+
     # Execute commands.
     for my $command (@commands) {
-        command $faction_name, $command;
+        $print += (command $faction_name, $command);
     }
 
     if (!$faction_name) {
@@ -825,7 +860,37 @@ sub handle_row {
                  warning => $warn,
                  commands => (join ". ", @commands),
                  map { $_, $pretty_delta{$_} } @fields};
-    push @ledger, $info;
+    if ($print) {
+        push @ledger, $info;
+    }
+}
+
+sub handle_row {
+    my ($faction_name, @commands) = clean_commands @_;
+
+    handle_row_internal $faction_name, @commands;
+
+    if (@factions and !@action_required) {
+        my $all_passed = 1;
+        my $income_taken = 0;
+        for my $faction (values %factions) {
+            $all_passed &&= $faction->{passed};
+            $income_taken ||= $faction->{income_taken};
+        }
+
+        if ($round == 6) {
+            command_finish;
+            return;
+        } 
+
+        if (!$income_taken) {
+            command_income '';
+        }
+
+        if (!@action_required) {
+            command_start;
+        }
+    }
 }
 
 1;

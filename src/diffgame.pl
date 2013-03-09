@@ -18,6 +18,14 @@ sub pretty_res {
 
 my ($dir1, $dir2) = (shift, shift);
 
+sub convert_ledger {
+    my $data = shift;
+    return $data if !ref $data;
+
+    # command / comment only
+    return [ map { [ $_->{commands} || $_->{comment} ] } @{$data} ];        
+}
+
 for (@ARGV) {
     print "Evaluating $_";
     my $a = pretty_res $dir1, $_;
@@ -32,10 +40,13 @@ for (@ARGV) {
         }
 
         if ($key eq 'ledger') {
+            $aa = convert_ledger $aa;
+            $bb = convert_ledger $bb;
             my $aj = join "\n", map { to_json($_) } @{$aa};
             my $bj = join "\n", map { to_json($_) } @{$bb};
             if ($aj ne $bj) {
-                print diff \$aj, \$bj;
+                print "Ledger diffs";
+                # print diff \$aj, \$bj;
             }
         } else {
             my $aj = to_json($aa, { pretty => 1, canonical => 1 });

@@ -47,23 +47,12 @@ Place initial dwellings:
 Select initial bonus tiles:
 
 #+BEGIN_EXAMPLE
-  Swarmlings: +Bon8
-  Auren: +Bon2
-  Nomads: +Bon5
+  Swarmlings: Pass Bon8
+  Auren: Pass Bon2
+  Nomads: Pass Bon5
 #+END_EXAMPLE
 
-Get first round's income:
-
-#+BEGIN_EXAMPLE
-  # Round 1 income 
-  income
-#+END_EXAMPLE
-
-Start the game:
-
-#+BEGIN_EXAMPLE
-  start
-#+END_EXAMPLE
+And then start the game!
 
 * Commands
 
@@ -198,7 +187,34 @@ Example: =advance ship=
 Advance 1 step on the shipping track. "Advance dig" for improving the
 shovel track.
 
+** =setup= /faction/ for /player/ email /address/
+
+Example:
+#+BEGIN_EXAMPLE
+setup Nomads for Alice
+#+END_EXAMPLE
+
+Add this faction to the game. The player name is optional, you also do just
+=setup Nomads=.
+
+Example:
+#+BEGIN_EXAMPLE
+setup Nomads for Alice email alice@example.com
+#+END_EXAMPLE
+
+For a PBEM game, associate the email address with this faction. Gets
+added to the list of addresses that the "send email" functionality sends
+email to, except those sent by this faction.
+
+
+* Obscure commands
+
 ** =income=
+
+/Note/: This command is only needed if you absolutely want to take income
+before all open decisions (e.g. power leeching) have been made. You should generally not
+need it.
+
 #+BEGIN_EXAMPLE
   income
 #+END_EXAMPLE
@@ -208,36 +224,30 @@ shovel track.
 
 Take all income (buildings, favors, bonus tiles, last turn's special
 scoring tile) for either all players (if no faction specified), or a
-specific faction
-. Note -- should be done just before starting a new round.
+specific faction. Should be done just before =start=-ing a new round.
 
 ** =start=
+
+/Note/: This command is only needed if you want to start a new round
+before all the decisions from the previous round (e.g. using spades
+gained from cult bonuses) are done. You should not need it.
 
 Move to the next round.
 
 ** =finish=
 
-Do the final scoring.
-
-** =setup= /faction/ for /player/ email /address/
-
-Example: =setup Nomads for Alice=
-
-Add this faction to the game. The player name is optional, you also do just
-=setup Nomads=.
-
-Example: =setup Nomads for Alice email alice@example.com=
-
-For a PBEM game, associate the email address with this faction. Gets
-added to the list of addresses that the "send email" functionality sends
-email to, except those sent by this faction.
+Do the final scoring. You can also trigger the final scoring by just
+declining or accepting any remaining offers of power, once all players
+have passed on the final round.
 
 ** =email= /email addresses/
 
 Example: =email alice@example.com,bob@example.com,charlie@example.com=
 
 List the email addresses associated with the game. These addresses
-get added to all emails sent by the game.
+get added to all emails sent by the game. Useful mainly if you want
+all game-related traffic to go to a specific mailing list. Usually
+it's better to associate addresses with individual factions.
 
 * Notes on specific factions
 
