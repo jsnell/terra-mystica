@@ -131,6 +131,22 @@ sub do_pass_vp {
             }
         }
     }
+
+    # XXX hack
+    if ($faction->{name} eq 'engineers' and
+        $faction->{buildings}{SH}{level}) {
+        my $color = 'gray';
+        for my $bridge (@bridges) {
+            if ($bridge->{color} eq $color and
+                $map{$bridge->{from}}{building} and
+                $map{$bridge->{from}}{color} eq $color and
+                $map{$bridge->{to}}{building} and
+                $map{$bridge->{to}}{color} eq $color) {
+                $fun->(3, 'SH');
+            }
+        }            
+    }
+
 }
 
 sub faction_vps {
