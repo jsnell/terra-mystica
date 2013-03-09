@@ -89,6 +89,11 @@ sub score_final_resources_for_faction {
     my $faction_name = shift;
     my $faction = $factions{$faction_name};
 
+    my $b = int($faction->{P2} / 2);
+    if ($b) {
+        command $faction_name, "burn $b";
+    }
+
     for (1..($faction->{P3})) {
         command $faction_name, "convert 1pw to 1c";
     }
