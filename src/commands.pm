@@ -362,15 +362,11 @@ sub command_pass {
         if (/^BON/) {
             $discard = $_;
         }
-
-        my $pass_vp = $tiles{$_}{pass_vp};
-        if ($pass_vp) {
-            for my $type (keys %{$pass_vp}) {
-                my $x = $pass_vp->{$type}[$faction->{buildings}{$type}{level}];
-                adjust_resource $faction, 'VP', $x, $_;
-            }
-        }         
     }
+
+    do_pass_vp $faction, sub {
+        adjust_resource $faction, 'VP', $_[0], $_[1];
+    };
 
     if ($bon) {
         if (!$round) {
@@ -476,6 +472,7 @@ sub command_finish {
         $factions{$_}{passed} = 0;
     }
     @action_required = ( { type => 'gameover' } );
+    $finished = 1;
 }
 
 sub command_income {

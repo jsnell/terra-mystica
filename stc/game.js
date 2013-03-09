@@ -814,6 +814,28 @@ function drawFactions() {
             });
         }
 
+        if (faction.vp_projection) {
+            var vp_proj_id = "vp-projection-" + name;
+            var vp_proj = new Element('table', {'class': 'income-table', 'id': vp_proj_id});
+            info.insert(vp_proj);
+            {
+	        var row = new Element('tr');
+	        row.update("<td>VP projection:<td>total<td>#{total}".interpolate(faction.vp_projection));
+	        row.insert(new Element('td').update("<a href='javascript:toggleIncome(\"" + vp_proj_id + "\")'>+</a>"));
+                vp_proj.insert(row);
+            }
+
+            vp_proj.insert(Element('tr', {'style': 'display: none'}).update("<td colspan=3><hr>"));
+            $H(faction.vp_projection).each(function(elem, ind) {
+                if (!elem.value || elem.key == "total") {
+                    return;
+                }
+
+                var row = new Element('tr', {'style': 'display: none'});
+                vp_proj.insert(row.update("<td><td>#{key}<td>#{value}".interpolate(elem)));
+            });            
+        }
+
         renderColorCycle(container, faction.color);
         renderTreasury(container, faction, name);
         

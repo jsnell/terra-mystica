@@ -47,8 +47,13 @@ sub maybe_score_favor_tile {
     }
 }
 
+sub score_with_ledger_entry {
+    my ($faction_name, $vp, $type) = @_;
+    handle_row_internal($faction_name, "+${vp}vp for $type");
+}
+
 sub score_type_rankings {
-    my ($type, @scores) = @_;
+    my ($type, $fun, @scores) = @_;
 
     my @levels = sort { $a <=> $b } map { $factions{$_}{$type} // 0} keys %factions;
     my %scores = ();
@@ -62,7 +67,7 @@ sub score_type_rankings {
         next if !$level or !defined $scores{$level};
         my $vp = $scores{$level} / $count{$level};
         if ($vp) {
-            handle_row_internal($faction_name, "+${vp}vp for $type");
+            $fun->($faction_name, $vp, $type);
         }
     }
 }
@@ -70,14 +75,14 @@ sub score_type_rankings {
 sub score_final_cults {
     for my $cult (@cults) {
         push @ledger, { comment => "Scoring $cult cult" };
-        score_type_rankings $cult, 8, 4, 2;
+        score_type_rankings $cult, \&score_with_ledger_entry, 8, 4, 2;
     }
 }
 
 sub score_final_networks {
     compute_network_size $factions{$_} for @factions;
     push @ledger, { comment => "Scoring largest network" };
-    score_type_rankings 'network', 18, 12, 6;
+    score_type_rankings 'network', \&score_with_ledger_entry, 18, 12, 6;
 }
 
 sub score_final_resources_for_faction {
@@ -111,6 +116,61 @@ sub score_final_resources {
         handle_row_internal($_, "score_resources");
     }
 }
+
+sub do_pass_vp {
+    my ($faction, $fun) = @_;
+
+    for (keys %{$faction}) {
+        next if !$faction->{$_};
+
+        my $pass_vp = $tiles{$_}{pass_vp};
+        if ($pass_vp) {
+            for my $type (keys %{$pass_vp}) {
+                $fun->($pass_vp->{$type}[$faction->{buildings}{$type}{level}],
+                       $_);
+            }
+        }
+    }
+}
+
+sub faction_vps {
+    my $faction = shift;
+    my %projection = ();
+
+    $projection{actual} = $faction->{VP};
+
+    do_pass_vp $faction, sub {
+        $projection{$_[1]} += $_[0];
+    };
+
+    
+    my $score_to_projection = sub {
+        my ($faction_name, $vp, $type) = @_;
+        if ($faction->{name} eq $faction_name) {
+            $projection{$type} += $vp;
+        }
+    };
+
+    for (@factions) {
+        if (!$factions{$_}{network}) {
+            compute_network_size $factions{$_}
+        }
+    }
+    score_type_rankings 'network', $score_to_projection, 18, 12, 6;
+
+    for my $cult (@cults) {
+        score_type_rankings $cult, $score_to_projection, 8, 4, 2;
+    }
+
+    my $rate = $faction->{exchange_rates}{C}{VP} // 3;
+    my $coins = sum map { $faction->{$_} } qw(P3 C W P);
+    $coins += int($faction->{P2} / 2);
+    $projection{resources} = int($coins / $rate);
+
+    $projection{total} = sum values %projection;
+
+    return %projection;
+};
 
 1;
 

@@ -5,7 +5,7 @@ package terra_mystica;
 use strict;
 use List::Util qw(sum max min);
 
-use vars qw($round $turn @ledger @action_required %leech);
+use vars qw($round $turn $finished @ledger @action_required %leech);
 
 use commands;
 use cults;
@@ -21,6 +21,7 @@ our @action_required = ();
 our @ledger = ();
 our $round = 0;
 our $turn = 0;
+our $finished = 0;
 
 sub finalize {
     my $delete_email = shift;
@@ -29,6 +30,9 @@ sub finalize {
         $factions{$faction}{income} = { faction_income $faction };        
         if ($delete_email) {
             delete $factions{$faction}{email};
+        }
+        if ($round == 6 and !$finished) {
+            $factions{$faction}{vp_projection} = { faction_vps $factions{$faction} };
         }
     }
         
