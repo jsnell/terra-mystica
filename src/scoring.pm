@@ -155,10 +155,11 @@ sub faction_vps {
 
     $projection{actual} = $faction->{VP};
 
-    do_pass_vp $faction, sub {
-        $projection{$_[1]} += $_[0];
-    };
-
+    if (!$faction->{passed}) {
+        do_pass_vp $faction, sub {
+            $projection{$_[1]} += $_[0];
+        };
+    }
     
     my $score_to_projection = sub {
         my ($faction_name, $vp, $type) = @_;
