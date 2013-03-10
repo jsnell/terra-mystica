@@ -5,12 +5,18 @@ use warnings;
 use File::Basename qw(dirname);
 use JSON;
 use Text::Diff qw(diff);
+use Time::HiRes qw(time);
 
 my $dir = dirname $0;
+my $time = 0;
 
 sub pretty_res {
+    my $begin = time;
     my $res = qx(perl $dir/tracker.pl @_);
     my $json = decode_json $res;
+    if ($time) {
+        printf "  %s: %5.3f\n", $_[0], (time - $begin);
+    }
     $json;
 #    my $pretty = to_json($json, { pretty => 1 });
 #    $pretty;
