@@ -115,6 +115,7 @@ sub evaluate_game {
         favors => { map({$_, $tiles{$_}} grep { /^FAV/ } keys %tiles ) },
         action_required => \@action_required,
         history_view => $history_view,
+        round => $round,
         cults => \%cults,
     }
 
