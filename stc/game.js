@@ -997,6 +997,12 @@ function drawActionRequired() {
             record.pretty = 'should pick a bonus tile';
         } else if (record.type == 'gameover') {
             record.pretty = 'The game is over';
+            var table = "";
+            $H(state.factions).sortBy(function(a) { return -a.value.VP }).each(function(elem) {
+                elem.faction_span = coloredFactionSpan(elem.key);
+                table += "<tr><td>#{faction_span}<td>#{value.VP}</tr>".interpolate(elem);
+            });
+            record.pretty += "<table>" + table + "</table>";
         } else {
             record.pretty = '?';
         }
