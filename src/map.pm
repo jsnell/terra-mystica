@@ -122,9 +122,9 @@ sub check_reachable {
 
     my $range = $faction->{ship}{level};
     if ($faction->{ship}{max_level}) {
-        if ($faction->{BON4} and !
+        if ($faction->{BON4} and
             # Bon4 doesn't apply in phase III
-            $faction->{passed}) {
+            !$faction->{passed}) {
             # XXX hack.
             $range++ 
         }
@@ -148,7 +148,7 @@ sub check_reachable {
         }
     }
 
-    if ($faction->{teleport}) {
+    if ($faction->{teleport} and !$faction->{passed}) {
         my $t = $faction->{teleport};
         my $level = $t->{level};
         my $range = $t->{range}[$level];
