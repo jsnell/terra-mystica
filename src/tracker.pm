@@ -116,6 +116,7 @@ sub evaluate_game {
         action_required => \@action_required,
         history_view => $history_view,
         round => $round,
+        finished => $finished,
         cults => \%cults,
     }
 
