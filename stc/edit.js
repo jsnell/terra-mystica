@@ -20,6 +20,7 @@ var browser = new Browser();
 
 function init() {
     $("fallback-editor").style.display = "block";
+    $("title").innerHTML += " - " + id.match(/edit\/([^_]*)/)[1];
     load();
 }
 
@@ -94,12 +95,6 @@ function load() {
                 var res = transport.responseText.evalJSON();
                 setEditorContent(res.data);
                 hash = res.hash;
-
-                var title = getEditorContent().match("# (.*)");
-                if (title && title[1]) {
-                    $("title").innerHTML += " (" + title[1] + ")";
-                    $("header").innerHTML += " (" + title[1] + ")";
-                }
 
                 drawActionRequired(res);
 

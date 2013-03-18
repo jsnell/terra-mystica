@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Terra Mystica</title>
+    <title id=title>Terra Mystica</title>
     <meta http-equiv="cache-control" content="no-cache">
     <script type="text/javascript" language="javascript"
             src="/stc/prototype-1.7.1.js">
@@ -57,6 +57,8 @@
       var pathname = document.location.pathname.sub("/faction/", "");
       var path = pathname.split("/");
       var params = { "game": path[0], "faction": path[1], "key": path[2] };
+
+      $("title").innerHTML += " - " + params.game + " / " + params.faction;
 
       var currentFaction = params.faction;
       preview();
