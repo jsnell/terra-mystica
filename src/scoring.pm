@@ -180,6 +180,15 @@ sub faction_vps {
     }
     score_type_rankings 'network', $score_to_projection, 18, 12, 6;
 
+    {
+        my $total = sum map {
+            $faction->{buildings}{$_}{level}
+        } qw(D TP TE SH SA);
+        $projection{network} ||= 0;
+        $projection{network} .=  " [".$faction->{network}."/$total]";
+    }
+    
+
     for my $cult (@cults) {
         score_type_rankings $cult, $score_to_projection, 8, 4, 2;
     }

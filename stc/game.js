@@ -832,7 +832,7 @@ function drawFactions() {
                 }
 
                 var row = new Element('tr', {'style': 'display: none'});
-                vp_proj.insert(row.update("<td><td>#{key}<td>#{value}".interpolate(elem)));
+                vp_proj.insert(row.update("<td><td>#{key}<td style='white-space: nowrap'>#{value}</nobr>".interpolate(elem)));
             });            
         }
 
