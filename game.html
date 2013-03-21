@@ -47,7 +47,7 @@
     <script language="javascript">
       var state = null;
       var id = document.location.pathname.sub(/.*\//, "");
-      $("title").innerHTML += " - " + id + "";
+      $("title").text += " - " + id + "";
       var currentFaction = "";
       new Ajax.Request("/cgi-bin/bridge.pl?game=" + id, {
           method:"get",

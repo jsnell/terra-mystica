@@ -58,7 +58,7 @@
       var path = pathname.split("/");
       var params = { "game": path[0], "faction": path[1], "key": path[2] };
 
-      $("title").innerHTML += " - " + params.game + " / " + params.faction;
+      $("title").text += " - " + params.game + " / " + params.faction;
 
       var currentFaction = params.faction;
       preview();

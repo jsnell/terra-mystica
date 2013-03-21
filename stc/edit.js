@@ -21,7 +21,7 @@ var browser = new Browser();
 function init() {
     $("fallback-editor").style.display = "block";
     try {
-        $("title").innerHTML += " - " + id.match(/edit\/([^_]*)/)[1];
+        $("title").text += " - " + id.match(/edit\/([^_]*)/)[1];
     } catch (e) {
     }
     load();
