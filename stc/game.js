@@ -572,17 +572,18 @@ function renderTown(div, name, faction, count) {
 }
 
 function naturalSortKey(val) {
-    if (val.key == "FAV10") {
-        return "FAVA";
-    }
-    if (val.key == "FAV11") {
-        return "FAVB";
-    }
-    if (val.key == "FAV12") {
-        return "FAVC";
-    }
+    var components = val.key.match(/(\d+|\D+)/g);
+    var key = [];
 
-    return val.key;
+    components.each(function(elem) {
+        if (elem.match(/\d/)) {
+            key.push(parseInt(elem) + 1e6);
+        } else {
+            key.push(elem);
+        }
+    });
+
+    return key;
 }
 
 function renderTreasury(board, treasury, faction) {
@@ -1083,6 +1084,33 @@ function addFactionInput(parent, record, index) {
     }
     if (record.type == "bonus") {
         addTakeTileButtons(parent, index, "BON", i);
+    }
+    if (record.type == "dwelling") {
+        var div = new Element("div", { "id": "leech-" + index,
+                                       "style": "padding-left: 2em" });
+        $H(state.map).sortBy(naturalSortKey).each(function(elem) {
+            var hex = elem.value;
+
+            if (hex.row == null) {
+                return;
+            }
+
+            if (hex.color != state.factions[currentFaction].color) {
+                return;
+            }
+
+            if (hex.building) {
+                return;
+            }
+
+            var button = new Element("button").update(elem.key);
+            button.onclick = function() {
+                $("leech-" + index).style.display = "none";
+                appendCommand("Build #{key}\n".interpolate(elem));
+            };
+            div.insert(button);                                               
+        });
+        $(parent).insert(div);
     }
 }
 
