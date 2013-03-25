@@ -314,15 +314,6 @@ command: =convert 2w to bridge. bridge h6:i9=
 
 * Known issues and workarounds
 
-** Outlook
-
-Problem: The "send email" link doesn't work with Outlook.
-
-Solution: The reason is Outlook's use of the semicolon as the address
-separator rather than the standard comma. The workaround is to toggle
-the =Allow comma as address separator= option in Outlook, as described
-here <http://support.microsoft.com/kb/820868>.
-
 ** FAV5 tile
 
 Problem: The tracker doesn't correctly account for a situation where:
@@ -347,4 +338,26 @@ after taking the town tile will unjustly award 3 power to the player.
 
 
 
+
+* Email Setup
+
+The "Send email" functionality works by opening a pre-formatted email
+message in your normal email program, addressed to the other players.
+This only works if your browser is configured to use the correct email
+program. It should work by default at least on Android devices, iPhones
+and iPads.
+
+** Gmail and Chrome
+
+To get Chrome to automatically open the message in Gmail, rather than 
+in a desktop mailer, follow these instructions from Google:
+
+https://support.google.com/chrome/bin/answer.py?hl=en&answer=1382847&p=ib_protocol_handler
+
+** Outlook
+
+Outlook uses the semicolon as the address separator rather than the
+standard comma. The workaround is to toggle the =Allow comma as
+address separator= option in Outlook, as described here
+<http://support.microsoft.com/kb/820868>.
 
