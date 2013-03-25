@@ -263,13 +263,14 @@ function drawMap() {
     }
 }
 
+var cults = ["FIRE", "WATER", "EARTH", "AIR"];
+
 function drawCults() {
     var canvas = $("cults");
     if (canvas.getContext) {
         canvas.width = canvas.width;
         var ctx = canvas.getContext("2d");
 
-        var cults = ["FIRE", "WATER", "EARTH", "AIR"];
         var x_offset = 0;
 
         var width = 250 / 4;
@@ -1034,24 +1035,90 @@ function drawActionRequired() {
     }
 }
 
+function addTakeTileButtons(parent, index, prefix, id) {
+    var div = new Element("div", { "id": "leech-" + index + "-" + id,
+                                   "style": "padding-left: 2em" });
+    $H(state.pool).sortBy(naturalSortKey).each(function(tile) {
+        if (tile.value < 1 || !tile.key.startsWith(prefix)) {
+            return;
+        }
+
+        if (prefix == "FAV" && state.factions[currentFaction][tile.key] > 0) {
+            return;
+        }
+
+        var button = new Element("button").update(tile.key);
+        button.onclick = function() {
+            gainResource(index, '', tile.key, id);
+        };
+        div.insert(button);                                               
+    });
+    $(parent).insert(div);
+}
+
 function addFactionInput(parent, record, index) {
     if (record.type == "leech") {
-        $(parent).insert("<div id='leech-" + index + "' style='padding-left: 2em'><button onclick='javascript:acceptLeech(" + index + ")'>Accept</a> <button onclick='javascript:declineLeech(" + index + ")'>Decline</button></div>")
+        $(parent).insert("<div id='leech-" + index + "' style='padding-left: 2em'><button onclick='javascript:acceptLeech(" + index + ")'>Accept</button> <button onclick='javascript:declineLeech(" + index + ")'>Decline</button></div>")
     }
+    if (record.type == "cult") {
+        var amount = record.amount;
+        var div = new Element("div", { "id": "leech-" + index + "-0",
+                                       "style": "padding-left: 2em" });
+        cults.each(function(cult) {
+            var button = new Element("button").update(cult.capitalize());
+            button.onclick = function() {
+                gainResource(index, amount == 1 ? '' : amount, cult, 0);
+            };
+            div.insert(button);                                               
+        });
+        $(parent).insert(div);
+    }
+    if (record.type == "town") {
+        addTakeTileButtons(parent, index, "TW");
+    }
+    if (record.type == "favor") {
+        for (var i = 0; i < record.amount; ++i) {
+            addTakeTileButtons(parent, index, "FAV", i);
+        }
+    }
+    if (record.type == "bonus") {
+        addTakeTileButtons(parent, index, "BON", i);
+    }
+}
+
+function appendCommand(cmd) {
+    var val = $(move_entry_input).value;
+
+    if (val != "" && !val.endsWith("\n")) {
+        cmd = ". " + cmd;
+    }
+
+    $(move_entry_input).value += cmd;
+    moveEntryInputChanged();
 }
 
 function acceptLeech(index) {
     var record = state.action_required[index];
     $("leech-" + index).style.display = "none";
-    $(move_entry_input).value += "Leech #{amount} from #{from_faction}\n".interpolate(record);
-        moveEntryInputChanged();
+    appendCommand("Leech #{amount} from #{from_faction}\n".interpolate(record));
 }
 
 function declineLeech(index) {
     var record = state.action_required[index];
     $("leech-" + index).style.display = "none";
-    $(move_entry_input).value += "Decline #{amount} from #{from_faction}\n".interpolate(record);
-        moveEntryInputChanged();
+    appendCommand("Decline #{amount} from #{from_faction}\n".interpolate(record));
+}
+
+function gainResource(index, amount, resource, id) {
+    var record = state.action_required[index];
+    record.amount_pretty = amount;
+    record.resource = resource;
+    $("leech-" + index + "-" + id).style.display = "none";
+    if (resource.startsWith("BON")) {
+        appendCommand("Pass #{resource}".interpolate(record));
+    } else {
+        appendCommand("+#{amount_pretty}#{resource}".interpolate(record));
+    }
 }
 
 function moveEntryInputChanged() {

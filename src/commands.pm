@@ -682,6 +682,10 @@ sub detect_incomplete_state {
             amount => $faction->{GAIN_FAVOR}, 
             faction => $prefix
         };
+    } else {
+        @action_required = grep {
+            $_->{faction} ne $faction->{name} or $_->{type} ne 'favor'
+        } @action_required;       
     }
 
     if ($faction->{GAIN_TW}) {
@@ -691,6 +695,10 @@ sub detect_incomplete_state {
             amount => $faction->{GAIN_TW}, 
             faction => $prefix
         };
+    } else {
+        @action_required = grep {
+            $_->{faction} ne $faction->{name} or $_->{type} ne 'town'
+        } @action_required;       
     }
 
     if ($faction->{BRIDGE}) {
@@ -699,6 +707,10 @@ sub detect_incomplete_state {
             type => 'bridge',
             faction => $prefix
         };
+    } else {
+        @action_required = grep {
+            $_->{faction} ne $faction->{name} or $_->{type} ne 'bridge'
+        } @action_required;       
     }
 
     ($warn, @extra_action_required);
