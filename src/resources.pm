@@ -39,6 +39,7 @@ our %pool = (
     GAIN_TW => 10000,
     BRIDGE => 10000,
     CONVERT_W_TO_P => 3,
+    TOWN_SIZE => 10000,
 );
 
 $pool{"ACT$_"}++ for 1..6;
@@ -196,6 +197,9 @@ sub adjust_resource {
         # Pseudo-resources not in the pool, but revealed by removing
         # buildings.
         if ($type !~ /^ACT.$/) {
+            if (!defined $pool{$type} or $pool{$type} < $delta) {
+                die "Not enough '$type' in pool\n";
+            }
             $pool{$type} -= $delta;
         }
 
@@ -206,10 +210,6 @@ sub adjust_resource {
             if ($faction->{$type} > $max) {
                 $faction->{$type} = $max;
             }
-        }
-
-        if (exists $pool{$type} and $pool{$type} < 0) {
-            die "Not enough '$type' in pool\n";
         }
 
         if ($type =~ /^FAV/) {
