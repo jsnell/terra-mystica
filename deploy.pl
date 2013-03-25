@@ -62,6 +62,7 @@ sub deploy_cgi {
                   income.pm
                   lockfile.pm
                   map.pm
+                  natural_cmp.pm
                   resources.pm
                   scoring.pm
                   tiles.pm
