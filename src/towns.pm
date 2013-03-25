@@ -3,6 +3,7 @@ package terra_mystica;
 use strict;
 
 use map;
+use vars qw(%pool);
 
 # Add a hex with a building owned by faction to the town denoted by tid.
 # Also add all transitively directly adjacent buildings to the town.
@@ -69,7 +70,8 @@ sub detect_towns_from {
     };
     $handle->($where);
 
-    if ($power >= $faction->{TOWN_SIZE} and $count >= 4) {
+    if ($power >= $faction->{TOWN_SIZE} and $count >= 4 and
+        grep { $pool{"TW$_"} > 0 } 1..5) {
         # Use the same town id for all towns for now.
         $map{$_}{town} = 1 for keys %reachable;
         adjust_resource($faction, "GAIN_TW", 1);
