@@ -309,10 +309,8 @@ two spades for any transforming). To advance, throw away the spade with
 
 ** Engineers
 
-There's no special command for the Engineer special ability (build a
-bridge with 2 workers). Just pay the 2 workers manually with =-2w= and
-build a bridge with =bridge XX:YY=.
-
+To build a bridge with the engineer special ability, use the =convert=
+command: =convert 2w to bridge. bridge h6:i9=
 
 * Known issues and workarounds
 

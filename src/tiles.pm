@@ -2,7 +2,7 @@ use strict;
 use vars qw(%actions %tiles);
 
 our %actions = (
-    ACT1 => { cost => { PW => 3 }, gain => {}},
+    ACT1 => { cost => { PW => 3 }, gain => { BRIDGE => 1}},
     ACT2 => { cost => { PW => 3 }, gain => { P => 1 } },
     ACT3 => { cost => { PW => 4 }, gain => { W => 2 } },
     ACT4 => { cost => { PW => 4 }, gain => { C => 7 } },

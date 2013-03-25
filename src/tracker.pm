@@ -71,6 +71,8 @@ sub finalize {
         $map{$key} = $bonus_coins{$key};
         $tiles{$key}{bonus_coins} = $bonus_coins{$key};
     }
+
+    delete $pool{BRIDGE};
 }
 
 sub evaluate_game {

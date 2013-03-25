@@ -985,6 +985,8 @@ function drawActionRequired() {
             } else {
                 record.pretty = 'may form #{amount} towns'.interpolate(record);
             }
+        } else if (record.type == 'bridge') {
+            record.pretty = 'may place a bridge'.interpolate(record);
         } else if (record.type == 'favor') {
             if (record.amount == 1) {
                 record.pretty = 'may take a favor tile'.interpolate(record);

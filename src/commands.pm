@@ -319,6 +319,11 @@ sub command_bridge {
     $map{$from}{bridge}{$to} = 1;
     $map{$to}{bridge}{$from} = 1;
 
+    if (!$faction->{BRIDGE}) {
+        die "Can't build bridge\n";
+    }
+    delete $faction->{BRIDGE};
+
     push @bridges, {from => $from, to => $to, color => $faction->{color}};
 
     detect_towns_from $faction, $from;
@@ -651,6 +656,14 @@ sub detect_incomplete_state {
         };
     }
 
+    if ($faction->{BRIDGE}) {
+        $warn = "bridge paid for but not placed\n";
+        push @extra_action_required, {
+            type => 'bridge',
+            faction => $prefix
+        };
+    }
+
     ($warn, @extra_action_required);
 }
 
@@ -684,6 +697,11 @@ sub clean_commands {
     # Parse the prefix
     if (s/^(.*?)://) {
         $prefix = lc $1;
+    }
+
+    # Quick hack
+    if ($prefix eq 'engineers') {
+        s/-2w\.\s*bridge/convert 2w to bridge. bridge/i;
     }
 
     my @commands = $_;

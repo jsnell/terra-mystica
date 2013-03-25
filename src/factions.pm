@@ -296,6 +296,9 @@ my %setups = (
                        advance_gain => [ { VP => 6 },
                                          { VP => 6 } ]
                    },
+                   exchange_rates => {
+                       W => { BRIDGE => 2 }
+                   },
                    buildings => {
                     D => { advance_cost => { W => 1, C => 1 },
                            income => { W => [ 0, 1, 2, 2, 3, 4, 4, 5, 6 ] } },
