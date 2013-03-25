@@ -24,6 +24,42 @@ sub handle_row_internal;
 sub command_adjust_resources {
     my ($faction, $delta, $type, $source) = @_;
     my $faction_name = $faction->{name};
+    my $checked = 0;
+
+    if (grep { $_ eq $type } @cults) {
+        if ($faction->{CULT} < $delta) {
+            # die "Advancing $delta steps on $type cult not allowed\n";
+        } else {
+            $faction->{CULT} -= $delta;
+            $checked = 1;
+        }
+    }
+
+    if ($type =~ /^FAV/) {
+        if (!$faction->{GAIN_FAVOR}) {
+            die "Taking favor tile not allowed\n";
+        } else {
+            $faction->{GAIN_FAVOR}--;
+            $checked = 1;
+        }
+    }
+
+    if ($type =~ /^TW/) {
+        if (!$faction->{GAIN_TW}) {
+            die "Taking town tile not allowed\n";
+        } else {
+            $faction->{GAIN_TW}--;
+            $checked = 1;
+        }
+    }
+
+    if ($type eq 'VP' and $finished) {
+        $checked = 1;
+    }
+
+    if (!$checked) {
+        push @warn, "dodgy resource manipulation ($delta $type)";
+    }
 
     adjust_resource $faction, $type, $delta, $source;
 
@@ -221,6 +257,7 @@ sub command_leech {
 
         if ($_->{from_faction} eq 'cultists' and
             !$factions{cultists}{leech_cult_gained}{$_->{leech_id}}++) {
+            $factions{cultists}{CULT}++;
             push @action_required, { type => 'cult',
                                      amount => 1, 
                                      faction => 'cultists' };
@@ -455,6 +492,7 @@ sub command_advance {
 }
 
 sub command_finish {
+    $finished = 1;
     score_final_cults;
     score_final_networks;
     score_final_resources;
@@ -462,7 +500,6 @@ sub command_finish {
         $factions{$_}{passed} = 0;
     }
     @action_required = ( { type => 'gameover' } );
-    $finished = 1;
 }
 
 sub command_income {
@@ -511,7 +548,7 @@ sub command {
         }
 
         command_adjust_resources $assert_faction->(), $delta, $type, lc $4;
-    }  elsif ($command =~ /^build (\w+)$/i) {
+    } elsif ($command =~ /^build (\w+)$/i) {
         command_build $assert_faction->(), uc $1;
     } elsif ($command =~ /^upgrade (\w+) to ([\w ]+)$/i) {
         die "Can't upgrade in setup phase\n" if !$round;
@@ -699,10 +736,11 @@ sub clean_commands {
         $prefix = lc $1;
     }
 
-    # Quick hack
+    # Quick backwards compatibility hacks
     if ($prefix eq 'engineers') {
         s/-2w\.\s*bridge/convert 2w to bridge. bridge/i;
     }
+    s/\s*pass\.\s*\+bon/pass bon/i;
 
     my @commands = $_;
     if ($prefix) {

@@ -29,7 +29,7 @@ sub convert_ledger {
     return $data if !ref $data;
 
     # command / comment only
-    return [ map { [ $_->{commands} || $_->{comment} ] } @{$data} ];        
+    return [ map { [ $_->{commands} || $_->{comment}, $_->{warning}] } @{$data} ];        
 }
 
 for (@ARGV) {
@@ -51,8 +51,8 @@ for (@ARGV) {
             my $aj = join "\n", map { to_json($_) } @{$aa};
             my $bj = join "\n", map { to_json($_) } @{$bb};
             if ($aj ne $bj) {
-                print "Ledger diffs";
-                # print diff \$aj, \$bj;
+                # print "Ledger diffs";
+                print diff \$aj, \$bj;
             }
         } else {
             my $aj = to_json($aa, { pretty => 1, canonical => 1 });

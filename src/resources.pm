@@ -213,12 +213,6 @@ sub adjust_resource {
         }
 
         if ($type =~ /^FAV/) {
-            if (!$faction->{GAIN_FAVOR}) {
-                die "Taking favor tile not allowed\n";
-            } else {
-                $faction->{GAIN_FAVOR}--;
-            }
-
             if ($faction->{$type} > 1) {
                 die "Can't take two copies of $type\n";
             }
@@ -234,19 +228,10 @@ sub adjust_resource {
         }
 
         if ($type =~ /^TW/) {
-            if (!$faction->{GAIN_TW}) {
-                die "Taking town tile not allowed\n";
-            } else {
-                $faction->{GAIN_TW}--;
-            }
             gain $faction, $tiles{$type}{gain}, 'TW';
         }
 
         if (grep { $_ eq $type } @cults) {
-            if ($faction->{CULT}) {
-                $faction->{CULT} -= $delta;
-            }
-
             my $new_value = $faction->{$type};
             maybe_gain_power_from_cult $faction, $type, $orig_value, $new_value;
         }
