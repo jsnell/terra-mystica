@@ -3,14 +3,31 @@
 #+EMAIL: jsnell@iki.fi
 #+STYLE: <link rel="stylesheet" type="text/css" href="stc/org.css" />
 
-* Setting up a game
+* New Games
 
-For now you'll need to ask Juho to create a game. You'll get two links:
-one for viewing the game, one for editing it. Anyone with the second link
-can change the game in arbitrary ways, so you might not want to share it
-too widely.
+** Creating a Game
 
-During setup, you'll need the following sections in the game file:
+For now you'll need to ask Juho to create a game, either through BGG
+GeekMail (username jsnell) or email (jsnell@iki.fi). Please tell
+whether this is going to be a PBF game on BGG, or if communication
+will happen through some other method. This information is needed to
+name the game correctly.
+
+You'll get two links in response: one for viewing the game, one for
+editing it. Anyone with the second link can change the game in
+arbitrary ways, so you might not want to share it too widely.
+
+After the faction selection is done, the admin page of the game will
+also have a link for each faction. These links allow entering moves
+for that single faction, but not editing the game history or making
+moves for other factions. You can distribute these links to the
+players if you want them to do their own move entry.
+
+** Setting up the Game
+
+During setup, you'll need the following sections in the game file,
+some of which will have been randomly set up when the game was created.
+You can still edit them, if you want.
 
 Remove randonly selected bonus tiles from the game, e.g.
 
@@ -52,7 +69,7 @@ Select initial bonus tiles:
   Nomads: Pass Bon5
 #+END_EXAMPLE
 
-And then start the game!
+The game will then automatically start.
 
 * Commands
 
@@ -339,13 +356,14 @@ after taking the town tile will unjustly award 3 power to the player.
 
 
 
-* Email Setup
+* Browser and Email Setup
 
 The "Send email" functionality works by opening a pre-formatted email
 message in your normal email program, addressed to the other players.
 This only works if your browser is configured to use the correct email
 program. It should work by default at least on Android devices, iPhones
-and iPads.
+and iPads. This section lists hints to configuring some common browsers
+or mail programs.
 
 ** Gmail and Chrome
 
@@ -360,4 +378,12 @@ Outlook uses the semicolon as the address separator rather than the
 standard comma. The workaround is to toggle the =Allow comma as
 address separator= option in Outlook, as described here
 <http://support.microsoft.com/kb/820868>.
+
+** Internet Explorer 6/7/8
+
+IE8 or earlier are not supported. You'll unfortunately need to do one of:
+
+- Upgrade to IE9
+- Install another browser
+- Install the Chrome Frame plugin from http://www.google.com/chromeframe
 
