@@ -3,6 +3,14 @@
 #+EMAIL: jsnell@iki.fi
 #+STYLE: <link rel="stylesheet" type="text/css" href="stc/org.css" />
 
+* Questions
+
+Do you have questions that this document doesn't answer? A good place
+to ask is the [[http://boardgamegeek.com/article/11807989][PBF moderator help / questions]]
+thread on BGG. There are a lot people who know how to use the
+moderator, so there's a good chance you'll get an answer faster than
+by contacting me directly.
+
 * New Games
 
 ** Creating a Game
