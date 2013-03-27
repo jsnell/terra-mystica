@@ -14,6 +14,7 @@ use exec_timer;
 
 print "Content-type: text/javascript\r\n";
 print "Cache-Control: no-cache\r\n";
+print "Access-Control-Allow-Origin: *\r\n";
 
 my $q = CGI->new;
 my $id = $q->param('game');
