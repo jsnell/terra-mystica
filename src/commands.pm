@@ -648,10 +648,6 @@ sub detect_incomplete_state {
             amount => $faction->{SPADE}, 
             faction => $prefix
         };
-        if (!$faction->{passed}) {
-            $warn = "Unused spades for $prefix\n";
-            $faction->{SPADE} = 0;
-        }
     }
 
     if ($faction->{FORBID_TF}) {
