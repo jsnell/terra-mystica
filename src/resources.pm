@@ -42,14 +42,20 @@ our %pool = (
     TOWN_SIZE => 10000,
 );
 
-$pool{"ACT$_"}++ for 1..6;
-$pool{"BON$_"}++ for 1..9;
-$pool{"FAV$_"}++ for 1..4;
-$pool{"FAV$_"} += 3 for 5..12;
-$pool{"TW$_"} += 2 for 1..5;
-
 our %bonus_coins = ();
-$bonus_coins{"BON$_"}{C} = 0 for 1..9;
+
+$pool{"ACT$_"}++ for 1..6;
+
+for (keys %tiles) {
+    if (/^BON/) {
+        $pool{$_}++;
+        $bonus_coins{$_}{C} = 0;
+    } elsif (/^FAV/) {
+        $pool{$_} += $tiles{$_}{count} || 3;
+    } elsif (/^TW/) {
+        $pool{$_} += 2;
+    }
+}
 
 sub adjust_resource;
 

@@ -33,10 +33,10 @@ our %tiles = (
     BON9 => { income => { C => 2 },
               pass_vp => { D => [ map { $_ } 0..8 ] } },
 
-    FAV1 => { gain => { FIRE => 3 }, income => {} },
-    FAV2 => { gain => { WATER => 3 }, income => {} },
-    FAV3 => { gain => { EARTH => 3 }, income => {} },
-    FAV4 => { gain => { AIR => 3 }, income => {} },
+    FAV1 => { gain => { FIRE => 3 }, income => {}, count => 1 },
+    FAV2 => { gain => { WATER => 3 }, income => {}, count => 1 },
+    FAV3 => { gain => { EARTH => 3 }, income => {}, count => 1 },
+    FAV4 => { gain => { AIR => 3 }, income => {}, count => 1 },
 
     FAV5 => { gain => { FIRE => 2, TOWN_SIZE => -1 }, income => {} },
     FAV6 => { gain => { WATER => 2 }, income => {} },

@@ -71,7 +71,7 @@ sub detect_towns_from {
     $handle->($where);
 
     if ($power >= $faction->{TOWN_SIZE} and $count >= 4 and
-        grep { $pool{"TW$_"} > 0 } 1..5) {
+        grep { /^TW/ and $pool{$_} > 0 } keys %pool) {
         # Use the same town id for all towns for now.
         $map{$_}{town} = 1 for keys %reachable;
         adjust_resource($faction, "GAIN_TW", 1);

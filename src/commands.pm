@@ -449,10 +449,10 @@ sub command_start {
     }
 
     $map{$_}{blocked} = 0 for keys %map;
-    for (1..9) {
-        if ($pool{"BON$_"}) {
-            $bonus_coins{"BON$_"}{C}++;
-        }
+    for (keys %pool) {
+        next if !/^BON/;
+        next if !$pool{$_};
+        $bonus_coins{$_}{C}++;
     }
 
     push @ledger, { comment => "Start round $round" };
