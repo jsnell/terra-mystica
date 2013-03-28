@@ -415,6 +415,10 @@ sub command_pass {
 sub command_action {
     my ($faction, $action) = @_;
     my $faction_name = $faction->{name};
+
+    if ($action !~ /^ACT[1-6]/ and !$faction->{$action}) {
+        die "No $action space available\n"
+    }
     
     my $name = $action;
     if ($action !~ /^ACT/) {
