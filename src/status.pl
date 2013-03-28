@@ -40,7 +40,7 @@ if (-f "../../data/read/$id") {
 
     if ($tag and $tag eq $hash) {
         print_json { cache_valid => 1 };
-        return;
+        exit 0;
     }
 
     if (defined $preview) {
