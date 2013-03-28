@@ -50,6 +50,7 @@ sub deploy_cgi {
                   bridge.pl
                   edit.pl
                   gamelist.pl
+                  status.pl
                   save.pl)) {
         copy_with_mode 0555, "src/$f", "$target/cgi-bin/$f";
     }
