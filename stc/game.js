@@ -1203,6 +1203,10 @@ function failed() {
     }
 }
 
+function spin() {
+    $("action_required").innerHTML = '<img src="/stc/spinner.gif"></img> loading ...';
+}
+
 function init(root) {
     root.innerHTML += ' \
     <table style="border-style: none" id="main-data"> \
@@ -1225,7 +1229,7 @@ function init(root) {
     <div id="preview_status"></div> \
     <pre id="preview_commands"></pre> \
     <div id="error"></div> \
-    <div id="action_required"><img src="/stc/spinner.gif"></img> loading ... </div> \
+    <div id="action_required"></div> \
     <div id="move_entry"></div> \
     <div id="factions"></div> \
     <table id="ledger"> \

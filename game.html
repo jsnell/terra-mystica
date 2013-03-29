@@ -25,6 +25,7 @@
       var id = document.location.pathname.sub(/.*\//, "");
       $("title").text += " - " + id + "";
       var currentFaction = "";
+      spin();
       new Ajax.Request("/cgi-bin/bridge.pl?game=" + id, {
           method:"get",
           onFailure: function(transport){

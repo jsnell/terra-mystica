@@ -35,6 +35,9 @@ function previewOrSave(save) {
 
     var target = save ? "/cgi-bin/append.pl" : "/cgi-bin/bridge.pl";
     target = "http://" + backendDomain + target;
+    if (!save) {
+        spin();
+    }
     new Ajax.Request(target, {
         method: "get",
         parameters: {
