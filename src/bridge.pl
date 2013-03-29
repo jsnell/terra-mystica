@@ -12,11 +12,20 @@ chdir dirname $0;
 use tracker;
 use exec_timer;
 
+my $q = CGI->new;
+
+if ($q->request_method eq "OPTIONS") {
+    print "Access-Control-Allow-Origin: *\r\n";
+    print "Access-Control-Allow-Headers: X-Prototype-Version, X-Requested-With\r\n";
+    print "\r\n";
+    exit 0;
+}
+
 print "Content-type: text/javascript\r\n";
 print "Cache-Control: no-cache\r\n";
 print "Access-Control-Allow-Origin: *\r\n";
+print "Access-Control-Expose-Headers: X-JSON\r\n";
 
-my $q = CGI->new;
 my $id = $q->param('game');
 $id =~ s{.*/}{};
 $id =~ s{[^A-Za-z0-9]}{}g;

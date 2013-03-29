@@ -18,6 +18,13 @@ use lockfile;
 
 my $q = CGI->new;
 
+if ($q->request_method eq "OPTIONS") {
+    print "Access-Control-Allow-Origin: *\r\n";
+    print "Access-Control-Allow-Headers: X-Prototype-Version, X-Requested-With\r\n";
+    print "\r\n";
+    exit 0;
+}
+
 my $id = $q->param('game');
 $id =~ s{.*/}{};
 $id =~ s{[^A-Za-z0-9_]}{}g;
@@ -70,6 +77,8 @@ sub verify_key {
 
 print "Content-type: text/json\r\n";
 print "Cache-Control: no-cache\r\n";
+print "Access-Control-Allow-Origin: *\r\n";
+print "Access-Control-Expose-Headers: X-JSON\r\n";
 print "\r\n";
 
 lockfile::lock $lockfile;
