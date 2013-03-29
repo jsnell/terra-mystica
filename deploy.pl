@@ -38,6 +38,25 @@ sub copy_with_mode {
     rename "$to.tmp", $to;
 }
 
+sub mangle_with_mode {
+    my ($mode, $from, $to, $mangle) = @_;
+    my $data = $mangle->(scalar slurp "$from");
+
+    if ($devel) {
+        if (!-l $to) {
+            symlink "$ENV{PWD}/$from", $to;
+        }
+        next;
+    }
+
+    my ($fh, $filename) = tempfile("tmpfileXXXXXXX",
+                                   DIR=>"$target");
+    print $fh $data;
+    close $fh;
+    chmod $mode, $filename;
+    rename $filename, $to;
+}
+
 sub deploy_docs {
     return if $devel;
     system "emacs --batch --file=usage.org --funcall org-export-as-html-batch";
@@ -54,6 +73,12 @@ sub deploy_cgi {
                   save.pl)) {
         copy_with_mode 0555, "src/$f", "$target/cgi-bin/$f";
     }
+
+    mangle_with_mode 0555, "src/res.pl", "$target/cgi-bin/res.pl", sub {
+        local $_ = shift;
+        s/%%GIT_VERSION%%/$tag/;
+        $_;
+    };
 
     for my $f (qw(buildings.pm
                   commands.pm
@@ -94,24 +119,12 @@ sub deploy_html {
                   faction.html
                   index.html)) {
         my $to = "$target/$f";
-        if ($devel) {
-            if (!-l $to) {
-                symlink "$ENV{PWD}/$f", $to;
-            }
-            next;
+
+        mangle_with_mode 0444, "$f", "$to", sub {
+            local $_ = shift;
+            s{=(['"])(/stc/.*)\1}{=$1$2?tag=$tag$1}g;
+            $_;
         }
-
-        my $data = slurp "$f";
-        $data =~ s{=(['"])(/stc/.*)\1}{=$1$2?tag=$tag$1}g;
-        
-        my ($fh, $filename) = tempfile("tmpfileXXXXXXX",
-                                       DIR=>"$target");
-        print $fh $data;
-        close $fh;
-        chmod 0444, $filename;
-        rename $filename, $to;
-
-        copy "$f", $to
     }
 }
 
