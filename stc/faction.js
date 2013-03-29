@@ -13,6 +13,10 @@ function loadGame (domain, pathname) {
         $("title").text += " - " + params.game + " / " + params.faction;
     }
 
+    if ($("move_entry")) {
+        $("move_entry").innerHTML = '';
+    }
+
     currentFaction = params.faction;
     preview();
 }
