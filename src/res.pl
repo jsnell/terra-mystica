@@ -18,14 +18,14 @@ sub print_json {
 }
 
 print_json {
-    js => {
+    js => [
         "/stc/prototype-1.7.1.js$tag",
         "/stc/faction.js$tag",
         "/stc/game.js$tag",
         "/stc/debug.js$tag",
-    },
-    css => {
+    ],
+    css => [
         "/stc/style.js$tag",
-    }
+    ]
 };
 
