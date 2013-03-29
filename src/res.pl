@@ -25,7 +25,7 @@ print_json {
         "/stc/debug.js$tag",
     ],
     css => [
-        "/stc/style.js$tag",
+        "/stc/style.css$tag",
     ]
 };
 
