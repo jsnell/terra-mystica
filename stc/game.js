@@ -1202,3 +1202,41 @@ function failed() {
         $("error").insert("Couldn't load game");
     }
 }
+
+function init(root) {
+    root.innerHTML += ' \
+    <table style="border-style: none" id="main-data"> \
+      <tr> \
+        <td> \
+          <div id="map-container"> \
+            <canvas id="map" width="800" height="500"> \
+              Browser not supported. \
+            </canvas> \
+          </div> \
+        <td> \
+          <div id="cult-container"> \
+            <canvas id="cults" width="250" height="500"> \
+              Browser not supported. \
+            </canvas> \
+          </div> \
+        <td> \
+          <div id="scoring"></div> \
+    </table> \
+    <div id="preview_status"></div> \
+    <pre id="preview_commands"></pre> \
+    <div id="error"></div> \
+    <div id="action_required"><img src="/stc/spinner.gif"></img> loading ... </div> \
+    <div id="move_entry"></div> \
+    <div id="factions"></div> \
+    <table id="ledger"> \
+      <col></col> \
+      <col span=2 ></col> \
+      <col span=2 style="background-color: #e0e0f0"></col> \
+      <col span=2 ></col> \
+      <col span=2 style="background-color: #e0e0f0"></col> \
+      <col span=2 ></col> \
+      <col span=2 style="background-color: #e0e0f0"></col> \
+    </table>';
+
+}
+

@@ -1,3 +1,22 @@
+var state = null;
+var params = null;
+var currentFaction = null;
+var backendDomain = null;
+
+function loadGame (domain, pathname) {
+    var path = pathname.sub("/faction/", "").split("/");
+    backendDomain = domain;
+    state = null;
+    params = { "game": path[0], "faction": path[1], "key": path[2] };
+    
+    if ($("title")) {
+        $("title").text += " - " + params.game + " / " + params.faction;
+    }
+
+    currentFaction = params.faction;
+    preview();
+}
+
 function previewOrSave(save) {
     if ($("move_entry_action")) {
         $("move_entry_action").disabled = true;
@@ -15,6 +34,7 @@ function previewOrSave(save) {
     }
 
     var target = save ? "/cgi-bin/append.pl" : "/cgi-bin/bridge.pl";
+    target = "http://" + backendDomain + target;
     new Ajax.Request(target, {
         method: "get",
         parameters: {
