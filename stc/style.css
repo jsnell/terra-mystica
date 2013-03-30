@@ -155,6 +155,7 @@ table.vp-breakdown {
 
 table#ledger {
     border-spacing: 0px;
+    padding-bottom: 40px;
 }
 
 table#ledger tr td {
