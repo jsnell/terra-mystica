@@ -17,6 +17,10 @@ function loadGame (domain, pathname) {
         $("move_entry").innerHTML = '';
     }
 
+    if ($("preview_commands")) {
+        $("preview_commands").innerHTML = '';
+    }
+
     currentFaction = params.faction;
     preview();
 }
@@ -90,11 +94,11 @@ function save() {
 
 function makeMailToLink() {
     var newline = "%0D%0A";
-    var status = $(preview_status).innerHTML;
-    var moves = $(preview_commands).textContent.split(/\n/).map(function (x) {
+    var status = $("preview_status").innerHTML;
+    var moves = $("preview_commands").textContent.split(/\n/).map(function (x) {
         return "  " + encodeURIComponent(x);
     }).join(newline);
-    var actions = $(action_required).childElements().map(function (x) {
+    var actions = $("action_required").childElements().map(function (x) {
         return "  " + encodeURIComponent(x.textContent);
     }).join(newline)
     var footer = "Round #{round}, turn #{turn}".interpolate(state);

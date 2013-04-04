@@ -1027,12 +1027,12 @@ function drawActionRequired() {
         }
     });
 
-    if (needMoveEntry && $(move_entry).innerHTML == "") {
+    if (needMoveEntry && $("move_entry").innerHTML == "") {
         var input = new Element("textarea", {"id": "move_entry_input",
                                              "onInput": "javascript:moveEntryInputChanged()",
                                              "style": "font-family: monospace; width: 60ex; height: 6em;" } );
-        $(move_entry).insert(input);
-        $(move_entry).insert("<div style='padding-left: 2em'><button id='move_entry_action' onclick='javascript:preview()'>Preview</button></div>")
+        $("move_entry").insert(input);
+        $("move_entry").insert("<div style='padding-left: 2em'><button id='move_entry_action' onclick='javascript:preview()'>Preview</button></div>")
     }
 }
 
@@ -1054,12 +1054,12 @@ function addTakeTileButtons(parent, index, prefix, id) {
         };
         div.insert(button);                                               
     });
-    $(parent).insert(div);
+    parent.insert(div);
 }
 
 function addFactionInput(parent, record, index) {
     if (record.type == "leech") {
-        $(parent).insert("<div id='leech-" + index + "' style='padding-left: 2em'><button onclick='javascript:acceptLeech(" + index + ")'>Accept</button> <button onclick='javascript:declineLeech(" + index + ")'>Decline</button></div>")
+        parent.insert("<div id='leech-" + index + "' style='padding-left: 2em'><button onclick='javascript:acceptLeech(" + index + ")'>Accept</button> <button onclick='javascript:declineLeech(" + index + ")'>Decline</button></div>")
     }
     if (record.type == "cult") {
         var amount = record.amount;
@@ -1072,7 +1072,7 @@ function addFactionInput(parent, record, index) {
             };
             div.insert(button);                                               
         });
-        $(parent).insert(div);
+        parent.insert(div);
     }
     if (record.type == "town") {
         addTakeTileButtons(parent, index, "TW");
@@ -1110,18 +1110,18 @@ function addFactionInput(parent, record, index) {
             };
             div.insert(button);                                               
         });
-        $(parent).insert(div);
+        parent.insert(div);
     }
 }
 
 function appendCommand(cmd) {
-    var val = $(move_entry_input).value;
+    var val = $("move_entry_input").value;
 
     if (val != "" && !val.endsWith("\n")) {
         cmd = ". " + cmd;
     }
 
-    $(move_entry_input).value += cmd;
+    $("move_entry_input").value += cmd;
     moveEntryInputChanged();
 }
 
@@ -1150,9 +1150,9 @@ function gainResource(index, amount, resource, id) {
 }
 
 function moveEntryInputChanged() {
-    $(move_entry_input).oninput = null;
-    $(move_entry_action).innerHTML = "Preview";
-    $(move_entry_action).onclick = preview;
+    $("move_entry_input").oninput = null;
+    $("move_entry_action").innerHTML = "Preview";
+    $("move_entry_action").onclick = preview;
 } 
 
 function moveEntryAfterPreview() {
