@@ -105,7 +105,7 @@ The commands that you'd usually use are:
 Example: =pass bon2=
 
 Pass, return current bonus tile, and replace it with Bon2. When passing
-on the last turn.
+on the last turn, leave out the bonus tile name.
 
 ** =leech= /amount/ from /faction/
 
