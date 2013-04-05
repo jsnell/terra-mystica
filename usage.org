@@ -37,17 +37,19 @@ During setup, you'll need the following sections in the game file,
 some of which will have been randomly set up when the game was created.
 You can still edit them, if you want.
 
-Remove randonly selected bonus tiles from the game, e.g.
+List the players (in any order, it will get randomized):
 
 #+BEGIN_EXAMPLE
-  delete bon9
-  delete bon6
+  player Alice email alice@example.com
+  player Bob email bob@example.com
+  player Charlie
 #+END_EXAMPLE
 
-Tell which score tiles are in the game, and in which order:
+Randomize the player order, scoring tiles, and remove the appropriate
+number of bonus tiles.
 
 #+BEGIN_EXAMPLE
-  score score4, score2, score8, score7, score6, score5
+  randomize v1 seed game1324
 #+END_EXAMPLE
 
 Select the factions in play:

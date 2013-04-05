@@ -2,6 +2,9 @@ package terra_mystica;
 
 use strict;
 
+use Digest::SHA1 qw(sha1);
+use Math::Random::MT;
+
 use buildings;
 use cults;
 use factions;
@@ -523,6 +526,43 @@ sub command_income {
     }
 }
 
+sub mt_shuffle {
+    my ($rand, @data) = @_;
+
+    map {
+        $_->[0]
+    } sort {
+        $a->[1] <=> $b->[1]
+    } map {
+        [ $_, $rand->rand() ]
+    } @data; 
+}
+
+sub command_randomize_v1 {
+    my $seed = shift;
+    my $rand = Math::Random::MT->new(unpack "l6", sha1 $seed);
+
+    my @score = ();
+    do {
+        @score = mt_shuffle $rand, map { "Score$_" } 1..8;
+    } until $score[4] ne "Score1" and $score[5] ne "Score1";
+    handle_row_internal "", "score ".(join ",", @score[0..5]);
+
+    my @bon = mt_shuffle $rand, map { "Bon$_" } 1..9;
+    for (0..(5-@players)) {
+        handle_row_internal "", "delete ".(shift @bon);
+    }
+
+    @players = mt_shuffle $rand, sort { lc $a->{name} cmp lc $b->{name} } @players;
+    my $i = 1;
+    for (@players) {
+        push @ledger, {
+            comment => "Player $i: ".($_->{name})
+        };
+        ++$i;
+    }
+}
+
 sub non_leech_action_required {
     return scalar grep { $_->{type} ne 'leech' } @action_required;
 }
@@ -632,6 +672,10 @@ sub command {
         score_final_resources_for_faction $faction_name;
     } elsif ($command =~ /^email (.*)/i) {
         $email = $1;
+    } elsif ($command =~ /^player (\S+)(?: email (\S*))?$/i) {
+        push @players, { name => $1, email => $2 };
+    } elsif ($command =~ /^randomize v1 seed (.*)/i) {
+        command_randomize_v1 $1;
     } else {
         die "Could not parse command '$command'.\n";
     }
@@ -829,14 +873,7 @@ sub maybe_advance_to_next_player {
     my ($warn, @extra_action_required) = detect_incomplete_state $faction_name;
 
     if (!$round) {
-        if (@setup_order) {
-            my $type = (@setup_order <= @factions ? 'bonus' : 'dwelling');
-            @action_required = ({ type => $type, faction => $setup_order[0] });
-            return $warn;
-        } else {
-            @action_required = ();
-            return $warn;
-        }
+        return "";
     }
 
     if (!$action_taken) {
@@ -868,6 +905,22 @@ sub maybe_advance_to_next_player {
     return $warn;
 }
 
+sub check_setup_actions {
+    if (!$round) {
+        if (@players and @players != @factions) {
+            @action_required = ({
+                type => 'faction',
+                player => $players[@factions]{name} }
+             );
+        } elsif (@setup_order) {
+            my $type = (@setup_order <= @factions ? 'bonus' : 'dwelling');
+            @action_required = ({ type => $type, faction => $setup_order[0] });
+        } else {
+            @action_required = ();
+        }
+    }
+}
+
 sub handle_row_internal {
     my ($faction_name, @commands) = @_;
 
@@ -895,6 +948,8 @@ sub handle_row_internal {
     for my $command (@commands) {
         $print += (command $faction_name, $command);
     }
+
+    check_setup_actions;
 
     if (!$faction_name) {
         return;

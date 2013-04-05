@@ -4,7 +4,7 @@ package terra_mystica;
 
 use strict;
 
-use vars qw(%factions %factions_by_color @factions @setup_order);
+use vars qw(%factions %factions_by_color @factions @setup_order @players);
 
 our @setup_order = ();
 
@@ -487,6 +487,19 @@ sub setup {
     die "Unknown faction: $faction_name\n" if !$setups{$faction_name};
 
     my $faction = $factions{$faction_name} = $setups{$faction_name};    
+    my $player_record = {};
+    if (@players) {
+        $player_record = $players[@factions];
+        if ($player ne $player_record->{name}) {
+            die "Expected ".($player_record->{name})." to pick a faction";
+        }
+        $email ||= $player_record->{email};
+    }
+
+    if ($player) {
+        $faction->{display} .= " ($player)";
+        $faction->{player} = "$player";
+    }
 
     $faction->{name} = $faction_name;
     $faction->{start_player} = 1 if !@factions;
@@ -532,10 +545,6 @@ sub setup {
 
     $faction->{SPADE} = 0;
     $faction->{TOWN_SIZE} = 7;
-    if ($player) {
-        $faction->{display} .= " ($player)";
-        $faction->{player} = "$player";
-    }
 
     push @factions, $faction_name;
 

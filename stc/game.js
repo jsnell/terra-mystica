@@ -1007,6 +1007,8 @@ function drawActionRequired() {
                 table += "<tr><td>#{faction_span}<td>#{value.VP}</tr>".interpolate(elem);
             });
             record.pretty += "<table>" + table + "</table>";
+        } else if (record.type == 'faction') {
+            record.pretty = '#{player} should pick a faction'.interpolate(record);
         } else {
             record.pretty = '?';
         }

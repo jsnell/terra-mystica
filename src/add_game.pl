@@ -29,20 +29,12 @@ open my $writefd, ">", "$write";
 
 print $writefd "# Game $id\n\n";
 
-my @bon = shuffle map { "Bon$_" } 1..9;
-my @score;
+print $writefd "# List players (in any order)\n";
+print $writefd "# Player ... email ...\n";
+print $writefd "# Player ... email ...\n";
 
-do {
-    @score = shuffle map { "Score$_" } 1..8;
-} until $score[4] ne "Score1" and $score[5] ne "Score1";
-
-for (0..4) {
-    print $writefd "delete $bon[$_]\n";
-}
-
-print $writefd "\n";
-print $writefd "score ", join  ",", @score[0..5];
-print $writefd "\n";
+print $writefd "\n# Randomize setup\n";
+print $writefd "randomize v1 seed $id\n";
 
 close $writefd;
 

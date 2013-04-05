@@ -196,8 +196,10 @@ function drawActionRequired(state) {
             record.pretty = 'should place a dwelling';
         } else if (record.type == 'bonus') {
             record.pretty = 'should pick a bonus tile';
-        }else if (record.type == 'gameover') {
+        } else if (record.type == 'gameover') {
             record.pretty = 'The game is over';
+        } else if (record.type == 'faction') {
+            record.pretty = '#{player} should pick a faction'.interpolate(record);
         } else {
             record.pretty = '?';
         }
