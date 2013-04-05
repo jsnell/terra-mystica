@@ -534,6 +534,7 @@ sub setup {
     $faction->{TOWN_SIZE} = 7;
     if ($player) {
         $faction->{display} .= " ($player)";
+        $faction->{player} = "$player";
     }
 
     push @factions, $faction_name;
