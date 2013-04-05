@@ -284,17 +284,10 @@ The mermaid special town founding ability can't be used automatically,
 but must be triggered manually. Use the =connect= command to mark
 hexes that should be considered adjacent for this purpose. For example
 if the mermaids declare the river hex between F2 and E4 as the one
-they want to skip, use the command =connect F2:E4=). If you want to
-connect to multiple hexes bordering that river hex, you need to issue
-separate commands. 
-
-The tracker doesn't yet check these commands for validity -- e.g. it
-doesn't check that one town has these special connections over only
-one river hex.
-
-
-
-
+they want to skip, use the command =connect F2:E4=). If there are multiple
+valid river hexes, the tracker will pick an arbitrary one. If you
+want to specify the river hex exactly, specify 3 land hexes:
+=connect G2:H4:I6=.
 
 ** Darklings
 

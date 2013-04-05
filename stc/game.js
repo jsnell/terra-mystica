@@ -49,10 +49,11 @@ function drawText(ctx, text, x, y, font) {
     ctx.restore();    
 }
 
-function makeHexPath(ctx, hex) {
+function makeHexPath(ctx, hex, size) {
+    size = size || hex_size;
     var loc = hexCenter(hex.row, hex.col);
-    var x = loc[0] - Math.cos(Math.PI / 6) * hex_size;
-    var y = loc[1] + Math.sin(Math.PI / 6) * hex_size;
+    var x = loc[0] - Math.cos(Math.PI / 6) * size;
+    var y = loc[1] + Math.sin(Math.PI / 6) * size;
     var angle = 0;
     
     ctx.beginPath();
@@ -60,8 +61,8 @@ function makeHexPath(ctx, hex) {
     for (var i = 0; i < 6; i++) {
         ctx.lineTo(x, y); 
         angle += Math.PI / 3;
-        x += Math.sin(angle) * hex_size;
-        y += Math.cos(angle) * hex_size;        
+        x += Math.sin(angle) * size;
+        y += Math.cos(angle) * size;        
     }
     ctx.closePath();
 }
@@ -187,6 +188,21 @@ function drawHex(ctx, elem) {
     }
 
     if (hex.color == 'white') {
+        if (hex.town) {
+            var loc = hexCenter(hex.row, hex.col);
+            ctx.save();
+            makeHexPath(ctx, hex, hex_size / 2);
+
+            ctx.fillStyle = "#def";
+            ctx.fill();
+
+            ctx.strokeStyle = "#456";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
         return;
     }
 

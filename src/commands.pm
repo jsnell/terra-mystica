@@ -483,19 +483,37 @@ sub command_connect {
 
     @hexes = grep { $_ ne '' } @hexes;
 
-    for my $from (@hexes) {
-        for my $to (@hexes) {
-            next if $from eq $to;
+    my %rivers = ();
 
-            die "$to and $from must be one river space away\n" if
-                $map{$from}{range}{1}{$to} ne 1;
-
-            $map{$from}{skip}{$to} = 1;
-            $map{$to}{skip}{$from} = 1;
+    for my $hex (@hexes) {
+        for my $adjacent (keys %{$map{$hex}{adjacent}}) {
+            if ($adjacent =~ /^r/) {
+                $rivers{$adjacent}++;
+            }
         }
     }
 
-    detect_towns_from $faction, $hexes[0];
+    for my $river (keys %rivers) {
+        next if $rivers{$river} != @hexes;
+
+        my @land = grep { !/^r/ } keys %{$map{$river}{adjacent}};
+
+        for my $from (@land) {
+            for my $to (@land) {
+                next if $from eq $to;
+                $map{$from}{skip}{$to} = 1;
+            }
+        }
+
+        $map{$river}{town} = 1;
+        last;
+    }
+
+    my $founded = 0;
+
+    $founded += detect_towns_from $faction, $_ for @hexes;
+
+    die "Can't found a town by connecting @hexes\n" if !$founded;
 }
 
 sub command_advance {

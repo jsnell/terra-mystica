@@ -25,14 +25,14 @@ sub detect_towns_from {
     my ($faction, $where) = @_;
 
     # Must not already be part of a town.
-    return if $map{$where}{town};
+    return 0 if $map{$where}{town};
 
     # Must not be empty.
-    return if !$map{$where}{building};
+    return 0 if !$map{$where}{building};
 
     # Must be controlled by faction. (Necessary e.g. when a bridge is
     # added).
-    return if $map{$where}{color} ne $faction->{color};
+    return 0 if $map{$where}{color} ne $faction->{color};
 
     my @adjacent = keys %{$map{$where}{adjacent}};
 
@@ -45,7 +45,7 @@ sub detect_towns_from {
     }
 
     # ... and if that happened, we need to bail out at this point.
-    return if $map{$where}{town};
+    return 0 if $map{$where}{town};
 
     my %reachable = ();
     my $power = 0;
@@ -75,7 +75,10 @@ sub detect_towns_from {
         # Use the same town id for all towns for now.
         $map{$_}{town} = 1 for keys %reachable;
         adjust_resource($faction, "GAIN_TW", 1);
+        return 1;
     }
+
+    return 0;
 }
 
 1;
