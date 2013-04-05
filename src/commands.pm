@@ -476,18 +476,26 @@ sub command_start {
 }
 
 sub command_connect {
-    my ($faction, $from, $to) = @_;
+    my ($faction, @hexes) = @_;
     my $faction_name = $faction->{name};
 
     die "Only mermaids can use 'connect'\n" if $faction_name ne 'mermaids';
-    
-    $map{$from}{adjacent}{$to} = 1;
-    $map{$to}{adjacent}{$from} = 1;
 
-    die "$to and $from must be one river space away\n" if
-        $map{$from}{range}{1}{$to} ne 1;
+    @hexes = grep { $_ ne '' } @hexes;
 
-    detect_towns_from $faction, $from;
+    for my $from (@hexes) {
+        for my $to (@hexes) {
+            next if $from eq $to;
+
+            die "$to and $from must be one river space away\n" if
+                $map{$from}{range}{1}{$to} ne 1;
+
+            $map{$from}{skip}{$to} = 1;
+            $map{$to}{skip}{$from} = 1;
+        }
+    }
+
+    detect_towns_from $faction, $hexes[0];
 }
 
 sub command_advance {
@@ -628,8 +636,8 @@ sub command {
         gain $faction, $gain, 'faction' for 1..$1;
     } elsif ($command =~ /^bridge (\w+):(\w+)$/i) {
         command_bridge $assert_faction->(), uc $1, uc $2;
-    } elsif ($command =~ /^connect (\w+):(\w+)$/i) {
-        command_connect $assert_faction->(), uc $1, uc $2;
+    } elsif ($command =~ /^connect (\w+):(\w+)(?::(\w+))?$/i) {
+        command_connect $assert_faction->(), uc $1, uc $2, uc $3;
     } elsif ($command =~ /^pass(?: (\w+))?$/i) {
         command_pass $assert_faction->(), uc ($1 // '');
     } elsif ($command =~ /^action (\w+)$/i) {

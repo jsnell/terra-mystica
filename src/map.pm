@@ -175,6 +175,10 @@ sub adjacent_own_buildings {
     my ($faction, $where) = @_;
 
     my @adjacent = keys %{$map{$where}{adjacent}};
+    if ($faction->{name} eq 'mermaids' and exists $map{$where}{skip}) {
+        push @adjacent, keys %{$map{$where}{skip}};
+    }
+
     return grep {
         $map{$_}{building} and ($map{$_}{color} eq $faction->{color});
     } @adjacent;
