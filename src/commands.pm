@@ -351,7 +351,11 @@ sub command_transform {
 }
 
 sub command_bridge {        
-    my ($faction, $from, $to) = @_;
+    my ($faction, $from, $to, $allow_illegal) = @_;
+
+    if (!$allow_illegal and !$map{$from}{bridgable}{$to}) {
+        die "Can't build bridge from $from to $to\n";
+    }
 
     $map{$from}{adjacent}{$to} = 1;
     $map{$to}{adjacent}{$from} = 1;
@@ -652,8 +656,8 @@ sub command {
         adjust_resource $faction, 'SPADE', $1;
         pay $faction, $cost for 1..$1;
         gain $faction, $gain, 'faction' for 1..$1;
-    } elsif ($command =~ /^bridge (\w+):(\w+)$/i) {
-        command_bridge $assert_faction->(), uc $1, uc $2;
+    } elsif ($command =~ /^bridge (\w+):(\w+)( allow_illegal)?$/i) {
+        command_bridge $assert_faction->(), uc $1, uc $2, $3;
     } elsif ($command =~ /^connect (\w+):(\w+)(?::(\w+))?$/i) {
         command_connect $assert_faction->(), uc $1, uc $2, uc $3;
     } elsif ($command =~ /^pass(?: (\w+))?$/i) {

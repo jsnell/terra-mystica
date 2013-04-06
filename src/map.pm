@@ -111,6 +111,43 @@ sub setup_ranges {
     setup_hex_ranges $_, 1 for keys %map;
 }
 
+sub setup_valid_bridges {
+    sub record_bridgable {
+        my ($this, $other) = @_;
+        if ($other and
+            $other !~ /^r/ and
+            exists $map{$this}{range}{1}{$other} and
+            $map{$this}{range}{1}{$other} == 1) {
+            $map{$this}{bridgable}{$other}++;
+            $map{$other}{bridgable}{$this}++;
+        }
+    }
+
+    for my $coord (keys %map) {
+        my $row = $map{$coord}{row};
+        my $col = $map{$coord}{col};
+        my $offset_col = $col - !($row % 2);
+
+        next if $coord =~ /^r/;
+
+        # Same column, 2 rows off
+        if (($reverse_map{$row+1}{$offset_col} // '') =~ /^r/ and
+            ($reverse_map{$row+1}{$offset_col+1} // '') =~ /^r/) {
+            record_bridgable $coord, $reverse_map{$row+2}{$col};
+        }
+
+        # Adjacent row
+        if (($reverse_map{$row}{$col-1} // '') =~ /^r/ and
+            ($reverse_map{$row+1}{$offset_col} // '') =~ /^r/) {
+            record_bridgable $coord, $reverse_map{$row+1}{$offset_col-1};
+        }
+        if (($reverse_map{$row}{$col+1} // '') =~ /^r/ and
+            ($reverse_map{$row+1}{$offset_col+1} // '') =~ /^r/) {
+            record_bridgable $coord, $reverse_map{$row+1}{$offset_col+2};
+        }
+    }    
+}
+
 # Check whether a faction can reach a given hex (directly, by ship, or
 # by teleporting).
 #
@@ -295,5 +332,6 @@ sub compute_leech {
 setup_base_map;
 setup_direct_adjacencies;
 setup_ranges;
+setup_valid_bridges;
 
 1;
