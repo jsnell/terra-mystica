@@ -40,7 +40,7 @@ close $writefd;
 
 system("ln -s ../$write $read");
 system("git add $read $write");
-system("git commit $read $write -m add");
+system("HOME=. git commit $read $write -m add");
 
 print "http://terra.snellman.net/game/$id\n";
 print "http://terra.snellman.net/edit/${id}_${hash}\n";
