@@ -810,7 +810,9 @@ sub clean_commands {
     # Remove comments
     if (s/#(.*)//) {
         if ($1 ne '') {
-            push @ledger, { comment => $1 };
+            my $comment = $1;
+            $comment =~ s/email \S*@\S*/email ***/g;
+            push @ledger, { comment => $comment };
         }
     }
 
