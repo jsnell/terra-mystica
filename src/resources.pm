@@ -222,6 +222,9 @@ sub adjust_resource {
             if ($faction->{$type} > 1) {
                 die "Can't take two copies of $type\n";
             }
+            
+            $faction->{stats}{$type}{round} = $round;
+            $faction->{stats}{$type}{order} = scalar grep {/^FAV/} keys %{$faction};
 
             gain $faction, $tiles{$type}{gain}, $type;
 
