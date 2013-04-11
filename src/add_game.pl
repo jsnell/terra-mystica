@@ -29,9 +29,7 @@ open my $writefd, ">", "$write";
 
 print $writefd "# Game $id\n\n";
 
-print $writefd "# List players (in any order)\n";
-print $writefd "# Player ... email ...\n";
-print $writefd "# Player ... email ...\n";
+print $writefd "# List players (in any order) with 'player' command\n";
 
 print $writefd "\n# Randomize setup\n";
 print $writefd "randomize v1 seed $id\n";
