@@ -114,7 +114,7 @@ if ($terra_mystica::email) {
     push @email, $terra_mystica::email;
 }
 
-for my $faction (values %terra_mystica::factions) {
+for my $faction (values %{$res->{factions}}) {
     if ($faction->{name} ne $faction_name and $faction->{email}) {
         push @email, $faction->{email}
     }
@@ -124,7 +124,7 @@ my $out = encode_json {
     error => $res->{error},
     email => (join ",", @email),
     action_required => $res->{action_required},
-    round => $terra_mystica::round,
-    turn => $terra_mystica::turn,
+    round => $res->{round},
+    turn => $res->{turn},
 };
 print $out;
