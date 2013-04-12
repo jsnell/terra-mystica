@@ -37,8 +37,10 @@ sub handle_game {
         if ($pos == 1) {
             $stat->{wins}++;
             push @{$stat->{games_won}}, $res->{id}; 
+            $win_vp = $_->{VP}
         }
         $stat->{average_vp} += $_->{VP};
+        $stat->{average_winner_vp} += $win_vp;
         $stat->{average_position} += $pos;
     }
 }
@@ -54,8 +56,11 @@ for my $game (@ARGV) {
 
 for my $stat (values %{$stats{factions}}) {
     $stat->{win_rate} = int(100 * $stat->{wins} / $stat->{count});
+    $stat->{average_loss_vp} = sprintf "%5.2f", ($stat->{average_winner_vp} - $stat->{average_vp}) / $stat->{count};
     $stat->{average_vp} = sprintf "%5.2f", $stat->{average_vp} / $stat->{count};
     $stat->{average_position} = sprintf "%5.2f", $stat->{average_position} / $stat->{count};
+
+    delete $stat->{average_winner_vp};
 }
 
 $stats{timestamp} = POSIX::strftime "%Y-%m-%d %H:%M UTC", gmtime time;
