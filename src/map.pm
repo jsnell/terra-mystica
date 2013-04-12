@@ -7,9 +7,6 @@ use strict;
 use factions;
 
 use vars qw(%map %reverse_map @bridges);
-our %map = ();
-our %reverse_map = ();
-our @bridges = ();
 
 my @map = qw(brown gray green blue yellow red brown black red green blue red black E
              yellow x x brown black x x yellow black x x yellow E
@@ -23,12 +20,13 @@ my @map = qw(brown gray green blue yellow red brown black red green blue red bla
 
 # Initialize %map, with the correct coordinates, from the above raw data.
 sub setup_base_map {
+    my $i = 0;
     my $ri = 0;
     my $river = 0;
     for my $row ('A'..'I') {
         my $col = 1;
         for my $ci (0..13) {
-            my $color = shift @map;
+            my $color = $map[$i++];
             last if $color eq 'E';
             if ($color ne 'x') {
                 $map{"$row$col"}{color} = $color;
@@ -329,9 +327,11 @@ sub compute_leech {
     return %this_leech;
 }
 
-setup_base_map;
-setup_direct_adjacencies;
-setup_ranges;
-setup_valid_bridges;
+sub setup_map {
+    setup_base_map;
+    setup_direct_adjacencies;
+    setup_ranges;
+    setup_valid_bridges;
+}
 
 1;

@@ -6,54 +6,56 @@ use scoring;
 use towns;
 use tiles;
 
-use vars qw(%pool %bonus_coins);
+use vars qw(%pool %bonus_coins $leech_id);
 
-our %pool = (
-    # Resources
-    C => 1000,
-    W => 1000,
-    P => 1000,
-    VP => 1000,
+sub setup_pool {
+    %bonus_coins = ();
 
-    # Power
-    P1 => 10000,
-    P2 => 10000,
-    P3 => 10000,
+    %pool = (
+        # Resources
+        C => 1000,
+        W => 1000,
+        P => 1000,
+        VP => 1000,
 
-    # Cult tracks
-    EARTH => 100,
-    FIRE => 100,
-    WATER => 100,
-    AIR => 100,
-    KEY => 100,
+        # Power
+        P1 => 10000,
+        P2 => 10000,
+        P3 => 10000,
 
-    # Temporary pseudo-resources for tracking activation effects
-    SPADE => 10000,
-    FREE_TF => 10000,
-    FREE_TP => 10000,
-    FREE_D => 10000,
-    TELEPORT_NO_TF => 10000,
-    CULT => 10000,
-    GAIN_FAVOR => 10000,
-    GAIN_SHIP => 10000,
-    GAIN_TW => 10000,
-    BRIDGE => 10000,
-    CONVERT_W_TO_P => 3,
-    TOWN_SIZE => 10000,
-);
+        # Cult tracks
+        EARTH => 100,
+        FIRE => 100,
+        WATER => 100,
+        AIR => 100,
+        KEY => 100,
 
-our %bonus_coins = ();
+        # Temporary pseudo-resources for tracking activation effects
+        SPADE => 10000,
+        FREE_TF => 10000,
+        FREE_TP => 10000,
+        FREE_D => 10000,
+        TELEPORT_NO_TF => 10000,
+        CULT => 10000,
+        GAIN_FAVOR => 10000,
+        GAIN_SHIP => 10000,
+        GAIN_TW => 10000,
+        BRIDGE => 10000,
+        CONVERT_W_TO_P => 3,
+        TOWN_SIZE => 10000,
+        );
 
-$pool{"ACT$_"}++ for 1..6;
+    $pool{"ACT$_"}++ for 1..6;
 
-for (keys %tiles) {
-    if (/^BON/) {
-        $pool{$_}++;
-        $bonus_coins{$_}{C} = 0;
-    } elsif (/^FAV/) {
-        $pool{$_} += $tiles{$_}{count} || 3;
-    } elsif (/^TW/) {
-        $pool{$_} += 2;
+    for (keys %tiles) {
+        if (/^BON/) {
+            $pool{$_}++;
+            $bonus_coins{$_}{C} = 0;
+        } elsif (/^FAV/) {
+            $pool{$_} += $tiles{$_}{count} || 3;
+        } elsif (/^TW/) {
+            $pool{$_} += 2;
+        }
     }
 }
 
@@ -260,8 +262,6 @@ sub adjust_resource {
         die "Not enough '$type' in ".($faction->{name})."\n";
     }
 }
-
-my $leech_id = 0;
 
 # Record any possible leech events from a build by a faction int the given
 # hex. 

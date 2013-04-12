@@ -16,13 +16,6 @@ use scoring;
 use tiles;
 use towns;
 
-our %leech = ();
-our @action_required = ();
-our @ledger = ();
-our $round = 0;
-our $turn = 0;
-our $finished = 0;
-
 sub finalize {
     my $delete_email = shift;
 
@@ -79,6 +72,30 @@ sub finalize {
 }
 
 sub evaluate_game {
+    local @setup_order = ();
+    local %map = ();
+    local %reverse_map = ();
+    local @bridges = ();
+    local %pool = ();
+    local %bonus_coins = ();
+    local %leech = ();
+    local $leech_id = 0;
+    local @action_required = ();
+    local @ledger = ();
+    local $round = 0;
+    local $turn = 0;
+    local $finished = 0;
+    local @score_tiles = ();
+    local %factions = ();
+    local %factions_by_color = ();
+    local @factions = ();
+    local @setup_order = ();
+    local @players = ();
+
+    setup_map;
+    setup_pool;
+    setup_cults;
+
     my $data = shift;
     my $row = 1;
     my @error = ();

@@ -3,7 +3,6 @@ package terra_mystica;
 use strict;
 
 use vars qw(@score_tiles);
-our @score_tiles = ();
 
 use cults;
 use tiles;

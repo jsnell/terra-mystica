@@ -3,10 +3,9 @@
 package terra_mystica;
 
 use strict;
+use Clone qw(clone);
 
 use vars qw(%factions %factions_by_color @factions @setup_order @players);
-
-our @setup_order = ();
 
 my %setups = (
     alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
@@ -486,7 +485,7 @@ sub setup {
 
     die "Unknown faction: $faction_name\n" if !$setups{$faction_name};
 
-    my $faction = $factions{$faction_name} = $setups{$faction_name};    
+    my $faction = $factions{$faction_name} = clone($setups{$faction_name});
     my $player_record = {};
     if (@players) {
         $player_record = $players[@factions];
