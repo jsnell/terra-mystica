@@ -46,7 +46,7 @@ sub mangle_with_mode {
         if (!-l $to) {
             symlink "$ENV{PWD}/$from", $to;
         }
-        next;
+        return;
     }
 
     my ($fh, $filename) = tempfile("tmpfileXXXXXXX",
@@ -117,7 +117,8 @@ sub deploy_html {
     for my $f (qw(game.html
                   edit.html
                   faction.html
-                  index.html)) {
+                  index.html
+                  stats.html)) {
         my $to = "$target/$f";
 
         mangle_with_mode 0444, "$f", "$to", sub {

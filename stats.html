@@ -1,0 +1,53 @@
+<html>
+  <head>
+    <title>Terra Mystica Statistics</title>
+    <script type="text/javascript" language="javascript"
+            src="/stc/prototype-1.7.1.js">
+    </script>
+    <script type="text/javascript" language="javascript"
+            src="/stc/debug.js">
+    </script>
+    <script type="text/javascript" language="javascript"
+            src="/stc/game.js">
+    </script>
+    <link rel="stylesheet" type="text/css" href="/stc/style.css">
+  </head>
+  <body style="padding: 5ex">
+    <div id="error"></div>
+    Statistics computed from <span id="count">?</span> finished games.
+    <h3>Faction Statistics</h3>
+    <table id="faction-stats" class="building-table"><tr><td>Faction<td>Wins<td>Games<td>Win %<td>Average VP<td>Games Won</table>
+    <div id="timestamp" style="margin-top: 2ex; "></div>
+    <script language="javascript">
+      var state = null;
+      var id = document.location.pathname;
+
+      function showStats() {
+         var count = 0;
+         $H(state.factions).sortBy(function (a) { return -a.value.win_rate } ).each(function(elem) {
+            elem.value.game_links = "";
+            (elem.value.games_won || []).each(function (id) {
+                elem.value.game_links += ("<a href='/game/" + id + "'>" + id + "</a> ");
+            });
+            $("faction-stats").insert("<tr><td>#{key}<td>#{value.wins}<td>#{value.count}<td>#{value.win_rate}<td>#{value.average_vp}<td>#{value.game_links}</tr>"
+               .interpolate(elem));
+            count += elem.value.wins;
+         });
+         $("timestamp").innerHTML = "Last updated: " + state.timestamp;
+         $("count").innerHTML = count;
+      }
+
+      new Ajax.Request("/data/stats.json", {
+          method:"get",
+          onSuccess: function(transport){
+            state = transport.responseText.evalJSON();
+            try {
+              showStats();
+            } catch (e) {
+              handleException(e);
+            };
+          }
+      });
+    </script>
+  </body>
+</html>
