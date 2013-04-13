@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <title>Terra Mystica - Register New Account</title>
+    <script type="text/javascript" language="javascript"
+            src="/stc/prototype-1.7.1.js">
+    </script>
+    <script type="text/javascript" language="javascript"
+            src="/stc/debug.js">
+    </script>
+    <script type="text/javascript" language="javascript"
+            src="/stc/register.js">
+    </script>
+    <link rel="stylesheet" type="text/css" href="/stc/style.css">
+  </head>
+  <body style="padding: 5ex">
+    <div id="error"></div>
+    <h3>Register new account</h3>
+    <form id="userinfo" action="/cgi-bin/register.pl">
+      <table>
+        <tr><td>Username<td><input name="username" id="username"></input>
+        <tr><td>Email Address<td><input name="email" id="email"></input>
+        <tr><td>Password<td><input name="password1" type="password" id="password1"></input>
+        <tr><td>Verify password<td><input name="password2" type="password" id="password2"></input>
+        <tr><td><td><input type="button" value="Register" onclick="javascript:register()"></input>
+      </table>
+    </form>
+  </body>
+</html>

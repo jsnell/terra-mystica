@@ -20,32 +20,45 @@
     please refer to the original manual.
     </p>
 
-    <h4>Games</h4>
-    <div id="games">The list of games is currently loading</div>
+    <h4>Your Games</h4>
+    <table id="yourgames" style="margin-left: 2ex;"></table>
+
+    <h4>All Games</h4>
+    <table id="allgames" style="margin-left: 2ex;"><tr><td><a href="javascript:fetchGames('allgames', 'all')">Load</a></table>
 
     <script language="javascript">
       var state = null;
       var id = document.location.pathname;
 
-      function listGames() {
-         $(games).innerHTML = "";
-         state.each(function(elem) {
-            $(games).insert("<div><a href='/game/#{id}'>Game #{id}</a></div>"
+      function listGames(div) {
+         $(div).innerHTML = "";
+         state.games.each(function(elem) {
+            $(div).insert("<tr><td>#{id}<td><a href='#{link}'> #{role}</a></tr>"
                .interpolate(elem));
          });
       }
 
-      new Ajax.Request("/cgi-bin/gamelist.pl", {
-          method:"get",
-          onSuccess: function(transport){
-            state = transport.responseText.evalJSON();
-            try {
-              listGames();
-            } catch (e) {
-              handleException(e);
-            };
-          }
-      });
+      function fetchGames(div, mode) {
+          $(div).innerHTML = "... loading";
+          new Ajax.Request("/cgi-bin/gamelist.pl", {
+              parameters: { "mode": mode },
+              method:"get",
+              onSuccess: function(transport){
+                state = transport.responseText.evalJSON();
+                try {
+                  if (!state.error) {
+                    listGames(div);
+                  } else {
+                    $(div).innerHTML = "<tr><td>" + state.error + "</td>";
+                  }
+                } catch (e) {
+                  handleException(e);
+                };
+              }
+          });
+      }
+
+      fetchGames("yourgames", "user");
     </script>
   </body>
 </html>

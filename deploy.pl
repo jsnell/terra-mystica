@@ -69,6 +69,9 @@ sub deploy_cgi {
                   bridge.pl
                   edit.pl
                   gamelist.pl
+                  login.pl
+                  register.pl
+                  validate.pl
                   status.pl
                   save.pl)) {
         copy_with_mode 0555, "src/$f", "$target/cgi-bin/$f";
@@ -83,6 +86,7 @@ sub deploy_cgi {
     for my $f (qw(buildings.pm
                   commands.pm
                   cults.pm
+                  editlink.pm
                   exec_timer.pm
                   factions.pm
                   income.pm
@@ -91,6 +95,7 @@ sub deploy_cgi {
                   natural_cmp.pm
                   resources.pm
                   scoring.pm
+                  session.pm
                   tiles.pm
                   towns.pm
                   tracker.pm)) {
@@ -104,6 +109,7 @@ sub deploy_stc {
                   edit.js
                   faction.js
                   game.js
+                  register.js
                   prototype-1.7.1.js
                   org.css
                   spinner.gif
@@ -118,6 +124,7 @@ sub deploy_html {
                   edit.html
                   faction.html
                   index.html
+                  register.html
                   stats.html)) {
         my $to = "$target/$f";
 
