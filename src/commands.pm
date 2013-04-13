@@ -19,7 +19,7 @@ my $action_taken;
 my @warn = ();
 my $printed_turn = 0;
 
-use vars qw($email);
+use vars qw($email $admin_email);
 
 sub handle_row;
 sub handle_row_internal;
@@ -660,7 +660,7 @@ sub command {
         command_bridge $assert_faction->(), uc $1, uc $2, $3;
     } elsif ($command =~ /^connect (\w+):(\w+)(?::(\w+))?$/i) {
         command_connect $assert_faction->(), uc $1, uc $2, uc $3;
-    } elsif ($command =~ /^pass(?: (\w+))?$/i) {
+    } elsif ($command =~ /^pass(?: (bon\d+))?$/i) {
         command_pass $assert_faction->(), uc ($1 // '');
     } elsif ($command =~ /^action (\w+)$/i) {
         command_action $assert_faction->(), uc $1;
@@ -702,6 +702,8 @@ sub command {
         score_final_resources_for_faction $faction_name;
     } elsif ($command =~ /^email (.*)/i) {
         $email = $1;
+    } elsif ($command =~ /^admin email (.*)/i) {
+        $admin_email = $1;
     } elsif ($command =~ /^player (\S+)(?: email (\S*))?$/i) {
         push @players, { name => $1, email => $2 };
     } elsif ($command =~ /^randomize v1 seed (.*)/i) {
