@@ -91,6 +91,8 @@ sub evaluate_game {
     local @factions = ();
     local @setup_order = ();
     local @players = ();
+    local $email = '';
+    local $admin_email = '';
 
     setup_map;
     setup_pool;
@@ -141,6 +143,7 @@ sub evaluate_game {
         turn => $turn,
         finished => $finished,
         cults => \%cults,
+        admin => $data->{delete_email} ? '' : $admin_email,
     }
 
 }

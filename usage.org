@@ -236,6 +236,10 @@ email to, except those sent by this faction.
 
 * Obscure commands
 
+** =admin email /email/=
+
+Give another user full admin rights to the game.
+
 ** =income=
 
 /Note/: This command is only needed if you absolutely want to take income
