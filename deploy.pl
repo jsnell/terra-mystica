@@ -70,6 +70,7 @@ sub deploy_cgi {
                   edit.pl
                   gamelist.pl
                   login.pl
+                  newgame.pl
                   register.pl
                   validate.pl
                   status.pl
@@ -127,6 +128,7 @@ sub deploy_html {
                   faction.html
                   index.html
                   login.html
+                  newgame.html
                   register.html
                   stats.html)) {
         my $to = "$target/$f";

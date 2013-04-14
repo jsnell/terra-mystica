@@ -35,8 +35,8 @@ sub create_game {
     close $writefd;
 
     system("ln -s ../$write $read");
-    system("git add $read $write");
-    system("HOME=. git commit $read $write -m add");
+    system("git add $read $write > /dev/null");
+    system("HOME=. git commit $read $write -m add > /dev/null");
 
     my $write_id = "${id}_${hash}";
 

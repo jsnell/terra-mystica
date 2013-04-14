@@ -10,6 +10,9 @@
       if (document.location.hash == "#failed") {
          document.getElementById("error").innerHTML = "Login failed"
       }
+      if (document.location.hash == "#required") {
+         document.getElementById("error").innerHTML = "Login required for operation"
+      }
     </script>
     <form id="userinfo" action="/cgi-bin/login.pl" method="POST">
       <table>
