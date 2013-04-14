@@ -35,7 +35,7 @@ if (!@error) {
     }
     
     if ($email_in_use) {
-        push @error, "The email address is already in use";
+        push @error, "The email address is already registered";
     }
 }
 
@@ -58,7 +58,7 @@ if (!@error) {
 
     my $smtp = Net::SMTP->new('localhost', ( Debug => 0 ));
 
-    $smtp->mail("$ENV{USER}\@terra.snellman.net");
+    $smtp->mail("www-data\@terra.snellman.net");
     $smtp->to($email);
 
     $smtp->data();

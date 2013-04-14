@@ -125,6 +125,7 @@ sub deploy_html {
                   edit.html
                   faction.html
                   index.html
+                  login.html
                   register.html
                   stats.html)) {
         my $to = "$target/$f";

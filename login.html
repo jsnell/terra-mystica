@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <title>Terra Mystica - Login</title>
+    <link rel="stylesheet" type="text/css" href="/stc/style.css">
+  </head>
+  <body style="padding: 5ex">
+    <h3>Login</h3>
+    <div id="error"></div>
+    <script>
+      if (document.location.hash == "#failed") {
+         document.getElementById("error").innerHTML = "Login failed"
+      }
+    </script>
+    <form id="userinfo" action="/cgi-bin/login.pl" method="POST">
+      <table>
+        <tr><td>Username<td><input name="username" id="username"></input>
+        <tr><td>Password<td><input name="password" type="password" id="password"></input>
+        <tr><td><td><input type="submit" value="login"></input>
+      </table>
+    </form>
+  </body>
+</html>

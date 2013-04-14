@@ -1,5 +1,6 @@
 function register() {
     $("error").innerHTML = "";
+    $("validate").style.display = "none";
 
     try {
         var fields = ["username", "email", "password1", "password2"];
@@ -28,8 +29,10 @@ function register() {
             method:"post",
             onSuccess: function(transport) {
                 state = transport.responseText.evalJSON();
-                if (state.error) {
-                    throw state.error;
+                if (state.error.length) {
+                    $("error").innerHTML = state.error.join("\n");
+                } else {
+                    $("validate").style.display = "block";
                 }
             }
         });    

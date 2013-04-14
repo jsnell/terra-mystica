@@ -19,11 +19,15 @@ my ($stored_password) = $dbh->selectrow_array("select password from player where
 if ($stored_password and
     $stored_password eq bcrypt($password, $stored_password)) {
     my $token = session_token $username, sprintf "%08x", rand 2**32;
+    print "Status: 303\r\n";
     print "Set-Cookie: token=$token; Path=/; HttpOnly\r\n";
     print "Cache-Control: no-cache\r\n";
     print "Location: /\r\n";
     print "\r\n";
 } else {
-    print "Location: /login.html\r\n";
+    print "Status: 303\r\n";
+    print "Set-Cookie: token=; Path=/; HttpOnly\r\n";
+    print "Location: /login.html#failed\r\n";
+    print "Cache-Control: no-cache\r\n";
     print "\r\n";
 }
