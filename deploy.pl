@@ -85,6 +85,7 @@ sub deploy_cgi {
 
     for my $f (qw(buildings.pm
                   commands.pm
+                  create_game.pm
                   cults.pm
                   editlink.pm
                   exec_timer.pm
