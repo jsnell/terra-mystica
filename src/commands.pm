@@ -411,7 +411,10 @@ sub command_pass {
         }
 
         adjust_resource $faction, $bon, 1;
+    } elsif ($round != 6) {
+        die "Must take a bonus tile when passing (except on last round)\n"
     }
+
     if ($discard) {
         adjust_resource $faction, $discard, -1;
     }
