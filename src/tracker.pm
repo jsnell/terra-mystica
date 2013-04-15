@@ -19,6 +19,15 @@ use towns;
 sub finalize {
     my $delete_email = shift;
 
+    my $spade_seen = 0;
+
+    for (@action_required) {
+        if ($_->{type} eq 'transform') {
+            $_ = '' if $spade_seen++;
+        }
+    }
+    @action_required = grep { $_ } @action_required;
+
     for my $faction (@factions) {
         $factions{$faction}{income} = { faction_income $faction };        
         if ($delete_email) {
