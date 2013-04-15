@@ -41,17 +41,15 @@ if (!@error) {
 
 if (!@error) {
     my $secret = read_file("../../data/secret");
-    my $iv = read_file("../../data/iv");
 
     my $salt = en_base64 (join '', map { chr int rand 256} 1..16);
     my $hashed_password = bcrypt($password, 
                                  '$2a$08$'.$salt);
     my $data = join "\t", ($username, $email, $hashed_password);
     my $cipher = Crypt::CBC->new(-key => $secret,
-                                  -blocksize => 8,
-                                  -iv => $iv,
-                                  -add_header => 0,
-                                  -cipher => 'Blowfish');
+                                 -blocksize => 8,
+                                 -header => 'randomiv',
+                                 -cipher => 'Blowfish');
     my $token = en_base64 $cipher->encrypt($data);
     my $url = sprintf "http://terra.snellman.net/cgi-bin/validate.pl?token=%s",
       $token;

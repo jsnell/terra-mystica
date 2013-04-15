@@ -31,12 +31,10 @@ sub add_user {
 
 sub check_token {
     my $secret = read_file("../../data/secret");
-    my $iv = read_file("../../data/iv");
 
     my $cipher = Crypt::CBC->new(-key => $secret,
                                  -blocksize => 8,
-                                 -iv => $iv,
-                                 -add_header => 0,
+                                 -header => 'randomiv',
                                  -cipher => 'Blowfish');
     my $data = $cipher->decrypt(de_base64 $token);
     add_user split /\t/, $data;
