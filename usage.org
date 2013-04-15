@@ -15,17 +15,13 @@ by contacting me directly.
 
 ** Creating a Game
 
-For now you'll need to ask Juho to create a game, either through BGG
-GeekMail (username jsnell) or email (jsnell@iki.fi). Please tell
-whether this is going to be a PBF game on BGG, or if communication
-will happen through some other method. This information is needed to
-name the game correctly.
+To create a new game, you'll need to be logged in. After that, you'll
+be able to create a game from the [[http://terra.snellman.net/newgame/][New Game]] page. You'll be redirected
+to the admin page of the new game, and can use that to finish the
+setup (e.g. listing the players). Any new games will also appear on 
+the front page under "your games", with the "admin" role.
 
-You'll get two links in response: one for viewing the game, one for
-editing it. Anyone with the second link can change the game in
-arbitrary ways, so you might not want to share it too widely.
-
-After the faction selection is done, the admin page of the game will
+After faction selection is done, the admin page of the game will
 also have a link for each faction. These links allow entering moves
 for that single faction, but not editing the game history or making
 moves for other factions. You can distribute these links to the
