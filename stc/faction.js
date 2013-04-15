@@ -110,4 +110,43 @@ function makeMailToLink() {
     return link;
 }
 
+function showActiveGames(div, mode) {
+    var record = { "active_count": 0, "action_required_count": 0 };
+    state.games.each(function(elem) {
+        if (!elem.finished) { record.active_count++; }
+        if (elem.action_required) { record.action_required_count++; }
+    });
+    $(div).innerHTML = "<div>Moves required in #{action_required_count}/#{active_count} games</div>".interpolate(record);
+
+    var link = new Element('a', {"href": "#", "accesskey": "n"}).update("Next game");
+    link.onclick = function() { fetchGames(div, mode, nextGame); } 
+    $(div).insert(link);
+}
+
+function nextGame(div, mode) {
+    state.games.each(function(elem) {
+        if (elem.action_required) { document.location = elem.link; }
+    });
+    showActiveGames(div, mode);
+}
+
+function fetchGames(div, mode, handler) {
+    $(div).innerHTML = "... loading";
+    new Ajax.Request("/cgi-bin/gamelist.pl", {
+        parameters: { "mode": mode },
+        method:"get",
+        onSuccess: function(transport){
+            state = transport.responseText.evalJSON();
+            try {
+                if (!state.error) {
+                    handler(div, mode);
+                } else {
+                    $(div).innerHTML = "<tr><td>" + state.error + "</td>";
+                }
+            } catch (e) {
+                handleException(e);
+            };
+        }
+    });
+}
 

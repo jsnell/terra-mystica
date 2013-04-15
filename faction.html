@@ -19,11 +19,13 @@
     <link rel="stylesheet" type="text/css" href="/stc/style.css">
   </head>
   <body id="root">
+    <div id="user-info"></div>
     <div id="game-root">
     </div>
     <script language="javascript">
       init($("game-root"));
       loadGame(document.location.host, document.location.pathname);
+      fetchGames($("user-info"), "user", showActiveGames);
     </script>
   </body>
 </html>

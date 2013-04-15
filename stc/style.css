@@ -200,6 +200,11 @@ div#move_entry_explanation {
     font-weight: bold;
 }
 
+div#user-info {
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
 tr#game-status-finished {
     color: #ccc;
 }
