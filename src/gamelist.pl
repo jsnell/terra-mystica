@@ -53,7 +53,7 @@ if ($mode eq 'all') {
         }
     } @{$ids[0]};
 } elsif ($mode eq 'user') {
-    my $user = username_from_session_token $q->cookie('token') // '';
+    my $user = username_from_session_token $q->cookie('session-token') // '';
     if (!defined $user) {
         $res{error} = "Not logged in"
     } else {

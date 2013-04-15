@@ -70,6 +70,7 @@ sub deploy_cgi {
                   edit.pl
                   gamelist.pl
                   login.pl
+                  logout.pl
                   newgame.pl
                   register.pl
                   validate.pl

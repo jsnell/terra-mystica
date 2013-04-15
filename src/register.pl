@@ -46,12 +46,14 @@ if (!@error) {
     my $hashed_password = bcrypt($password, 
                                  '$2a$08$'.$salt);
     my $data = join "\t", ($username, $email, $hashed_password);
+    my $iv = Crypt::CBC->random_bytes(8);
     my $cipher = Crypt::CBC->new(-key => $secret,
+                                 -iv => $iv,
                                  -blocksize => 8,
                                  -header => 'randomiv',
                                  -cipher => 'Blowfish');
     my $token = en_base64 $cipher->encrypt($data);
-    my $url = sprintf "http://terra.snellman.net/cgi-bin/validate.pl?token=%s",
+    my $url = sprintf "http://terra.snellman.net/validate/%s",
       $token;
 
     my $smtp = Net::SMTP->new('localhost', ( Debug => 0 ));

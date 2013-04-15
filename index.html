@@ -9,9 +9,15 @@
   </head>
   <body style="padding: 5ex">
     <div style="float: right; height: 200px">
-      <a href="/login.html">Login</a><br>
-      <a href="/register.html">Register</a><br>
-      <a href="/newgame/">New Game</a>
+      <script>
+        if (!/session-username=(.+)/.match(document.cookie)) {
+          document.write('<a href="/login/">Login</a><br>');
+          document.write('<a href="/register/">Register</a><br>');
+        } else {
+          document.write('<a href="/newgame/">New Game</a><br>');
+          document.write('<a href="/logout/">Logout</a><br>');
+        }
+      </script>
     </div>
 
     <p>

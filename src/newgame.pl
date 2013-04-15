@@ -10,10 +10,10 @@ use session;
 
 my $q = CGI->new;
 
-my $username = username_from_session_token $q->cookie('token') // '';
+my $username = username_from_session_token $q->cookie('session-token') // '';
 if (!$username) {
     print "Status: 303\r\n";
-    print "Location: /login.html#required\r\n";
+    print "Location: /login/#required\r\n";
     print "Cache-Control: no-cache\r\n";
     print "\r\n";
     exit;
@@ -26,7 +26,7 @@ my ($email) = $dbh->selectrow_array("select address from email where player = ? 
 
 my $gameid = $q->param('gameid');
 if (!$gameid) {
-    print "Location: /newgame.html\r\n";
+    print "Location: /newgame/\r\n";
     print "Cache-Control: no-cache\r\n";
     print "\r\n";
     exit;
