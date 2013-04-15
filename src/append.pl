@@ -110,11 +110,13 @@ if (!@{$res->{error}}) {
 lockfile::unlock $lockfile;
 
 # Ignore DB errors during metadata refresh.
-eval {
-    my ($read_id) = $id =~ /(.*?)_/g;
-    index_game $read_id, $id, $res;
-}; if ($@) {
-    print STDERR $@;
+if (!@{$res->{error}}) {
+    eval {
+        my ($read_id) = $id =~ /(.*?)_/g;
+        index_game $read_id, $id, $res;
+    }; if ($@) {
+        print STDERR $@;
+    }
 }
 
 my @email = ();
