@@ -57,16 +57,18 @@ if (!@error) {
     my $smtp = Net::SMTP->new('localhost', ( Debug => 0 ));
 
     $smtp->mail("www-data\@terra.snellman.net");
-    $smtp->to($email);
-
-    $smtp->data();
-    $smtp->datasend("To: $email\n");
-    $smtp->datasend("From: noreply+registration\@terra.snellman.net\n");
-    $smtp->datasend("Subject: Account activation for Terra Mystica\n");
-    $smtp->datasend("\n");
-    $smtp->datasend("To activate your account, use the following link:\n");
-    $smtp->datasend("  $url\n");
-    $smtp->dataend();
+    if (!$smtp->to($email)) {
+        push @error, "Invalid email address";
+    } else {
+        $smtp->data();
+        $smtp->datasend("To: $email\n");
+        $smtp->datasend("From: noreply+registration\@terra.snellman.net\n");
+        $smtp->datasend("Subject: Account activation for Terra Mystica\n");
+        $smtp->datasend("\n");
+        $smtp->datasend("To activate your account, use the following link:\n");
+        $smtp->datasend("  $url\n");
+        $smtp->dataend();
+    }
 
     $smtp->quit;
 }
