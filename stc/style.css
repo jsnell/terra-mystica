@@ -193,3 +193,15 @@ pre#preview_commands {
 div#move_entry {
     margin-bottom: 10px;
 }
+
+tr#game-status-finished {
+    color: #ccc;
+}
+
+tr.game-status-finished td { 
+    background-color: #ccc;
+}
+
+tr.game-status-action-required td {
+    background-color: #cfc;
+}

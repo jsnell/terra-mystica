@@ -2,6 +2,8 @@
 
 use strict;
 
+use exec_timer;
+
 use CGI qw(:cgi);
 use DBI;
 use File::Basename qw(dirname);
@@ -24,6 +26,8 @@ my %res = ( error => '');
 
 sub add_sorted {
     $res{games} = [ sort {
+                        $b->{action_required} <=> $a->{action_required} or
+                        $a->{finished} <=> $b->{finished} or
                         natural_cmp $a->{id}, $b->{id};
                     } @_
         ];
@@ -39,11 +43,13 @@ sub role_link {
 }
 
 if ($mode eq 'all') {
-    my @ids = $dbh->selectall_arrayref("select id from game");
+    my @ids = $dbh->selectall_arrayref("select id,finished from game");
     add_sorted map {
         { id => $_->[0],
           role => 'view',
-          link => "/game/".$_->[0]
+          link => "/game/".$_->[0],
+          finished => $_->[1] ? 1 : 0,
+          action_required => 0,
         }
     } @{$ids[0]};
 } elsif ($mode eq 'user') {
@@ -52,12 +58,14 @@ if ($mode eq 'all') {
         $res{error} = "Not logged in"
     } else {
         my @roles = $dbh->selectall_arrayref(
-            "select game, faction, game.write_id from game_role left join game on game=game.id where email in (select address from email where player = ?)",
+            "select game, faction, game.write_id, game.finished, action_required from game_role left join game on game=game.id where email in (select address from email where player = ?)",
             {}, $user);
         add_sorted map {
             { id => $_->[0],
               role => $_->[1],
-              link => role_link(@{$_})
+              link => role_link(@{$_}),
+              finished => $_->[3] ? 1 : 0,
+              action_required => $_->[4],
             }
         } @{$roles[0]};
     }

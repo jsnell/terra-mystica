@@ -26,5 +26,3 @@ sub evaluate_and_index_game {
 for (@ARGV) {
     evaluate_and_index_game $_;
 }
-
-$dbh->disconnect();

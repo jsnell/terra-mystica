@@ -13,6 +13,7 @@ use JSON;
 chdir dirname $0;
 
 use exec_timer;
+use indexgame;
 use tracker;
 use lockfile;
 
@@ -107,6 +108,14 @@ if (!@{$res->{error}}) {
 };
 
 lockfile::unlock $lockfile;
+
+# Ignore DB errors during metadata refresh.
+eval {
+    my ($read_id) = $id =~ /(.*?)_/g;
+    index_game $read_id, $id, $res;
+}; if ($@) {
+    print STDERR $@;
+}
 
 my @email = ();
 
