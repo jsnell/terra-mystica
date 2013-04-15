@@ -37,13 +37,13 @@
     <table id="yourgames" style="margin-left: 2ex;"></table>
 
     <h4>All Games</h4>
-    <table id="allgames" style="margin-left: 2ex;"><tr><td><a href="javascript:fetchGames('allgames', 'all')">Load</a></table>
+    <table id="allgames" style="margin-left: 2ex;"><tr><td><a href="javascript:fetchGames('allgames', 'all', listGames)">Load</a></table>
 
     <script language="javascript">
       var state = null;
       var id = document.location.pathname;
 
-      function listGames(div) {
+      function listGames(div, mode) {
          $(div).innerHTML = "";
          state.games.each(function(elem) {
             elem.status = "";
@@ -52,9 +52,23 @@
             $(div).insert("<tr class='#{status}'><td>#{id}<td><a href='#{link}'> #{role}</a></tr>"
                .interpolate(elem));
          });
+         if (mode == "user") {
+           var link = new Element('a', {"href": "#", "accesskey": "n"}).update("Refresh");
+           link.onclick = function() { fetchGames(div, mode, nextGame); } 
+           var td = new Element('td').insert(link);
+           var tr = new Element('tr').insert(new Element("td")).insert(td);
+           $(div).insert(tr);
+         }
       }
 
-      function fetchGames(div, mode) {
+      function nextGame(div, mode) {
+         state.games.each(function(elem) {
+            if (elem.action_required) { document.location = elem.link; }
+         });
+         listGames(div, mode);
+      }
+
+      function fetchGames(div, mode, handler) {
           $(div).innerHTML = "... loading";
           new Ajax.Request("/cgi-bin/gamelist.pl", {
               parameters: { "mode": mode },
@@ -63,7 +77,7 @@
                 state = transport.responseText.evalJSON();
                 try {
                   if (!state.error) {
-                    listGames(div);
+                    handler(div, mode);
                   } else {
                     $(div).innerHTML = "<tr><td>" + state.error + "</td>";
                   }
@@ -74,7 +88,7 @@
           });
       }
 
-      fetchGames("yourgames", "user");
+      fetchGames("yourgames", "user", listGames);
     </script>
   </body>
 </html>
