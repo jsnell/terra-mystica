@@ -33,6 +33,7 @@ function register() {
                     $("error").innerHTML = state.error.join("\n");
                 } else {
                     $("validate").style.display = "block";
+                    $("usage").style.display = "none";
                 }
             }
         });    
