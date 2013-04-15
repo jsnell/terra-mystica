@@ -1050,7 +1050,7 @@ function drawActionRequired() {
                                              "onInput": "javascript:moveEntryInputChanged()",
                                              "style": "font-family: monospace; width: 60ex; height: 6em;" } );
         $("move_entry").insert(input);
-        $("move_entry").insert("<div style='padding-left: 2em'><button id='move_entry_action' onclick='javascript:preview()'>Preview</button></div>")
+        $("move_entry").insert("<div style='padding-left: 2em'><button id='move_entry_action' onclick='javascript:preview()'>Preview</button><br><div id='move_entry_explanation'></span></div>")
     }
 }
 
@@ -1171,15 +1171,22 @@ function moveEntryInputChanged() {
     $("move_entry_input").oninput = null;
     $("move_entry_action").innerHTML = "Preview";
     $("move_entry_action").onclick = preview;
+    $("move_entry_explanation").innerHTML = "";
 } 
 
 function moveEntryAfterPreview() {
     if ($("move_entry_action")) {
         $("move_entry_action").disabled = false;
 
-        if ($("error").innerHTML == "" && allowSaving) {
-            $("move_entry_action").innerHTML = "Save";
-            $("move_entry_action").onclick = save;
+        if ($("move_entry_input").value != "") {
+            if ($("error").innerHTML != "") {
+                $("move_entry_explanation").innerHTML = "Can't save yet - input had errors";
+            } else if (!allowSaving) {
+                $("move_entry_explanation").innerHTML = "Can't save yet - it's still your turn to move";
+            } else {
+                $("move_entry_action").innerHTML = "Save";
+                $("move_entry_action").onclick = save;
+            }
         }
     }
     if ($("move_entry_input")) {

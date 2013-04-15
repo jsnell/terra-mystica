@@ -194,6 +194,12 @@ div#move_entry {
     margin-bottom: 10px;
 }
 
+div#move_entry_explanation {
+    margin-top: 5px;
+    font: 14px Verdana;
+    font-weight: bold;
+}
+
 tr#game-status-finished {
     color: #ccc;
 }
