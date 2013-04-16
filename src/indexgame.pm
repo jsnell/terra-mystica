@@ -27,11 +27,11 @@ sub index_game {
             $_->{faction} and $_->{faction} eq $faction->{name}
         } @{$game->{action_required}};
         ($res) = $dbh->do(
-            'update game_role set email=?,action_required=? where game=? and faction=?',
+            'update game_role set email=lower(?),action_required=? where game=? and faction=?',
             {},
             $faction->{email}, 1*!!$action_required, $id, $faction->{name});
         if ($res == 0) {
-            $dbh->do('insert into game_role (game, email, faction, action_required) values (?, ?, ?, ?)',
+            $dbh->do('insert into game_role (game, email, faction, action_required) values (?, lower(?), ?, ?)',
                      {}, $id, $faction->{email}, $faction->{name}, $action_required);
         }
     }

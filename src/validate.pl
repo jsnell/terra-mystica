@@ -23,7 +23,7 @@ sub add_user {
 
     $dbh->do('insert into player (username, password) values (?, ?)', {},
              $user, $hashed_password);
-    $dbh->do('insert into email (address, player, validated) values (?, ?, ?)',
+    $dbh->do('insert into email (address, player, validated) values (lower(?), ?, ?)',
              {}, $email, $user, 1);
     $dbh->commit();
     $dbh->disconnect();
