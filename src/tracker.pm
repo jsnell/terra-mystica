@@ -75,7 +75,7 @@ sub finalize {
         $tiles{$key}{bonus_coins} = $bonus_coins{$key};
     }
 
-    for (qw(BRIDGE TOWN_SIZE)) {
+    for (qw(BRIDGE TOWN_SIZE GAIN_ACTION)) {
         delete $pool{$_};
     }
 }

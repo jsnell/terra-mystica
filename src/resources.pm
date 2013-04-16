@@ -40,6 +40,7 @@ sub setup_pool {
         GAIN_FAVOR => 10000,
         GAIN_SHIP => 10000,
         GAIN_TW => 10000,
+        GAIN_ACTION => 10000,
         BRIDGE => 10000,
         CONVERT_W_TO_P => 3,
         TOWN_SIZE => 10000,
