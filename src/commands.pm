@@ -27,6 +27,7 @@ sub handle_row_internal;
 sub allow_full_move {
     my $faction = shift;
     $faction->{allowed_actions} = 1;
+    $faction->{allowed_sub_actions} = {};
 }
 
 sub require_subaction {
