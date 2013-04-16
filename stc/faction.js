@@ -4,13 +4,26 @@ var currentFaction = null;
 var backendDomain = null;
 
 function loadGame (domain, pathname) {
-    var path = pathname.sub("/faction/", "").split("/");
+    var path = pathname.sub(/\/(faction|game)\//, "").split("/");
+    var expected = ["game", "faction", "key"];
+    params = {};
+    path.each(function(elem) {
+        var match = elem.match(/(.*)=(.*)/); 
+        if (match) {
+            params[match[1]] = match[2]; 
+        } else {
+            params[expected.shift()] = elem;
+        }
+    });
+
     backendDomain = domain;
     state = null;
-    params = { "game": path[0], "faction": path[1], "key": path[2] };
     
     if ($("title")) {
-        $("title").text += " - " + params.game + " / " + params.faction;
+        $("title").text += " - " + params.game;
+        if (params.faction) {
+            $("title").text += " / " + params.faction;
+        }
     }
 
     if ($("move_entry")) {
@@ -52,7 +65,8 @@ function previewOrSave(save) {
             "game": params.game,
             "preview": preview,
             "faction-key": params.key,
-            "preview-faction": currentFaction
+            "preview-faction": currentFaction,
+            "max-row": params['max-row']
         },
         onFailure: function(transport){
             state = transport.responseText.evalJSON();

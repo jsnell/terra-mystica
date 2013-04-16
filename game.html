@@ -8,6 +8,9 @@
             src="/stc/prototype-1.7.1.js">
     </script>
     <script type="text/javascript" language="javascript"
+            src="/stc/faction.js">
+    </script>
+    <script type="text/javascript" language="javascript"
             src="/stc/game.js">
     </script>
     <script type="text/javascript" language="javascript"
@@ -16,31 +19,13 @@
     <link rel="stylesheet" type="text/css" href="/stc/style.css">
   </head>
   <body id="root">
+    <div id="user-info"></div>
     <div id="game-root">
     </div>
     <script language="javascript">
-      init($("game-root"));
-
-      var state = null;
-      var id = document.location.pathname.sub(/.*\//, "");
-      $("title").text += " - " + id + "";
-      var currentFaction = "";
-      spin();
-      new Ajax.Request("/cgi-bin/bridge.pl?game=" + id, {
-          method:"get",
-          onFailure: function(transport){
-             state = transport.responseText.evalJSON();
-             failed();
-          },
-          onSuccess: function(transport){
-            state = transport.responseText.evalJSON();
-            try {
-              draw();
-            } catch (e) {
-              handleException(e);
-            };
-          }
-      });
+       init($("game-root"));
+       loadGame(document.location.host, document.location.pathname);
+       fetchGames($("user-info"), "user", showActiveGames);
     </script>
   </body>
 </html>
