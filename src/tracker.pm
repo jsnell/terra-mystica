@@ -28,13 +28,26 @@ sub finalize {
     }
     @action_required = grep { $_ } @action_required;
 
-    for my $faction (@factions) {
-        $factions{$faction}{income} = { faction_income $faction };        
+    for my $faction_name (@factions) {
+        my $faction = $factions{$faction_name};
+        next if !$faction;
+        $faction->{income} = { faction_income $faction->{name} };        
         if ($delete_email) {
-            delete $factions{$faction}{email};
+            delete $faction->{email};
         }
         if ($round == 6 and !$finished) {
-            $factions{$faction}{vp_projection} = { faction_vps $factions{$faction} };
+            $faction->{vp_projection} = { faction_vps $faction };
+        }
+        delete $faction->{allowed_actions};
+        delete $faction->{allowed_sub_actions};
+        delete $faction->{locations};
+        delete $faction->{teleport};
+        if ($round == 6) {
+            delete $faction->{income};
+            delete $faction->{income_breakdown};
+        }
+        for (values %{$faction->{buildings}}) {
+            delete $_->{subactions};
         }
     }
         
@@ -57,15 +70,6 @@ sub finalize {
         delete $hex->{bridgable};
     }
     
-    for my $faction (@factions) {
-        delete $factions{$faction}{locations};
-        delete $factions{$faction}{teleport};
-        if ($round == 6) {
-            delete $factions{$faction}{income};
-            delete $factions{$faction}{income_breakdown};
-        }
-    }
-
     for my $key (keys %cults) {
         $map{$key} = $cults{$key};
     }
@@ -77,6 +81,10 @@ sub finalize {
 
     for (qw(BRIDGE TOWN_SIZE GAIN_ACTION)) {
         delete $pool{$_};
+    }
+
+    for (values %actions) {
+        delete $_->{subaction};
     }
 }
 

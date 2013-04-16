@@ -6,7 +6,6 @@ use exec_timer;
 
 use CGI qw(:cgi);
 use DBI;
-use File::Basename qw(dirname);
 use JSON;
 
 use editlink;

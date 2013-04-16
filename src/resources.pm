@@ -191,6 +191,9 @@ sub adjust_resource {
             $track->{level}++
         }
         $type = '';
+    } elsif ($type eq 'GAIN_ACTION') {
+        $faction->{allowed_actions} += $delta;
+        return;
     } elsif ($type eq 'PW') {
         if ($delta > 0) {
             gain_power $faction, $delta;

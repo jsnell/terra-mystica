@@ -443,6 +443,10 @@ my %setups = (
                                income => { P => [ 0, 1, 2, 3 ] } },
                        SH => { advance_cost => { W => 4, C => 8 },
                                advance_gain => [ { SPADE => 3 } ],
+                               subactions => {
+                                   transform => 3,
+                                   build => 1,
+                               },
                                income => { PW => [ 0, 2 ] } },
                        SA => { advance_cost => { W => 4, C => 6 },
                                income => { P => [ 0, 1 ] } },
@@ -503,6 +507,8 @@ sub setup {
     $faction->{name} = $faction_name;
     $faction->{start_player} = 1 if !@factions;
     $faction->{email} = $email;
+
+    $faction->{allowed_actions} = 0;
 
     if ($factions_by_color{$faction->{color}}) {
         my $other_name = $factions_by_color{$faction->{color}}->{name};

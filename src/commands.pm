@@ -24,6 +24,46 @@ use vars qw($email $admin_email);
 sub handle_row;
 sub handle_row_internal;
 
+sub allow_full_move {
+    my $faction = shift;
+    $faction->{allowed_actions} = 1;
+}
+
+sub require_subaction {
+    my ($faction, $type, $followup) = @_;
+
+    if (($faction->{allowed_sub_actions}{$type} // 0) > 0) {
+        $faction->{allowed_sub_actions}{$type}--;
+        $faction->{allowed_sub_actions} = $followup if $followup;
+    } elsif ($faction->{allowed_actions}) {
+        $faction->{allowed_actions}--;
+        $faction->{allowed_sub_actions} = $followup if $followup;
+    } else {
+        my @unpassed = grep { !$_->{passed} } values %factions;
+        if (@unpassed == 1) {
+            allow_full_move $faction;
+            require_subaction($faction, $type);
+            return;
+        } else {
+            die "'$type' command not allowed (trying to take multiple actions in one turn?)\n"
+        }
+    }
+}
+
+sub allow_pass {
+    my $faction = shift;
+    $faction->{allowed_sub_actions} = {
+        pass => 1,
+    };    
+}
+
+sub allow_build {
+    my $faction = shift;
+    $faction->{allowed_sub_actions} = {
+        build => 1,
+    };
+}
+
 sub command_adjust_resources {
     my ($faction, $delta, $type, $source) = @_;
     my $faction_name = $faction->{name};
@@ -95,13 +135,6 @@ sub command_build {
     die "'$where' already contains a $map{$where}{building}\n"
         if $map{$where}{building};
 
-    if (!$round) {
-        if ($faction_name ne $setup_order[0]) {
-            die "Expected $setup_order[0] to place building, not $faction_name\n"
-        }
-        shift @setup_order;
-    }
-
     if ($faction->{FREE_D}) {
         $free = 1;
         $faction->{FREE_D}--;
@@ -113,6 +146,16 @@ sub command_build {
             if $map{$where}{color} ne $color;
     } else {
         command $faction_name, "transform $where to $color";
+    }
+
+    require_subaction $faction, 'build', {};
+
+    if (!$round) {
+        if ($faction_name ne $setup_order[0]) {
+            die "Expected $setup_order[0] to place building, not $faction_name\n"
+        }
+        shift @setup_order;
+        check_setup_actions();
     }
 
     note_leech $faction, $where;
@@ -131,6 +174,8 @@ sub command_build {
 
 sub command_upgrade {
     my ($faction, $where, $type) = @_;
+
+    require_subaction $faction, 'upgrade', {};
 
     die "Unknown location '$where'\n" if !$map{$where};
 
@@ -160,6 +205,11 @@ sub command_upgrade {
         }
     }
 
+    if (defined $faction->{buildings}{$type}{subactions}) {
+        $faction->{allowed_sub_actions} =
+            $faction->{buildings}{$type}{subactions};
+    }
+
     $faction->{buildings}{$oldtype}{level}--;
     advance_track $faction, $type, $faction->{buildings}{$type}, $free;
 
@@ -174,6 +224,8 @@ sub command_upgrade {
 
 sub command_send {
     my ($faction, $cult, $amount) = @_;
+
+    require_subaction $faction, 'send', {};
 
     die "Unknown cult track $cult\n" if !grep { $_ eq $cult } @cults;
 
@@ -329,6 +381,13 @@ sub command_transform {
         $color_difference = 2;
     }
 
+    if ($color_difference and !$faction->{passed}) {
+        require_subaction $faction, 'transform', {
+            transform => 1,
+            build => $faction->{allowed_sub_actions}{build} // 0,
+        };
+    }
+
     if ($faction->{FREE_TF}) {
         adjust_resource $faction, 'FREE_TF', -1;
         my $ok = 0;
@@ -350,8 +409,28 @@ sub command_transform {
     $action_taken++;
 }
 
+sub command_dig {
+    my ($faction, $amount) = @_;
+
+    my $cost = $faction->{dig}{cost}[$faction->{dig}{level}];
+    my $gain = $faction->{dig}{gain}[$faction->{dig}{level}];
+
+    if (!$faction->{allowed_sub_actions}{transform}) {
+        $faction->{allowed_sub_actions}{transform} = {
+            transform => 1,
+            build => 1
+        };
+    };
+
+    adjust_resource $faction, 'SPADE', $amount;
+    pay $faction, $cost for 1..$amount;
+    gain $faction, $gain, 'faction' for 1..$amount;
+}
+
 sub command_bridge {        
     my ($faction, $from, $to, $allow_illegal) = @_;
+
+    require_subaction $faction, 'bridge', {};
 
     if (!$allow_illegal and !$map{$from}{bridgable}{$to}) {
         die "Can't build bridge from $from to $to\n";
@@ -380,6 +459,8 @@ sub command_pass {
     my $faction_name = $faction->{name};
 
     my $discard;
+
+    require_subaction $faction, 'pass', {};
 
     my $passed_count = grep { $_->{passed} } values %factions;
     my $first_to_pass = $passed_count == 0;
@@ -425,6 +506,8 @@ sub command_pass {
 sub command_action {
     my ($faction, $action) = @_;
     my $faction_name = $faction->{name};
+
+    require_subaction $faction, 'action', clone $actions{$action}{subaction};
 
     if ($action !~ /^ACT[1-6]/ and !$faction->{$action}) {
         die "No $action space available\n"
@@ -480,6 +563,7 @@ sub command_start {
     my $start_player = $order[0];
     push @action_required, { type => 'full',
                              faction => $start_player };
+    allow_full_move $factions{$start_player};
 }
 
 sub command_connect {
@@ -525,6 +609,8 @@ sub command_connect {
 
 sub command_advance {
     my ($faction, $type) = @_;
+
+    require_subaction $faction, 'advance', {};
 
     my $track = $faction->{$type};
     advance_track $faction, $type, $track, 0;
@@ -652,13 +738,7 @@ sub command {
     } elsif ($command =~ /^transform (\w+) to (\w+)$/i) {
         command_transform $assert_faction->(), uc $1, lc $2;
     } elsif ($command =~ /^dig (\d+)/i) {
-        $assert_faction->();
-        my $cost = $faction->{dig}{cost}[$faction->{dig}{level}];
-        my $gain = $faction->{dig}{gain}[$faction->{dig}{level}];
-
-        adjust_resource $faction, 'SPADE', $1;
-        pay $faction, $cost for 1..$1;
-        gain $faction, $gain, 'faction' for 1..$1;
+        command_dig $assert_faction->(), $1;
     } elsif ($command =~ /^bridge (\w+):(\w+)( allow_illegal)?$/i) {
         command_bridge $assert_faction->(), uc $1, uc $2, $3;
     } elsif ($command =~ /^connect (\w+):(\w+)(?::(\w+))?$/i) {
@@ -834,6 +914,7 @@ sub clean_commands {
         s/-2w\.\s*bridge/convert 2w to bridge. bridge/i;
     }
     s/\s*pass\.\s*\+bon/pass bon/i;
+    s/(build \w+)\. (transform \w+ to \w+)/$2. $1/i;
 
     my @commands = $_;
     if ($prefix) {
@@ -936,6 +1017,7 @@ sub maybe_advance_to_next_player {
     if (defined $next) {
         push @action_required, { type => 'full',
                                  faction => $next };
+        allow_full_move $factions{$next};
         maybe_advance_turn $faction_name;
     }
 
@@ -952,6 +1034,11 @@ sub check_setup_actions {
         } elsif (@setup_order) {
             my $type = (@setup_order <= @factions ? 'bonus' : 'dwelling');
             @action_required = ({ type => $type, faction => $setup_order[0] });
+            if ($type eq 'bonus') {
+                allow_pass $factions{$setup_order[0]};
+            } else {
+                allow_build $factions{$setup_order[0]};
+            }
         } else {
             @action_required = ();
         }
