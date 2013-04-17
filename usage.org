@@ -107,7 +107,7 @@ Example: =pass bon2=
 Pass, return current bonus tile, and replace it with Bon2. When passing
 on the last turn, leave out the bonus tile name.
 
-** =leech= /amount/ from /faction/
+** =leech= /amount/ =from= /faction/
 
 Example: =Leech 2=.
 
@@ -119,7 +119,7 @@ Trade no vps for 1 power, using the opportunity provided by the Fakirs
 rather than some other faction (in case there are multiple opportunities
 available).
 
-** =decline /amount/ from /faction/=
+** =decline= /amount/ =from= /faction/
 
 Example: =decline=.
 
@@ -150,7 +150,7 @@ Example: =build F5=
 Terraform the hex F5 into the correct terrain type, and build a
 dwelling there.
 
-** =upgrade= /location/ to /building/
+** =upgrade= /location/ =to= /building/
 
 Example: =upgrade F5 to TP=
 
@@ -178,7 +178,7 @@ Example: =transform F5 to black=
 
 Terraform F5 to black, but don't build anything there.
 
-** =convert= /amount/ /resource/ to /amount/ /resource/
+** =convert= /amount/ /resource/ =to= /amount/ /resource/
 
 Example: =convert 3pw to 1w=
 
@@ -214,7 +214,7 @@ Example: =advance ship=
 Advance 1 step on the shipping track. "Advance dig" for improving the
 shovel track.
 
-** =setup= /faction/ for /player/ email /address/
+** =setup= /faction/ =for= /player/ =email= /address/
 
 Example:
 #+BEGIN_EXAMPLE
@@ -236,7 +236,7 @@ email to, except those sent by this faction.
 
 * Obscure commands
 
-** =admin email /email/=
+** =admin email= /email/
 
 Give another user full admin rights to the game.
 
