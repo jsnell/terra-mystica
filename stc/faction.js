@@ -130,7 +130,7 @@ function showActiveGames(div, mode) {
         if (!elem.finished) { record.active_count++; }
         if (elem.action_required) { record.action_required_count++; }
     });
-    $(div).innerHTML = "<div>Moves required in #{action_required_count}/#{active_count} games</div>".interpolate(record);
+    $(div).innerHTML = "<div style='display: block-inline; margin-right: 10px'>Moves required in #{action_required_count}/#{active_count} games</div>".interpolate(record);
 
     var link = new Element('a', {"href": "#", "accesskey": "n"}).update("Next game");
     link.onclick = function() { fetchGames(div, mode, nextGame); } 
