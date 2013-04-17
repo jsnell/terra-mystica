@@ -86,7 +86,11 @@ be added -- it'll automatically apply the commands to the current
 faction.
 
 After this, you can have multiple commands that apply to that faction,
-separated by full stops. For example:
+separated by full stops. *Every line should consist of exactly a single turn*.
+Do not split a single turn across multiple lines, or merge multiple
+turns on a single line.
+
+For example:
 
 #+BEGIN_EXAMPLE
   Nomads: Dig 1. Build E7
