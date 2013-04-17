@@ -50,6 +50,7 @@ for my $game (@ARGV) {
     my ($id) = ($game =~ m{/([a-zA-Z0-9]+$)}g);
     my @rows = <>;
     my $res = evaluate_game { rows => [ @rows ] };
+    if ($res->{error}) { print @{$res->{error}}; }
     $res->{id} = $id;
     handle_game $res;
 }

@@ -82,10 +82,6 @@ sub finalize {
     for (qw(BRIDGE TOWN_SIZE GAIN_ACTION)) {
         delete $pool{$_};
     }
-
-    for (values %actions) {
-        delete $_->{subaction};
-    }
 }
 
 sub evaluate_game {
