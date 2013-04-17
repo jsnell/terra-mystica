@@ -1156,7 +1156,7 @@ function gainResource(index, amount, resource, id) {
     record.resource = resource;
     $("leech-" + index + "-" + id).style.display = "none";
     if (resource.startsWith("BON")) {
-        appendCommand("Pass #{resource}".interpolate(record));
+        appendCommand("Pass #{resource}\n".interpolate(record));
     } else {
         appendCommand("+#{amount_pretty}#{resource}".interpolate(record));
     }
