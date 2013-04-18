@@ -20,8 +20,10 @@ my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
                        { AutoCommit => 0, RaiseError => 1});
 my $q = CGI->new;
 my $mode = $q->param('mode') // 'all';
+my $status = $q->param('status') // 'running';
 
 my %res = ( error => '');
+my %status = (finished => 1, running => 0);
 
 sub add_sorted {
     $res{games} = [ sort {
@@ -42,7 +44,8 @@ sub role_link {
 }
 
 if ($mode eq 'all') {
-    my @ids = $dbh->selectall_arrayref("select id,finished from game");
+    my @ids = $dbh->selectall_arrayref(
+        "select id,finished from game");
     add_sorted map {
         { id => $_->[0],
           role => 'view',
@@ -57,8 +60,8 @@ if ($mode eq 'all') {
         $res{error} = "Not logged in"
     } else {
         my @roles = $dbh->selectall_arrayref(
-            "select game, faction, game.write_id, game.finished, action_required from game_role left join game on game=game.id where email in (select address from email where player = ?)",
-            {}, $user);
+            "select game, faction, game.write_id, game.finished, action_required from game_role left join game on game=game.id where email in (select address from email where player = ? and game.finished = ?)",
+            {}, $user, $status{$status});
         add_sorted map {
             { id => $_->[0],
               role => $_->[1],

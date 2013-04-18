@@ -147,7 +147,7 @@ function nextGame(div, mode) {
 function fetchGames(div, mode, handler) {
     $(div).innerHTML = "... loading";
     new Ajax.Request("/cgi-bin/gamelist.pl", {
-        parameters: { "mode": mode },
+        parameters: { "mode": mode, "status": "running" },
         method:"get",
         onSuccess: function(transport){
             state = transport.responseText.evalJSON();
