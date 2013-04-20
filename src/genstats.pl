@@ -24,6 +24,7 @@ sub handle_game {
     my $res = shift;
 
     return if !$res->{finished};
+    return if @{$res->{order}} < 3;
 
     my $pos = 0;
     my $win_vp = 0;
