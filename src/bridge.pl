@@ -44,7 +44,14 @@ if (-f "../../data/read/$id") {
     print "\r\n";
     my @rows = read_file("../../data/read/$id");
     if (defined $preview) {
-        push @rows, (map { "$preview_faction: $_" } split /\n/, $preview);
+
+        if ($preview_faction =~ /^player/) {
+            if ($preview =~ /(setup \w+)/i) {
+                push @rows, "$1\n"; 
+            }
+        } else {
+            push @rows, (map { "$preview_faction: $_" } split /\n/, $preview);
+        }
     }
 
     my $res = terra_mystica::evaluate_game { rows => \@rows, max_row => $max_row };

@@ -493,10 +493,11 @@ sub setup {
     my $player_record = {};
     if (@players) {
         $player_record = $players[@factions];
-        if ($player ne $player_record->{name}) {
+        if ($player and $player ne $player_record->{name}) {
             die "Expected ".($player_record->{name})." to pick a faction";
         }
         $email ||= $player_record->{email};
+        delete $player_record->{email};
     }
 
     if ($player) {

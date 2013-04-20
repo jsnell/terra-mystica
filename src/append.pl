@@ -35,7 +35,14 @@ my $faction_key = $q->param('faction-key');
 my $new_content = "";
 
 my $preview = $q->param('preview');
-my $append = join "\n", (map { "$faction_name: $_" } grep { /\S/ } split /\n/, $preview);
+my $append = '';
+
+if ($faction_name =~ /^player/) {
+    $preview =~ /(setup \w+)/i;
+    $append = "$1\n";
+} else {
+    $append = join "\n", (map { "$faction_name: $_" } grep { /\S/ } split /\n/, $preview);
+}
 
 my $dir = "../../data/write/";
 my $lockfile = lockfile::get "$dir/lock";
@@ -128,6 +135,12 @@ if ($terra_mystica::email) {
 for my $faction (values %{$res->{factions}}) {
     if ($faction->{name} ne $faction_name and $faction->{email}) {
         push @email, $faction->{email}
+    }
+}
+
+for (@{$res->{players}}) {
+    if ($_->{email}) {
+        push @email, $_->{email}
     }
 }
 

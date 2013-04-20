@@ -21,6 +21,12 @@ sub finalize {
 
     my $spade_seen = 0;
 
+    if ($delete_email) {
+        for (@players) {
+            delete $_->{email};
+        }
+    }
+
     for (@action_required) {
         if ($_->{type} eq 'transform') {
             $_ = '' if $spade_seen++;
@@ -156,6 +162,7 @@ sub evaluate_game {
         turn => $turn,
         finished => $finished,
         cults => \%cults,
+        players => \@players,
         admin => $data->{delete_email} ? '' : $admin_email,
     }
 

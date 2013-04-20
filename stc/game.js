@@ -1032,7 +1032,9 @@ function drawActionRequired() {
         var row = new Element("div", {'style': 'margin: 3px'}).update("#{faction_span} #{pretty}</div>".interpolate(record));
         parent.insert(row);
 
-        if (currentFaction && record.faction == currentFaction) {
+        if (currentFaction &&
+            (record.faction == currentFaction ||
+             record.player_index == currentFaction)) {
             addFactionInput(parent, record, index);
             needMoveEntry = true;
             allowSaving = false;
@@ -1097,6 +1099,34 @@ function addFactionInput(parent, record, index) {
     }
     if (record.type == "bonus") {
         addTakeTileButtons(parent, index, "BON", i);
+    }
+    if (record.type == "faction") {
+        var div = new Element("div", { "id": "leech-" + index + "-0",
+                                       "style": "padding-left: 2em" });
+        var boards = { "green": ["witches", "auren"],
+                       "blue": ["mermaids", "swarmlings" ],
+                       "black": ["darklings", "alchemists"],
+                       "brown": ["halflings", "cultists"], 
+                       "yellow": ["nomads", "fakirs"],
+                       "red": ["giants", "chaosmagicians"],
+                       "gray": ["dwarves", "engineers"] 
+                     };
+
+        $H(state.factions).each(function(faction) {
+            delete boards[faction.value.color];
+        });
+
+        $H(boards).each(function(board) {
+            board.value.sort().each(function(faction) {
+                var button = new Element("button").update(faction);
+                button.onclick = function() {
+                    appendCommand("setup " + faction + "\n");
+                };
+                div.insert(button);
+            });
+            div.insert("<br>");
+        });
+        parent.insert(div);
     }
     if (record.type == "dwelling") {
         var div = new Element("div", { "id": "leech-" + index,

@@ -1030,8 +1030,9 @@ sub check_setup_actions {
         if (@players and @players != @factions) {
             @action_required = ({
                 type => 'faction',
-                player => $players[@factions]{name} }
-             );
+                player => $players[@factions]{name},
+                player_index => "player".(1+@factions),
+             });
         } elsif (@setup_order) {
             my $type = (@setup_order <= @factions ? 'bonus' : 'dwelling');
             @action_required = ({ type => $type, faction => $setup_order[0] });
