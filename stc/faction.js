@@ -124,9 +124,9 @@ function makeMailToLink() {
     return link;
 }
 
-function showActiveGames(div, mode) {
+function showActiveGames(games, div, mode) {
     var record = { "active_count": 0, "action_required_count": 0 };
-    state.games.each(function(elem) {
+    games.games.each(function(elem) {
         if (!elem.finished) { record.active_count++; }
         if (elem.action_required) { record.action_required_count++; }
     });
@@ -137,11 +137,11 @@ function showActiveGames(div, mode) {
     $(div).insert(link);
 }
 
-function nextGame(div, mode) {
-    state.games.each(function(elem) {
+function nextGame(games, div, mode) {
+    games.games.each(function(elem) {
         if (elem.action_required) { document.location = elem.link; }
     });
-    showActiveGames(div, mode);
+    showActiveGames(games, div, mode);
 }
 
 function fetchGames(div, mode, handler) {
@@ -150,12 +150,12 @@ function fetchGames(div, mode, handler) {
         parameters: { "mode": mode, "status": "running" },
         method:"get",
         onSuccess: function(transport){
-            state = transport.responseText.evalJSON();
+            var games = transport.responseText.evalJSON();
             try {
-                if (!state.error) {
-                    handler(div, mode);
+                if (!games.error) {
+                    handler(games, div, mode);
                 } else {
-                    $(div).innerHTML = "<tr><td>" + state.error + "</td>";
+                    $(div).innerHTML = "<tr><td>" + games.error + "</td>";
                 }
             } catch (e) {
                 handleException(e);
