@@ -229,3 +229,11 @@ tr.game-status-finished td {
 tr.game-status-action-required td {
     background-color: #cfc;
 }
+
+table.gamelist {
+    margin-left: 2ex;
+}
+
+table.gamelist td {
+    padding-right: 2ex;
+}

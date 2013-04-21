@@ -34,13 +34,13 @@
     </p>
 
     <h4>Your Active Games</h4>
-    <table id="yourgames-active" style="margin-left: 2ex;"></table>
+    <table id="yourgames-active" class="gamelist"></table>
 
     <h4>Your Finished Games</h4>
-    <table id="yourgames-finished" style="margin-left: 2ex;"><tr><td><a href="javascript:fetchGames('yourgames-finished', 'user', 'finished', listGames)">Load</a></table>
+    <table id="yourgames-finished" class="gamelist"><tr><td><a href="javascript:fetchGames('yourgames-finished', 'user', 'finished', listGames)">Load</a></table>
 
     <h4>All Games</h4>
-    <table id="allgames" style="margin-left: 2ex;"><tr><td><a href="javascript:fetchGames('allgames', 'all', '', listGames)">Load</a></table>
+    <table id="allgames" class="gamelist"><tr><td><a href="javascript:fetchGames('allgames', 'all', '', listGames)">Load</a></table>
 
     <script language="javascript">
       var state = null;
@@ -52,7 +52,26 @@
             elem.status = "";
             if (elem.finished) { elem.status = "game-status-finished"; }
             if (elem.action_required) { elem.status = "game-status-action-required"; }
-            $(div).insert("<tr class='#{status}'><td>#{id}<td><a href='#{link}'> #{role}</a></tr>"
+            if (elem.seconds_since_update) {
+               var amount;
+               var unit;
+               if (elem.seconds_since_update > 86400) {
+                   amount = Math.round(elem.seconds_since_update / 86400);
+                   unit = "day";
+               } else if (elem.seconds_since_update > 3600) {
+                   amount = Math.round(elem.seconds_since_update / 3600);
+                   unit = "hour";
+               } else if (elem.seconds_since_update > 60) {
+                   amount = Math.round(elem.seconds_since_update / 60);
+                   unit = "minute";
+               } else {
+                   amount = Math.round(elem.seconds_since_update);
+                   unit = "second";
+               }
+               if (amount > 1) { unit += "s" }
+               elem.time_since_update = "last move " + amount + " " + unit + " ago";
+            }
+            $(div).insert("<tr class='#{status}'><td>#{id}<td><a href='#{link}'> #{role}<td>#{time_since_update}</a></tr>"
                .interpolate(elem));
          });
          if (mode == "user") {
