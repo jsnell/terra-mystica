@@ -29,6 +29,7 @@ sub add_sorted {
     $res{games} = [ sort {
                         $b->{action_required} <=> $a->{action_required} or
                         $a->{finished} <=> $b->{finished} or
+                        ($a->{seconds_since_update} // 1e12) <=> ($b->{seconds_since_update} // 1e12) or
                         natural_cmp $a->{id}, $b->{id};
                     } @_
         ];
