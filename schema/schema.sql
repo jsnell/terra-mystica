@@ -14,6 +14,7 @@ create table game (
     write_id text,
     needs_indexing boolean,
     finished boolean,
+    last_update timestamp
 );
 
 create table game_role (

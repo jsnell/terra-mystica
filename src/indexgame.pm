@@ -3,17 +3,20 @@
 use strict;
 
 use DBI;
+use POSIX qw(strftime);
 
 my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
                        { AutoCommit => 0, RaiseError => 1});
 
 sub index_game {
-    my ($id, $write_id, $game) = @_;
+    my ($id, $write_id, $game, $timestamp) = @_;
+
+    $timestamp = strftime "%Y-%m-%d %H:%M:%S", localtime ($timestamp || time);
 
     my ($res) = $dbh->do(
-        'update game set needs_indexing=?, write_id=?, finished=? where id = ?',
+        'update game set needs_indexing=?, write_id=?, finished=?, last_update=? where id = ?',
         {},
-        0, $write_id, $game->{finished}, $id);
+        0, $write_id, $game->{finished}, $timestamp, $id);
     if ($res == 0) {
         $dbh->do(
             'insert into game (id, write_id, finished, needs_indexing) values (?, ?, ?, false)',

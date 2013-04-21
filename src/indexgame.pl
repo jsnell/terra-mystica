@@ -20,7 +20,8 @@ sub evaluate_and_index_game {
     };
     my $write_id = glob "data/write/${id}_*";
     $write_id =~ s{.*/}{};
-    index_game $id, $write_id, $game;
+    my $timestamp = (stat "data/read/$id")[9];
+    index_game $id, $write_id, $game, $timestamp;
 }
 
 for (@ARGV) {
