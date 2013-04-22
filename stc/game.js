@@ -919,7 +919,7 @@ function drawLedger() {
 function showHistory(row) {
     var loc = document.location.href;
     loc = loc.replace(/\/max-row=.*/, '');
-    return loc + "/max-row=" + row;
+    return "/game/" + params.game + "/max-row=" + row;
 }
 
 function drawScoringTiles() {
