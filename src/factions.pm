@@ -498,6 +498,9 @@ sub setup {
         }
         $email ||= $player_record->{email};
         delete $player_record->{email};
+        if (!$player) {
+            $player = $player_record->{name};
+        }
     }
 
     if ($player) {
