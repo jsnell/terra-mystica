@@ -1014,7 +1014,7 @@ function drawActionRequired() {
             var table = "";
             $H(state.factions).sortBy(function(a) { return -a.value.VP }).each(function(elem) {
                 elem.faction_span = coloredFactionSpan(elem.key);
-                table += "<tr><td>#{faction_span}<td>#{value.VP}</tr>".interpolate(elem);
+                table += "<tr><td>#{faction_span}<td> #{value.VP}</tr>\n".interpolate(elem);
             });
             record.pretty += "<table>" + table + "</table>";
         } else if (record.type == 'faction') {

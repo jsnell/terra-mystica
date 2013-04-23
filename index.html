@@ -36,6 +36,9 @@
     <h4>Your Active Games</h4>
     <table id="yourgames-active" class="gamelist"></table>
 
+    <h4>Games you Administrate</h4>
+    <table id="yourgames-admin" class="gamelist"></table>
+
     <h4>Your Finished Games</h4>
     <table id="yourgames-finished" class="gamelist"><tr><td><a href="javascript:fetchGames('yourgames-finished', 'user', 'finished', listGames)">Load</a></table>
 
@@ -111,6 +114,7 @@
       }
 
       fetchGames("yourgames-active", "user", "running", listGames);
+      fetchGames("yourgames-admin", "admin", "running", listGames);
     </script>
   </body>
 </html>

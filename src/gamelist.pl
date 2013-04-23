@@ -55,14 +55,14 @@ if ($mode eq 'all') {
           action_required => 0,
         }
     } @{$ids[0]};
-} elsif ($mode eq 'user') {
+} elsif ($mode eq 'user' or $mode eq 'admin') {
     my $user = username_from_session_token $q->cookie('session-token') // '';
     if (!defined $user) {
         $res{error} = "Not logged in"
     } else {
         my @roles = $dbh->selectall_arrayref(
-            "select game, faction, game.write_id, game.finished, action_required, (extract(epoch from now() - game.last_update)) as time_since_update from game_role left join game on game=game.id where email in (select address from email where player = ? and game.finished = ?)",
-            {}, $user, $status{$status});
+            "select game, faction, game.write_id, game.finished, action_required, (extract(epoch from now() - game.last_update)) as time_since_update from game_role left join game on game=game.id where email in (select address from email where player = ? and game.finished = ? and (game_role.faction = 'admin') = ?)",
+            {}, $user, $status{$status}, 1*!!($mode eq 'admin'));
         add_sorted map {
             { id => $_->[0],
               role => $_->[1],
