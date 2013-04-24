@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <title>Terra Mystica - Register New Account</title>
+    <script type="text/javascript" language="javascript"
+            src="/stc/prototype-1.7.1.js">
+    </script>
+    <script type="text/javascript" language="javascript"
+            src="/stc/debug.js">
+    </script>
+    <script type="text/javascript" language="javascript"
+            src="/stc/reset.js">
+    </script>
+    <link rel="stylesheet" type="text/css" href="/stc/style.css">
+  </head>
+  <body style="padding: 5ex">
+    <div id="error"></div>
+    <h3>Reset password</h3>
+    <form id="userinfo" action="/cgi-bin/reset.pl">
+      <table>
+        <tr><td>Email Address<td><input name="email" id="email"></input>
+        <tr><td>New Password<td><input name="password" type="password" id="password"></input>
+        <tr><td><td><input type="button" value="Reset Password" onclick="javascript:resetPassword()"></input>
+      </table>
+    </form>
+    <div id="usage" style="display: block"></div>
+    <div id="validate" style="display: none">
+      <p>
+      A password reset email has been sent to the indicated address.
+
+      <p>
+      Haven't received the email? Please check:
+      <ul>
+        <li> That the email is not in your spam folder
+        <li> That you entered the correct email address above
+      </ul>
+    </div>
+  </body>
+</html>

@@ -73,7 +73,9 @@ sub deploy_cgi {
                   logout.pl
                   newgame.pl
                   register.pl
+                  reset.pl
                   validate.pl
+                  validate-reset.pl
                   status.pl
                   save.pl)) {
         copy_with_mode 0555, "src/$f", "$target/cgi-bin/$f";
@@ -114,6 +116,7 @@ sub deploy_stc {
                   faction.js
                   game.js
                   register.js
+                  reset.js
                   prototype-1.7.1.js
                   org.css
                   spinner.gif
@@ -131,6 +134,7 @@ sub deploy_html {
                   login.html
                   newgame.html
                   register.html
+                  reset.html
                   stats.html)) {
         my $to = "$target/$f";
 
