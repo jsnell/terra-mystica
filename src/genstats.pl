@@ -36,9 +36,14 @@ sub handle_game {
         });
         $stat->{count}++;
         if ($pos == 1) {
-            $stat->{wins}++;
-            push @{$stat->{games_won}}, $res->{id}; 
             $win_vp = $_->{VP}
+        }
+        if ($_->{VP} == $win_vp) {
+            my $win_count = grep {
+                $_->{VP} == $win_vp
+            } values %{$res->{factions}};
+            $stat->{wins} += 1 / $win_count;
+            push @{$stat->{games_won}}, $res->{id}; 
         }
         $stat->{average_vp} += $_->{VP};
         $stat->{average_winner_vp} += $win_vp;
