@@ -37,7 +37,6 @@ sub finalize {
     for my $faction (values %factions) {
         if ($faction->{waiting}) {
             my $action = $action_required[0];
-            print STDERR $action->{faction}, " ", $action->{type}, "\n";
             if ($action->{faction} eq $faction->{name}) {
                 $faction->{waiting} = 0;
             }
