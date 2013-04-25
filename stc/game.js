@@ -1207,7 +1207,7 @@ function moveEntryAfterPreview() {
             if ($("error").innerHTML != "") {
                 $("move_entry_explanation").innerHTML = "Can't save yet - input had errors";
             } else if (!allowSaving) {
-                $("move_entry_explanation").innerHTML = "Can't save yet - it's still your turn to move";
+                $("move_entry_explanation").innerHTML = "Can't save yet - it's still your turn to move. (Also see the 'wait' command).";
             } else {
                 $("move_entry_action").innerHTML = "Save";
                 $("move_entry_action").onclick = save;

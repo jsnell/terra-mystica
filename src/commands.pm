@@ -792,6 +792,8 @@ sub command {
         push @players, { name => $1, email => $2 };
     } elsif ($command =~ /^randomize v1 seed (.*)/i) {
         command_randomize_v1 $1;
+    } elsif ($command =~ /^wait$/i) {
+        ($assert_faction->())->{waiting} = 1;
     } else {
         die "Could not parse command '$command'.\n";
     }

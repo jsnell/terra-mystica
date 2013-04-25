@@ -34,6 +34,16 @@ sub finalize {
     }
     @action_required = grep { $_ } @action_required;
 
+    for my $faction (values %factions) {
+        if ($faction->{waiting}) {
+            my $action = $action_required[0];
+            print STDERR $action->{faction}, " ", $action->{type}, "\n";
+            if ($action->{faction} eq $faction->{name}) {
+                $faction->{waiting} = 0;
+            }
+        }
+    }
+
     for my $faction_name (@factions) {
         my $faction = $factions{$faction_name};
         next if !$faction;
@@ -54,6 +64,11 @@ sub finalize {
         }
         for (values %{$faction->{buildings}}) {
             delete $_->{subactions};
+        }
+        if ($faction->{waiting}) {
+            @action_required = grep {
+                $_->{faction} ne $faction_name;
+            } @action_required;
         }
     }
         
