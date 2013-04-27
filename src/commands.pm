@@ -101,6 +101,10 @@ sub command_adjust_resources {
         $checked = 1;
     }
 
+    if ($type eq 'SPADE' and $delta < 0) {
+        $checked = 1;
+    }
+
     if (!$checked) {
         push @warn, "dodgy resource manipulation ($delta $type)";
     }
