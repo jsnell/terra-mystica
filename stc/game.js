@@ -49,11 +49,7 @@ function drawText(ctx, text, x, y, font) {
     ctx.restore();    
 }
 
-function makeHexPath(ctx, hex, size) {
-    size = size || hex_size;
-    var loc = hexCenter(hex.row, hex.col);
-    var x = loc[0] - Math.cos(Math.PI / 6) * size;
-    var y = loc[1] + Math.sin(Math.PI / 6) * size;
+function makeHexPath(ctx, x, y, size) {
     var angle = 0;
     
     ctx.beginPath();
@@ -65,6 +61,14 @@ function makeHexPath(ctx, hex, size) {
         y += Math.cos(angle) * size;        
     }
     ctx.closePath();
+}
+
+function makeMapHexPath(ctx, hex, size) {
+    size = size || hex_size;
+    var loc = hexCenter(hex.row, hex.col);
+    var x = loc[0] - Math.cos(Math.PI / 6) * size;
+    var y = loc[1] + Math.sin(Math.PI / 6) * size;
+    makeHexPath(ctx, x, y, size);
 }
 
 function fillBuilding(ctx, hex) {
@@ -191,7 +195,7 @@ function drawHex(ctx, elem) {
         if (hex.town) {
             var loc = hexCenter(hex.row, hex.col);
             ctx.save();
-            makeHexPath(ctx, hex, hex_size / 2);
+            makeMapHexPath(ctx, hex, hex_size / 2);
 
             ctx.fillStyle = "#def";
             ctx.fill();
@@ -206,7 +210,7 @@ function drawHex(ctx, elem) {
         return;
     }
 
-    makeHexPath(ctx, hex);
+    makeMapHexPath(ctx, hex);
 
     ctx.save();
     ctx.fillStyle = bgcolors[hex.color];
@@ -216,7 +220,7 @@ function drawHex(ctx, elem) {
     ctx.save();
     ctx.strokeStyle = "#000000";
     ctx.lineWidth = 2;
-    makeHexPath(ctx, hex);
+    makeMapHexPath(ctx, hex);
     ctx.stroke();
     ctx.restore();
 
@@ -312,7 +316,9 @@ function drawCults() {
 
             ctx.translate(0, 20);
 
-            for (var i = 0; i <= 10; ++i) {
+            var seen10 = false;
+
+            for (var i = 10; i >= 0; --i) {
                 ctx.save();
                 ctx.translate(0, ((10 - i) * 40 + 20));
 
@@ -326,22 +332,11 @@ function drawCults() {
 
                     ctx.translate(12, 0);
 
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.arc(0, 10, 8, Math.PI * 2, 0, false);
-                    ctx.fillStyle = colors[faction.color];
-                    ctx.fill();
-                    ctx.stroke()
-                    ctx.restore();
-
-                    ctx.save();
-                    ctx.strokeStyle = (faction.color == 'black' ? '#ccc' : '#000');
-                    ctx.textAlign = 'center';
-                    var l = name[0].toUpperCase();
-                    if (name == 'cultists') { l  = 'c' }
-                    drawText(ctx, l, -2, 14,
-                             "bold 10px Verdana");
-                    ctx.restore();
+                    drawCultMarker(ctx, faction.color, name,
+                                   !seen10 && (i == 10 || faction.KEY > 0));
+                    if (i == 10) {
+                        seen10 = true;
+                    }
                 });
 
                 ctx.restore();
@@ -397,6 +392,41 @@ function drawCults() {
         ctx.stroke();
         ctx.restore();
     }
+}
+
+function drawCultMarker(ctx, color, name, hex) {
+    ctx.save();
+    ctx.beginPath();
+
+    if (hex) {
+        strokeCultMarkerHex(ctx);
+    } else {
+        strokeCultMarkerArc(ctx);
+    }
+
+    ctx.fillStyle = colors[color];
+    ctx.fill();
+    ctx.stroke()
+    ctx.restore();
+
+    ctx.save();
+    ctx.strokeStyle = (color == 'black' ? '#ccc' : '#000');
+    ctx.textAlign = 'center';
+    var l = name[0].toUpperCase();
+    if (name == 'cultists') { l  = 'c' }
+    drawText(ctx, l, -2, 14,
+             "bold 10px Verdana");
+    ctx.restore();
+}
+
+function strokeCultMarkerArc(ctx) {
+    ctx.arc(0, 10, 8, 0.001, Math.PI * 2, false);
+}
+
+function strokeCultMarkerHex(ctx) {
+    ctx.save();
+    makeHexPath(ctx, -8, 14, 8.5);
+    ctx.restore();
 }
 
 function renderAction(canvas, name, key) {
