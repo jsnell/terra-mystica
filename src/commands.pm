@@ -704,6 +704,10 @@ sub command {
         $faction;
     };
 
+    if ($faction) {
+        $faction->{waiting} = 0;
+    }
+
     if ($command =~ /^([+-])(\d*)(\w+)(?: for (\w+))?$/i) {
         my ($sign, $count) = (($1 eq '+' ? 1 : -1),
                               ($2 eq '' ? 1 : $2));        
