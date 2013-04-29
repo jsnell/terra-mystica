@@ -28,6 +28,7 @@ sub handle_game {
 
     my $pos = 0;
     my $win_vp = 0;
+    my $faction_count = keys %{$res->{factions}};
     for (sort { $b->{VP} <=> $a->{VP} } values %{$res->{factions}}) {
         $pos++;
         my $stat = ($stats{factions}{$_->{name}} ||= {
@@ -43,7 +44,13 @@ sub handle_game {
                 $_->{VP} == $win_vp
             } values %{$res->{factions}};
             $stat->{wins} += 1 / $win_count;
-            push @{$stat->{games_won}}, $res->{id}; 
+            push @{$stat->{games_won}}, $res->{id};
+        }
+        if ($_->{VP} > ($stat->{high_score}{$faction_count}{vp} // 0)) {
+            $stat->{high_score}{$faction_count} = {
+                vp => $_->{VP},
+                game => $res->{id},
+            }
         }
         $stat->{average_vp} += $_->{VP};
         $stat->{average_winner_vp} += $win_vp;
@@ -56,7 +63,7 @@ for my $game (@ARGV) {
     my ($id) = ($game =~ m{/([a-zA-Z0-9]+$)}g);
     my @rows = <>;
     my $res = evaluate_game { rows => [ @rows ] };
-    if ($res->{error}) { print @{$res->{error}}; }
+    if (@{$res->{error}}) { print STDERR @{$res->{error}}; }
     $res->{id} = $id;
     handle_game $res;
 }
