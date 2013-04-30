@@ -122,7 +122,7 @@ div#action_required {
     padding: 5px;
     border-style: solid;
     border-width: 1px;
-    max-width: 700px;
+    max-width: 1024px;
 }
 
 table.income-table {

@@ -632,36 +632,41 @@ function naturalSortKey(val) {
     return key;
 }
 
+function renderTreasuryTile(board, faction, name, count) {
+    if (count < 1) {
+        return;
+    }
+
+    if (name.startsWith("ACT")) {
+        insertAction(board, name, name);
+        return;
+    } else if (name.startsWith("BON")) {
+        board.insert(new Element('div', {
+            'class': 'bonus'}));
+        var div = board.childElements().last();
+        renderBonus(div, name, faction);            
+    } else if (name.startsWith("FAV")) {
+        board.insert(new Element('div', {
+            'class': 'favor'}));
+        var div = board.childElements().last();
+        renderFavor(div, name, faction, count);
+        return;
+    } else if (name.startsWith("TW")) {
+        board.insert(new Element('div', {
+            'class': 'town'}));
+        var div = board.childElements().last();
+        renderTown(div, name, faction, count);
+        return;
+    }
+}
+
+
 function renderTreasury(board, treasury, faction) {
     $H(treasury).sortBy(naturalSortKey).each(function(elem, index) {
         var name = elem.key;
         var value = elem.value;
 
-        if (value < 1) {
-            return;
-        }
-
-        if (name.startsWith("ACT")) {
-            insertAction(board, name, name);
-            return;
-        } else if (name.startsWith("BON")) {
-            board.insert(new Element('div', {
-                'class': 'bonus'}));
-            var div = board.childElements().last();
-            renderBonus(div, name, faction);            
-        } else if (name.startsWith("FAV")) {
-            board.insert(new Element('div', {
-                'class': 'favor'}));
-            var div = board.childElements().last();
-            renderFavor(div, name, faction, value);
-            return;
-        } else if (name.startsWith("TW")) {
-            board.insert(new Element('div', {
-                'class': 'town'}));
-            var div = board.childElements().last();
-            renderTown(div, name, faction, value);
-            return;
-        }
+        renderTreasuryTile(board, faction, name, value);
     });
 }
 
@@ -1093,11 +1098,19 @@ function addTakeTileButtons(parent, index, prefix, id) {
             return;
         }
 
+        var container = new Element("div", {"style": "display: inline-block"});
+
         var button = new Element("button").update(tile.key);
         button.onclick = function() {
             gainResource(index, '', tile.key, id);
         };
-        div.insert(button);                                               
+        container.insert(button);
+        container.insert(new Element("br"));
+
+        renderTreasuryTile(container, currentFaction,
+                           tile.key, state.pool[tile.key]);
+        
+        div.insert(container);
     });
     parent.insert(div);
 }
