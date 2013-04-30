@@ -704,6 +704,13 @@ sub command {
         $faction;
     };
 
+    my $assert_active_faction = sub {
+        $assert_faction->();
+        die "Can't do '$command' after passing\n" if $faction->{passed} and
+            !$finished;
+        $faction;
+    };
+
     if ($faction) {
         $faction->{waiting} = 0;
     }
@@ -721,23 +728,23 @@ sub command {
 
         command_adjust_resources $assert_faction->(), $delta, $type, lc $4;
     } elsif ($command =~ /^build (\w+)$/i) {
-        command_build $assert_faction->(), uc $1;
+        command_build $assert_active_faction->(), uc $1;
     } elsif ($command =~ /^upgrade (\w+) to ([\w ]+)$/i) {
         die "Can't upgrade in setup phase\n" if !$round;
-        command_upgrade $assert_faction->(), uc $1, alias_building uc $2;
+        command_upgrade $assert_active_faction->(), uc $1, alias_building uc $2;
     } elsif ($command =~ /^send (p|priest) to (\w+)(?: for (\d+))?$/i) {
-        command_send $assert_faction->(), uc $2, $3;
+        command_send $assert_active_faction->(), uc $2, $3;
     } elsif ($command =~ /^convert (\d+)?\s*(\w+) to (\d+)?\s*(\w+)$/i) {
         my $from_count = $1 || 1;
         my $from_type = alias_resource uc $2;
         my $to_count = $3 || 1;
         my $to_type = alias_resource uc $4;
 
-        command_convert($assert_faction->(),
+        command_convert($assert_active_faction->(),
                         $from_count, $from_type,
                         $to_count, $to_type);
     } elsif ($command =~ /^burn (\d+)$/i) {
-        $assert_faction->();
+        $assert_active_faction->();
         adjust_resource $faction, 'P2', -2*$1;
         adjust_resource $faction, 'P3', $1;
     } elsif ($command =~ /^leech (\d+)(?: from (\w+))?$/i) {
@@ -747,15 +754,15 @@ sub command {
     } elsif ($command =~ /^transform (\w+) to (\w+)$/i) {
         command_transform $assert_faction->(), uc $1, lc $2;
     } elsif ($command =~ /^dig (\d+)/i) {
-        command_dig $assert_faction->(), $1;
+        command_dig $assert_active_faction->(), $1;
     } elsif ($command =~ /^bridge (\w+):(\w+)( allow_illegal)?$/i) {
-        command_bridge $assert_faction->(), uc $1, uc $2, $3;
+        command_bridge $assert_active_faction->(), uc $1, uc $2, $3;
     } elsif ($command =~ /^connect (\w+):(\w+)(?::(\w+))?$/i) {
-        command_connect $assert_faction->(), uc $1, uc $2, uc $3;
+        command_connect $assert_active_faction->(), uc $1, uc $2, uc $3;
     } elsif ($command =~ /^pass(?: (bon\d+))?$/i) {
-        command_pass $assert_faction->(), uc ($1 // '');
+        command_pass $assert_active_faction->(), uc ($1 // '');
     } elsif ($command =~ /^action (\w+)$/i) {
-        command_action $assert_faction->(), uc $1;
+        command_action $assert_active_faction->(), uc $1;
     } elsif ($command =~ /^start$/i) {
         return 0 if full_action_required;
         command_start;
@@ -926,6 +933,7 @@ sub clean_commands {
     }
     s/\s*pass\.\s*\+bon/pass bon/i;
     s/(build \w+)\. (transform \w+ to \w+)/$2. $1/i;
+    s/\s*(pass \w+)\. (convert (\d+ *)?\w+ to (\d+ *)?\w+)/$2. $1/i;
 
     my @commands = $_;
     if ($prefix) {
