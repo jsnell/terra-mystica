@@ -195,7 +195,7 @@ sub command_upgrade {
         die "$where contains $oldtype, wanted $wanted_oldtype{$type}\n"
     }
 
-    note_leech $faction, $where;
+    my %this_leech = note_leech $faction, $where;
 
     my $free = 0;
     if ($type eq 'TP') {
@@ -203,7 +203,7 @@ sub command_upgrade {
             $free = 1;
             $faction->{FREE_TP}--;
         } else {
-            if (!keys %leech) {
+            if (!keys %this_leech) {
                 my $cost = $faction->{buildings}{$type}{advance_cost}{C};
                 adjust_resource $faction, "C", -${cost};
             }

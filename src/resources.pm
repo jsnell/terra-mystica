@@ -293,6 +293,8 @@ sub note_leech {
     for (keys %this_leech) {
 	$leech{$_} += $this_leech{$_};
     }
+
+    return %this_leech;
 }
 
 1;
