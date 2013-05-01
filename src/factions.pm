@@ -535,6 +535,7 @@ sub setup {
         $faction->{$_} ||= 0;
         $faction->{"MAX_$_"} = 10;
     }
+    $faction->{'CULT'} ||= 0;
 
     my $buildings = $faction->{buildings};
     $buildings->{D}{max_level} = 8;
