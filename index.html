@@ -10,8 +10,11 @@
     <link rel="stylesheet" type="text/css" href="/stc/style.css">
   </head>
   <body style="padding: 5ex">
-    <div style="float: right; height: 200px">
-      <script>
+    <table>
+      <tr>
+        <td valign="top" style="padding-right: 2ex; ">
+          <p>
+            <script>
         if (!/session-username=(.+)/.match(document.cookie)) {
           document.write('<a href="/login/">Login</a><br>');
           document.write('<a href="/register/">Register</a><br>');
@@ -20,19 +23,14 @@
           document.write('<a href="/logout/">Logout</a><br>');
         }
       </script>
-    </div>
-
+      <a href="/stats.html">Statistics</a><br>
+      <a href="/usage.html">Help</a><br>
+        <td valign="top">
     <p>
     This is an unofficial automated moderator tool
     for <a href="http://www.terra-mystica-spiel.de/en/index.php">Terra
     Mystica</a>, a game by Helge Ostertag and Jens Dr&ouml;gem&uuml;ller
     published by Feuerland Spiele.
-    </p>
-
-    <p>
-    See the <a href="http://terra.snellman.net/usage.html">instructions</a>
-    for more information on using the moderator. For information on rules,
-    please refer to the original manual.
     </p>
 
     <h4>Your Active Games</h4>
@@ -118,5 +116,6 @@
       fetchGames("yourgames-active", "user", "running", listGames);
       fetchGames("yourgames-admin", "admin", "running", listGames);
     </script>
+    </table>
   </body>
 </html>
