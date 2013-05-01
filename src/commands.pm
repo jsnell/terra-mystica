@@ -949,6 +949,9 @@ sub clean_commands {
         s/(\w)\s(\W)/$1$2/g;
     }
 
+    @commands = ((grep { /^(leech|decline)/i } @commands),
+                 (grep { !/^(leech|decline)/i } @commands));
+
     return ($prefix, grep { /\S/ } @commands);
 }
 
