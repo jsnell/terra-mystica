@@ -34,6 +34,12 @@ sub finalize {
     }
     @action_required = grep { $_ } @action_required;
 
+    for my $action (values %actions) {
+        if ($action->{subaction}) {
+            delete $action->{subaction}{dig};
+        }
+    }
+
     for my $faction (values %factions) {
         if ($faction->{waiting}) {
             my $action = $action_required[0];
@@ -136,8 +142,10 @@ sub evaluate_game {
     my @error = ();
     my $history_view = 0;
 
+    my @command_stream = ();
+
     for (@{$data->{rows}}) {
-        eval { handle_row $_ };
+        eval { push @command_stream, clean_commands $_ };
         if ($@) {
             chomp;
             push @error, "Error on line $row [$_]:";
@@ -145,14 +153,16 @@ sub evaluate_game {
             last;
         }
         $row++;
+    }
 
-        if (defined $data->{max_row} and $data->{max_row}) {
-            my $max = $data->{max_row};
-            if (@ledger >= ($max -1)) {
-                push @error, "Showing historical game state (up to row $max)";
-                $history_view = @ledger;
-                last;
+    if (!@error) {
+        eval {
+            $history_view = play \@command_stream, $data->{max_row} // 0;
+            if ($history_view) {
+                push @error, "Showing historical game state (up to row $history_view)";
             }
+        }; if ($@) {
+            push @error, "$@\n";
         }
     }
 

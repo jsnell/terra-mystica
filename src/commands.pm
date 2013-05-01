@@ -15,9 +15,10 @@ use scoring;
 use tiles;
 use towns;
 
-my $action_taken;
 my @warn = ();
 my $printed_turn = 0;
+my $force_finish = 0;
+my $active_faction;
 
 use vars qw($email $admin_email);
 
@@ -26,6 +27,7 @@ sub handle_row_internal;
 
 sub allow_full_move {
     my $faction = shift;
+    $active_faction = $faction->{name};
     $faction->{allowed_actions} = 1;
     $faction->{allowed_sub_actions} = {};
 }
@@ -39,11 +41,18 @@ sub require_subaction {
     } elsif ($faction->{allowed_actions}) {
         $faction->{allowed_actions}--;
         $faction->{allowed_sub_actions} = $followup if $followup;
+        # Implicit "decline"
+        @action_required = grep {
+            $_->{faction} ne $faction->{name} or $_->{type} ne 'leech'
+        } @action_required;
     } else {
         my @unpassed = grep { !$_->{passed} } values %factions;
         if (@unpassed == 1) {
+            finish_row();
+            start_new_row($faction->{name});
+
             allow_full_move $faction;
-            require_subaction($faction, $type);
+            require_subaction($faction, $type, $followup);
             return;
         } else {
             die "'$type' command not allowed (trying to take multiple actions in one turn?)\n"
@@ -174,7 +183,6 @@ sub command_build {
     push @{$faction->{locations}}, $where;
 
     detect_towns_from $faction, $where;
-    $action_taken++;
 }
 
 sub command_upgrade {
@@ -224,7 +232,6 @@ sub command_upgrade {
     $map{$where}{building} = $type;
 
     detect_towns_from $faction, $where;
-    $action_taken++;
 }
 
 sub command_send {
@@ -258,7 +265,6 @@ sub command_send {
     gain $faction, $gain;
 
     adjust_resource $faction, "P", -1;
-    $action_taken++;
 }
 
 sub command_convert {
@@ -408,10 +414,15 @@ sub command_transform {
         adjust_resource $faction, 'SPADE', -$color_difference;
     }
 
+    if (!$faction->{SPADE}) {
+        @action_required = grep {
+            $_->{faction} ne $faction->{name} or $_->{type} ne 'transform'
+        } @action_required;       
+    }
+
     $map{$where}{color} = $color;
 
     detect_towns_from $faction, $where;
-    $action_taken++;
 }
 
 sub command_dig {
@@ -421,7 +432,7 @@ sub command_dig {
     my $gain = $faction->{dig}{gain}[$faction->{dig}{level}];
 
     if (!$faction->{allowed_sub_actions}{transform}) {
-        $faction->{allowed_sub_actions}{transform} = {
+        require_subaction $faction, 'dig', {
             transform => 1,
             build => 1
         };
@@ -456,7 +467,6 @@ sub command_bridge {
 
     detect_towns_from $faction, $from;
     detect_towns_from $faction, $to;
-    $action_taken++;
 }
 
 sub command_pass {
@@ -504,8 +514,6 @@ sub command_pass {
     if ($discard) {
         adjust_resource $faction, $discard, -1;
     }
-
-    $action_taken++;
 }
 
 sub command_action {
@@ -534,7 +542,6 @@ sub command_action {
         die "Action space $action is blocked\n"
     }
     $map{$action}{blocked} = 1;
-    $action_taken++;
 }
 
 sub command_start {
@@ -619,7 +626,6 @@ sub command_advance {
 
     my $track = $faction->{$type};
     advance_track $faction, $type, $track, 0;
-    $action_taken++;
 }
 
 sub command_finish {
@@ -706,7 +712,9 @@ sub command {
 
     my $assert_active_faction = sub {
         $assert_faction->();
-        die "Can't do '$command' after passing\n" if $faction->{passed} and
+        die "Command invalid when not active player\n" if
+            $faction_name ne $active_faction and
+            $round > 0 and
             !$finished;
         $faction;
     };
@@ -749,8 +757,10 @@ sub command {
         adjust_resource $faction, 'P3', $1;
     } elsif ($command =~ /^leech (\d+)(?: from (\w+))?$/i) {
         command_leech $assert_faction->(), $1, lc $2;
+        $force_finish = 1;
     } elsif ($command =~ /^decline(?: (\d+) from (\w+))?$/i) { 
         command_decline $assert_faction->(), $1, lc $2;
+        $force_finish = 1;
     } elsif ($command =~ /^transform (\w+) to (\w+)$/i) {
         command_transform $assert_faction->(), uc $1, lc $2;
     } elsif ($command =~ /^dig (\d+)/i) {
@@ -761,6 +771,7 @@ sub command {
         command_connect $assert_active_faction->(), uc $1, uc $2, uc $3;
     } elsif ($command =~ /^pass(?: (bon\d+))?$/i) {
         command_pass $assert_active_faction->(), uc ($1 // '');
+        $force_finish = 1;
     } elsif ($command =~ /^action (\w+)$/i) {
         command_action $assert_active_faction->(), uc $1;
     } elsif ($command =~ /^start$/i) {
@@ -909,13 +920,14 @@ sub next_faction_in_turn {
 sub clean_commands {
     local $_ = shift;
     my $prefix = '';
+    my @comments = ();
 
     # Remove comments
     if (s/#(.*)//) {
         if ($1 ne '') {
             my $comment = $1;
             $comment =~ s/email \S*@\S*/email ***/g;
-            push @ledger, { comment => $comment };
+            push @comments, ['comment', $comment ];
         }
     }
 
@@ -934,6 +946,7 @@ sub clean_commands {
     s/\s*pass\.\s*\+bon/pass bon/i;
     s/(build \w+)\. (transform \w+ to \w+)/$2. $1/i;
     s/\s*(pass \w+)\. (convert (\d+ *)?\w+ to (\d+ *)?\w+)/$2. $1/i;
+    s/(dig \w). (action \w+)/$2. $1/i;
 
     my @commands = $_;
     if ($prefix) {
@@ -952,7 +965,7 @@ sub clean_commands {
     @commands = ((grep { /^(leech|decline)/i } @commands),
                  (grep { !/^(leech|decline)/i } @commands));
 
-    return ($prefix, grep { /\S/ } @commands);
+    return @comments, map { [ $prefix, $_ ] } grep { /\S/ } @commands;
 }
 
 sub pretty_resource_delta {
@@ -1016,31 +1029,25 @@ sub maybe_advance_to_next_player {
         return "";
     }
 
-    if (!$action_taken) {
-        return $warn
-    }
-
-    my $last  = (grep { $_->{type} eq 'full' } @action_required)[-1];
-    if ($last) {
-        $last = $last->{faction};
-        if ($faction_name ne $last) {
-            die "'$faction_name' took an action, expected '$last'\n"
-        }
-    }
-
-    # Remove all of this faction's todo items
-    @action_required = grep { $_->{faction} ne $faction_name } @action_required;
-    # And then possibly add new ones if there was something wrong with the
-    # action.
     push @action_required, @extra_action_required;
 
-    # Advance to the next player, unless everyone has passed
-    my $next = next_faction_in_turn $faction_name;
-    if (defined $next) {
-        push @action_required, { type => 'full',
-                                 faction => $next };
-        allow_full_move $factions{$next};
-        maybe_advance_turn $faction_name;
+    if (@extra_action_required) {
+        return $warn;
+    } elsif ($faction_name eq $active_faction and
+             !$factions{$faction_name}{allowed_actions}) {
+        @action_required = grep {
+            $_->{faction} ne $faction_name or
+                $_->{type} ne 'full'
+        } @action_required;
+
+        # Advance to the next player, unless everyone has passed
+        my $next = next_faction_in_turn $faction_name;
+        if (defined $next) {
+            push @action_required, { type => 'full',
+                                     faction => $next };
+            allow_full_move $factions{$next};
+            maybe_advance_turn $faction_name;
+        }
     }
 
     return $warn;
@@ -1068,60 +1075,87 @@ sub check_setup_actions {
     }
 }
 
-sub handle_row_internal {
+my %old_data = ();
+my @data_fields = qw(VP C W P P1 P2 P3 PW FIRE WATER EARTH AIR CULT);
+my @row_commands;
+my $row_faction = 'none';
+
+sub start_new_row {
+    my $faction_name = shift;
+
+    %leech = ();
+    @warn = ();
+    @row_commands = ();
+    $row_faction = $faction_name;
+
+    # Store the resource counts for computing a delta
+    %old_data = map { $_, $factions{$faction_name}{$_} } @data_fields; 
+}
+
+sub finish_row {
+    my $faction_name = $row_faction;
+
+    return if !$faction_name or $faction_name eq 'none';
+
+    # Compute the delta
+    my %new_data = map { $_, $factions{$faction_name}{$_} } @data_fields;
+    my %pretty_delta = pretty_resource_delta \%old_data, \%new_data;
+
+    my $warn = maybe_advance_to_next_player $faction_name;
+
+    my $info = { faction => $faction_name,
+                 leech => { %leech },
+                 warning => $warn,
+                 commands => (join ". ", @row_commands),
+                 map { $_, $pretty_delta{$_} } @data_fields};
+
+    push @ledger, $info;
+    $row_faction = 'none';
+}
+
+sub do_command {
     my ($faction_name, @commands) = @_;
 
     return if !@commands;
+    die if @commands > 1;
+
+    if ($faction_name eq 'comment') {
+        push @ledger, { comment => "@commands" };
+        return;
+    }
 
     if (!($factions{$faction_name} or $faction_name eq '')) {
         my $faction_list = join ", ", @factions;
         die "Unknown faction: '$faction_name' (expected one of $faction_list)\n";
     }
 
-    %leech = ();
-    @warn = ();
-    $action_taken = 0;
-
-    # Store the resource counts for computing a delta
-    my @fields = qw(VP C W P P1 P2 P3 PW FIRE WATER EARTH AIR CULT);
-    my %old_data = ();
-    if ($faction_name) {
-        %old_data = map { $_, $factions{$faction_name}{$_} } @fields; 
+    if ($faction_name and $faction_name ne $row_faction) {
+        start_new_row $faction_name;
     }
 
-    my $print = 0;
+    $force_finish = 0;
 
-    # Execute commands.
-    for my $command (@commands) {
-        $print += (command $faction_name, $command);
+    command $faction_name, $commands[0];
+
+    if ($faction_name) {
+        push @row_commands, $commands[0];
+    }
+
+    if ($force_finish) {
+        finish_row;
     }
 
     check_setup_actions;
+}
 
-    if (!$faction_name) {
-        return;
-    }
-
-    # Compute the delta
-    my %new_data = map { $_, $factions{$faction_name}{$_} } @fields;
-    my %pretty_delta = pretty_resource_delta \%old_data, \%new_data;
-
-    my $warn = maybe_advance_to_next_player $faction_name;
-    my $info = { faction => $faction_name,
-                 leech => { %leech },
-                 warning => $warn,
-                 commands => (join ". ", @commands),
-                 map { $_, $pretty_delta{$_} } @fields};
-    if ($print) {
-        push @ledger, $info;
+sub handle_row_internal {
+    do_command @_;
+    if ($_[0]) {
+        finish_row;
     }
 }
 
-sub handle_row {
-    my ($faction_name, @commands) = clean_commands @_;
-
-    handle_row_internal $faction_name, @commands;
-
+sub maybe_do_maintenance {
     if (@factions and !@action_required) {
         my $all_passed = 1;
         my $income_taken = 0;
@@ -1136,13 +1170,45 @@ sub handle_row {
         } 
 
         if (!$income_taken) {
+            finish_row;
             command_income '';
         }
 
         if (!@action_required) {
+            finish_row;
             command_start;
         }
     }
+}
+
+sub play {
+    my ($commands, $max_row) = @_;
+    my $i = 0;
+    $active_faction = '';
+
+    while ($i < @{$commands}) {
+        my $this = $commands->[$i];
+        my $next = $commands->[$i+1];
+        eval {
+            do_command $this->[0], $this->[1];
+        }; if ($@) {
+            finish_row;
+            die "Error in command '".($this->[1])."': $@";
+        }
+        if (($next->[0] // '') ne ($this->[0] // '')) {
+            finish_row;
+        }
+        $i++;
+        maybe_do_maintenance;
+
+        if ($max_row) {
+            if (@ledger >= ($max_row-1)) {
+                return scalar @ledger;
+            }
+        }
+    }
+
+    return 0;
 }
 
 1;
