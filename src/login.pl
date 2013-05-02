@@ -19,9 +19,10 @@ my ($stored_password) = $dbh->selectrow_array("select password from player where
 if ($stored_password and
     $stored_password eq bcrypt($password, $stored_password)) {
     my $token = session_token $username, sprintf "%08x", rand 2**32;
+    my $y = 86400*365;
     print "Status: 303\r\n";
-    print "Set-Cookie: session-username=$username; Path=/;\r\n";
-    print "Set-Cookie: session-token=$token; Path=/; HttpOnly\r\n";
+    print "Set-Cookie: session-username=$username; Path=/; Max-Age=$y\r\n";
+    print "Set-Cookie: session-token=$token; Path=/; HttpOnly; Max-Age=$y\r\n";
     print "Cache-Control: no-cache\r\n";
     print "Location: /\r\n";
     print "\r\n";
