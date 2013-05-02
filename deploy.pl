@@ -100,6 +100,7 @@ sub deploy_cgi {
                   map.pm
                   natural_cmp.pm
                   resources.pm
+                  rlimit.pm
                   scoring.pm
                   session.pm
                   tiles.pm

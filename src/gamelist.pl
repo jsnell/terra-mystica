@@ -9,6 +9,7 @@ use DBI;
 use JSON;
 
 use editlink;
+use rlimit;
 use natural_cmp;
 use session;
 
