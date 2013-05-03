@@ -155,7 +155,7 @@ function fetchGames(div, mode, handler) {
                 if (!games.error) {
                     handler(games, div, mode);
                 } else {
-                    $(div).innerHTML = "<tr><td>" + games.error + "</td>";
+                    $(div).innerHTML = games.error;
                 }
             } catch (e) {
                 handleException(e);

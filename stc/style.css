@@ -232,6 +232,7 @@ tr.game-status-action-required td {
 
 table.gamelist {
     margin-left: 2ex;
+    width: 60ex;
 }
 
 table.gamelist td {

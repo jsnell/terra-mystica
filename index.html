@@ -50,7 +50,7 @@
       var id = document.location.pathname;
 
       function listGames(div, mode, status) {
-         $(div).innerHTML = "";
+         $(div).update("");
          state.games.each(function(elem) {
             elem.status = "";
             if (elem.finished) { elem.status = "game-status-finished"; }
@@ -94,7 +94,7 @@
       }
 
       function fetchGames(div, mode, status, handler) {
-          $(div).innerHTML = "... loading";
+          $(div).update("... loading");
           new Ajax.Request("/cgi-bin/gamelist.pl", {
               parameters: { "mode": mode, "status": status },
               method:"get",
@@ -104,7 +104,7 @@
                   if (!state.error) {
                     handler(div, mode, status);
                   } else {
-                    $(div).innerHTML = "<tr><td>" + state.error + "</td>";
+                    $(div).update(state.error);
                   }
                 } catch (e) {
                   handleException(e);
