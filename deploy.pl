@@ -74,6 +74,7 @@ sub deploy_cgi {
                   newgame.pl
                   register.pl
                   reset.pl
+                  results.pl
                   validate.pl
                   validate-reset.pl
                   status.pl

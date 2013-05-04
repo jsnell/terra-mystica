@@ -40,6 +40,28 @@ sub index_game {
         push @admin_roles, { name => 'admin', email => $game->{admin}}
     }
 
+    if ($game->{finished}) {
+        my @by_vp = sort { $b->{VP} <=> $a->{VP} } values %{$game->{factions}};
+        my $pos = 0;
+        my $prev;
+        
+        for (@by_vp) {
+            $pos++;
+            if ($prev and $prev->{VP} == $_->{VP}) {
+                $_->{rank} = $prev->{rank};
+            } else {
+                $_->{rank} = $pos;
+            }
+        }
+    }
+
+    {
+        my $pos = 0;
+        for (@{$game->{order}}) {
+            $game->{factions}{$_}{start_order} = ++$pos;
+        }
+    }
+
     for my $faction (values %{$game->{factions}},
                      @player_roles,
                      @admin_roles) {
@@ -47,14 +69,13 @@ sub index_game {
             ($_->{faction} and $_->{faction} eq $faction->{name}) or
                 ($_->{player_index} and $_->{player_index} eq $faction->{name});
         } @{$game->{action_required}});
-        ($res) = $dbh->do(
-            'update game_role set email=lower(?),action_required=? where game=? and faction=?',
-            {},
-            $faction->{email}, $action_required, $id, $faction->{name});
-        if ($res == 0) {
-            $dbh->do('insert into game_role (game, email, faction, action_required) values (?, lower(?), ?, ?)',
-                     {}, $id, $faction->{email}, $faction->{name}, $action_required);
-        }
+        $dbh->do('insert into game_role (game, email, faction, action_required, vp, rank, start_order) values (?, lower(?), ?, ?, ?, ?, ?)',
+                 {}, $id,
+                 $faction->{email}, $faction->{name},
+                 $action_required,
+                 $faction->{VP},
+                 $faction->{rank},
+                 $faction->{start_order});
     }
 
     $dbh->commit(); 

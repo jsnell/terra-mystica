@@ -53,7 +53,6 @@
          $(div).update("");
          state.games.each(function(elem) {
             elem.status = "";
-            if (elem.finished) { elem.status = "game-status-finished"; }
             if (elem.action_required) { elem.status = "game-status-action-required"; }
             if (elem.seconds_since_update) {
                var amount;
@@ -74,7 +73,10 @@
                if (amount > 1) { unit += "s" }
                elem.time_since_update = "last move " + amount + " " + unit + " ago";
             }
-            $(div).insert("<tr class='#{status}'><td>#{id}<td><a href='#{link}'> #{role}<td>#{time_since_update}</a></tr>"
+            if (elem.vp) { elem.vp += " vp"; }
+            if (elem.rank) { elem.vp += " (" + elem.rank + ")"; }
+
+            $(div).insert("<tr class='#{status}'><td>#{id}<td><a href='#{link}'> #{role}<td>#{time_since_update}</a><td>#{vp}</tr>"
                .interpolate(elem));
          });
          if (mode == "user") {

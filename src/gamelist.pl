@@ -62,7 +62,7 @@ if ($mode eq 'all') {
         $res{error} = "Not logged in <a href='/login/'>(login)</a>"
     } else {
         my @roles = $dbh->selectall_arrayref(
-            "select game, faction, game.write_id, game.finished, action_required, (extract(epoch from now() - game.last_update)) as time_since_update from game_role left join game on game=game.id where email in (select address from email where player = ? and game.finished = ? and (game_role.faction = 'admin') = ?)",
+            "select game, faction, game.write_id, game.finished, action_required, (extract(epoch from now() - game.last_update)) as time_since_update, vp, rank from game_role left join game on game=game.id where email in (select address from email where player = ? and game.finished = ? and (game_role.faction = 'admin') = ?)",
             {}, $user, $status{$status}, 1*!!($mode eq 'admin'));
         add_sorted map {
             { id => $_->[0],
@@ -70,7 +70,9 @@ if ($mode eq 'all') {
               link => role_link(@{$_}),
               finished => $_->[3] ? 1 : 0,
               action_required => $_->[4],
-              seconds_since_update => $_->[5]
+              seconds_since_update => $_->[5],
+              vp => $_->[6],
+              rank => $_->[7],
             }
         } @{$roles[0]};
     }
