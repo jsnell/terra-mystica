@@ -9,7 +9,7 @@ use File::Basename qw(dirname);
 
 BEGIN { push @INC, "$ENV{PWD}/src/"; }
 
-use tracker;
+use results;
 
 sub print_json {
     my $data = shift;
@@ -23,49 +23,51 @@ my %stats = ();
 sub handle_game {
     my $res = shift;
 
-    return if !$res->{finished};
-    return if @{$res->{order}} < 3;
-
     my $pos = 0;
     my $win_vp = 0;
     my $faction_count = keys %{$res->{factions}};
-    for (sort { $b->{VP} <=> $a->{VP} } values %{$res->{factions}}) {
+
+    return if $faction_count < 3;
+
+    for (sort { $b->{vp} <=> $a->{vp} } values %{$res->{factions}}) {
         $pos++;
-        my $stat = ($stats{factions}{$_->{name}} ||= {
+        my $stat = ($stats{factions}{$_->{faction}} ||= {
             wins => 0,
             games_won => [],
         });
         $stat->{count}++;
         if ($pos == 1) {
-            $win_vp = $_->{VP}
+            $win_vp = $_->{vp}
         }
-        if ($_->{VP} == $win_vp) {
+        if ($_->{vp} == $win_vp) {
             my $win_count = grep {
-                $_->{VP} == $win_vp
+                $_->{vp} == $win_vp
             } values %{$res->{factions}};
             $stat->{wins} += 1 / $win_count;
             push @{$stat->{games_won}}, $res->{id};
         }
-        if ($_->{VP} > ($stat->{high_score}{$faction_count}{vp} // 0)) {
+        if ($_->{vp} > ($stat->{high_score}{$faction_count}{vp} // 0)) {
             $stat->{high_score}{$faction_count} = {
-                vp => $_->{VP},
+                vp => $_->{vp},
                 game => $res->{id},
             }
         }
-        $stat->{average_vp} += $_->{VP};
+        $stat->{average_vp} += $_->{vp};
         $stat->{average_winner_vp} += $win_vp;
         $stat->{average_position} += $pos;
     }
 }
 
-for my $game (@ARGV) {
-    local @ARGV = $game;
-    my ($id) = ($game =~ m{/([a-zA-Z0-9]+$)}g);
-    my @rows = <>;
-    my $res = evaluate_game { rows => [ @rows ] };
-    if (@{$res->{error}}) { print STDERR @{$res->{error}}; }
-    $res->{id} = $id;
-    handle_game $res;
+my %results = get_finished_game_results '';
+my %games = ();
+
+for (@{$results{results}}) {
+    $games{$_->{game}}{factions}{$_->{faction}} = $_;
+    $games{$_->{game}}{id} = $_->{game};
+}
+
+for (values %games) {
+    handle_game $_;
 }
 
 for my $stat (values %{$stats{factions}}) {

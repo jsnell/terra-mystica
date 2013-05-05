@@ -100,6 +100,7 @@ sub deploy_cgi {
                   lockfile.pm
                   map.pm
                   natural_cmp.pm
+                  results.pm
                   resources.pm
                   rlimit.pm
                   scoring.pm
