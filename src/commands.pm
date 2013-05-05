@@ -394,7 +394,7 @@ sub command_transform {
 
     if ($color_difference and !$faction->{passed}) {
         require_subaction $faction, 'transform', {
-            transform => 1,
+            transform => ($faction->{allowed_sub_actions}{transform} // 1) - 1,
             build => $faction->{allowed_sub_actions}{build} // 0,
         };
     }
