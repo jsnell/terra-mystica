@@ -65,14 +65,23 @@ sub index_game {
     for my $faction (values %{$game->{factions}},
                      @player_roles,
                      @admin_roles) {
-        my $action_required = 1*!!(grep {
-            ($_->{faction} and $_->{faction} eq $faction->{name}) or
-                ($_->{player_index} and $_->{player_index} eq $faction->{name});
-        } @{$game->{action_required}});
-        $dbh->do('insert into game_role (game, email, faction, action_required, vp, rank, start_order) values (?, lower(?), ?, ?, ?, ?, ?)',
+        my $action_required = 0;
+        my $leech_required = 0;
+
+        for my $action (@{$game->{action_required}}) {
+            next if $faction->{name} ne $action->{faction};
+            if ($action->{type} eq 'leech') {
+                $leech_required = 1;
+            } else {
+                $action_required = 1;
+            }
+        } 
+
+        $dbh->do('insert into game_role (game, email, faction, action_required, leech_required, vp, rank, start_order) values (?, lower(?), ?, ?, ?, ?, ?, ?)',
                  {}, $id,
                  $faction->{email}, $faction->{name},
                  $action_required,
+                 $leech_required,
                  $faction->{VP},
                  $faction->{rank},
                  $faction->{start_order});

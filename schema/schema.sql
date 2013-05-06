@@ -22,6 +22,7 @@ create table game_role (
     email text, -- Conceptually references email (address), but not enforced
     faction text,
     boolean action_required,
+    boolean leech_required,
     vp integer,
     rank integer,
     start_order integer,

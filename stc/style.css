@@ -235,6 +235,10 @@ table.gamelist {
     width: 70ex;
 }
 
+table.gamelist thead {
+    background-color: #ddd;
+}
+
 table.gamelist td {
     padding-right: 2ex;
 }
