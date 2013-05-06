@@ -21,7 +21,7 @@ sub index_game {
         $dbh->do(
             'insert into game (id, write_id, finished, needs_indexing) values (?, ?, ?, false)',
             {},
-            $id, $write_id, $game->{finished});
+            $id, $write_id, 1*(!!$game->{finished}));
     }
 
     $dbh->do("delete from game_role where game=?",
