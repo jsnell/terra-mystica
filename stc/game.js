@@ -849,7 +849,14 @@ function drawFactions() {
 
         if (faction.income) {
 	    var row = new Element('tr');
-	    row.update("<td>Income:<td>total<td>#{C}c<td>#{W}w<td>#{P}p<td>#{PW}pw".interpolate(faction.income));
+            if (faction.income.P > faction.MAX_P - faction.P) {
+                faction.income.P_style = "style='color: #f00'";
+            }
+            if (faction.income.PW > faction.P1 * 2 + faction.P2) {
+                faction.income.PW_style = "style='color: #f00'";
+            }
+
+	    row.update("<td>Income:<td>total<td>#{C}c<td>#{W}w<td #{P_style}>#{P}p<td #{PW_style}>#{PW}pw".interpolate(faction.income));
 	    row.insert(new Element('td').update("<a href='javascript:toggleIncome(\"" + income_id + "\")'>+</a>"));
             income.insert(row);
         }
