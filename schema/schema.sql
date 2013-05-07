@@ -29,5 +29,6 @@ create table game_role (
     primary key (game, faction)
 );
 
-
+create index game_role_email_idx on game_role (email);
+create index game_role_game_idx on game_role (game);
 
