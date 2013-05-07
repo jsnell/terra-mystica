@@ -69,7 +69,15 @@ sub index_game {
         my $leech_required = 0;
 
         for my $action (@{$game->{action_required}}) {
-            next if $faction->{name} ne $action->{faction};
+            my $acting = '';
+            if (defined $action->{player_index}) {
+                $acting = $action->{player_index};
+            } else {
+                $acting = $action->{faction};
+            }            
+
+            next if $faction->{name} ne $acting;
+
             if ($action->{type} eq 'leech') {
                 $leech_required = 1;
             } else {
