@@ -12,7 +12,7 @@ sub get_finished_game_results {
     my %res = ( error => '', results => [] );
 
     my $rows = $dbh->selectall_arrayref(
-        "select game, faction, vp, rank, start_order, email.player, email from game_role left join game on game=game.id left join email on email=email.address where faction != 'admin' and game.finished",
+        "select game, faction, vp, rank, start_order, email.player, email from game_role left join game on game=game.id left join email on email=email.address where faction != 'admin' and game.finished and (exclude_from_stats is null or exclude_from_stats = false)",
         {});
 
     if (!$rows) {
