@@ -50,7 +50,9 @@
       var id = document.location.pathname;
 
       function listGames(div, mode, status) {
-         $(div).update("<tr><thead><td>Game<td>Faction<td>Last move<td>Waiting for<td>Status</thead>");
+         $(div).update("<thead><td>Game<td>Faction<td>Last move<td>Waiting for<td>Status</thead>");
+         var tbody = new Element("tbody");
+         $(div).insert(tbody);
          state.games.each(function(elem) {
             elem.status = "";
             if (elem.action_required) { elem.status = "game-status-action-required"; }
@@ -76,7 +78,7 @@
             if (elem.vp) { elem.vp += " vp"; }
             if (elem.rank) { elem.vp += " (" + elem.rank + ")"; }
 
-            $(div).insert("<tr class='#{status}'><td>#{id}<td><a href='#{link}'> #{role}<td>#{time_since_update}</a><td>#{waiting_for}<td>#{vp}</tr>"
+            $(tbody).insert("<tr class='#{status}'><td>#{id}<td><a href='#{link}'> #{role}<td>#{time_since_update}</a><td>#{waiting_for}<td>#{vp}</tr>"
                .interpolate(elem));
          });
          if (mode == "user") {
@@ -84,7 +86,7 @@
            link.onclick = function() { fetchGames(div, mode, status, nextGame); } 
            var td = new Element('td').insert(link);
            var tr = new Element('tr').insert(new Element("td")).insert(td);
-           $(div).insert(tr);
+           $(tbody).insert(tr);
          }
       }
 
