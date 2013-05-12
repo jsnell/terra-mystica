@@ -14,6 +14,12 @@ die "Directory $target does not exist" if !-d $target;
 my $tag = qx(git rev-parse HEAD);
 my $devel = ($target eq 'www-devel');
 
+my %untracked = map {
+    (/ (.*)/g, 1)
+} grep {
+    /^\?/
+} qx(git status --porcelain);
+
 if (!$devel) {
     system "git", "diff", "--exit-code";
 
@@ -31,6 +37,10 @@ sub copy_with_mode {
             symlink "$ENV{PWD}/$from", $to;
         }
         return 
+    }
+
+    if ($untracked{$from}) {
+        die "untracked file '$from'\n"
     }
 
     copy $from, "$to.tmp" or die "Error copying $from to $to: $!";
