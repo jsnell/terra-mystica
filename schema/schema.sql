@@ -33,3 +33,7 @@ create table game_role (
 create index game_role_email_idx on game_role (email);
 create index game_role_game_idx on game_role (game);
 
+create table blacklist (
+       email text references email (address)
+);
+
