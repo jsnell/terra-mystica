@@ -15,7 +15,8 @@ create table game (
     needs_indexing boolean,
     finished boolean,
     exclude_from_stats boolean,
-    last_update timestamp
+    last_update timestamp,
+    round integer
 );
 
 create table game_role (
