@@ -281,6 +281,11 @@ Do the final scoring. You can also trigger the final scoring by just
 declining or accepting any remaining offers of power, once all players
 have passed on the final round.
 
+** =abort=
+
+Forcibly end the game. Useful for hiding a stalled game from the "your
+games" list.
+
 ** =email= /email addresses/
 
 Example: =email alice@example.com,bob@example.com,charlie@example.com=

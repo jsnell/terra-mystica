@@ -808,6 +808,9 @@ sub command {
     } elsif ($command =~ /^finish$/i) {
         return 0 if non_leech_action_required;
         command_finish;
+    } elsif ($command =~ /^abort$/i) {
+        $finished = 1;
+        @action_required = ( { type => 'gameover' } );
     } elsif ($command =~ /^score_resources$/i) {
         score_final_resources_for_faction $faction_name;
     } elsif ($command =~ /^email (.*)/i) {
