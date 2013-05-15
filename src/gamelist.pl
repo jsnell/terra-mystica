@@ -47,13 +47,14 @@ sub role_link {
 
 if ($mode eq 'all') {
     my @ids = $dbh->selectall_arrayref(
-        "select id,finished from game");
+        "select id,finished,round from game");
     add_sorted map {
         { id => $_->[0],
           role => 'view',
           link => "/game/".$_->[0],
           finished => $_->[1] ? 1 : 0,
           action_required => 0,
+          round => $_->[2],
         }
     } @{$ids[0]};
 } elsif ($mode eq 'user' or $mode eq 'admin') {
@@ -62,7 +63,7 @@ if ($mode eq 'all') {
         $res{error} = "Not logged in <a href='/login/'>(login)</a>"
     } else {
         my @roles = $dbh->selectall_arrayref(
-            "select game, faction, game.write_id, game.finished, action_required, (extract(epoch from now() - game.last_update)) as time_since_update, vp, rank, (select faction from game_role as gr2 where gr2.game = gr1.game and action_required limit 1) as waiting_for, leech_required from game_role as gr1 left join game on game=game.id where email in (select address from email where player = ? and game.finished = ? and (gr1.faction = 'admin') = ?)",
+            "select game, faction, game.write_id, game.finished, action_required, (extract(epoch from now() - game.last_update)) as time_since_update, vp, rank, (select faction from game_role as gr2 where gr2.game = gr1.game and action_required limit 1) as waiting_for, leech_required, game.round  from game_role as gr1 left join game on game=game.id where email in (select address from email where player = ? and game.finished = ? and (gr1.faction = 'admin') = ?)",
             {}, $user, $status{$status}, 1*!!($mode eq 'admin'));
         add_sorted map {
             { id => $_->[0],
@@ -73,7 +74,8 @@ if ($mode eq 'all') {
               seconds_since_update => $_->[5],
               vp => $_->[6],
               rank => $_->[7],
-              waiting_for => $_->[8]
+              waiting_for => $_->[8],
+              round => $_->[10]
             }
         } @{$roles[0]};
     }

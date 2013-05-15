@@ -16,7 +16,7 @@ sub get_finished_game_results {
     $dbh->do("update game set exclude_from_stats=true where id in (select id from game left join game_role on game.id = game_role.game left join blacklist on game_role.email=blacklist.email where game_role.faction='admin' and blacklist.email is not null)");
 
     my $rows = $dbh->selectall_arrayref(
-        "select game, faction, vp, rank, start_order, email.player, email from game_role left join game on game=game.id left join email on email=email.address where faction != 'admin' and game.finished and (exclude_from_stats is null or exclude_from_stats = false)",
+        "select game, faction, vp, rank, start_order, email.player, email from game_role left join game on game=game.id left join email on email=email.address where faction != 'admin' and game.finished and game.round=6 and (exclude_from_stats is null or exclude_from_stats = false)",
         {});
 
     if (!$rows) {

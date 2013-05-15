@@ -50,7 +50,7 @@
       var id = document.location.pathname;
 
       function listGames(div, mode, status) {
-         $(div).update("<thead><td>Game<td>Faction<td>Last move<td>Waiting for<td>Status</thead>");
+         $(div).update("<thead><td>Game<td>Faction<td>Last move<td>Round<td>Waiting for<td>Status</thead>");
          var tbody = new Element("tbody");
          $(div).insert(tbody);
          state.games.each(function(elem) {
@@ -78,7 +78,7 @@
             if (elem.vp) { elem.vp += " vp"; }
             if (elem.rank) { elem.vp += " (" + elem.rank + ")"; }
 
-            $(tbody).insert("<tr class='#{status}'><td>#{id}<td><a href='#{link}'> #{role}<td>#{time_since_update}</a><td>#{waiting_for}<td>#{vp}</tr>"
+            $(tbody).insert("<tr class='#{status}'><td>#{id}<td><a href='#{link}'> #{role}<td>#{time_since_update}</a><td>#{round}<td>#{waiting_for}<td>#{vp}</tr>"
                .interpolate(elem));
          });
          if (mode == "user") {
