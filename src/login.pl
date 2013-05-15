@@ -17,8 +17,20 @@ my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
 
 my ($stored_password) = $dbh->selectrow_array("select password from player where username = ?", {}, $username);
 
-if ($stored_password and
-    $stored_password eq bcrypt($password, $stored_password)) {
+print STDERR "login: $username\n";
+
+my $match = 0;
+
+if (!$stored_password) {
+    print STDERR "login: invalid username\n";    
+} elsif ($stored_password ne bcrypt($password, $stored_password)) {
+    print STDERR "login: invalid password\n";
+} else {
+    print STDERR "login: ok\n";
+    $match = 1;
+}
+
+if ($match) {
     my $token = session_token $username, sprintf "%08x", rand 2**32;
     my $y = 86400*365;
     print "Status: 303\r\n";
