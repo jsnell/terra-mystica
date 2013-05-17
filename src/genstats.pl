@@ -76,7 +76,7 @@ sub handle_game {
         } else {
             $start_position = 'second-to-last';
         }
-        my $position_stat = ($stats{positions}{$start_position} ||= {
+        my $position_stat = ($stats{"positions-${faction_count}p"}{$start_position} ||= {
             wins => 0,
             games_won => [],
         });
@@ -109,16 +109,17 @@ for my $stat (values %{$stats{factions}}) {
     delete $stat->{average_winner_vp};
 }
 
-for my $stat (values %{$stats{positions}}) {
-    next if !$stat->{count};
-    $stat->{win_rate} = int(100 * $stat->{wins} / $stat->{count});
-    $stat->{average_loss_vp} = sprintf "%5.2f", ($stat->{average_winner_vp} - $stat->{average_vp}) / $stat->{count};
-    $stat->{average_vp} = sprintf "%5.2f", $stat->{average_vp} / $stat->{count};
-    $stat->{average_position} = sprintf "%5.2f", $stat->{average_position} / $stat->{count};
-
-    delete $stat->{average_winner_vp};
+for (3..5) {
+    for my $stat (values %{$stats{"positions-${_}p"}}) {
+        next if !$stat->{count};
+        $stat->{win_rate} = int(100 * $stat->{wins} / $stat->{count});
+        $stat->{average_loss_vp} = sprintf "%5.2f", ($stat->{average_winner_vp} - $stat->{average_vp}) / $stat->{count};
+        $stat->{average_vp} = sprintf "%5.2f", $stat->{average_vp} / $stat->{count};
+        $stat->{average_position} = sprintf "%5.2f", $stat->{average_position} / $stat->{count};
+        
+        delete $stat->{average_winner_vp};
+    }
 }
-
 
 $stats{timestamp} = POSIX::strftime "%Y-%m-%d %H:%M UTC", gmtime time;
 
