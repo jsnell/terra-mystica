@@ -13,16 +13,20 @@ sub index_game {
 
     $timestamp = strftime "%Y-%m-%d %H:%M:%S", localtime ($timestamp || time);
 
+    my $player_count = scalar @{$game->{order}};
+
     my ($res) = $dbh->do(
-        'update game set needs_indexing=?, write_id=?, finished=?, round=?, last_update=? where id = ?',
+        'update game set needs_indexing=?, write_id=?, finished=?, round=?, last_update=?, player_count=? where id = ?',
         {},
         0, $write_id, 1*(!!$game->{finished}), $game->{round}, $timestamp, 
+        $player_count,
         $id);
     if ($res == 0) {
         $dbh->do(
-            'insert into game (id, write_id, finished, round, needs_indexing) values (?, ?, ?, ?, false)',
+            'insert into game (id, write_id, finished, round, needs_indexing) values (?, ?, ?, ?, ?, false)',
             {},
-            $id, $write_id, 1*(!!$game->{finished}), $game->{round});
+            $id, $write_id, 1*(!!$game->{finished}), $game->{round},
+            $player_count);
     }
 
     $dbh->do("delete from game_role where game=?",

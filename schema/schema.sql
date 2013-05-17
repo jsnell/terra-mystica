@@ -16,6 +16,7 @@ create table game (
     finished boolean,
     exclude_from_stats boolean,
     last_update timestamp,
+    player_count integer,
     round integer
 );
 
