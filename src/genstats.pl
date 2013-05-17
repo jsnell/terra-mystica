@@ -20,41 +20,71 @@ sub print_json {
 
 my %stats = ();
 
+sub record_stats {
+    my ($res, $stat, $pos, $faction_count, $win_vp, $winner_count) = @_;
+
+    $stat->{count}++;
+
+    if ($_->{vp} == $win_vp) {
+        $stat->{wins} += 1 / $winner_count;
+        push @{$stat->{games_won}}, $res->{id};
+    }
+    if ($_->{vp} > ($stat->{high_score}{$faction_count}{vp} // 0)) {
+        $stat->{high_score}{$faction_count} = {
+            vp => $_->{vp},
+            game => $res->{id},
+        }
+    }
+    $stat->{average_vp} += $_->{vp};
+    $stat->{average_winner_vp} += $win_vp;
+    $stat->{average_position} += $pos;    
+}
+
 sub handle_game {
     my $res = shift;
 
     my $pos = 0;
     my $win_vp = 0;
+    my $winner_count = 0;
     my $faction_count = keys %{$res->{factions}};
 
     return if $faction_count < 3;
 
     for (sort { $b->{vp} <=> $a->{vp} } values %{$res->{factions}}) {
         $pos++;
-        my $stat = ($stats{factions}{$_->{faction}} ||= {
+        if ($pos == 1) {
+            $win_vp = $_->{vp};
+            $winner_count = grep {
+                $_->{vp} == $win_vp
+            } values %{$res->{factions}};
+        }
+
+        my $faction_stat = ($stats{factions}{$_->{faction}} ||= {
             wins => 0,
             games_won => [],
         });
-        $stat->{count}++;
-        if ($pos == 1) {
-            $win_vp = $_->{vp}
+
+        my $start_position = ($_->{start_order} - 1) / ($faction_count - 1);
+        if ($start_position == 0) {
+            $start_position = 'first';
+        } elsif ($start_position == 1) {
+            $start_position = 'last';
+        } elsif ($start_position == 0.5) {
+            $start_position = 'middle';
+        } elsif ($start_position < 0.5) {
+            $start_position = 'second';
+        } else {
+            $start_position = 'second-to-last';
         }
-        if ($_->{vp} == $win_vp) {
-            my $win_count = grep {
-                $_->{vp} == $win_vp
-            } values %{$res->{factions}};
-            $stat->{wins} += 1 / $win_count;
-            push @{$stat->{games_won}}, $res->{id};
+        my $position_stat = ($stats{positions}{$start_position} ||= {
+            wins => 0,
+            games_won => [],
+        });
+
+        for my $stat (($faction_stat, $position_stat)) {
+            record_stats($res, $stat, $pos, $faction_count,
+                         $win_vp, $winner_count);
         }
-        if ($_->{vp} > ($stat->{high_score}{$faction_count}{vp} // 0)) {
-            $stat->{high_score}{$faction_count} = {
-                vp => $_->{vp},
-                game => $res->{id},
-            }
-        }
-        $stat->{average_vp} += $_->{vp};
-        $stat->{average_winner_vp} += $win_vp;
-        $stat->{average_position} += $pos;
     }
 }
 
@@ -78,6 +108,17 @@ for my $stat (values %{$stats{factions}}) {
 
     delete $stat->{average_winner_vp};
 }
+
+for my $stat (values %{$stats{positions}}) {
+    next if !$stat->{count};
+    $stat->{win_rate} = int(100 * $stat->{wins} / $stat->{count});
+    $stat->{average_loss_vp} = sprintf "%5.2f", ($stat->{average_winner_vp} - $stat->{average_vp}) / $stat->{count};
+    $stat->{average_vp} = sprintf "%5.2f", $stat->{average_vp} / $stat->{count};
+    $stat->{average_position} = sprintf "%5.2f", $stat->{average_position} / $stat->{count};
+
+    delete $stat->{average_winner_vp};
+}
+
 
 $stats{timestamp} = POSIX::strftime "%Y-%m-%d %H:%M UTC", gmtime time;
 

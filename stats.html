@@ -22,6 +22,8 @@
     <table id="faction-stats" class="building-table"><tr><td>Faction<td>Wins<td>Games<td>Win %<td>Average position<td>Average score<td>Average loss<td>Games Won</table>
     <h3>High Scores</h3>
     <table id="high-scores" class="building-table"><tr><td>Faction<td>3p<td>4p<td>5p</table>
+    <h3>Start Position Statistics</h3>
+    <table id="position-stats" class="building-table"><tr><td>Position<td>Wins<td>Games<td>Win %<td>Average position<td>Average score<td>Average loss</table>
     <div id="timestamp" style="margin-top: 2ex; "></div>
     <script language="javascript">
       var state = null;
@@ -38,6 +40,10 @@
                .interpolate(elem));
             count += elem.value.wins;
             $("high-scores").insert("<tr><td>#{key}<td><a href='/game/#{value.high_score.3.game}'>#{value.high_score.3.vp}</a><td><a href='/game/#{value.high_score.4.game}'>#{value.high_score.4.vp}</a><td><a href='/game/#{value.high_score.5.game}'>#{value.high_score.5.vp}</a></tr>"
+               .interpolate(elem));
+         });
+         $H(state.positions).sortBy(function (a) { return -a.value.win_rate } ).each(function(elem) {
+            $("position-stats").insert("<tr><td>#{key}<td>#{value.wins}<td>#{value.count}<td>#{value.win_rate}<td>#{value.average_position}<td>#{value.average_vp}<td>#{value.average_loss_vp}</tr>"
                .interpolate(elem));
          });
          $("timestamp").innerHTML = "Last updated: " + state.timestamp;
