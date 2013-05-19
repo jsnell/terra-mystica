@@ -8,6 +8,9 @@
             src="/stc/prototype-1.7.1.js">
     </script>
     <script type="text/javascript" language="javascript"
+            src="/stc/common.js">
+    </script>
+    <script type="text/javascript" language="javascript"
             src="/stc/faction.js">
     </script>
     <script type="text/javascript" language="javascript"
@@ -17,6 +20,7 @@
             src="/stc/debug.js">
     </script>
     <link rel="stylesheet" type="text/css" href="/stc/style.css">
+    <link id="favicon" rel="shortcut icon" href="/favicon.ico" />
   </head>
   <body id="root">
     <div id="header"><div><a href="/" accesskey="h">Home</a></div><div><a href="/usage.html" accesskey="u">Help</a></div><div id="user-info"></div></div>
@@ -25,7 +29,7 @@
     <script language="javascript">
        init($("game-root"));
        loadGame(document.location.host, document.location.pathname);
-       fetchGames($("user-info"), "user", showActiveGames);
+       fetchGames($("user-info"), "user", "running", showActiveGames);
     </script>
   </body>
 </html>

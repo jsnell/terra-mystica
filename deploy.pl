@@ -124,10 +124,12 @@ sub deploy_cgi {
 
 sub deploy_stc {
     mkdir "$target/stc";
-    for my $f (qw(debug.js
+    for my $f (qw(common.js
+                  debug.js
                   edit.js
                   faction.js
                   game.js
+                  index.js
                   register.js
                   reset.js
                   prototype-1.7.1.js
@@ -137,6 +139,7 @@ sub deploy_stc {
         copy_with_mode 0444, "stc/$f", "$target/stc/$f";
     }
     copy_with_mode 0444, "stc/favicon.ico", "$target/favicon.ico";
+    copy_with_mode 0444, "stc/favicon-inactive.ico", "$target/favicon-inactive.ico";
 }
 
 sub deploy_html {

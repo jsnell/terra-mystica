@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Terra Mystica</title>
+    <title id="title">Terra Mystica</title>
     <meta http-equiv="cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <script type="text/javascript" language="javascript"
             src="/stc/prototype-1.7.1.js">
     </script>
+    <script type="text/javascript" language="javascript"
+            src="/stc/common.js">
+    </script>
+    <script type="text/javascript" language="javascript"
+            src="/stc/index.js">
+    </script>
     <link rel="stylesheet" type="text/css" href="/stc/style.css">
+    <link id="favicon" rel="shortcut icon" href="/favicon.ico" />
   </head>
   <body style="padding: 5ex">
     <table>
@@ -46,79 +53,12 @@
     <table id="allgames" class="gamelist"><tr><td><a href="javascript:fetchGames('allgames', 'all', '', listGames)">Load</a></table>
 
     <script language="javascript">
-      var state = null;
-      var id = document.location.pathname;
-
-      function listGames(div, mode, status) {
-         $(div).update("<thead><td>Game<td>Faction<td>Last move<td>Round<td>Waiting for<td>Status</thead>");
-         var tbody = new Element("tbody");
-         $(div).insert(tbody);
-         state.games.each(function(elem) {
-            elem.status = "";
-            if (elem.action_required) { elem.status = "game-status-action-required"; }
-            if (elem.seconds_since_update) {
-               var amount;
-               var unit;
-               if (elem.seconds_since_update > 86400) {
-                   amount = Math.round(elem.seconds_since_update / 86400);
-                   unit = "day";
-               } else if (elem.seconds_since_update > 3600) {
-                   amount = Math.round(elem.seconds_since_update / 3600);
-                   unit = "hour";
-               } else if (elem.seconds_since_update > 60) {
-                   amount = Math.round(elem.seconds_since_update / 60);
-                   unit = "minute";
-               } else {
-                   amount = Math.round(elem.seconds_since_update);
-                   unit = "second";
-               }
-               if (amount > 1) { unit += "s" }
-               elem.time_since_update = amount + " " + unit + " ago";
-            }
-            if (elem.vp) { elem.vp += " vp"; }
-            if (elem.rank) { elem.vp += " (" + elem.rank + ")"; }
-
-            $(tbody).insert("<tr class='#{status}'><td>#{id}<td><a href='#{link}'> #{role}<td>#{time_since_update}</a><td>#{round}<td>#{waiting_for}<td>#{vp}</tr>"
-               .interpolate(elem));
-         });
-         if (mode == "user") {
-           var link = new Element('a', {"href": "#", "accesskey": "n"}).update("Refresh");
-           link.onclick = function() { fetchGames(div, mode, status, nextGame); } 
-           var td = new Element('td').insert(link);
-           var tr = new Element('tr').insert(new Element("td")).insert(td);
-           $(tbody).insert(tr);
-         }
-      }
-
-      function nextGame(div, mode, status) {
-         state.games.each(function(elem) {
-            if (elem.action_required) { document.location = elem.link; }
-         });
-         listGames(div, mode, status);
-      }
-
-      function fetchGames(div, mode, status, handler) {
-          $(div).update("... loading");
-          new Ajax.Request("/cgi-bin/gamelist.pl", {
-              parameters: { "mode": mode, "status": status },
-              method:"get",
-              onSuccess: function(transport){
-                state = transport.responseText.evalJSON();
-                try {
-                  if (!state.error) {
-                    handler(div, mode, status);
-                  } else {
-                    $(div).update(state.error);
-                  }
-                } catch (e) {
-                  handleException(e);
-                };
-              }
-          });
-      }
-
       fetchGames("yourgames-active", "user", "running", listGames);
       fetchGames("yourgames-admin", "admin", "running", listGames);
+
+      setInterval(function() {
+         fetchGames("yourgames-active", "user", "running", listGames);
+      }, 5*60*1000);
     </script>
     </table>
   </body>

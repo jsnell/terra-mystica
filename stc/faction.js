@@ -1,5 +1,4 @@
 var state = null;
-var params = null;
 var currentFaction = null;
 var backendDomain = null;
 
@@ -18,14 +17,9 @@ function loadGame (domain, pathname) {
 
     backendDomain = domain;
     state = null;
-    
-    if ($("title")) {
-        $("title").text += " - " + params.game;
-        if (params.faction) {
-            $("title").text += " / " + params.faction;
-        }
-    }
 
+    setTitle();
+    
     if ($("move_entry")) {
         $("move_entry").innerHTML = '';
     }
@@ -84,6 +78,8 @@ function previewOrSave(save) {
                     } else {
                         $("move_entry").innerHTML = "";
                     }
+                    fetchGames($("user-info"), "user", "running",
+                               showActiveGames);
                     preview(false);
                 }
             } else {
@@ -124,43 +120,28 @@ function makeMailToLink() {
     return link;
 }
 
-function showActiveGames(games, div, mode) {
+function showActiveGames(games, div, mode, status) {
     var record = { "active_count": 0, "action_required_count": 0 };
-    games.games.each(function(elem) {
+    moveRequired = false;
+    games.each(function(elem) {
         if (!elem.finished) { record.active_count++; }
-        if (elem.action_required) { record.action_required_count++; }
+        if (elem.action_required) {
+            moveRequired = true;
+            record.action_required_count++;
+        }
     });
     $(div).innerHTML = "<div style='display: block-inline; margin-right: 10px'>Moves required in #{action_required_count}/#{active_count} games</div>".interpolate(record);
 
     var link = new Element('a', {"href": "#", "accesskey": "n"}).update("Next game");
-    link.onclick = function() { fetchGames(div, mode, nextGame); } 
+    link.onclick = function() { fetchGames(div, mode, "running", nextGame); } 
     $(div).insert(link);
+
+    setTitle();
 }
 
-function nextGame(games, div, mode) {
-    games.games.each(function(elem) {
+function nextGame(games, div, mode, status) {
+    games.each(function(elem) {
         if (elem.action_required) { document.location = elem.link; }
     });
-    showActiveGames(games, div, mode);
+    showActiveGames(games, div, mode, status);
 }
-
-function fetchGames(div, mode, handler) {
-    $(div).innerHTML = "... loading";
-    new Ajax.Request("/cgi-bin/gamelist.pl", {
-        parameters: { "mode": mode, "status": "running" },
-        method:"get",
-        onSuccess: function(transport){
-            var games = transport.responseText.evalJSON();
-            try {
-                if (!games.error) {
-                    handler(games, div, mode);
-                } else {
-                    $(div).innerHTML = games.error;
-                }
-            } catch (e) {
-                handleException(e);
-            };
-        }
-    });
-}
-
