@@ -827,6 +827,7 @@ function drawFactions() {
         var b = ['D', 'TP', 'TE', 'SH', 'SA'];
         var count = [];
         var cost = [];
+        var income = [];
 
         b.each(function(key) {
             record = faction.buildings[key];
@@ -837,11 +838,30 @@ function drawFactions() {
             }
             count.push(text);
             cost.push("#{advance_cost.C}c,&#160;#{advance_cost.W}w".interpolate(record));
+            if (record.level == record.max_level) {
+                income.push("");
+            } else {
+                var income_delta = [];
+                ["C", "W", "P", "PW"].each(function(type) {
+                    var type_income = record.income[type];
+                    if (!type_income) { return; }
+                    var delta = type_income[record.level + 1] - type_income[record.level];
+                    if (delta > 0) {
+                        income_delta.push(delta + type.toLowerCase());
+                    }
+                });
+                if (income_delta.size() > 0) {
+                    income.push("+" + income_delta.join(",&#160;"));
+                } else {
+                    income.push("");
+                }
+            }
         });
 
         buildings.insert(rowFromArray(b, '').insert("<td><a href='javascript:toggleBuildings(\"" + buildings_id + "\")'>+</a>"));
         buildings.insert(rowFromArray(count, ''));
         buildings.insert(rowFromArray(cost, 'display: none'));
+        buildings.insert(rowFromArray(income, 'display: none'));
 
         var income_id = "income-" + name;
         var income = new Element('table', {'class': 'income-table', 'id': income_id});
