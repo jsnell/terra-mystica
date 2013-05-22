@@ -243,7 +243,9 @@ sub adjust_resource {
         }
 
         if ($type =~ /^TW/) {
-            gain $faction, $tiles{$type}{gain}, 'TW';
+            for (1..$delta) {
+                gain $faction, $tiles{$type}{gain}, 'TW';
+            }
         }
 
         if (grep { $_ eq $type } @cults) {

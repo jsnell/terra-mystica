@@ -82,6 +82,8 @@ sub command_adjust_resources {
     if (grep { $_ eq $type } @cults) {
         if ($faction->{CULT} < $delta) {
             # die "Advancing $delta steps on $type cult not allowed\n";
+        } elsif ($faction->{CULT} > $delta) {
+            die "All cult advances must be used on the same cult track\n";
         } else {
             $faction->{CULT} -= $delta;
             $checked = 1;
@@ -92,7 +94,7 @@ sub command_adjust_resources {
         if (!$faction->{GAIN_FAVOR}) {
             die "Taking favor tile not allowed\n";
         } else {
-            $faction->{GAIN_FAVOR}--;
+            $faction->{GAIN_FAVOR} -= $delta;
             $checked = 1;
         }
     }
@@ -101,7 +103,7 @@ sub command_adjust_resources {
         if (!$faction->{GAIN_TW}) {
             die "Taking town tile not allowed\n";
         } else {
-            $faction->{GAIN_TW}--;
+            $faction->{GAIN_TW} -= $delta;
             $checked = 1;
         }
     }
@@ -969,6 +971,23 @@ sub clean_commands {
                  (grep { !/^(leech|decline)/i } @commands));
 
     return @comments, map { [ $prefix, $_ ] } grep { /\S/ } @commands;
+}
+
+sub rewrite_stream {
+    my @command_stream = @_;
+
+    for my $i (0..(@command_stream-2)) {
+        my $this = $command_stream[$i];
+        my $next = $command_stream[$i+1];
+        if (($this->[0] eq $next->[0]) and
+            ($this->[1] =~ /^\+(\d*)(\w+)/ and
+             lc $this->[1] eq lc $next->[1])) {
+            $this->[1] = "+".(($1 || 1) * 2)."$2";
+            $next->[1] = '';
+        }
+    }
+
+    grep { $_->[1] } @command_stream;
 }
 
 sub pretty_resource_delta {

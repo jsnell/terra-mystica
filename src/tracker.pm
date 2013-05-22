@@ -155,6 +155,8 @@ sub evaluate_game {
         $row++;
     }
 
+    @command_stream = rewrite_stream @command_stream;
+
     if (!@error) {
         eval {
             $history_view = play \@command_stream, $data->{max_row} // 0;
