@@ -7,7 +7,6 @@ use Digest::SHA1  qw(sha1_hex);
 use Fatal qw(chdir open);
 use File::Basename qw(dirname);
 use File::Slurp;
-use File::Temp qw(tempfile);
 use JSON;
 
 chdir dirname $0;
@@ -15,6 +14,7 @@ chdir dirname $0;
 use exec_timer;
 use indexgame;
 use rlimit;
+use save;
 use tracker;
 use lockfile;
 
@@ -30,7 +30,7 @@ my $new_content = $q->param('content');
 my $dir = "../../data/write/";
 my $lockfile = lockfile::get "$dir/lock";
 
-sub save {
+sub verify_and_save {
     chdir $dir;
 
     my $orig_content = read_file $id;
@@ -39,14 +39,7 @@ sub save {
         die "Someone else made changes to the game. Please reload\n";
     }
 
-    my ($fh, $filename) = tempfile("tmpfileXXXXXXX",
-                                   DIR=>".");
-    print $fh $new_content;
-    close $fh;
-    chmod 0444, $filename;
-    rename $filename, "$id";
-
-    system "git commit -m 'change $id' $id > /dev/null";
+    save $id, $new_content;
 }
 
 lockfile::lock $lockfile;
@@ -58,7 +51,7 @@ my $res = terra_mystica::evaluate_game {
 
 if (!@{$res->{error}}) {
     eval {
-        save;
+        verify_and_save;
     }; if ($@) {
         print STDERR "error: $@\n";
         $res->{error} = [ $@ ]

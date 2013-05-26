@@ -7,7 +7,6 @@ use Crypt::CBC;
 use Fatal qw(chdir open);
 use File::Basename qw(dirname);
 use File::Slurp;
-use File::Temp qw(tempfile);
 use JSON;
 
 chdir dirname $0;
@@ -15,6 +14,7 @@ chdir dirname $0;
 use exec_timer;
 use indexgame;
 use rlimit;
+use save;
 use tracker;
 use lockfile;
 
@@ -48,17 +48,6 @@ if ($faction_name =~ /^player/) {
 my $dir = "../../data/write/";
 my $lockfile = lockfile::get "$dir/lock";
 chdir $dir;
-
-sub save {
-    my ($fh, $filename) = tempfile("tmpfileXXXXXXX",
-                                   DIR=>".");
-    print $fh $new_content;
-    close $fh;
-    chmod 0444, $filename;
-    rename $filename, "$id";
-
-    system "git commit -m 'change $id' $id > /dev/null";
-}
 
 sub verify_key {
     my $secret = read_file("../secret");
@@ -108,7 +97,7 @@ my $res = terra_mystica::evaluate_game {
 
 if (!@{$res->{error}}) {
     eval {
-        save;
+        save $id, $new_content;
     }; if ($@) {
         print STDERR "error: $@\n";
         $res->{error} = [ $@ ]

@@ -114,6 +114,7 @@ sub deploy_cgi {
                   results.pm
                   resources.pm
                   rlimit.pm
+                  save.pm
                   scoring.pm
                   session.pm
                   tiles.pm
