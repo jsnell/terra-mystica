@@ -39,3 +39,9 @@ create table blacklist (
        email text references email (address)
 );
 
+create table game_note (
+    game text references game (id),
+    faction text,
+    note text,
+    primary key (game, faction)
+);

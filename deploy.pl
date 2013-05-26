@@ -82,6 +82,7 @@ sub deploy_cgi {
                   login.pl
                   logout.pl
                   newgame.pl
+                  plan.pl
                   register.pl
                   reset.pl
                   results.pl

@@ -1081,6 +1081,8 @@ function drawActionRequired() {
             record.pretty += "<table>" + table + "</table>";
         } else if (record.type == 'faction') {
             record.pretty = '#{player} should pick a faction'.interpolate(record);
+        } else if (record.type == 'planning') {
+            record.pretty = 'are planning';
         } else {
             record.pretty = '?';
         }
@@ -1103,14 +1105,53 @@ function drawActionRequired() {
         }
     });
 
-    if (needMoveEntry && $("move_entry").innerHTML == "" &&
-        !state.history_view) {
+    if (state.history_view) {
+        return;
+    }
+
+    if (currentFaction && $("data_entry").innerHTML == "") {
+        $("data_entry").insert("<div id='data_entry_tabs'></div>");
+        $("data_entry_tabs").insert("<button onclick='dataEntrySelect(\"move\")' id='data_entry_tab_move' class='tab'>Moves</button>");
+        $("data_entry_tabs").insert("<button onclick='initPlanIfNeeded(); dataEntrySelect(\"planning\")' id='data_entry_tab_planning' class='tab'>Planning</button>");
+        $("data_entry").insert("<div id='move_entry' class='tab_content'></div>");
+        $("data_entry").insert("<div id='planning_entry' class='tab_content'></div>");
+        dataEntrySelect("move");
+    }
+
+    if ($("planning_entry").innerHTML == "") {
+        var input = new Element("textarea", {"id": "planning_entry_input",
+                                             "style": "font-family: monospace; width: 60ex; height: 12em;" } );
+        $("planning_entry").insert(input);
+        $("planning_entry").insert("<div style='padding-left: 2em'><button id='planning_entry_action' onclick='javascript:previewPlan()'>Show Result</button><button id='planning_entry_action' onclick='javascript:savePlan()'>Save Plan</button><br><div id='planning_entry_explanation'>Use this entry box to leave notes for yourself, or to plan your coming moves using the same input format as for normal play. View the effects of the plan with 'show result' or save the plan / notes for later with 'save plan'.</div></div>");
+    }
+
+    if (needMoveEntry && $("move_entry").innerHTML == "") {
         var input = new Element("textarea", {"id": "move_entry_input",
                                              "onInput": "javascript:moveEntryInputChanged()",
                                              "style": "font-family: monospace; width: 60ex; height: 6em;" } );
         $("move_entry").insert(input);
-        $("move_entry").insert("<div style='padding-left: 2em'><button id='move_entry_action' onclick='javascript:preview()'>Preview</button><br><div id='move_entry_explanation'></span></div>")
+        $("move_entry").insert("<div style='padding-left: 2em'><button id='move_entry_action' onclick='javascript:preview()'>Preview</button><br><div id='move_entry_explanation'></div>")
     }
+}
+
+function dataEntrySelect(select) {
+    $$("#data_entry_tabs button.tab").each(function(tab) {
+        if (tab.id == "data_entry_tab_" + select) {
+            tab.style.fontWeight = "bold";
+        } else {
+            tab.style.fontWeight = "normal";
+        }
+    });
+
+    $$("#data_entry div.tab_content").each(function(tab) {
+        if (tab.id == select + "_entry") {
+            tab.style.display = "block";
+        } else {
+            tab.style.display = "none";
+        }
+    });
+
+    moveEntryInputChanged();
 }
 
 function addTakeTileButtons(parent, index, prefix, id) {
@@ -1263,16 +1304,24 @@ function gainResource(index, amount, resource, id) {
 }
 
 function moveEntryInputChanged() {
+    if (!$("move_entry_input")) {
+        return;
+    }
+
     $("move_entry_input").oninput = null;
     $("move_entry_action").innerHTML = "Preview";
     $("move_entry_action").onclick = preview;
     $("move_entry_explanation").innerHTML = "";
 } 
 
+function dataEntrySetStatus(disabled) {
+    $("data_entry").descendants().each(function (elem) {
+        elem.disabled = disabled;
+    });
+}
+
 function moveEntryAfterPreview() {
     if ($("move_entry_action")) {
-        $("move_entry_action").disabled = false;
-
         if ($("move_entry_input").value != "") {
             if ($("error").innerHTML != "") {
                 $("move_entry_explanation").innerHTML = "Can't save yet - input had errors";
@@ -1285,9 +1334,9 @@ function moveEntryAfterPreview() {
         }
     }
     if ($("move_entry_input")) {
-        $("move_entry_input").disabled = false;
         $("move_entry_input").oninput = moveEntryInputChanged;
     }
+    dataEntrySetStatus(false);
 }
 
 function draw() {
@@ -1350,7 +1399,7 @@ function init(root) {
     <pre id="preview_commands"></pre> \
     <div id="error"></div> \
     <div id="action_required"></div> \
-    <div id="move_entry"></div> \
+    <div id="data_entry"></div> \
     <div id="factions"></div> \
     <table id="ledger"> \
       <col></col> \

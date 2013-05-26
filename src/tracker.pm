@@ -47,6 +47,10 @@ sub finalize {
                 $faction->{waiting} = 0;
             }
         }
+        if ($faction->{planning}) {
+            @action_required = ({ type => 'planning',
+                                  faction => $faction->{name}});
+        }
     }
 
     for my $faction_name (@factions) {

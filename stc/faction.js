@@ -32,20 +32,12 @@ function loadGame (domain, pathname) {
     preview();
 }
 
-function previewOrSave(save) {
-    if ($("move_entry_action")) {
-        $("move_entry_action").disabled = true;
-    }
+function previewOrSave(save, preview_data, prefix_data) {
+    dataEntrySetStatus(true);
 
-    if ($("move_entry_input")) {
-        $("move_entry_input").disabled = true;
-    }
-    var preview = "";
-
-    if ($("move_entry_input")) {
-        preview = $("move_entry_input").value;
+    if (preview_data) {
         $("preview_status").innerHTML = "Previewing the following commands for " + currentFaction;
-        $("preview_commands").innerHTML = preview;
+        $("preview_commands").innerHTML = preview_data;
     }
 
     var target = save ? "/cgi-bin/append.pl" : "/cgi-bin/bridge.pl";
@@ -56,8 +48,12 @@ function previewOrSave(save) {
     new Ajax.Request(target, {
         method: "get",
         parameters: {
+            // Thanks, Chrome on Android. I'm sure that randomly
+            // ignoring cache control headers is *just* the right
+            // thing.
+            "cache-token": new Date() - Math.random(),
             "game": params.game,
-            "preview": preview,
+            "preview": prefix_data + preview_data,
             "faction-key": params.key,
             "preview-faction": currentFaction,
             "max-row": params['max-row']
@@ -94,12 +90,20 @@ function previewOrSave(save) {
     });
 }
 
+function previewPlan() {
+    var prefix_data = "start_planning.";
+    var preview_data = $("planning_entry_input").value;
+    previewOrSave(false, preview_data, prefix_data);
+}
+
 function preview() {
-    previewOrSave(false);
+    var preview_data = $("move_entry_input") ? $("move_entry_input").value : "";
+    previewOrSave(false, preview_data, "");
 }
 
 function save() {
-    previewOrSave(true);
+    var preview_data = $("move_entry_input").value;
+    previewOrSave(true, preview_data, "");
 }
 
 function makeMailToLink() {
@@ -144,4 +148,48 @@ function nextGame(games, div, mode, status) {
         if (elem.action_required) { document.location = elem.link; }
     });
     showActiveGames(games, div, mode, status);
+}
+
+function loadOrSavePlan(save) {
+    dataEntrySetStatus(true);
+
+    var target = "/cgi-bin/plan.pl";
+    target = "http://" + backendDomain + target;
+
+    var form_params = {
+        "cache-token": new Date() - Math.random(),
+        "game": params.game,
+        "faction-key": params.key,
+        "preview-faction": currentFaction,
+    };
+    if (save) {
+        form_params['set-note'] = $("planning_entry_input").value;
+    }
+
+    new Ajax.Request(target, {
+        method: "get",
+        parameters: form_params,
+        onSuccess: function(transport){
+            var notes = transport.responseText.evalJSON();
+            $("planning_entry_input").value = notes.note;
+            dataEntrySetStatus(false);
+        }
+    });
+}
+
+function loadPlan() {
+    loadOrSavePlan(false);
+}
+
+function savePlan() {
+    loadOrSavePlan(true);
+}
+
+var plan_loaded = 0;
+function initPlanIfNeeded() {
+    if (plan_loaded) {
+        return;
+    }
+    loadPlan();
+    plan_loaded = 1;
 }

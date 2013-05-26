@@ -47,7 +47,7 @@ sub require_subaction {
         } @action_required;
     } else {
         my @unpassed = grep { !$_->{passed} } values %factions;
-        if (@unpassed == 1) {
+        if (@unpassed == 1 or $faction->{planning}) {
             finish_row();
             start_new_row($faction->{name});
 
@@ -516,6 +516,12 @@ sub command_pass {
     if ($discard) {
         adjust_resource $faction, $discard, -1;
     }
+
+    if ($faction->{planning}) {
+        finish_row($faction->{name});
+        start_new_row($faction->{name});
+        command_start_planning($faction);
+    }
 }
 
 sub command_action {
@@ -695,6 +701,18 @@ sub command_randomize_v1 {
     }
 }
 
+sub command_start_planning {
+    my $faction = shift;
+
+    $faction->{planning} = 1;
+    if ($faction->{passed}) {
+        command_income;
+        command_start;
+    }
+
+    allow_full_move $faction;
+}
+
 sub non_leech_action_required {
     return scalar grep { $_->{type} ne 'leech' } @action_required;
 }
@@ -825,6 +843,8 @@ sub command {
         command_randomize_v1 $1;
     } elsif ($command =~ /^wait$/i) {
         ($assert_faction->())->{waiting} = 1;
+    } elsif ($command =~ /^start_planning$/i) {
+        command_start_planning $assert_faction->();
     } else {
         die "Could not parse command '$command'.\n";
     }

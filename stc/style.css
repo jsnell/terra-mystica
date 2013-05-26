@@ -190,7 +190,7 @@ pre#preview_commands {
     margin-left: 20px;
 }
 
-div#move_entry {
+div#data_entry {
     margin-bottom: 10px;
 }
 
@@ -198,6 +198,13 @@ div#move_entry_explanation {
     margin-top: 5px;
     font: 14px Verdana;
     font-weight: bold;
+    max-width: 60ex;
+}
+
+div#planning_entry_explanation {
+    margin-top: 5px;
+    font: 14px Verdana;
+    max-width: 60ex;
 }
 
 div#header {
@@ -241,4 +248,9 @@ table.gamelist thead {
 
 table.gamelist td {
     padding-right: 2ex;
+}
+
+button {
+    margin-right: 5px;
+    margin-bottom: 2px;
 }

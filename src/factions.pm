@@ -568,6 +568,8 @@ sub setup {
     }
     push @setup_order, reverse @factions;
 
+    $faction->{planning} = 0;
+
     @action_required = ({ type => 'dwelling', faction => $setup_order[0] });
 }
 
