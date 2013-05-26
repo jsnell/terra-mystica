@@ -1118,7 +1118,7 @@ function drawActionRequired() {
         dataEntrySelect("move");
     }
 
-    if ($("planning_entry").innerHTML == "") {
+    if ($("planning_entry") && $("planning_entry").innerHTML == "") {
         var input = new Element("textarea", {"id": "planning_entry_input",
                                              "style": "font-family: monospace; width: 60ex; height: 12em;" } );
         $("planning_entry").insert(input);
