@@ -15,6 +15,7 @@ use session;
 
 print "Content-type: text/javascript\r\n";
 print "Cache-Control: no-cache\r\n";
+print "Connection: close\r\n";
 print "\r\n";
 
 my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
