@@ -130,7 +130,7 @@ function drawTemple(ctx, hex) {
     ctx.save();
 
     ctx.beginPath();
-    ctx.arc(loc[0], loc[1], 14, 0, Math.PI*2, false);
+    ctx.arc(loc[0], loc[1], 14, 0.001, Math.PI*2, false);
 
     fillBuilding(ctx, hex);
 
