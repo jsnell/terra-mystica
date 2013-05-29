@@ -106,6 +106,8 @@ for my $stat (values %{$stats{factions}}) {
     $stat->{average_vp} = sprintf "%5.2f", $stat->{average_vp} / $stat->{count};
     $stat->{average_position} = sprintf "%5.2f", $stat->{average_position} / $stat->{count};
 
+    $stat->{wins} = 0 + sprintf "%5.2f", $stat->{wins};
+
     delete $stat->{average_winner_vp};
 }
 

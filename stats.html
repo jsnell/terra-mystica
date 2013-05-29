@@ -53,7 +53,7 @@
             });
          });
          $("timestamp").innerHTML = "Last updated: " + state.timestamp;
-         $("count").innerHTML = count;
+         $("count").innerHTML = Math.round(count);
       }
 
       new Ajax.Request("/data/stats.json", {
