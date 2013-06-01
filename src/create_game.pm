@@ -42,15 +42,10 @@ randomize v1 seed $id
 EOF
  
     my $write_id = "${id}_${hash}";
-
-    index_game $id, $write_id, {};
+    my $game = $admin ? { admin => $admin } : {};
 
     chdir "write";
-    save $write_id, $content;
-
-    if ($admin) {
-        index_game $id, $write_id, { admin => $admin };
-    }
+    save $write_id, $content, $game;
 
     return $write_id;
 }

@@ -97,7 +97,7 @@ my $res = terra_mystica::evaluate_game {
 
 if (!@{$res->{error}}) {
     eval {
-        save $id, $new_content;
+        save $id, $new_content, $res;
     }; if ($@) {
         print STDERR "error: $@\n";
         $res->{error} = [ $@ ]
@@ -105,16 +105,6 @@ if (!@{$res->{error}}) {
 };
 
 lockfile::unlock $lockfile;
-
-# Ignore DB errors during metadata refresh.
-if (!@{$res->{error}}) {
-    eval {
-        my ($read_id) = $id =~ /(.*?)_/g;
-        index_game $read_id, $id, $res;
-    }; if ($@) {
-        print STDERR $@;
-    }
-}
 
 my @email = ();
 

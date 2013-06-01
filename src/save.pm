@@ -2,10 +2,13 @@
 
 use strict;
 
+use DBI;
 use File::Temp qw(tempfile);
 
+use indexgame;
+
 sub save {
-    my ($id, $new_content) = @_;
+    my ($id, $new_content, $game) = @_;
 
     my ($fh, $filename) = tempfile("tmpfileXXXXXXX",
                                    DIR=>".");
@@ -16,8 +19,10 @@ sub save {
 
     system "git commit -m 'change $id' $id > /dev/null";
 
+    my ($read_id) = $id =~ /(.*?)_/g;
+    index_game $read_id, $id, $game;
+
     eval {
-        my ($read_id) = $id =~ /(.*?)_/g;
         my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
                                { AutoCommit => 0, RaiseError => 1});
         $dbh->do("update game set commands=? where id=?", {},

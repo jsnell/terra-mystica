@@ -12,7 +12,6 @@ use JSON;
 chdir dirname $0;
 
 use exec_timer;
-use indexgame;
 use rlimit;
 use save;
 use tracker;
@@ -31,6 +30,8 @@ my $dir = "../../data/write/";
 my $lockfile = lockfile::get "$dir/lock";
 
 sub verify_and_save {
+    my $game = shift;
+
     chdir $dir;
 
     my $orig_content = read_file $id;
@@ -39,7 +40,7 @@ sub verify_and_save {
         die "Someone else made changes to the game. Please reload\n";
     }
 
-    save $id, $new_content;
+    save $id, $new_content, $game;
 }
 
 lockfile::lock $lockfile;
@@ -51,7 +52,7 @@ my $res = terra_mystica::evaluate_game {
 
 if (!@{$res->{error}}) {
     eval {
-        verify_and_save;
+        verify_and_save $res;
     }; if ($@) {
         print STDERR "error: $@\n";
         $res->{error} = [ $@ ]
@@ -59,16 +60,6 @@ if (!@{$res->{error}}) {
 };
 
 lockfile::unlock $lockfile;
-
-if (!@{$res->{error}}) {
-    # Ignore DB errors during metadata refresh.
-    eval {
-        my ($read_id) = $id =~ /(.*?)_/g;
-        index_game $read_id, $id, $res;
-    }; if ($@) {
-        print STDERR $@;
-    }
-}
 
 print "Content-type: text/json\r\n";
 print "Cache-Control: no-cache\r\n";
