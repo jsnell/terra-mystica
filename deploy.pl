@@ -102,7 +102,6 @@ sub deploy_cgi {
                   game.pm
                   income.pm
                   indexgame.pm
-                  lockfile.pm
                   map.pm
                   natural_cmp.pm
                   results.pm
