@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+!/usr/bin/perl -w
 
 use CGI qw(:cgi);
 use DBI;
@@ -53,11 +53,11 @@ if (-f "../../data/read/$gameid") {
 }
 
 chdir "../../data";
-my $lockfile = lockfile::get "lock";
+my $lockfile = lockfile::get "write/lock";
 lockfile::lock $lockfile;
 
 eval {
-    my $write_id = create_game $gameid, $email;
+    my $write_id = create_game $dbh, $gameid, $email;
 
     print encode_json {
         error => [],

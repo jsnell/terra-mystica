@@ -3,6 +3,7 @@
 use strict;
 
 use CGI qw(:cgi);
+use DBI;
 use Digest::SHA1  qw(sha1_hex);
 use Fatal qw(chdir open);
 use File::Basename qw(dirname);
@@ -19,9 +20,9 @@ use lockfile;
 
 my $q = CGI->new;
 
-my $id = $q->param('game');
-$id =~ s{.*/}{};
-$id =~ s{[^A-Za-z0-9_]}{}g;
+my $write_id = $q->param('game');
+$write_id =~ s{.*/}{};
+$write_id =~ s{[^A-Za-z0-9_]}{}g;
 
 my $orig_hash = $q->param('orig-hash');
 my $new_content = $q->param('content');
@@ -29,18 +30,23 @@ my $new_content = $q->param('content');
 my $dir = "../../data/write/";
 my $lockfile = lockfile::get "$dir/lock";
 
+my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
+                       { AutoCommit => 0, RaiseError => 1});
+
 sub verify_and_save {
     my $game = shift;
 
     chdir $dir;
 
-    my $orig_content = read_file $id;
+    my ($read_id) = $write_id =~ /(.*?)_/g;
+    my $orig_content = get_game_content $read_id, $write_id;
+
     if (sha1_hex($orig_content) ne $orig_hash) {
         print STDERR "Concurrent modification [$orig_hash] [", sha1_hex($orig_content), "]";
         die "Someone else made changes to the game. Please reload\n";
     }
 
-    save $id, $new_content, $game;
+    save $dbh, $write_id, $new_content, $game;
 }
 
 lockfile::lock $lockfile;

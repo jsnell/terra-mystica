@@ -2,6 +2,7 @@
 
 use POSIX qw(chdir);
 use CGI qw(:cgi);
+use DBI;
 use Fatal qw(chdir open);
 use File::Basename qw(dirname);
 use File::Slurp;
@@ -10,6 +11,7 @@ use JSON;
 chdir dirname $0;
 
 use exec_timer;
+use game;
 use rlimit;
 use tracker;
 
@@ -41,11 +43,14 @@ sub print_json {
     print $out;
 }
 
-if (-f "../../data/read/$id") {
-    print "\r\n";
-    my @rows = read_file("../../data/read/$id");
-    if (defined $preview) {
+my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
+                       { AutoCommit => 0, RaiseError => 1});
 
+if (game_exists $dbh, $id) {
+    print "\r\n";
+    my @rows = get_game_commands($dbh, $id);
+
+    if (defined $preview) {
         if ($preview_faction =~ /^player/) {
             if ($preview =~ /(setup \w+)/i) {
                 push @rows, "$1\n"; 

@@ -8,7 +8,7 @@ use indexgame;
 use save;
 
 sub create_game {
-    my ($id, $admin) = @_;
+    my ($dbh, $id, $admin) = @_;
 
     die "Invalid game id $id\n" if !$id or $id =~ /[^A-Za-z0-9]/;
 
@@ -45,7 +45,7 @@ EOF
     my $game = $admin ? { admin => $admin } : {};
 
     chdir "write";
-    save $write_id, $content, $game;
+    save $dbh, $write_id, $content, $game;
 
     return $write_id;
 }

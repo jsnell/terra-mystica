@@ -88,16 +88,9 @@ sub deploy_cgi {
                   results.pl
                   validate.pl
                   validate-reset.pl
-                  status.pl
                   save.pl)) {
         copy_with_mode 0555, "src/$f", "$target/cgi-bin/$f";
     }
-
-    mangle_with_mode 0555, "src/res.pl", "$target/cgi-bin/res.pl", sub {
-        local $_ = shift;
-        s/%%GIT_VERSION%%/$tag/;
-        $_;
-    };
 
     for my $f (qw(buildings.pm
                   commands.pm
@@ -106,6 +99,7 @@ sub deploy_cgi {
                   editlink.pm
                   exec_timer.pm
                   factions.pm
+                  game.pm
                   income.pm
                   indexgame.pm
                   lockfile.pm

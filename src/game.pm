@@ -7,10 +7,16 @@ use Fatal qw(chdir open);
 use indexgame;
 use save;
 
+sub game_exists {
+    my ($dbh, $id) = @_;
+
+    $dbh->selectrow_array("select count(*) from game where id=?",
+                          {},
+                          $id);
+}
+
 sub get_game_content {
-    my ($id, $write_id) = @_;
-    my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                           { AutoCommit => 0, RaiseError => 1});
+    my ($dbh, $id, $write_id) = @_;
 
     my ($actual_write_id, $content) =
         $dbh->selectrow_array("select write_id, commands from game where id=?",
@@ -22,12 +28,15 @@ sub get_game_content {
             die "Invalid write_id $write_id"
         }
     } else {
-        $content =~ s{email.*}{}g;
+        $content =~ s/email\s*\S+/email redacted/g;
     }
 
-    $dbh->disconnect();
-
     return $content;
+}
+
+sub get_game_commands {
+    split /\n/, get_game_content @_;
+    
 }
 
 1;

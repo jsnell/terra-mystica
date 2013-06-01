@@ -4,6 +4,7 @@ use strict;
 
 use CGI qw(:cgi);
 use Crypt::CBC;
+use DBI;
 use Fatal qw(chdir open);
 use File::Basename qw(dirname);
 use File::Slurp;
@@ -12,6 +13,7 @@ use JSON;
 chdir dirname $0;
 
 use exec_timer;
+use game;
 use indexgame;
 use rlimit;
 use save;
@@ -49,6 +51,9 @@ my $dir = "../../data/write/";
 my $lockfile = lockfile::get "$dir/lock";
 chdir $dir;
 
+my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
+                       { AutoCommit => 0, RaiseError => 1});
+
 sub verify_key {
     my $secret = read_file("../secret");
     my $iv = read_file("../iv");
@@ -60,10 +65,9 @@ sub verify_key {
                                  -cipher => 'Blowfish');
     my $data = $cipher->decrypt(pack "h*", $faction_key);
     my $game_secret = unpack("h*", $data ^ $faction_name);
-    $id .= "_$game_secret";
-    die "Invalid faction key\n" if $id =~ /[^a-zA-z0-9_]/ or !(-f $id);
+    my $write_id .= "${id}_$game_secret";
 
-    $new_content = read_file("$id");
+    $new_content = get_game_content $dbh, $id, $write_id;
     chomp $new_content;
     $new_content .= "\n";
 
@@ -97,7 +101,7 @@ my $res = terra_mystica::evaluate_game {
 
 if (!@{$res->{error}}) {
     eval {
-        save $id, $new_content, $res;
+        save $dbh, $id, $new_content, $res;
     }; if ($@) {
         print STDERR "error: $@\n";
         $res->{error} = [ $@ ]

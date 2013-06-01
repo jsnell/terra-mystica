@@ -5,11 +5,8 @@ use strict;
 use DBI;
 use POSIX qw(strftime);
 
-my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 0, RaiseError => 1});
-
 sub index_game {
-    my ($id, $write_id, $game, $timestamp) = @_;
+    my ($dbh, $id, $write_id, $game, $timestamp) = @_;
 
     $timestamp = strftime "%Y-%m-%d %H:%M:%S", localtime ($timestamp || time);
 
@@ -104,10 +101,7 @@ sub index_game {
                  $faction->{rank},
                  $faction->{start_order});
     }
-
-    $dbh->commit(); 
 }
 
-END {
-    $dbh->disconnect();
-}
+1;
+
