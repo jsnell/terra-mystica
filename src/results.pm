@@ -2,7 +2,6 @@ use strict;
 
 use DBI;
 use Digest::SHA1 qw(sha1_hex);
-use File::Slurp qw(read_file);
 
 sub get_finished_game_results {
     my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',

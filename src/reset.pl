@@ -4,7 +4,6 @@ use CGI qw(:cgi);
 use Crypt::CBC;
 use Crypt::Eksblowfish::Bcrypt qw(bcrypt en_base64);
 use DBI;
-use File::Slurp qw(read_file);
 use JSON;
 use Net::SMTP;
 

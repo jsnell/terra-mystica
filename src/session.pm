@@ -1,5 +1,4 @@
 use Digest::SHA1 qw(sha1_hex);
-use File::Slurp qw(read_file);
 
 use secret;
 
