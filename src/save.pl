@@ -13,33 +13,32 @@ use JSON;
 chdir dirname $0;
 
 use exec_timer;
+use game;
 use rlimit;
 use save;
 use tracker;
-use lockfile;
 
 my $q = CGI->new;
 
 my $write_id = $q->param('game');
 $write_id =~ s{.*/}{};
 $write_id =~ s{[^A-Za-z0-9_]}{}g;
+my ($read_id) = $write_id =~ /(.*?)_/g;
 
 my $orig_hash = $q->param('orig-hash');
 my $new_content = $q->param('content');
 
 my $dir = "../../data/write/";
-my $lockfile = lockfile::get "$dir/lock";
 
 my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 0, RaiseError => 1});
+                       { AutoCommit => 1, RaiseError => 1 });
 
 sub verify_and_save {
     my $game = shift;
 
     chdir $dir;
 
-    my ($read_id) = $write_id =~ /(.*?)_/g;
-    my $orig_content = get_game_content $read_id, $write_id;
+    my $orig_content = get_game_content $dbh, $read_id, $write_id;
 
     if (sha1_hex($orig_content) ne $orig_hash) {
         print STDERR "Concurrent modification [$orig_hash] [", sha1_hex($orig_content), "]";
@@ -49,7 +48,7 @@ sub verify_and_save {
     save $dbh, $write_id, $new_content, $game;
 }
 
-lockfile::lock $lockfile;
+begin_game_transaction $dbh, $read_id;
 
 my $res = terra_mystica::evaluate_game {
     rows => [ split /\n/, $new_content ],
@@ -65,7 +64,7 @@ if (!@{$res->{error}}) {
     }
 };
 
-lockfile::unlock $lockfile;
+finish_game_transaction $dbh;
 
 print "Content-type: text/json\r\n";
 print "Cache-Control: no-cache\r\n";

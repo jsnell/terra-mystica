@@ -19,13 +19,15 @@ sub add_user {
     my ($user, $email, $hashed_password) = @_;
 
     my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                           { AutoCommit => 0, RaiseError => 1});
+                           { AutoCommit => 1, RaiseError => 1});
 
+    $dbh->do('begin');
     $dbh->do('insert into player (username, password) values (?, ?)', {},
              $user, $hashed_password);
     $dbh->do('insert into email (address, player, validated) values (lower(?), ?, ?)',
              {}, $email, $user, 1);
-    $dbh->commit();
+    $dbh->do('commit');
+
     $dbh->disconnect();
 }
 

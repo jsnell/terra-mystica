@@ -12,7 +12,7 @@ use JSON;
 
 my $q = CGI->new;
 my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 0, RaiseError => 1});
+                       { AutoCommit => 1, RaiseError => 1});
 
 chdir dirname "$0";
 chdir "../../data/write";
@@ -53,6 +53,8 @@ eval {
     verify_key;
     if (defined $set_note) {
         $res{note} = $set_note;
+
+        $dbh->do('begin');
         my $res = $dbh->do(
             "delete from game_note where faction = ? and game = ?",
             {},

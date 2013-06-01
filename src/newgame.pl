@@ -6,7 +6,6 @@ use JSON;
 use POSIX qw(chdir);
 
 use create_game;
-use lockfile;
 use session;
 
 my $q = CGI->new;
@@ -19,11 +18,6 @@ if (!$username) {
     print "\r\n";
     exit;
 }
-
-my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 0 });
-
-my ($email) = $dbh->selectrow_array("select address from email where player = ? limit 1", {}, $username);
 
 my $gameid = $q->param('gameid');
 if (!$gameid) {
@@ -48,13 +42,18 @@ if ($gameid =~ /([^A-Za-z0-9])/) {
     error "Invalid character in game id '$1'";
 }
 
-if (-f "../../data/read/$gameid") {
+my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
+                       { AutoCommit => 1 });
+
+begin_game_transaction $dbh, $gameid;
+
+if (game_exists $dbh, $gameid) {
     error "Game $gameid already exists";
 }
 
+my ($email) = $dbh->selectrow_array("select address from email where player = ? limit 1", {}, $username);
+
 chdir "../../data";
-my $lockfile = lockfile::get "write/lock";
-lockfile::lock $lockfile;
 
 eval {
     my $write_id = create_game $dbh, $gameid, $email;
@@ -67,4 +66,4 @@ eval {
     error $@;
 }
 
-lockfile::unlock $lockfile;
+finish_game_transaction $dbh;

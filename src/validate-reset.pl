@@ -19,14 +19,17 @@ sub reset_password {
     my ($user, $email, $hashed_password) = @_;
 
     my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                           { AutoCommit => 0, RaiseError => 1});
+                           { AutoCommit => 1, RaiseError => 1});
+
+    $dbh->do('begin');
 
     $dbh->do('update player set password=? where username=?',
              {},
              $hashed_password,
              $user);
 
-    $dbh->commit();
+    $dbh->do('commit');
+
     $dbh->disconnect();
 }
 

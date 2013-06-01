@@ -21,7 +21,7 @@ $write_id =~ s{.*/}{};
 $write_id =~ s{[^A-Za-z0-9_]}{}g;
 
 my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 0, RaiseError => 1});
+                       { AutoCommit => 1, RaiseError => 1});
 
 my ($read_id) = $write_id =~ /(.*?)_/g;
 my $data = get_game_content $dbh, $read_id, $write_id;

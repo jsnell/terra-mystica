@@ -25,7 +25,7 @@ if ($username =~ /([^A-Za-z0-9._-])/) {
 
 if (!@error) {
     my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                           { AutoCommit => 0 });
+                           { AutoCommit => 1 });
 
     my ($username_in_use) = $dbh->selectrow_array("select count(*) from player where username = ?", {}, $username);
     my ($email_in_use) = $dbh->selectrow_array("select count(*) from email where address = ?", {}, $email);

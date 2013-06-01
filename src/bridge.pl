@@ -44,7 +44,7 @@ sub print_json {
 }
 
 my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 0, RaiseError => 1});
+                       { AutoCommit => 1, RaiseError => 1});
 
 if (game_exists $dbh, $id) {
     print "\r\n";

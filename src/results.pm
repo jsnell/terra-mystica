@@ -6,10 +6,12 @@ use File::Slurp qw(read_file);
 
 sub get_finished_game_results {
     my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                           { AutoCommit => 0, RaiseError => 1});
+                           { AutoCommit => 1, RaiseError => 1});
     my $secret = shift;
 
     my %res = ( error => '', results => [] );
+
+    $dbh->do('begin');
 
     # Filter out games by some dicks who are getting their kicks by
     # distorting the stats with ridiculous games.
@@ -36,7 +38,7 @@ sub get_finished_game_results {
         }
     }
 
-    $dbh->commit();
+    $dbh->do('commit');
 
     $dbh->disconnect();
 

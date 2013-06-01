@@ -13,7 +13,7 @@ my $username = $q->param('username');
 my $password = $q->param('password');
 
 my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 0 });
+                       { AutoCommit => 1 });
 
 my ($stored_password) = $dbh->selectrow_array("select password from player where username = ?", {}, $username);
 

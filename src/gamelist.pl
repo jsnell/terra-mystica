@@ -19,7 +19,7 @@ print "Connection: close\r\n";
 print "\r\n";
 
 my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 0, RaiseError => 1});
+                       { AutoCommit => 1, RaiseError => 1});
 my $q = CGI->new;
 my $mode = $q->param('mode') // 'all';
 my $status = $q->param('status') // 'running';

@@ -12,7 +12,7 @@ use indexgame;
 use tracker;
 
 my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 0, RaiseError => 1});
+                       { AutoCommit => 1, RaiseError => 1});
 
 sub evaluate_and_index_game {
     my ($id) = ($_[0] =~ m{([a-zA-Z0-9]+$)}g);
@@ -31,6 +31,10 @@ sub evaluate_and_index_game {
     index_game $dbh, $id, $write_id, $game, $timestamp;
 }
 
+$dbh->do('begin');
+
 for (@ARGV) {
     evaluate_and_index_game $_;
 }
+
+$dbh->do('commit');

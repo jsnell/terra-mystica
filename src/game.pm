@@ -39,4 +39,19 @@ sub get_game_commands {
     
 }
 
+sub begin_game_transaction {
+    my ($dbh, $id) = @_;
+    
+    $dbh->do("begin");
+    $dbh->do("select * from game where id=? for update",
+             {},
+             $id);
+}
+
+sub finish_game_transaction {
+    my ($dbh) = @_;
+    
+    $dbh->do("commit");
+}
+
 1;

@@ -25,8 +25,6 @@ sub save {
     eval {
         $dbh->do("update game set commands=? where id=?", {},
                  $new_content, $read_id);
-        $dbh->commit();
-        $dbh->disconnect();
     }; if ($@) {
         print "db error: $@";
     }
