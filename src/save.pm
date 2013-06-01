@@ -22,12 +22,8 @@ sub save {
     my ($read_id) = $id =~ /(.*?)_/g;
     index_game $dbh, $read_id, $id, $game;
 
-    eval {
-        $dbh->do("update game set commands=? where id=?", {},
-                 $new_content, $read_id);
-    }; if ($@) {
-        print "db error: $@";
-    }
+    $dbh->do("update game set commands=? where id=?", {},
+             $new_content, $read_id);
 }
 
 1;
