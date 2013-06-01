@@ -2,9 +2,10 @@
 
 use strict;
 use Digest::SHA1 qw(sha1_hex);
-use Fatal qw(open);
+use Fatal qw(chdir open);
 
 use indexgame;
+use save;
 
 sub create_game {
     my ($id, $admin) = @_;
@@ -20,25 +21,32 @@ sub create_game {
     }
 
     open my $writefd, ">", "$write";
-
-    print $writefd "# Game $id\n\n";
-
-    if ($admin) {
-        print $writefd "admin email $admin\n\n"
-    }
-
-    print $writefd "# List players (in any order) with 'player' command\n";
-
-    print $writefd "\n# Randomize setup\n";
-    print $writefd "randomize v1 seed $id\n";
-
     close $writefd;
-
     system("ln -s ../$write $read");
     system("git add $read $write > /dev/null");
     system("HOME=. git commit $read $write -m add > /dev/null");
 
+    my $opt_admin = "";
+    if ($admin) {
+        $opt_admin = "admin email $admin\n\n";
+    }
+
+    my $content = <<EOF;
+# Game $id
+
+$opt_admin
+# List players (in any order) with 'player' command
+
+# Randomize setup
+randomize v1 seed $id
+EOF
+ 
     my $write_id = "${id}_${hash}";
+
+    index_game $id, $write_id, {};
+
+    chdir "write";
+    save $write_id, $content;
 
     if ($admin) {
         index_game $id, $write_id, { admin => $admin };

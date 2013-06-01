@@ -6,6 +6,7 @@ use JSON;
 use POSIX qw(chdir);
 
 use create_game;
+use lockfile;
 use session;
 
 my $q = CGI->new;
@@ -52,6 +53,9 @@ if (-f "../../data/read/$gameid") {
 }
 
 chdir "../../data";
+my $lockfile = lockfile::get "lock";
+lockfile::lock $lockfile;
+
 eval {
     my $write_id = create_game $gameid, $email;
 
@@ -62,3 +66,5 @@ eval {
 }; if ($@) {
     error $@;
 }
+
+lockfile::unlock $lockfile;
