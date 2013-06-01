@@ -31,9 +31,11 @@ sub verify_key {
                                  -cipher => 'Blowfish');
     my $data = $cipher->decrypt(pack "h*", $faction_key);
     my $game_secret = unpack("h*", $data ^ $faction_name);
+
     my $write_id = "${id}_$game_secret";
-    die "Invalid faction key\n" if
-        $write_id =~ /[^a-zA-z0-9_]/ or !(-f $write_id);
+    my $valid = $dbh->selectrow_array("select count(*) from game where write_id=?", {}, $write_id);
+
+    die "Invalid faction key\n" if !$valid;
 }
 
 print "Content-type: text/json\r\n";
