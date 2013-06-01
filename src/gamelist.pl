@@ -2,8 +2,6 @@
 
 use strict;
 
-use exec_timer;
-
 use CGI qw(:cgi);
 use DBI;
 use JSON;
