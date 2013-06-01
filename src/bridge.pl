@@ -1,14 +1,8 @@
 #!/usr/bin/perl -w
 
-use POSIX qw(chdir);
 use CGI qw(:cgi);
 use DBI;
-use Fatal qw(chdir open);
-use File::Basename qw(dirname);
-use File::Slurp;
 use JSON;
-
-chdir dirname $0;
 
 use exec_timer;
 use game;

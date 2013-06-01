@@ -3,12 +3,7 @@
 use CGI qw(:cgi);
 use DBI;
 use Digest::SHA1 qw(sha1_hex);
-use Fatal qw(chdir open);
-use File::Basename qw(dirname);
-use File::Slurp;
 use JSON;
-
-BEGIN { chdir dirname $0 };
 
 use editlink;
 use game;

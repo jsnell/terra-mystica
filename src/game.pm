@@ -1,8 +1,6 @@
 #!/usr/bin/perl -w
 
 use strict;
-use Digest::SHA1 qw(sha1_hex);
-use Fatal qw(chdir open);
 
 use indexgame;
 use save;

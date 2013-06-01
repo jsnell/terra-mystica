@@ -5,7 +5,7 @@ use strict;
 use CGI qw(:cgi);
 use Crypt::CBC;
 use DBI;
-use Fatal qw(chdir open);
+use Fatal qw(chdir);
 use File::Basename qw(dirname);
 use JSON;
 

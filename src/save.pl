@@ -7,7 +7,6 @@ use DBI;
 use Digest::SHA1  qw(sha1_hex);
 use Fatal qw(chdir open);
 use File::Basename qw(dirname);
-use File::Slurp;
 use JSON;
 
 chdir dirname $0;

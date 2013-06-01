@@ -5,9 +5,6 @@ use strict;
 use CGI qw(:cgi);
 use Crypt::CBC;
 use DBI;
-use Fatal qw(chdir open);
-use File::Basename qw(dirname);
-use File::Slurp;
 use JSON;
 
 use secret;
@@ -15,9 +12,6 @@ use secret;
 my $q = CGI->new;
 my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
                        { AutoCommit => 1, RaiseError => 1});
-
-chdir dirname "$0";
-chdir "../../data/write";
 
 my $id = $q->param('game');
 $id =~ s{.*/}{};
