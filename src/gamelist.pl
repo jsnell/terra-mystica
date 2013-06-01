@@ -59,7 +59,8 @@ if ($mode eq 'all') {
         }
     } @{$ids[0]};
 } elsif ($mode eq 'user' or $mode eq 'admin') {
-    my $user = username_from_session_token $q->cookie('session-token') // '';
+    my $user = username_from_session_token($dbh,
+                                           $q->cookie('session-token') // '');
     if (!defined $user) {
         $res{error} = "Not logged in <a href='/login/'>(login)</a>"
     } else {

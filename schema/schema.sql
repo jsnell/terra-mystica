@@ -46,3 +46,10 @@ create table game_note (
     note text,
     primary key (game, faction)
 );
+
+create table secret (
+    secret bytea,
+    shared_iv bytea,
+    primary key (secret)
+);
+

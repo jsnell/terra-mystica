@@ -110,6 +110,7 @@ sub deploy_cgi {
                   rlimit.pm
                   save.pm
                   scoring.pm
+                  secret.pm
                   session.pm
                   tiles.pm
                   towns.pm

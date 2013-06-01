@@ -1,13 +1,12 @@
 use strict;
 
 use Crypt::CBC;
-use File::Slurp qw(read_file);
-
-my $secret = read_file("../../data/secret");
-my $iv = read_file("../../data/iv");
+use secret;
 
 sub edit_link_for_faction {
     my ($id, $faction_name) = @_;
+
+    my ($secret, $iv) = get_secret;
 
     my ($game, $game_secret) = ($id =~ /(.*?)_(.*)/g);
     $game_secret = pack "h*", $game_secret;

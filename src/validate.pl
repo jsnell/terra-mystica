@@ -4,7 +4,8 @@ use CGI qw(:cgi);
 use Crypt::CBC;
 use Crypt::Eksblowfish::Bcrypt qw(de_base64);
 use DBI;
-use File::Slurp qw(read_file);
+
+use secret;
 
 print "Content-type: text/html\r\n";
 print "Cache-Control: no-cache\r\n";
@@ -32,7 +33,7 @@ sub add_user {
 }
 
 sub check_token {
-    my $secret = read_file("../../data/secret");
+    my ($secret, $iv) = get_secret;
 
     my $cipher = Crypt::CBC->new(-key => $secret,
                                  -blocksize => 8,

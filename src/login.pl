@@ -31,7 +31,7 @@ if (!$stored_password) {
 }
 
 if ($match) {
-    my $token = session_token $username, sprintf "%08x", rand 2**32;
+    my $token = session_token $dbh, $username, sprintf "%08x", rand 2**32;
     my $y = 86400*365;
     print "Status: 303\r\n";
     print "Set-Cookie: session-username=$username; Path=/; Max-Age=$y\r\n";

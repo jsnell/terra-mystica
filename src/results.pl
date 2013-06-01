@@ -9,12 +9,13 @@ use JSON;
 
 use rlimit;
 use results;
+use secret;
 
 print "Content-type: text/javascript\r\n";
 print "Cache-Control: no-cache\r\n";
 print "\r\n";
 
-my $secret = read_file("../../data/secret");
+my $secret = get_secret;
 
 my %res = get_finished_game_results $secret;
 

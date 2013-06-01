@@ -10,6 +10,8 @@ use File::Basename qw(dirname);
 use File::Slurp;
 use JSON;
 
+use secret;
+
 my $q = CGI->new;
 my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
                        { AutoCommit => 1, RaiseError => 1});
@@ -26,8 +28,7 @@ my $faction_key = $q->param('faction-key');
 my $set_note = $q->param('set-note');
 
 sub verify_key {
-    my $secret = read_file("../secret");
-    my $iv = read_file("../iv");
+    my ($secret, $iv) = get_secret $dbh;
 
     my $cipher = Crypt::CBC->new(-key => $secret,
                                  -blocksize => 8,
@@ -66,7 +67,7 @@ eval {
             $faction_name,
             $id,
             $set_note);
-        $dbh->commit();
+        $dbh->do('commit');
     } else {
         my $rows = $dbh->selectall_arrayref(
             "select note from game_note where faction = ? and game = ?",

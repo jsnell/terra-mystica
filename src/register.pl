@@ -8,6 +8,8 @@ use File::Slurp qw(read_file);
 use JSON;
 use Net::SMTP;
 
+use secret;
+
 print "Content-type: text/javascript\r\n";
 print "Cache-Control: no-cache\r\n";
 print "\r\n";
@@ -23,10 +25,10 @@ if ($username =~ /([^A-Za-z0-9._-])/) {
     push @error, "Invalid character in username '$1'"
 }
 
-if (!@error) {
-    my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                           { AutoCommit => 1 });
+my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
+                       { AutoCommit => 1 });
 
+if (!@error) {
     my ($username_in_use) = $dbh->selectrow_array("select count(*) from player where username = ?", {}, $username);
     my ($email_in_use) = $dbh->selectrow_array("select count(*) from email where address = ?", {}, $email);
 
@@ -40,7 +42,7 @@ if (!@error) {
 }
 
 if (!@error) {
-    my $secret = read_file("../../data/secret");
+    my $secret = get_secret $dbh;
 
     my $salt = en_base64 (join '', map { chr int rand 256} 1..16);
     my $hashed_password = bcrypt($password, 

@@ -1,4 +1,4 @@
-!/usr/bin/perl -w
+#!/usr/bin/perl -w
 
 use CGI qw(:cgi);
 use DBI;
@@ -6,11 +6,17 @@ use JSON;
 use POSIX qw(chdir);
 
 use create_game;
+use game;
 use session;
 
 my $q = CGI->new;
 
-my $username = username_from_session_token $q->cookie('session-token') // '';
+my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
+                       { AutoCommit => 1 });
+
+my $username = username_from_session_token($dbh,
+                                           $q->cookie('session-token') // '');
+
 if (!$username) {
     print "Status: 303\r\n";
     print "Location: /login/#required\r\n";
@@ -41,9 +47,6 @@ sub error {
 if ($gameid =~ /([^A-Za-z0-9])/) {
     error "Invalid character in game id '$1'";
 }
-
-my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 1 });
 
 begin_game_transaction $dbh, $gameid;
 

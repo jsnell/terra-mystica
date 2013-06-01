@@ -7,7 +7,6 @@ use Crypt::CBC;
 use DBI;
 use Fatal qw(chdir open);
 use File::Basename qw(dirname);
-use File::Slurp;
 use JSON;
 
 chdir dirname $0;
@@ -17,6 +16,7 @@ use game;
 use indexgame;
 use rlimit;
 use save;
+use secret;
 use tracker;
 
 my $q = CGI->new;
@@ -52,8 +52,7 @@ my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
                        { AutoCommit => 1, RaiseError => 1});
 
 sub verify_key {
-    my $secret = read_file("../secret");
-    my $iv = read_file("../iv");
+    my ($secret, $iv) = get_secret $dbh;
 
     my $cipher = Crypt::CBC->new(-key => $secret,
                                  -blocksize => 8,
