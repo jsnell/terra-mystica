@@ -4,9 +4,9 @@ use Crypt::CBC;
 use secret;
 
 sub edit_link_for_faction {
-    my ($id, $faction_name) = @_;
+    my ($dbh, $id, $faction_name) = @_;
 
-    my ($secret, $iv) = get_secret;
+    my ($secret, $iv) = get_secret $dbh;
 
     my ($game, $game_secret) = ($id =~ /(.*?)_(.*)/g);
     $game_secret = pack "h*", $game_secret;

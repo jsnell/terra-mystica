@@ -42,7 +42,7 @@ sub role_link {
     if ($role eq 'admin') {
         "/edit/$write_id";
     } else {
-        edit_link_for_faction $write_id, $role;
+        edit_link_for_faction $dbh, $write_id, $role;
     }
 }
 

@@ -29,7 +29,7 @@ my $data = get_game_content $dbh, $read_id, $write_id;
 my $res = terra_mystica::evaluate_game { rows => [ split /\n/, $data ] };
 
 for my $faction (values %{$res->{factions}}) {
-    $faction->{edit_link} = edit_link_for_faction $write_id, $faction->{name};
+    $faction->{edit_link} = edit_link_for_faction $dbh, $write_id, $faction->{name};
 }
 
 my $out = encode_json {
