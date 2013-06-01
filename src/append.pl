@@ -31,11 +31,9 @@ if ($q->request_method eq "OPTIONS") {
 my $read_id = $q->param('game');
 $read_id =~ s{.*/}{};
 $read_id =~ s{[^A-Za-z0-9_]}{}g;
-my $write_id;
 
 my $faction_name = $q->param('preview-faction');
 my $faction_key = $q->param('faction-key');
-my $new_content = "";
 
 my $preview = $q->param('preview');
 my $append = '';
@@ -64,16 +62,7 @@ sub verify_key {
                                  -cipher => 'Blowfish');
     my $data = $cipher->decrypt(pack "h*", $faction_key);
     my $game_secret = unpack("h*", $data ^ $faction_name);
-    $write_id = "${read_id}_$game_secret";
-
-    $new_content = get_game_content $dbh, $read_id, $write_id;
-    chomp $new_content;
-    $new_content .= "\n";
-
-    chomp $append;
-    $append .= "\n";
-
-    $new_content .= $append;
+    return "${read_id}_$game_secret";
 }
 
 print "Content-type: text/json\r\n";
@@ -84,14 +73,25 @@ print "\r\n";
 
 begin_game_transaction $dbh, $read_id;
 
+my $write_id;
 eval {
-    verify_key;
+    $write_id = verify_key;
 }; if ($@) {
     print encode_json {
         error => [ $@ ],
     };
     exit;
 };
+
+
+my $new_content = get_game_content $dbh, $read_id, $write_id;
+chomp $new_content;
+$new_content .= "\n";
+
+chomp $append;
+$append .= "\n";
+
+$new_content .= $append;
 
 my $res = terra_mystica::evaluate_game {
     rows => [ split /\n/, $new_content ],
