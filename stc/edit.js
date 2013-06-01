@@ -87,7 +87,11 @@ function save() {
 }
 
 function load() {
-    new Ajax.Request("/cgi-bin/edit.pl?game=" + id, {
+    new Ajax.Request("/cgi-bin/edit.pl", {
+        parameters: {
+            "game": id,
+            "cache-token": new Date() - Math.random()
+        },
         method:"get",
         onFailure: function(transport) {
             $("error").innerHTML = "Error opening game."
