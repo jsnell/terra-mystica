@@ -1078,6 +1078,10 @@ sub maybe_advance_to_next_player {
         return "";
     }
 
+    if ($factions{$faction_name}{planning}) {
+        return "";
+    }
+
     push @action_required, @extra_action_required;
 
     if (@extra_action_required) {
