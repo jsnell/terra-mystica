@@ -450,9 +450,16 @@ sub command_bridge {
 
     require_subaction $faction, 'bridge', {};
 
-    if (!$allow_illegal and !$map{$from}{bridgable}{$to}) {
-        die "Can't build bridge from $from to $to\n";
+    if (!$allow_illegal) {
+        if ($faction->{BRIDGE_COUNT} == 0) {
+            die "All 3 bridges already placed";
+        }
+        if (!$map{$from}{bridgable}{$to}) {
+            die "Can't build bridge from $from to $to\n";
+        }
     }
+
+    $faction->{BRIDGE_COUNT}--;
 
     $map{$from}{adjacent}{$to} = 1;
     $map{$to}{adjacent}{$from} = 1;

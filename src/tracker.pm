@@ -67,6 +67,7 @@ sub finalize {
         delete $faction->{allowed_sub_actions};
         delete $faction->{locations};
         delete $faction->{teleport};
+        delete $faction->{BRIDGE_COUNT};
         if ($round == 6) {
             delete $faction->{income};
             delete $faction->{income_breakdown};

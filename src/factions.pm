@@ -555,6 +555,7 @@ sub setup {
 
     $faction->{SPADE} = 0;
     $faction->{TOWN_SIZE} = 7;
+    $faction->{BRIDGE_COUNT} = 3;
 
     push @factions, $faction_name;
 
