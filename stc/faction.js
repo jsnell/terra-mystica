@@ -70,7 +70,8 @@ function previewOrSave(save, preview_data, prefix_data) {
                 } else {
                     $("preview_status").innerHTML = "Executed the following commands for " + currentFaction;
                     if (state.email) {
-                        $("move_entry").update(new Element("a", {"href": makeMailToLink()}).update("Send email"));
+                        $("move_entry").update("<br>");
+                        $("move_entry").insert(new Element("a", {"href": makeMailToLink()}).update("Send email"));
                     } else {
                         $("move_entry").innerHTML = "";
                     }
