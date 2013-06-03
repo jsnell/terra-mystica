@@ -515,7 +515,11 @@ sub command_pass {
             shift @setup_order;
         }
 
-        adjust_resource $faction, $bon, 1;
+        if ($round == 6) {
+            push @warn, "Can't take a bonus tile when passing on last round\n";
+        } else {
+            adjust_resource $faction, $bon, 1;
+        }
     } elsif ($round != 6) {
         die "Must take a bonus tile when passing (except on last round)\n"
     }
