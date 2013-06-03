@@ -2,6 +2,8 @@
 
 use strict;
 use warnings;
+
+use DBI;
 use File::Basename qw(dirname);
 use JSON;
 use Text::Diff qw(diff);
@@ -32,10 +34,19 @@ sub convert_ledger {
     return [ map { [ $_->{commands} || $_->{comment}, $_->{warning}] } @{$data} ];        
 }
 
-for (@ARGV) {
-    print "Evaluating $_";
-    my $a = pretty_res $dir1, $_;
-    my $b = pretty_res $dir2, $_;
+my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
+                       { AutoCommit => 1, RaiseError => 1});
+
+my $games = $dbh->selectall_arrayref("select id, write_id, extract(epoch from last_update) from game where id like ?",
+                                     {},
+                                     shift || '%');
+
+for (@{$games}) {
+    my $id = $_->[0];
+
+    print "Evaluating $id";
+    my $a = pretty_res $dir1, $id;
+    my $b = pretty_res $dir2, $id;
 
     for my $key (keys %{$a}) {
         my $aa = $a->{$key};

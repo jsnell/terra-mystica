@@ -33,8 +33,7 @@ sub get_game_content {
 }
 
 sub get_game_commands {
-    split /\n/, get_game_content @_;
-    
+    split /\n/, get_game_content @_;    
 }
 
 sub begin_game_transaction {
