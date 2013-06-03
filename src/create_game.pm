@@ -2,8 +2,8 @@
 
 use strict;
 use Digest::SHA1 qw(sha1_hex);
-use Fatal qw(chdir open);
 
+use game;
 use indexgame;
 use save;
 
@@ -16,15 +16,9 @@ sub create_game {
     my $write = "write/${id}_$hash";
     my $read = "read/$id";
 
-    if (-f $read) {
+    if (game_exists $dbh, $id) {
         die "Game $id already exists\n";
     }
-
-    open my $writefd, ">", "$write";
-    close $writefd;
-    system("ln -s ../$write $read");
-    system("git add $read $write > /dev/null");
-    system("HOME=. git commit $read $write -m add > /dev/null");
 
     my $opt_admin = "";
     if ($admin) {
@@ -44,7 +38,6 @@ EOF
     my $write_id = "${id}_${hash}";
     my $game = $admin ? { admin => $admin } : {};
 
-    chdir "write";
     save $dbh, $write_id, $content, $game;
 
     return $write_id;

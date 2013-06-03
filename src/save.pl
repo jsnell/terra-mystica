@@ -5,11 +5,7 @@ use strict;
 use CGI qw(:cgi);
 use DBI;
 use Digest::SHA1  qw(sha1_hex);
-use Fatal qw(chdir open);
-use File::Basename qw(dirname);
 use JSON;
-
-chdir dirname $0;
 
 use exec_timer;
 use game;
@@ -27,15 +23,11 @@ my ($read_id) = $write_id =~ /(.*?)_/g;
 my $orig_hash = $q->param('orig-hash');
 my $new_content = $q->param('content');
 
-my $dir = "../../data/write/";
-
 my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
                        { AutoCommit => 1, RaiseError => 1 });
 
 sub verify_and_save {
     my $game = shift;
-
-    chdir $dir;
 
     my $orig_content = get_game_content $dbh, $read_id, $write_id;
 

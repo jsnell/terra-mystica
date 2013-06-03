@@ -3,7 +3,6 @@
 use CGI qw(:cgi);
 use Crypt::Eksblowfish::Bcrypt qw(bcrypt en_base64);
 use DBI;
-use File::Basename qw(dirname);
 
 use rlimit;
 use session;

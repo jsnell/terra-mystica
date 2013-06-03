@@ -5,11 +5,7 @@ use strict;
 use CGI qw(:cgi);
 use Crypt::CBC;
 use DBI;
-use Fatal qw(chdir);
-use File::Basename qw(dirname);
 use JSON;
-
-chdir dirname $0;
 
 use exec_timer;
 use game;
@@ -44,9 +40,6 @@ if ($faction_name =~ /^player/) {
 } else {
     $append = join "\n", (map { "$faction_name: $_" } grep { /\S/ } split /\n/, $preview);
 }
-
-my $dir = "../../data/write/";
-chdir $dir;
 
 my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
                        { AutoCommit => 1, RaiseError => 1});

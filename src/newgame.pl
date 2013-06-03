@@ -3,7 +3,6 @@
 use CGI qw(:cgi);
 use DBI;
 use JSON;
-use POSIX qw(chdir);
 
 use create_game;
 use game;
@@ -55,8 +54,6 @@ if (game_exists $dbh, $gameid) {
 }
 
 my ($email) = $dbh->selectrow_array("select address from email where player = ? limit 1", {}, $username);
-
-chdir "../../data";
 
 eval {
     my $write_id = create_game $dbh, $gameid, $email;
