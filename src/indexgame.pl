@@ -8,6 +8,7 @@ use File::Basename;
 
 BEGIN { push @INC, dirname $0 }
 
+use game;
 use indexgame;
 use tracker;
 
@@ -15,26 +16,29 @@ my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
                        { AutoCommit => 1, RaiseError => 1});
 
 sub evaluate_and_index_game {
-    my ($id) = ($_[0] =~ m{([a-zA-Z0-9]+$)}g);
-    die "invalid id $_[0]" if !$id;
+    my ($id, $write_id, $timestamp) = @_;
 
-    die "Manual indexing currently unsupported";
+    print "$id\n";
 
-    my @rows = read_file "data/read/$id";
+    begin_game_transaction $dbh, $id;
+
+    my @rows = get_game_commands $dbh, $id, $write_id;
+
     my $game = terra_mystica::evaluate_game {
         rows => [ @rows ],
         delete_email => 0
     };
-    my $write_id = glob "data/write/${id}_*";
-    $write_id =~ s{.*/}{};
-    my $timestamp = (stat "data/read/$id")[9];
+
     index_game $dbh, $id, $write_id, $game, $timestamp;
+
+    finish_game_transaction $dbh;
 }
 
-$dbh->do('begin');
+my $games = $dbh->selectall_arrayref("select id, write_id, extract(epoch from last_update) from game where id like ?",
+                                     {},
+                                     shift || '%');
 
-for (@ARGV) {
-    evaluate_and_index_game $_;
+for (@{$games}) {
+    evaluate_and_index_game @{$_};
 }
 
-$dbh->do('commit');
