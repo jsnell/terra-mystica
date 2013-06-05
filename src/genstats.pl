@@ -38,6 +38,7 @@ sub record_stats {
     $stat->{average_vp} += $_->{vp};
     $stat->{average_winner_vp} += $win_vp;
     $stat->{average_position} += $pos;    
+    $stat->{expected_wins} += 1/$faction_count;
 }
 
 sub handle_game {
@@ -111,6 +112,7 @@ for (values %games) {
 
 for my $stat (values %{$stats{factions}}) {
     $stat->{win_rate} = int(100 * $stat->{wins} / $stat->{count});
+    $stat->{expected_win_rate} = int(100 * $stat->{expected_wins} / $stat->{count});
     $stat->{average_loss_vp} = sprintf "%5.2f", ($stat->{average_winner_vp} - $stat->{average_vp}) / $stat->{count};
     $stat->{average_vp} = sprintf "%5.2f", $stat->{average_vp} / $stat->{count};
     $stat->{average_position} = sprintf "%5.2f", $stat->{average_position} / $stat->{count};
@@ -124,6 +126,7 @@ for (3..5) {
     for my $stat (values %{$stats{"positions-${_}p"}}) {
         next if !$stat->{count};
         $stat->{win_rate} = int(100 * $stat->{wins} / $stat->{count});
+        $stat->{expected_win_rate} = int(100 * $stat->{expected_wins} / $stat->{count});
         $stat->{average_loss_vp} = sprintf "%5.2f", ($stat->{average_winner_vp} - $stat->{average_vp}) / $stat->{count};
         $stat->{average_vp} = sprintf "%5.2f", $stat->{average_vp} / $stat->{count};
         $stat->{average_position} = sprintf "%5.2f", $stat->{average_position} / $stat->{count};
