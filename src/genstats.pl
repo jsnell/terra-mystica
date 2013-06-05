@@ -50,6 +50,15 @@ sub handle_game {
 
     return if $faction_count < 3;
 
+    my %player_ids = ();
+ 
+    for (values %{$res->{factions}}) {
+        next if !$_->{id_hash};
+        if ($player_ids{$_->{id_hash}}++) {
+            return;
+        }
+    }
+
     for (sort { $b->{vp} <=> $a->{vp} } values %{$res->{factions}}) {
         $pos++;
         if ($pos == 1) {
