@@ -57,6 +57,7 @@ sub index_game {
             } else {
                 $_->{rank} = $pos;
             }
+            $prev = $_;
         }
     }
 
