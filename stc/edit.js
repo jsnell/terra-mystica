@@ -1,5 +1,5 @@
 var fallback = true;
-var id = document.location.pathname;
+var id = document.location.pathname.sub(/\/edit\//, "");
 var editor = null;
 
 // From JQuery
@@ -105,8 +105,17 @@ function load() {
 
                 drawActionRequired(res);
 
+                $("links").innerHTML = "<h4>Game links</h4>";
+                { 
+                    var read_id = id.sub(/_.*/, '');
+                    var div = new Element("div", {"style": "margin-left: 20px" });
+                    var link = new Element("a", {"href": "/game/" + read_id });
+                    link.update("Public view");
+                    div.insert(link);
+                    $("links").insert(div);
+                }
+
                 if (res.factions) {
-                    $("links").innerHTML = "<h4>Edit links</h4>";
                     $H(res.factions).each(function (elem) {
                         var div = new Element("div", {"style": "margin-left: 20px" });
                         var link = new Element("a", {"href": elem.value.edit_link});
