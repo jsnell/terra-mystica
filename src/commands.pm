@@ -385,6 +385,10 @@ sub command_transform {
     my ($faction, $where, $color) = @_;
     my $faction_name = $faction->{name};
 
+    if ($map{$where}{color} eq $color) {
+        die "Can't transform $where, it already is $color\n"
+    }
+
     check_reachable $faction, $where;
 
     if ($map{$where}{building}) {
