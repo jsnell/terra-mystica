@@ -811,12 +811,14 @@ sub command {
     } elsif ($command =~ /^setup (\w+)(?: for (\S+?))?(?: email (\S+))?$/i) {
         setup lc $1, $2, $3;
     } elsif ($command =~ /delete (\w+)$/i) {
+        my $x = ($faction ? $faction : \%pool);
+
         my $name = uc $1;
         push @ledger, { comment => "Removing tile $name" };
-        if ($pool{$name} <= 1) {
-            delete $pool{$name};
+        if ($x->{$name} <= 1) {
+            delete $x->{$name};
         } else {
-            $pool{$name}--;
+            $x->{$name}--;
         }
     } elsif ($command =~ /^income$/i) {
         return 0 if non_leech_action_required;
