@@ -30,6 +30,7 @@ sub allow_full_move {
     $active_faction = $faction->{name};
     $faction->{allowed_actions} = 1;
     $faction->{allowed_sub_actions} = {};
+    delete $faction->{TELEPORT_TO};
 }
 
 sub require_subaction {
@@ -161,7 +162,11 @@ sub command_build {
         die "Transforming terrain forbidden during this action\n"
             if $map{$where}{color} ne $color;
     } else {
-        command $faction_name, "transform $where to $color";
+        if ($map{$where}{color} eq $color) {
+            check_reachable $faction, $where;
+        } else {
+            command $faction_name, "transform $where to $color";
+        }
     }
 
     require_subaction $faction, 'build', {};

@@ -183,6 +183,14 @@ sub check_reachable {
         }
     }
 
+    if ($faction->{TELEPORT_TO}) {
+        if ($faction->{TELEPORT_TO} eq $where) {
+            return;
+        } else {
+            die "Can't use tunnel / carpet flight multiple times in one round\n"
+        }
+    }
+
     if ($faction->{teleport} and !$faction->{passed}) {
         my $t = $faction->{teleport};
         my $level = $t->{level};
@@ -192,6 +200,7 @@ sub check_reachable {
         for my $loc (@{$faction->{locations}}) {
             if (exists $map{$where}{range}{0}{$loc} and 
                 $map{$where}{range}{0}{$loc} <= $range) {
+                $faction->{TELEPORT_TO} = $where;
                 my $cost = $t->{cost}[$level];
                 my $gain = $t->{gain}[$level];
                 pay($faction, $cost);
