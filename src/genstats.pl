@@ -52,10 +52,52 @@ sub handle_game {
     return if $faction_count < 3;
 
     my %player_ids = ();
- 
+
     for (values %{$res->{factions}}) {
         next if !$_->{id_hash};
+        # Filter out games with same player playing multiple factions
         if ($player_ids{$_->{id_hash}}++) {
+            return;
+        }
+    }
+
+    # Filter out games with no players with an email address
+    if (!keys %player_ids) {
+        # Whitelist some old PBF games, etc.
+        my %whitelist = map { ($_, 1 ) } qw(
+            0627puyo
+            10
+            17
+            19
+            20
+            23
+            24
+            26
+            27
+            5
+            8
+            9
+            BlaGame11
+            BlaGame8
+            IBGPBF5
+            Noerrorpls
+            gamecepet
+            gareth2
+            nyobagame
+            pbc1
+            pbc2
+            pbc3
+            skelly1
+            skelly1a
+            skelly1b
+            skelly1c
+            skelly1d
+            skelly1e
+            skelly1f
+            verandi1
+            verandi2
+        );
+        if (!$whitelist{$res->{id}}) {
             return;
         }
     }
