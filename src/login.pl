@@ -8,15 +8,15 @@ use rlimit;
 use session;
 
 my $q = CGI->new;
-my $username = $q->param('username');
+my $form_username = $q->param('username');
 my $password = $q->param('password');
 
 my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
                        { AutoCommit => 1 });
 
-my ($stored_password) = $dbh->selectrow_array("select password from player where username = ?", {}, $username);
+print STDERR "login: $form_username\n";
 
-print STDERR "login: $username\n";
+my ($stored_password, $username) = $dbh->selectrow_array("select password, username from player where lower(username) = lower(?)", {}, $form_username);
 
 my $match = 0;
 

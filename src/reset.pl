@@ -24,7 +24,7 @@ my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
                        { AutoCommit => 1 });
 
 if (!@error) {
-    $username = $dbh->selectrow_array("select player from email where address = ?", {}, $email);
+    $username = $dbh->selectrow_array("select player from email where address = lower(?)", {}, $email);
 
     if (!$username) {
         push @error, "The email address is not registered";

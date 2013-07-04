@@ -28,8 +28,8 @@ my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
                        { AutoCommit => 1 });
 
 if (!@error) {
-    my ($username_in_use) = $dbh->selectrow_array("select count(*) from player where username = ?", {}, $username);
-    my ($email_in_use) = $dbh->selectrow_array("select count(*) from email where address = ?", {}, $email);
+    my ($username_in_use) = $dbh->selectrow_array("select count(*) from player where lower(username) = lower(?)", {}, $username);
+    my ($email_in_use) = $dbh->selectrow_array("select count(*) from email where lower(address) = lower(?)", {}, $email);
 
     if ($username_in_use) {
         push @error, "The username is already in use";
