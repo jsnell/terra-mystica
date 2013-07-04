@@ -2,12 +2,14 @@ create table player (
   username text primary key,
   password text
 );
+create unique index player_username_lowercase_idx on player(lower(username));
 
 create table email (
   address text unique,
   player text references player (username),
   validated boolean
 );
+create unique index email_address_lowercase_idx on email(lower(address));
 
 create table game (
     id text primary key,
