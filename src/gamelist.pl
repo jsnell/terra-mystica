@@ -56,9 +56,13 @@ if ($mode eq 'all') {
           round => $_->[2],
         }
     } @{$ids[0]};
-} elsif ($mode eq 'user' or $mode eq 'admin') {
+} elsif ($mode eq 'user' or $mode eq 'admin' or $mode eq 'other-user') {
     my $user = username_from_session_token($dbh,
                                            $q->cookie('session-token') // '');
+    if ($mode eq 'other-user') {
+        $user = $q->param("args");
+    }
+
     if (!defined $user) {
         $res{error} = "Not logged in <a href='/login/'>(login)</a>"
     } else {
@@ -68,7 +72,7 @@ if ($mode eq 'all') {
         add_sorted map {
             { id => $_->[0],
               role => $_->[1],
-              link => role_link(@{$_}),
+              link => ($mode eq 'other-user' ? "/game/$_->[0]" : role_link(@{$_})),
               finished => $_->[3] ? 1 : 0,
               action_required => $_->[4] || $_->[9] || 0,
               seconds_since_update => $_->[5],

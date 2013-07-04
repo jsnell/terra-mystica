@@ -145,6 +145,7 @@ sub deploy_html {
                   index.html
                   login.html
                   newgame.html
+                  player.html
                   register.html
                   reset.html
                   stats.html)) {

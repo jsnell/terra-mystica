@@ -30,10 +30,14 @@ function setFavicon(url) {
     icon.parentNode.replaceChild(new_icon, icon);
 }
 
-function fetchGames(div, mode, status, handler) {
+function fetchGames(div, mode, status, handler, args) {
     $(div).update("... loading");
     new Ajax.Request("/cgi-bin/gamelist.pl", {
-        parameters: { "mode": mode, "status": status },
+        parameters: {
+            "mode": mode,
+            "status": status,
+            "args": args
+        },
         method:"get",
         onSuccess: function(transport){
             var resp = transport.responseText.evalJSON();
