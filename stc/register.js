@@ -30,7 +30,7 @@ function register() {
             onSuccess: function(transport) {
                 state = transport.responseText.evalJSON();
                 if (state.error.length) {
-                    $("error").innerHTML = state.error.join("\n");
+                    $("error").innerHTML = state.error.join("<br>");
                 } else {
                     $("validate").style.display = "block";
                     $("usage").style.display = "none";
