@@ -764,7 +764,7 @@ function drawFactions() {
         name = name;
         var faction = state.factions[name];
         var color = faction.color;
-        var title = faction.display;
+        var title = factionDisplayName(faction);
 
         var style ='float: left; margin-right: 20px; ';
         if (faction.passed) {
@@ -1012,9 +1012,17 @@ function coloredFactionSpan(faction_name) {
     record = {};
     record.bg = colors[state.factions[faction_name].color];
     record.fg = (record.bg == '#000000' ? '#ccc' : '#000');
-    record.display = state.factions[faction_name].display;
+    record.display = factionDisplayName(state.factions[faction_name]);
 
     return "<span style='background-color:#{bg}; color: #{fg}'>#{display}</span>".interpolate(record);
+}
+
+function factionDisplayName(faction, fg) {
+    if (faction.registered) {
+        return "#{name} (<a style='color: inherit' href='/player/#{player}'>#{player}</a>)".interpolate(faction);
+    } else {
+        return "#{name} (#{player})".interpolate(faction);
+    }
 }
 
 var allowSaving = false;

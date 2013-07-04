@@ -36,6 +36,22 @@ sub get_game_commands {
     split /\n/, get_game_content @_;    
 }
 
+sub get_game_players {
+    my ($dbh, $id) = @_;
+
+    my ($rows) =
+        $dbh->selectall_arrayref("select player, faction from email inner join game_role on game_role.email=email.address where game=?",
+                                 {},
+                                 $id);
+
+    my %players = ();
+    for (@{$rows}) {
+        $players{$_->[1]} = $_->[0];
+    }
+
+    \%players;
+}
+
 sub begin_game_transaction {
     my ($dbh, $id) = @_;
     

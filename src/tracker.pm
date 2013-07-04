@@ -17,7 +17,7 @@ use tiles;
 use towns;
 
 sub finalize {
-    my $delete_email = shift;
+    my ($delete_email, $faction_info) = @_;
 
     my $spade_seen = 0;
 
@@ -51,6 +51,13 @@ sub finalize {
             @action_required = ({ type => 'planning',
                                   faction => $faction->{name}});
         }
+        if (exists $faction_info->{$faction->{name}}) {
+            $faction->{player} = $faction_info->{$faction->{name}};
+            $faction->{registered} = 1;
+        } else {
+            $faction->{registered} = 0;
+        }
+        $faction->{display} .= " ($faction->{player})";
     }
 
     for my $faction_name (@factions) {
@@ -143,6 +150,7 @@ sub evaluate_game {
     setup_cults;
 
     my $data = shift;
+    my $faction_info = $data->{players};
     my $row = 1;
     my @error = ();
     my $history_view = 0;
@@ -173,7 +181,7 @@ sub evaluate_game {
         }
     }
 
-    finalize $data->{delete_email} // 1;
+    finalize $data->{delete_email} // 1, $faction_info // {};
 
     return {
         order => \@factions,

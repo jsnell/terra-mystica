@@ -504,7 +504,6 @@ sub setup {
     }
 
     if ($player) {
-        $faction->{display} .= " ($player)";
         $faction->{player} = "$player";
     }
 

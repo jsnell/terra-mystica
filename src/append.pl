@@ -87,6 +87,7 @@ $new_content .= $append;
 
 my $res = terra_mystica::evaluate_game {
     rows => [ split /\n/, $new_content ],
+    players => get_game_players($dbh, $read_id),
     delete_email => 0
 };
 

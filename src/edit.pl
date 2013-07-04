@@ -21,7 +21,10 @@ my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
 my ($read_id) = $write_id =~ /(.*?)_/g;
 my $data = get_game_content $dbh, $read_id, $write_id;
 
-my $res = terra_mystica::evaluate_game { rows => [ split /\n/, $data ] };
+my $res = terra_mystica::evaluate_game {
+    rows => [ split /\n/, $data ],
+    players => get_game_players($dbh, $read_id),
+};
 
 for my $faction (values %{$res->{factions}}) {
     $faction->{edit_link} = edit_link_for_faction $dbh, $write_id, $faction->{name};

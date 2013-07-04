@@ -54,7 +54,11 @@ if (game_exists $dbh, $id) {
         }
     }
 
-    my $res = terra_mystica::evaluate_game { rows => \@rows, max_row => $max_row };
+    my $res = terra_mystica::evaluate_game {
+        rows => \@rows,
+        players => get_game_players($dbh, $id),
+        max_row => $max_row
+    };
     print_json $res;
 } else {
     print "Status: 404 Not Found\r\n";
