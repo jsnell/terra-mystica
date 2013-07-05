@@ -1,10 +1,10 @@
 #!/usr/bin/perl -w
 
 use CGI qw(:cgi);
-use DBI;
 use Digest::SHA1 qw(sha1_hex);
 use JSON;
 
+use db;
 use editlink;
 use game;
 use tracker;
@@ -15,8 +15,7 @@ my $write_id = $q->param('game');
 $write_id =~ s{.*/}{};
 $write_id =~ s{[^A-Za-z0-9_]}{}g;
 
-my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 1, RaiseError => 1});
+my $dbh = get_db_connection;
 
 my ($read_id) = $write_id =~ /(.*?)_/g;
 my $data = get_game_content $dbh, $read_id, $write_id;

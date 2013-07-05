@@ -4,9 +4,9 @@ use strict;
 
 use CGI qw(:cgi);
 use Crypt::CBC;
-use DBI;
 use JSON;
 
+use db;
 use exec_timer;
 use game;
 use indexgame;
@@ -41,8 +41,7 @@ if ($faction_name =~ /^player/) {
     $append = join "\n", (map { "$faction_name: $_" } grep { /\S/ } split /\n/, $preview);
 }
 
-my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 1, RaiseError => 1});
+my $dbh = get_db_connection;
 
 sub verify_key {
     my ($secret, $iv) = get_secret $dbh;

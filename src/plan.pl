@@ -2,16 +2,15 @@
 
 use strict;
 
-use CGI qw(:cgi);
+use CGI qw(:cgi -utf8);
 use Crypt::CBC;
-use DBI;
 use JSON;
 
+use db;
 use secret;
 
 my $q = CGI->new;
-my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 1, RaiseError => 1});
+my $dbh = get_db_connection;
 
 my $id = $q->param('game');
 $id =~ s{.*/}{};

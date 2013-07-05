@@ -2,18 +2,17 @@
 
 use strict;
 
-use DBI;
 use File::Slurp qw(read_file);
 use File::Basename;
 
 BEGIN { push @INC, dirname $0 }
 
+use db;
 use game;
 use indexgame;
 use tracker;
 
-my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 1, RaiseError => 1});
+my $dbh = get_db_connection;
 
 sub evaluate_and_index_game {
     my ($id, $write_id, $timestamp) = @_;

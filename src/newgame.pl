@@ -1,17 +1,16 @@
 #!/usr/bin/perl -w
 
 use CGI qw(:cgi);
-use DBI;
 use JSON;
 
+use db;
 use create_game;
 use game;
 use session;
 
 my $q = CGI->new;
 
-my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 1 });
+my $dbh = get_db_connection;
 
 print "Content-Type: text/json\r\n";
 print "Cache-Control: no-cache\r\n";

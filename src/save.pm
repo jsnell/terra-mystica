@@ -2,7 +2,6 @@
 
 use strict;
 
-use DBI;
 use File::Temp qw(tempfile);
 
 use indexgame;

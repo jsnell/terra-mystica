@@ -1,11 +1,11 @@
 use strict;
 
-use DBI;
 use Digest::SHA1 qw(sha1_hex);
 
+use db;
+
 sub get_finished_game_results {
-    my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                           { AutoCommit => 1, RaiseError => 1});
+    my $dbh = get_db_connection;
     my $secret = shift;
 
     my %res = ( error => '', results => [] );

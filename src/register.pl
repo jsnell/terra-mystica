@@ -3,10 +3,10 @@
 use CGI qw(:cgi);
 use Crypt::CBC;
 use Crypt::Eksblowfish::Bcrypt qw(bcrypt en_base64);
-use DBI;
 use JSON;
 use Net::SMTP;
 
+use db;
 use secret;
 
 print "Content-type: text/javascript\r\n";
@@ -24,8 +24,7 @@ if ($username =~ /([^A-Za-z0-9._-])/) {
     push @error, "Invalid character in username '$1'"
 }
 
-my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 1 });
+my $dbh = get_db_connection;
 
 if (!@error) {
     my ($username_in_use) = $dbh->selectrow_array("select count(*) from player where lower(username) = lower(?)", {}, $username);

@@ -3,10 +3,10 @@
 use CGI qw(:cgi);
 use Crypt::CBC;
 use Crypt::Eksblowfish::Bcrypt qw(bcrypt en_base64);
-use DBI;
 use JSON;
 use Net::SMTP;
 
+use db;
 use secret;
 
 print "Content-type: text/javascript\r\n";
@@ -20,8 +20,7 @@ my $email = $q->param('email');
 my $password = $q->param('password');
 my $username;
 
-my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 1 });
+my $dbh = get_db_connection;
 
 if (!@error) {
     $username = $dbh->selectrow_array("select player from email where address = lower(?)", {}, $email);

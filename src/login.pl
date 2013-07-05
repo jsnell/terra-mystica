@@ -2,8 +2,8 @@
 
 use CGI qw(:cgi);
 use Crypt::Eksblowfish::Bcrypt qw(bcrypt en_base64);
-use DBI;
 
+use db;
 use rlimit;
 use session;
 
@@ -11,8 +11,7 @@ my $q = CGI->new;
 my $form_username = $q->param('username');
 my $password = $q->param('password');
 
-my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 1 });
+my $dbh = get_db_connection;
 
 print STDERR "login: $form_username\n";
 

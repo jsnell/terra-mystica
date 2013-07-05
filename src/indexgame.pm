@@ -2,7 +2,6 @@
 
 use strict;
 
-use DBI;
 use POSIX qw(strftime);
 
 sub index_game {

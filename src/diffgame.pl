@@ -3,11 +3,12 @@
 use strict;
 use warnings;
 
-use DBI;
 use File::Basename qw(dirname);
 use JSON;
 use Text::Diff qw(diff);
 use Time::HiRes qw(time);
+
+use db;
 
 my $dir = dirname $0;
 my $time = 0;
@@ -34,8 +35,7 @@ sub convert_ledger {
     return [ map { [ $_->{commands} || $_->{comment}, $_->{warning}] } @{$data} ];        
 }
 
-my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 1, RaiseError => 1});
+my $dbh = get_db_connection;
 
 my $games = $dbh->selectall_arrayref("select id, write_id, extract(epoch from last_update) from game where id like ?",
                                      {},

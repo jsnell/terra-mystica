@@ -3,8 +3,8 @@
 use CGI qw(:cgi);
 use Crypt::CBC;
 use Crypt::Eksblowfish::Bcrypt qw(de_base64);
-use DBI;
 
+use db;
 use secret;
 
 print "Content-type: text/html\r\n";
@@ -19,8 +19,7 @@ my $token = $q->param('token');
 sub reset_password {
     my ($user, $email, $hashed_password) = @_;
 
-    my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                           { AutoCommit => 1, RaiseError => 1});
+    my $dbh = get_db_connection;
 
     $dbh->do('begin');
 

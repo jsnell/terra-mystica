@@ -1,9 +1,9 @@
 #!/usr/bin/perl -w
 
 use CGI qw(:cgi);
-use DBI;
 use JSON;
 
+use db;
 use exec_timer;
 use game;
 use rlimit;
@@ -37,8 +37,7 @@ sub print_json {
     print $out;
 }
 
-my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 1, RaiseError => 1});
+my $dbh = get_db_connection;
 
 if (game_exists $dbh, $id) {
     print "\r\n";

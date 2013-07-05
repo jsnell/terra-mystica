@@ -11,6 +11,7 @@ BEGIN {
     unshift @INC, "$target/cgi-bin/";
 }
 
+use db;
 use game;
 use tracker;
 
@@ -22,8 +23,7 @@ sub print_json {
 }
 
 
-my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 1, RaiseError => 1});
+my $dbh = get_db_connection;
 
 my @rows = get_game_commands $dbh, $ARGV[0];
 

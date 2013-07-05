@@ -3,10 +3,10 @@
 use strict;
 
 use CGI qw(:cgi);
-use DBI;
 use Digest::SHA1  qw(sha1_hex);
 use JSON;
 
+use db;
 use exec_timer;
 use game;
 use rlimit;
@@ -23,8 +23,7 @@ my ($read_id) = $write_id =~ /(.*?)_/g;
 my $orig_hash = $q->param('orig-hash');
 my $new_content = $q->param('content');
 
-my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 1, RaiseError => 1 });
+my $dbh = get_db_connection;
 
 sub verify_and_save {
     my $game = shift;

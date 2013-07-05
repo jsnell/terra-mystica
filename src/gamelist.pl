@@ -3,9 +3,9 @@
 use strict;
 
 use CGI qw(:cgi);
-use DBI;
 use JSON;
 
+use db;
 use editlink;
 use rlimit;
 use natural_cmp;
@@ -16,8 +16,7 @@ print "Cache-Control: no-cache\r\n";
 print "Connection: close\r\n";
 print "\r\n";
 
-my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
-                       { AutoCommit => 1, RaiseError => 1});
+my $dbh = get_db_connection;
 my $q = CGI->new;
 my $mode = $q->param('mode') // 'all';
 my $status = $q->param('status') // 'running';
