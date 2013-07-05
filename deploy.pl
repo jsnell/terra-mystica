@@ -97,6 +97,7 @@ sub deploy_cgi {
                   commands.pm
                   create_game.pm
                   cults.pm
+                  db.pm
                   editlink.pm
                   exec_timer.pm
                   factions.pm
@@ -131,6 +132,7 @@ sub deploy_stc {
                   reset.js
                   prototype-1.7.1.js
                   org.css
+                  settings.js
                   spinner.gif
                   style.css)) {
         copy_with_mode 0444, "stc/$f", "$target/stc/$f";
@@ -149,6 +151,7 @@ sub deploy_html {
                   player.html
                   register.html
                   reset.html
+                  settings.html
                   stats.html)) {
         my $to = "$target/$f";
 
