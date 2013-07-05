@@ -1,6 +1,7 @@
 create table player (
   username text primary key,
-  password text
+  password text,
+  displayname text
 );
 create unique index player_username_lowercase_idx on player(lower(username));
 
