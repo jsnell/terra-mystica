@@ -86,6 +86,7 @@ sub deploy_cgi {
                   register.pl
                   reset.pl
                   results.pl
+                  settings.pl
                   validate.pl
                   validate-reset.pl
                   save.pl)) {

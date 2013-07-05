@@ -13,35 +13,32 @@ my $q = CGI->new;
 my $dbh = DBI->connect("dbi:Pg:dbname=terra-mystica", '', '',
                        { AutoCommit => 1 });
 
+print "Content-Type: text/json\r\n";
+print "Cache-Control: no-cache\r\n";
+print "\r\n";
+
 my $username = username_from_session_token($dbh,
                                            $q->cookie('session-token') // '');
 
+sub error {
+    print encode_json {
+        error => [ @_ ],
+    };
+    exit;
+};
+
 if (!$username) {
-    print "Status: 303\r\n";
-    print "Location: /login/#required\r\n";
-    print "Cache-Control: no-cache\r\n";
-    print "\r\n";
+    print encode_json {
+        error => "Login required",
+        link => "/login/#required",
+    };
     exit;
 }
 
 my $gameid = $q->param('gameid');
 if (!$gameid) {
-    print "Location: /newgame/\r\n";
-    print "Cache-Control: no-cache\r\n";
-    print "\r\n";
-    exit;
+    error "No game name";
 }
-
-print "Content-Type: text/json\r\n";
-print "Cache-Control: no-cache\r\n";
-print "\r\n";
-
-sub error {
-    print encode_json {
-        error => \@_,
-    };
-    exit;
-};
 
 if ($gameid =~ /([^A-Za-z0-9])/) {
     error "Invalid character in game id '$1'";
