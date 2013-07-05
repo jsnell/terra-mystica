@@ -19,6 +19,10 @@ function loadGame (domain, pathname) {
     state = null;
 
     setTitle();
+    if ($("header-gamename")) {
+        $("header-gamename").innerHTML = params["game"];
+    }
+    
     
     if ($("move_entry")) {
         $("move_entry").innerHTML = '';
