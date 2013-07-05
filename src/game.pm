@@ -40,13 +40,15 @@ sub get_game_players {
     my ($dbh, $id) = @_;
 
     my ($rows) =
-        $dbh->selectall_arrayref("select player, faction from email inner join game_role on game_role.email=email.address where game=?",
+        $dbh->selectall_arrayref("select faction, player, email, displayname from email inner join game_role on game_role.email=email.address inner join player on player.username=email.player where game=? and faction != 'admin'",
                                  {},
                                  $id);
 
     my %players = ();
     for (@{$rows}) {
-        $players{$_->[1]} = $_->[0];
+        $players{$_->[0]} = { username => $_->[1],
+                              displayname => $_->[3],
+                              email => $_->[2] };
     }
 
     \%players;

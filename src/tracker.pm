@@ -52,7 +52,8 @@ sub finalize {
                                   faction => $faction->{name}});
         }
         if (exists $faction_info->{$faction->{name}}) {
-            $faction->{username} = $faction_info->{$faction->{name}};
+            $faction->{username} = $faction_info->{$faction->{name}}{username};
+            $faction->{player} = $faction_info->{$faction->{name}}{displayname};
             $faction->{registered} = 1;
         } else {
             $faction->{registered} = 0;
