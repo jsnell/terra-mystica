@@ -57,7 +57,6 @@ sub finalize {
         } else {
             $faction->{registered} = 0;
         }
-        $faction->{display} .= " ($faction->{player})";
     }
 
     for my $faction_name (@factions) {
