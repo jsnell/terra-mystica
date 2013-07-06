@@ -11,17 +11,8 @@ use tracker;
 
 my $q = CGI->new;
 
-if ($q->request_method eq "OPTIONS") {
-    print "Access-Control-Allow-Origin: *\r\n";
-    print "Access-Control-Allow-Headers: X-Prototype-Version, X-Requested-With\r\n";
-    print "\r\n";
-    exit 0;
-}
-
 print "Content-type: text/javascript\r\n";
 print "Cache-Control: no-cache\r\n";
-print "Access-Control-Allow-Origin: *\r\n";
-print "Access-Control-Expose-Headers: X-JSON\r\n";
 
 my $id = $q->param('game');
 $id =~ s{.*/}{};
