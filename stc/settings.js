@@ -1,30 +1,25 @@
 var state = null;
 
-function setEntryStatus(disabled) {
-    $("settings").descendants().each(function (elem) {
-        elem.disabled = disabled;
-    });
-}
-
 function loadOrSaveSettings(save) {
     var target = "/cgi-bin/settings.pl";
 
     var form_params = {
         "cache-token": new Date() - Math.random(),
+        "csrf-token": getCSRFToken()
     };
     if (save) {
         form_params['displayname'] = $("displayname").value;
         form_params['save'] = 1;
     }
 
-    setEntryStatus(true);
+    disableDescendants($("settings"));
 
     new Ajax.Request(target, {
         method: "post",
         parameters: form_params,
         onSuccess: function(transport){
             state = transport.responseText.evalJSON();
-            setEntryStatus(false);
+            enableDescendants($("settings"));
             if (state.link) {
                 document.location = state.link;
             } else if (state.error.length) {

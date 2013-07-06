@@ -15,11 +15,6 @@ my $q = CGI->new;
 
 ensure_csrf_cookie $q;
 
-print "Content-type: text/javascript\r\n";
-print "Cache-Control: no-cache\r\n";
-print "Connection: close\r\n";
-print "\r\n";
-
 my $dbh = get_db_connection;
 my $mode = $q->param('mode') // 'all';
 my $status = $q->param('status') // 'running';
@@ -63,6 +58,8 @@ if ($mode eq 'all') {
                                            $q->cookie('session-token') // '');
     if ($mode eq 'other-user') {
         $user = $q->param("args");
+    } else {
+        verify_csrf_cookie_or_die $q;
     }
 
     if (!defined $user) {
@@ -86,6 +83,11 @@ if ($mode eq 'all') {
         } @{$roles[0]};
     }
 }
+
+print "Content-type: text/javascript\r\n";
+print "Cache-Control: no-cache\r\n";
+print "Connection: close\r\n";
+print "\r\n";
 
 print encode_json \%res;
 

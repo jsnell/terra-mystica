@@ -49,4 +49,20 @@ sub ensure_csrf_cookie {
     }
 }
 
+sub verify_csrf_cookie_or_die {
+    my $q = shift;
+    my $cookie_token = $q->cookie("csrf-token");
+    my $param_token = $q->param("csrf-token");
+    
+    if (!defined $cookie_token or
+        !defined $param_token or
+        $cookie_token ne $param_token) {
+        print STDERR "CSRF verification failure [$cookie_token] [$param_token]\n";
+        print "Status: 403\r\n";
+        ensure_csrf_cookie $q;
+        print "\r\n";
+        exit 1;
+    }
+}
+
 1;

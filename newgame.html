@@ -8,6 +8,9 @@
     <script type="text/javascript" language="javascript"
             src="/stc/debug.js">
     </script>
+    <script type="text/javascript" language="javascript"
+            src="/stc/common.js">
+    </script>
     <link rel="stylesheet" type="text/css" href="/stc/style.css">
   </head>
   <body style="padding: 5ex">
@@ -17,10 +20,13 @@
       var state = null;
       function newGame() {
         $("error").innerHTML = "";
+        $("csrf-token").value = getCSRFToken();
+        disableDescendants($("submit"));
         $("newgame").request({
             method:"post",
             onSuccess: function(transport) {
                 state = transport.responseText.evalJSON();
+                enableDescendants($("submit"));
                 if (state.link) {
                     document.location = state.link;
                 } else if (state.error.length) {
@@ -33,8 +39,9 @@
     <form id="newgame" action="/cgi-bin/newgame.pl" onsubmit="return false">
       <table>
         <tr><td>Game id<td><input name="gameid" id="gameid"></input>
-        <tr><td><td><input type="button" value="New Game" onclick="javascript:newGame()"></input>
+        <tr><td><td><input id="submit" type="button" value="New Game" onclick="javascript:newGame()"></input>
       </table>
+      <input type="hidden" id="csrf-token" name="csrf-token"></input>
     </form>
     <p>
       The id of the game should be unique, and only contain

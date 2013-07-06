@@ -22,7 +22,7 @@
         <td valign="top" style="padding-right: 2ex; ">
           <p>
             <script>
-        if (!/session-username=(.+)/.match(document.cookie)) {
+        if (!/session-username=([A-Za-z0-9]+)/.match(document.cookie)) {
           document.write('<a href="/login/">Login</a><br>');
           document.write('<a href="/register/">Register</a><br>');
         } else {

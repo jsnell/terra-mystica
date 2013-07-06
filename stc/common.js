@@ -1,6 +1,18 @@
 var params = null;
 var moveRequired = false;
 
+function disableDescendants(parent) {
+    parent.descendants().each(function (elem) {
+        elem.disabled = true;
+    });
+}
+
+function enableDescendants(parent) {
+    parent.descendants().each(function (elem) {
+        elem.disabled = false;
+    });
+}
+
 function setTitle() {
     try {
         var title = "TM";
@@ -30,15 +42,25 @@ function setFavicon(url) {
     icon.parentNode.replaceChild(new_icon, icon);
 }
 
+function getCSRFToken() {
+    var match = document.cookie.match(/csrf-token=([^ ;]+)/);
+    if (match) {
+        return match[1];
+    } else {
+        return "invalid";
+    }
+}
+
 function fetchGames(div, mode, status, handler, args) {
     $(div).update("... loading");
     new Ajax.Request("/cgi-bin/gamelist.pl", {
         parameters: {
             "mode": mode,
             "status": status,
-            "args": args
+            "args": args,
+            "csrf-token": getCSRFToken()
         },
-        method:"get",
+        method:"post",
         onSuccess: function(transport){
             var resp = transport.responseText.evalJSON();
             try {

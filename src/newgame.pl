@@ -9,8 +9,9 @@ use game;
 use session;
 
 my $q = CGI->new;
-
 my $dbh = get_db_connection;
+
+verify_csrf_cookie_or_die $q;
 
 print "Content-Type: text/json\r\n";
 print "Cache-Control: no-cache\r\n";
