@@ -1019,7 +1019,8 @@ function coloredFactionSpan(faction_name) {
 
 function factionDisplayName(faction, fg) {
     if (faction.registered) {
-        return "#{display} (<a style='color: inherit' href='/player/#{username}'>#{player}</a>)".interpolate(faction);
+        faction.player_escaped = faction.player.escapeHTML();
+        return "#{display} (<a style='color: inherit' href='/player/#{username}'>#{player_escaped}</a>)".interpolate(faction);
     } else {
         return "#{display} (#{player})".interpolate(faction);
     }

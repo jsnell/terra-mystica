@@ -65,10 +65,6 @@ sub save_user_settings {
         error "Display Name too long";
     }
 
-    if ($displayname =~ /[^ \pL]/) {
-        error "Display Name contains invalid character ($&)";
-    }
-
     $dbh->do("update player set displayname=? where username=?",
              {},
              $displayname,
