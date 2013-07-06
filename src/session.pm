@@ -1,4 +1,5 @@
 use Digest::SHA1 qw(sha1_hex);
+use Crypt::Eksblowfish::Bcrypt qw(en_base64);
 
 use secret;
 
@@ -23,6 +24,28 @@ sub username_from_session_token {
         $username;
     } else {
         undef;
+    }
+}
+
+sub read_urandom_string_base64 {
+    my $chars = shift;
+
+    open my $f, "</dev/urandom";
+    my $data = '';
+
+    read $f, $data, $chars;
+
+    close $f;
+
+    substr en_base64($data), 0, $chars;
+}
+
+sub ensure_csrf_cookie {
+    my $q = shift;
+    if (!$q->cookie("csrf-token")) {
+        my $y = 86400*365;
+        my $r = read_urandom_string_base64 8;
+        print "Set-Cookie: csrf-token=$r; Path=/; Max-Age=$y\r\n";
     }
 }
 

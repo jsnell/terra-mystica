@@ -11,13 +11,16 @@ use rlimit;
 use natural_cmp;
 use session;
 
+my $q = CGI->new;
+
+ensure_csrf_cookie $q;
+
 print "Content-type: text/javascript\r\n";
 print "Cache-Control: no-cache\r\n";
 print "Connection: close\r\n";
 print "\r\n";
 
 my $dbh = get_db_connection;
-my $q = CGI->new;
 my $mode = $q->param('mode') // 'all';
 my $status = $q->param('status') // 'running';
 

@@ -29,9 +29,10 @@ if (!$stored_password) {
 }
 
 if ($match) {
-    my $token = session_token $dbh, $username, sprintf "%08x", rand 2**32;
+    my $token = session_token $dbh, $username, read_urandom_string_base64 8;
     my $y = 86400*365;
     print "Status: 303\r\n";
+    ensure_csrf_cookie $q;
     print "Set-Cookie: session-username=$username; Path=/; Max-Age=$y\r\n";
     print "Set-Cookie: session-token=$token; Path=/; HttpOnly; Max-Age=$y\r\n";
     print "Cache-Control: no-cache\r\n";
@@ -39,7 +40,8 @@ if ($match) {
     print "\r\n";
 } else {
     print "Status: 303\r\n";
-    print "Set-Cookie: session-username=; Path=/;\r\n";
+    print "Set-Cookie: csrf-token=; Path=/\r\n";
+    print "Set-Cookie: session-username=; Path=/\r\n";
     print "Set-Cookie: session-token=; Path=/; HttpOnly\r\n";
     print "Location: /login/#failed\r\n";
     print "Cache-Control: no-cache\r\n";
