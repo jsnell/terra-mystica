@@ -22,8 +22,8 @@ sub add_user {
     my $dbh = get_db_connection;
 
     $dbh->do('begin');
-    $dbh->do('insert into player (username, password) values (?, ?)', {},
-             $user, $hashed_password);
+    $dbh->do('insert into player (username, displayname, password) values (?, ?, ?)', {},
+             $user, $user, $hashed_password);
     $dbh->do('insert into email (address, player, validated) values (lower(?), ?, ?)',
              {}, $email, $user, 1);
     $dbh->do('commit');
