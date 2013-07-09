@@ -83,6 +83,7 @@ sub command_adjust_resources {
     if (grep { $_ eq $type } @cults) {
         if ($faction->{CULT} < $delta) {
             # die "Advancing $delta steps on $type cult not allowed\n";
+        } elsif ($delta < 0) {
         } elsif ($faction->{CULT} > $delta) {
             die "All cult advances must be used on the same cult track\n";
         } else {
