@@ -8,6 +8,8 @@ use JSON;
 use Text::Diff qw(diff);
 use Time::HiRes qw(time);
 
+BEGIN { push @INC, dirname $0 };
+
 use db;
 
 my $dir = dirname $0;
