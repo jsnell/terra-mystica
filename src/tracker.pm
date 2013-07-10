@@ -72,6 +72,7 @@ sub finalize {
         }
         delete $faction->{allowed_actions};
         delete $faction->{allowed_sub_actions};
+        delete $faction->{allowed_build_locations};
         delete $faction->{locations};
         delete $faction->{teleport};
         delete $faction->{BRIDGE_COUNT};

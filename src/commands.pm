@@ -30,6 +30,7 @@ sub allow_full_move {
     $active_faction = $faction->{name};
     $faction->{allowed_actions} = 1;
     $faction->{allowed_sub_actions} = {};
+    $faction->{allowed_build_locations} = {};
     delete $faction->{TELEPORT_TO};
 }
 
@@ -168,6 +169,11 @@ sub command_build {
         } else {
             command $faction_name, "transform $where to $color";
         }
+    }
+
+    if (keys %{$faction->{allowed_build_locations}} and
+        !$faction->{allowed_build_locations}{$where}) {
+        delete $faction->{allowed_sub_actions}{build};
     }
 
     require_subaction $faction, 'build', {};
@@ -430,7 +436,10 @@ sub command_transform {
         @action_required = grep {
             $_->{faction} ne $faction->{name} or $_->{type} ne 'transform'
         } @action_required;       
+        delete $faction->{allowed_sub_actions}{transform};
     }
+
+    $faction->{allowed_build_locations}{$where} = 1;
 
     $map{$where}{color} = $color;
 
