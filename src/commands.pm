@@ -875,6 +875,9 @@ sub command {
         command_randomize_v1 $1;
     } elsif ($command =~ /^wait$/i) {
         ($assert_faction->())->{waiting} = 1;
+    } elsif ($command =~ /^done$/i) {
+        ($assert_faction->())->{allowed_sub_actions} = {};
+        ($assert_faction->())->{allowed_actions} = 0;
     } elsif ($command =~ /^start_planning$/i) {
         command_start_planning $assert_faction->();
     } else {

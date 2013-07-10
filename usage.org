@@ -222,6 +222,17 @@ Wait for other players to react. Useful for example if you're the
 last player who hasn't passed, and want to see whether another player
 accepts power between two of your moves.
 
+** =done=
+Example:
+#+BEGIN_EXAMPLE
+Done
+#+END_EXAMPLE
+
+Finish your turn. Useful mostly when you're the only player who hasn't passed,
+and want to break the chain of actions at a specific place. For example
+when using Dwarves or Fakirs to first tunnel to a space to terraform it,
+and right afterwards tunnel to the same space to build a dwelling.
+
 ** =setup= /faction/ =for= /player/ =email= /address/
 
 Example:
