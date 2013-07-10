@@ -7,6 +7,7 @@ use Crypt::CBC;
 use JSON;
 
 use db;
+use editlink;
 use exec_timer;
 use game;
 use indexgame;
@@ -23,16 +24,10 @@ $read_id =~ s{[^A-Za-z0-9_]}{}g;
 
 my $faction_name = $q->param('preview-faction');
 my $faction_key = $q->param('faction-key');
+my $orig_faction_name = $faction_name;
 
 my $preview = $q->param('preview');
 my $append = '';
-
-if ($faction_name =~ /^player/) {
-    $preview =~ /(setup \w+)/i;
-    $append = "$1\n";
-} else {
-    $append = join "\n", (map { "$faction_name: $_" } grep { /\S/ } split /\n/, $preview);
-}
 
 my $dbh = get_db_connection;
 
@@ -64,6 +59,15 @@ eval {
     };
     exit;
 };
+
+
+if ($faction_name =~ /^player/) {
+    $preview =~ /(setup (\w+))/i;
+    $append = "$1\n";
+    $faction_name = lc $2;
+} else {
+    $append = join "\n", (map { "$faction_name: $_" } grep { /\S/ } split /\n/, $preview);
+}
 
 
 my $new_content = get_game_content $dbh, $read_id, $write_id;
@@ -116,5 +120,8 @@ my $out = encode_json {
     action_required => $res->{action_required},
     round => $res->{round},
     turn => $res->{turn},
+    new_faction_key => ($orig_faction_name eq $faction_name ?
+                        undef :
+                        edit_link_for_faction $dbh, $write_id, $faction_name),
 };
 print $out;

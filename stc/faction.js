@@ -2,7 +2,7 @@ var state = null;
 var currentFaction = null;
 var backendDomain = null;
 
-function loadGame (domain, pathname) {
+function parseParamsFromPathname (pathname) {
     var path = pathname.sub(/\/(faction|game)\//, "").split("/");
     var expected = ["game", "faction", "key"];
     params = {};
@@ -14,6 +14,15 @@ function loadGame (domain, pathname) {
             params[expected.shift()] = elem;
         }
     });
+}
+
+function loadGame (domain, pathname) {
+    if (document.location.hash &&
+        document.location.hash.match(/^#\/faction/)) {
+        document.location = "http://" + domain + document.location.hash.sub(/^#/, '');
+    }
+
+    parseParamsFromPathname(pathname);
 
     backendDomain = domain;
     state = null;
@@ -78,6 +87,10 @@ function previewOrSave(save, preview_data, prefix_data) {
                         $("move_entry").insert(new Element("a", {"href": makeMailToLink()}).update("Send email"));
                     } else {
                         $("move_entry").innerHTML = "";
+                    }
+                    if (state.new_faction_key) {
+                        parseParamsFromPathname(state.new_faction_key);
+                        document.location.hash = state.new_faction_key;
                     }
                     fetchGames($("user-info"), "user", "running",
                                showActiveGames);
