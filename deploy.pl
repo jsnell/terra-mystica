@@ -152,8 +152,10 @@ sub deploy_html {
                   player.html
                   register.html
                   reset.html
+                  robots.txt
                   settings.html
-                  stats.html)) {
+                  stats.html
+                  )) {
         my $to = "$target/$f";
 
         mangle_with_mode 0444, "$f", "$to", sub {

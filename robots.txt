@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /game/
+Disallow: /faction/
+Disallow: /cgi-bin/
+Allow: /
