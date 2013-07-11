@@ -46,9 +46,9 @@ my $games = $dbh->selectall_arrayref("select id, write_id, extract(epoch from la
 for (@{$games}) {
     my $id = $_->[0];
 
-    print "Evaluating $id";
     my $a = pretty_res $dir1, $id;
     my $b = pretty_res $dir2, $id;
+    my $header_printed = 0;
 
     for my $key (keys %{$a}) {
         my $aa = $a->{$key};
@@ -64,6 +64,7 @@ for (@{$games}) {
             my $aj = join "\n", map { to_json($_) } @{$aa};
             my $bj = join "\n", map { to_json($_) } @{$bb};
             if ($aj ne $bj) {
+                print "Diff in $id" if !$header_printed++;
                 # print "Ledger diffs";
                 print diff \$aj, \$bj;
             }
@@ -71,6 +72,7 @@ for (@{$games}) {
             my $aj = to_json($aa, { pretty => 1, canonical => 1 });
             my $bj = to_json($bb, { pretty => 1, canonical => 1 });
             if ($aj ne $bj) {
+                print "Diff in $id" if !$header_printed++;
                 print diff \$aj, \$bj;
             }
         }
