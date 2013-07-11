@@ -159,24 +159,29 @@ sub command_build {
         $faction->{FREE_D}--;
     }
 
-    if ($faction->{TELEPORT_NO_TF}) {
-        $faction->{TELEPORT_NO_TF}--;
-        die "Transforming terrain forbidden during this action\n"
-            if $map{$where}{color} ne $color;
-    } else {
-        if ($map{$where}{color} eq $color) {
-            check_reachable $faction, $where;
-        } else {
-            command $faction_name, "transform $where to $color";
-        }
-    }
+    my $tf_needed = $map{$where}{color} ne $color;
 
-    if (keys %{$faction->{allowed_build_locations}} and
+    if (!$tf_needed and
+        keys %{$faction->{allowed_build_locations}} and
         !$faction->{allowed_build_locations}{$where}) {
         delete $faction->{allowed_sub_actions}{build};
     }
 
-    require_subaction $faction, 'build', {};
+    require_subaction $faction, 'build', {
+        transform => $tf_needed
+    };
+
+    if ($faction->{TELEPORT_NO_TF}) {
+        $faction->{TELEPORT_NO_TF}--;
+        die "Transforming terrain forbidden during this action\n"
+            if $tf_needed;
+    } else {
+        if ($tf_needed) {
+            command $faction_name, "transform $where to $color";
+        } else {
+            check_reachable $faction, $where;
+        }
+    }
 
     if (!$round) {
         if ($faction_name ne $setup_order[0]) {
