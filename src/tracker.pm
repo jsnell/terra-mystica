@@ -143,7 +143,6 @@ sub evaluate_game {
     local @factions = ();
     local @setup_order = ();
     local @players = ();
-    local $email = '';
     local $admin_email = '';
 
     setup_map;

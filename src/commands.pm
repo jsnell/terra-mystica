@@ -20,7 +20,7 @@ my $printed_turn = 0;
 my $force_finish = 0;
 my $active_faction;
 
-use vars qw($email $admin_email);
+use vars qw($admin_email);
 
 sub handle_row;
 sub handle_row_internal;
@@ -870,8 +870,6 @@ sub command {
         @action_required = ( { type => 'gameover' } );
     } elsif ($command =~ /^score_resources$/i) {
         score_final_resources_for_faction $faction_name;
-    } elsif ($command =~ /^email (.*)/i) {
-        $email = $1;
     } elsif ($command =~ /^admin email (.*)/i) {
         $admin_email = $1;
     } elsif ($command =~ /^player (\S+)(?: email (\S*))?$/i) {

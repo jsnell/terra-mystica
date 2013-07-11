@@ -305,15 +305,6 @@ have passed on the final round.
 Forcibly end the game. Useful for hiding a stalled game from the "your
 games" list.
 
-** =email= /email addresses/
-
-Example: =email alice@example.com,bob@example.com,charlie@example.com=
-
-List the email addresses associated with the game. These addresses
-get added to all emails sent by the game. Useful mainly if you want
-all game-related traffic to go to a specific mailing list. Usually
-it's better to associate addresses with individual factions.
-
 * Notes on specific factions
 
 ** Mermaids
