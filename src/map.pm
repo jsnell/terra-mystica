@@ -312,6 +312,30 @@ sub alias_color {
     $color;
 }
 
+sub color_at_offset {
+    my ($color, $target, $max_steps) = @_;
+    
+    if ($max_steps == 0) {
+        return $color;
+    }
+
+    my $difference = color_difference $color, $target;
+    if ($difference <= $max_steps) {
+        return $target;
+    }
+
+    my @colors_at_offset = grep {
+        $max_steps == color_difference $color, $_ 
+    } @colors;
+    my @diff_to_target = map { color_difference $target, $_ } @colors_at_offset;
+
+    if ($diff_to_target[0] < $diff_to_target[1]) {
+        $colors_at_offset[0];
+    } else {
+        $colors_at_offset[1];
+    }
+}
+
 # Given a faction and a hex, figure out who can leach power when a
 # building is built or upgraded, and how much. (Note: won't take into
 # account the amount of power tokens the receiver has. That's taken

@@ -397,6 +397,11 @@ sub command_transform {
     my ($faction, $where, $color) = @_;
     my $faction_name = $faction->{name};
 
+    if (!$color) {
+        $color = color_at_offset($map{$where}{color}, $faction->{color},
+                                 $faction->{SPADE});
+    }
+
     if ($map{$where}{color} eq $color) {
         die "Can't transform $where, it already is $color\n"
     }
@@ -816,8 +821,8 @@ sub command {
     } elsif ($command =~ /^decline(?: (\d+) from (\w+))?$/i) { 
         command_decline $assert_faction->(), $1, lc $2;
         $force_finish = 1;
-    } elsif ($command =~ /^transform (\w+) to (\w+)$/i) {
-        command_transform $assert_faction->(), uc $1, lc $2;
+    } elsif ($command =~ /^transform (\w+)(?: to (\w+))?$/i) {
+        command_transform $assert_faction->(), uc $1, lc ($2 // '');
     } elsif ($command =~ /^dig (\d+)/i) {
         command_dig $assert_active_faction->(), $1;
     } elsif ($command =~ /^bridge (\w+):(\w+)( allow_illegal)?$/i) {

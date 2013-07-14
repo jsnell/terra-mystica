@@ -174,7 +174,13 @@ Send a priest to the water cult, taking just one level of advancement
 
 Example: =transform F5 to black=
 
-Terraform F5 to black, but don't build anything there.
+Terraform F5 to black, but don't build anything there. The color
+to transform to is optional, you can also do just:
+
+Example: =transform F5=
+
+In this case the hex is transformed either to your home color, or
+as close to it as possible given the available spades.
 
 ** =convert= /amount/ /resource/ =to= /amount/ /resource/
 
