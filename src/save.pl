@@ -26,7 +26,7 @@ my $new_content = $q->param('content');
 my $dbh = get_db_connection;
 
 sub verify_and_save {
-    my $game = shift;
+    my ($game, $timestamp) = @_;
 
     my $orig_content = get_game_content $dbh, $read_id, $write_id;
 
@@ -35,7 +35,7 @@ sub verify_and_save {
         die "Someone else made changes to the game. Please reload\n";
     }
 
-    save $dbh, $write_id, $new_content, $game;
+    save $dbh, $write_id, $new_content, $game, $timestamp;
 }
 
 begin_game_transaction $dbh, $read_id;
@@ -47,7 +47,11 @@ my $res = terra_mystica::evaluate_game {
 
 if (!@{$res->{error}}) {
     eval {
-        verify_and_save $res;
+        my ($timestamp) =
+            $dbh->selectrow_array("select extract(epoch from last_update) from game where id=?",
+                                  {},
+                                  $read_id);
+        verify_and_save $res, $timestamp;
     }; if ($@) {
         print STDERR "error: $@\n";
         $res->{error} = [ $@ ]
