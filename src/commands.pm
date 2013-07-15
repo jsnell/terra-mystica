@@ -844,7 +844,7 @@ sub command {
 
         my $name = uc $1;
         push @ledger, { comment => "Removing tile $name" };
-        if ($x->{$name} <= 1) {
+        if (!defined $x->{name} or $x->{$name} <= 1) {
             delete $x->{$name};
         } else {
             $x->{$name}--;
@@ -940,7 +940,7 @@ sub detect_incomplete_state {
         };
     } else {
         @action_required = grep {
-            $_->{faction} ne $faction->{name} or $_->{type} ne 'favor'
+            ($_->{faction} // '') ne $faction->{name} or $_->{type} ne 'favor'
         } @action_required;       
     }
 
@@ -953,7 +953,7 @@ sub detect_incomplete_state {
         };
     } else {
         @action_required = grep {
-            $_->{faction} ne $faction->{name} or $_->{type} ne 'town'
+            ($_->{faction} // '') ne $faction->{name} or $_->{type} ne 'town'
         } @action_required;       
     }
 
@@ -965,7 +965,7 @@ sub detect_incomplete_state {
         };
     } else {
         @action_required = grep {
-            $_->{faction} ne $faction->{name} or $_->{type} ne 'bridge'
+            ($_->{faction} // '') ne $faction->{name} or $_->{type} ne 'bridge'
         } @action_required;       
     }
 
