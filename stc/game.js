@@ -1081,7 +1081,7 @@ function drawActionRequired() {
         } else if (record.type == 'bonus') {
             record.pretty = 'should pick a bonus tile';
         } else if (record.type == 'gameover') {
-            record.pretty = 'The game is over';
+            record.pretty = "<span>The game is over\n</span>";
             var table = "";
             $H(state.factions).sortBy(function(a) { return -a.value.VP }).each(function(elem) {
                 elem.faction_span = coloredFactionSpan(elem.key);
