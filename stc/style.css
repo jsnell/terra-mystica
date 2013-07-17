@@ -207,6 +207,11 @@ div#planning_entry_explanation {
     max-width: 60ex;
 }
 
+table#recent_moves {
+    margin-top: 5px;
+    margin-left: 10px;
+}
+
 div#header {
     margin-bottom: 5px;
     margin-left: 5px;

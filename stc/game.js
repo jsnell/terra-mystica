@@ -930,6 +930,9 @@ function drawFactions() {
 function drawLedger() {
     var ledger = $("ledger");
     ledger.innerHTML = "";
+    if ($("recent_moves")) {
+        $("recent_moves").update("");
+    }
 
     state.ledger.each(function(record, index) {
         if (record.comment) {
@@ -938,10 +941,29 @@ function drawLedger() {
                           "</b>" + 
                           "<td><a href='" + showHistory(index + 1) +
                           "'>show history</a></tr>");
+
+            var move_entry = new Element("tr");
+            move_entry.insert(new Element("td", {"colspan": 2, "style": "font-weight: bold"}).update(
+                record.comment.escapeHTML()));
         } else {
             record.bg = colors[state.factions[record.faction].color];
             record.fg = (record.bg == '#000000' ? '#ccc' : '#000');
             record.commands = record.commands.escapeHTML();
+
+            if ($("recent_moves")) {
+                if (record.faction == currentFaction &&
+                    !/^(leech|decline)/i.match(record.commands)) {
+                    $("recent_moves").update("");
+                }
+
+                var move_entry = new Element("tr");
+                move_entry.insert(new Element("td").insert(
+                    coloredFactionSpan(record.faction)));
+                move_entry.insert(new Element("td").insert(
+                    record.commands));
+                $("recent_moves").insert(move_entry);
+            }
+
             var row = "<tr><td style='background-color:#{bg}; color: #{fg}'>#{faction}".interpolate(record);
             ["VP", "C", "W", "P", "PW", "CULT"].each(function(key) {
                 var elem = record[key];
@@ -1122,8 +1144,10 @@ function drawActionRequired() {
         $("data_entry").insert("<div id='data_entry_tabs'></div>");
         $("data_entry_tabs").insert("<button onclick='dataEntrySelect(\"move\")' id='data_entry_tab_move' class='tab'>Moves</button>");
         $("data_entry_tabs").insert("<button onclick='initPlanIfNeeded(); dataEntrySelect(\"planning\")' id='data_entry_tab_planning' class='tab'>Planning</button>");
+        $("data_entry_tabs").insert("<button onclick='dataEntrySelect(\"recent\")' id='data_entry_tab_recent' class='tab'>Recent Moves</button>");
         $("data_entry").insert("<div id='move_entry' class='tab_content'></div>");
         $("data_entry").insert("<div id='planning_entry' class='tab_content'></div>");
+        $("data_entry").insert("<div id='recent_entry' class='tab_content'></div>");
         dataEntrySelect("move");
     }
 
@@ -1132,6 +1156,11 @@ function drawActionRequired() {
                                              "style": "font-family: monospace; width: 60ex; height: 12em;" } );
         $("planning_entry").insert(input);
         $("planning_entry").insert("<div style='padding-left: 2em'><button id='planning_entry_action' onclick='javascript:previewPlan()'>Show Result</button><button id='planning_entry_action' onclick='javascript:savePlan()'>Save Plan</button><br><div id='planning_entry_explanation'>Use this entry box to leave notes for yourself, or to plan your coming moves using the same input format as for normal play. View the effects of the plan with 'show result' or save the plan / notes for later with 'save plan'.</div></div>");
+    }
+
+    if ($("recent_entry") && $("recent_entry").innerHTML == "") {
+        var recent = new Element("table", { "id": "recent_moves" });
+        $("recent_entry").insert(recent);
     }
 
     if (needMoveEntry && $("move_entry").innerHTML == "") {
