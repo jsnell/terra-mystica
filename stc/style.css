@@ -194,6 +194,10 @@ div#data_entry {
     margin-bottom: 10px;
 }
 
+div#data_entry_tabs {
+    margin-bottom: 10px;
+}
+
 div#move_entry_explanation {
     margin-top: 5px;
     font: 14px Verdana;
