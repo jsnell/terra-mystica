@@ -143,9 +143,10 @@ sub deploy_stc {
 }
 
 sub deploy_html {
-    for my $f (qw(game.html
+    for my $f (qw(changes.html
                   edit.html
                   faction.html
+                  game.html
                   index.html
                   login.html
                   newgame.html
@@ -166,8 +167,15 @@ sub deploy_html {
     }
 }
 
+sub deploy_data {
+    for my $f (qw(changes.json)) {
+        my $to = "$target/data/$f";
+        copy_with_mode 0444, $f, $to;
+    }
+}
+
 deploy_docs;
 deploy_stc;
 deploy_cgi;
 deploy_html;
-
+deploy_data;

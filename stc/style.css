@@ -234,6 +234,14 @@ div#header div {
 div#user-info {
 }
 
+div.changelog {
+    min-width: 60ex;
+}
+
+div.changelog-entry {
+    margin-left: 2ex;
+}
+
 tr#game-status-finished {
     color: #ccc;
 }

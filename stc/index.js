@@ -57,3 +57,4 @@ function nextGame(games, div, mode, status) {
     });
     listGames(games, div, mode, status);
 }
+

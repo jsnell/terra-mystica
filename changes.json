@@ -1,0 +1,56 @@
+{
+    "changes": [
+        { "date": "2013-07-16",
+          "title": "Recent moves",
+          "description": "The 'recent' moves tab has been added. It shows all moves that happened in the game since your last full move."
+        },
+        { "date": "2013-07-15",
+          "title": "'transform location' shorthand",
+          "description": "The transform command can now be used without a color argument. This transforms the target location as close to your home terrain as possible given the remaining spades."
+        },
+        { "date": "2013-07-11",
+          "title": "'done' command",
+          "description": "The 'done' command can be used to forcibly end a turn. This is mostly useful in the planning tool."
+        },
+        { "date": "2013-07-06",
+          "title": "'Display name'",
+          "description": "The name given for a player in the game definition is no longer used for registered players. Instead the actual name of the player is used. You can change the name that is shown from the <a href='/settings/'>settings page</a>."
+        },
+        { "date": "2013-07-05",
+          "title": "Player info",
+          "description": "A player information page has been added for all regitered users. You can find the page by clicking on the name of the player in the game view, or at <code>/player/<i>username</i></code> ."
+        },
+        { "date": "2013-06-01",
+          "title": "PBEM companion support removed",
+          "description": "Support for the tmpbem companion app has been removed. Thanks to Gareth for writing it originally, and showing how inadequate the system was at the time."
+        },
+        { "date": "2013-05-26",
+          "title": "Planning tool",
+          "description": "A 'planning' tab has been added to the faction view. This can be used for entering notes to self, or entering a list of commands you intend to execute on future turns. In the latter case, you can also preview the effect of the plan."
+        },        
+        { "date": "2013-05-19",
+          "title": "Dynamic favicon",
+          "description": "The 'favicon', the little picture shown on the browser tab, is now gray if you have no moves to make and orange only if action is required. The information is updated every few minutes. Note -- does not work on Internet Explorer."
+        },        
+        { "date": "2013-05-15",
+          "title": "'abort' command",
+          "description": "The 'abort' command can be used to terminate a game halfway through."
+        },        
+        { "date": "2013-05-01",
+          "title": "Linebreaks no longer matter",
+          "description": "The move processing now ignores linebreaks in the commands input. Previously a linebreak indicated ending a turn, which occasionally confused people. Now the end of turn is automatically detected from the stream of individual commands."
+        },
+        { "date": "2013-04-27",
+          "title": "Hexagons on cult track",
+          "description": "The markers on the cult track will now be shown as hexagons if it's theoretically possible for that faction to advance to the top of the cult track. If not (no keys, top spot taken, etc) a circle is used instead."
+        },
+        { "date": "2013-04-25",
+          "title": "Password reset",
+          "description": "A password reset page function is now available from the login page."
+        },
+        { "date": "2013-04-25",
+          "title": "'wait' command",
+          "description": "The 'wait' command can be used to mark that you don't want to take an action until all the preceding actions have been resolved. Use it for example when you need to know whether somebody leeches power, before you take your own move."
+        }
+    ]
+}
