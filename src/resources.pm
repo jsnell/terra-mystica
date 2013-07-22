@@ -290,6 +290,9 @@ sub note_leech {
                                  actual => $actual,
                                  leech_id => $leech_id,
                                  faction => $faction->{name} };
+        if ($actual) {
+            $from_faction->{leech_not_rejected}{$leech_id}++;
+        }
     }
 
     for (keys %this_leech) {

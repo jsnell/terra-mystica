@@ -271,6 +271,18 @@ you can use comments to interleave notes to yourself and actual commands.
 
 * Obscure commands
 
+** =option= /option/
+
+Example:
+#+BEGIN_EXAMPLE
+  option errata-cultist-power
+#+END_EXAMPLE
+
+Set a game variant or option. Should be done before randomization or
+faction selection. The following options are available:
+
+- =errata-cultist-power=: Official rules change, http://boardgamegeek.com/thread/1009456/rules-update-for-cultists
+
 ** =admin email= /email/
 
 Give another user full admin rights to the game.

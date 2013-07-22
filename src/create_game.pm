@@ -31,6 +31,8 @@ sub create_game {
 $opt_admin
 # List players (in any order) with 'player' command
 
+# Default game options
+option errata-cultist-power
 # Randomize setup
 randomize v1 seed $id
 EOF

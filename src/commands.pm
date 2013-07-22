@@ -19,8 +19,9 @@ my @warn = ();
 my $printed_turn = 0;
 my $force_finish = 0;
 my $active_faction;
+my @data_fields = qw(VP C W P P1 P2 P3 PW FIRE WATER EARTH AIR CULT);
 
-use vars qw($admin_email);
+use vars qw($admin_email %options);
 
 sub handle_row;
 sub handle_row_internal;
@@ -43,10 +44,8 @@ sub require_subaction {
     } elsif ($faction->{allowed_actions}) {
         $faction->{allowed_actions}--;
         $faction->{allowed_sub_actions} = $followup if $followup;
-        # Implicit "decline"
-        @action_required = grep {
-            $_->{faction} ne $faction->{name} or $_->{type} ne 'leech'
-        } @action_required;
+        # Taking an action is an implicit "decline"
+        command_decline($faction, undef, undef);
     } else {
         my @unpassed = grep { !$_->{passed} } values %factions;
         if (@unpassed == 1 or $faction->{planning}) {
@@ -344,7 +343,7 @@ sub command_leech {
             !$factions{cultists}{leech_cult_gained}{$_->{leech_id}}++) {
             $factions{cultists}{CULT}++;
             push @action_required, { type => 'cult',
-                                     amount => 1, 
+                                     amount => 1,
                                      faction => 'cultists' };
         }
 
@@ -373,9 +372,12 @@ sub command_decline {
 
     if (!$amount) {
         # Decline all
-        @action_required = grep {
-            $_->{faction} ne $faction->{name} or $_->{type} ne 'leech'
+        my @declines = grep {
+            $_->{faction} eq $faction->{name} and $_->{type} eq 'leech';
         } @action_required;
+        for (@declines) {
+            command_decline($faction, $_->{amount}, $_->{from_faction});
+        }
     } else {
         my $declined = 0;
         for (@action_required) {
@@ -383,6 +385,7 @@ sub command_decline {
                 $_->{type} eq 'leech' and
                 $_->{amount} eq $amount and
                 $_->{from_faction} eq $from) {
+                cultist_maybe_gain_power($_);
                 $_ = '';
                 $declined = 1;
                 last;
@@ -391,6 +394,26 @@ sub command_decline {
         @action_required = grep { $_ ne '' } @action_required;
         die "Invalid decline ($amount from $from)\n" if !$declined;
     }
+}
+
+sub cultist_maybe_gain_power {
+    my $record = shift;
+    my $faction = $factions{$record->{from_faction}};
+
+    return if --$faction->{leech_not_rejected}{$record->{leech_id}} > 0;
+    return if $record->{from_faction} ne 'cultists';
+    return if !$options{'errata-cultist-power'};
+
+    my %old_data = map { $_, $faction->{$_} } @data_fields;
+    gain_power $faction, 1;
+    my %new_data = map { $_, $faction->{$_} } @data_fields;
+    my %pretty_delta = pretty_resource_delta(\%old_data, \%new_data);
+
+    push @ledger, {
+        faction => $faction->{name},
+        commands => '[+1pw, all opponents declined power]',
+        map { $_, $pretty_delta{$_} } @data_fields
+    };
 }
 
 sub command_transform {
@@ -877,6 +900,13 @@ sub command {
         score_final_resources_for_faction $faction_name;
     } elsif ($command =~ /^admin email (.*)/i) {
         $admin_email = $1;
+    } elsif ($command =~ /^option (\S+)$/i) {
+        my $opt = lc $1;
+        if ($opt !~ /^(errata-cultist-power)$/) {
+            die "Unknown option $opt\n";
+        }
+        $options{$opt} = 1;
+        push @ledger, { comment => "option $opt" };
     } elsif ($command =~ /^player (\S+)(?: email (\S*))?$/i) {
         push @players, { name => $1, email => $2 };
     } elsif ($command =~ /^randomize v1 seed (.*)/i) {
@@ -1165,7 +1195,6 @@ sub check_setup_actions {
 }
 
 my %old_data = ();
-my @data_fields = qw(VP C W P P1 P2 P3 PW FIRE WATER EARTH AIR CULT);
 my @row_commands;
 my $row_faction = 'none';
 

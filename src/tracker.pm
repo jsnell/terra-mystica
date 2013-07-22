@@ -76,6 +76,7 @@ sub finalize {
         delete $faction->{locations};
         delete $faction->{teleport};
         delete $faction->{BRIDGE_COUNT};
+        delete $faction->{leech_not_rejected};
         if ($round == 6) {
             delete $faction->{income};
             delete $faction->{income_breakdown};
@@ -144,6 +145,7 @@ sub evaluate_game {
     local @setup_order = ();
     local @players = ();
     local $admin_email = '';
+    local %options = ();
 
     setup_map;
     setup_pool;
