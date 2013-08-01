@@ -1042,7 +1042,7 @@ sub clean_commands {
         s/-2w\.\s*bridge/convert 2w to bridge. bridge/i;
     }
     s/\s*pass\.\s*\+bon/pass bon/i;
-    s/(build \w+)\. (transform \w+ to \w+)/$2. $1/i;
+    s/(build \w+)\. (transform \w+(?: to \w+)?)/$2. $1/i;
     s/\s*(pass \w+)\. (convert (\d+ *)?\w+ to (\d+ *)?\w+)/$2. $1/i;
     s/(dig \w). (action \w+)/$2. $1/i;
 
