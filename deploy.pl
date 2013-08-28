@@ -75,7 +75,8 @@ sub deploy_docs {
 
 sub deploy_cgi {
     mkdir "$target/cgi-bin";
-    for my $f (qw(append.pl
+    for my $f (qw(alias.pl
+                  append.pl
                   bridge.pl
                   edit.pl
                   gamelist.pl
@@ -89,6 +90,7 @@ sub deploy_cgi {
                   settings.pl
                   template.pl 
                   validate.pl
+                  validate-alias.pl
                   validate-reset.pl
                   save.pl)) {
         copy_with_mode 0555, "src/$f", "$target/cgi-bin/$f";
@@ -123,7 +125,8 @@ sub deploy_cgi {
 
 sub deploy_stc {
     mkdir "$target/stc";
-    for my $f (qw(common.js
+    for my $f (qw(alias.js
+                  common.js
                   debug.js
                   edit.js
                   faction.js
@@ -143,7 +146,8 @@ sub deploy_stc {
 }
 
 sub deploy_html {
-    for my $f (qw(changes.html
+    for my $f (qw(alias.html
+                  changes.html
                   edit.html
                   faction.html
                   game.html

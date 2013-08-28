@@ -271,3 +271,11 @@ button {
     margin-right: 5px;
     margin-bottom: 2px;
 }
+
+div#settings table tr td {
+    vertical-align: top
+}
+
+div#settings ul {
+    margin-top: 0px
+}

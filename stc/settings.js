@@ -46,6 +46,9 @@ function renderSettings(state) {
     $H(state.email).each(function (elem) {
         newEmailList.insert(new Element("li").update(elem.key));
     });
+    newEmailList.insert(new Element("li").update(
+        new Element("a", { "href": "/alias/"}).update(
+            "Add new address")));
 
     $("email").update(newEmailList);
 }
