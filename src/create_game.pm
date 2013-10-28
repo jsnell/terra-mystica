@@ -8,7 +8,7 @@ use indexgame;
 use save;
 
 sub create_game {
-    my ($dbh, $id, $admin) = @_;
+    my ($dbh, $id, $admin, @options) = @_;
 
     die "Invalid game id $id\n" if !$id or $id =~ /[^A-Za-z0-9]/;
 
@@ -25,6 +25,8 @@ sub create_game {
         $opt_admin = "admin email $admin\n\n";
     }
 
+    @options = map { s/\s+//g; "option $_\n" } @options;
+
     my $content = <<EOF;
 # Game $id
 
@@ -32,7 +34,7 @@ $opt_admin
 # List players (in any order) with 'player' command
 
 # Default game options
-option errata-cultist-power
+@options
 # Randomize setup
 randomize v1 seed $id
 EOF

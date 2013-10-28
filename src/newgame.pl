@@ -52,8 +52,10 @@ if (game_exists $dbh, $gameid) {
 
 my ($email) = $dbh->selectrow_array("select address from email where player = ? limit 1", {}, $username);
 
+my @options = $q->param('game-options');
+
 eval {
-    my $write_id = create_game $dbh, $gameid, $email;
+    my $write_id = create_game $dbh, $gameid, $email, @options;
 
     print encode_json {
         error => [],
