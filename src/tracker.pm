@@ -74,7 +74,6 @@ sub finalize {
         delete $faction->{allowed_sub_actions};
         delete $faction->{allowed_build_locations};
         delete $faction->{locations};
-        delete $faction->{teleport};
         delete $faction->{BRIDGE_COUNT};
         delete $faction->{leech_not_rejected};
         if ($round == 6) {
@@ -119,7 +118,7 @@ sub finalize {
         $tiles{$key}{bonus_coins} = $bonus_coins{$key};
     }
 
-    for (qw(BRIDGE TOWN_SIZE GAIN_ACTION)) {
+    for (qw(BRIDGE TOWN_SIZE GAIN_ACTION carpet_range)) {
         delete $pool{$_};
     }
 }
@@ -148,7 +147,7 @@ sub evaluate_game {
     local %options = ();
 
     setup_map;
-    setup_pool;
+
     setup_cults;
 
     my $data = shift;
@@ -183,6 +182,7 @@ sub evaluate_game {
         }
     }
 
+    maybe_setup_pool;
     finalize $data->{delete_email} // 1, $faction_info // {};
 
     return {

@@ -1,5 +1,5 @@
 use strict;
-use vars qw(%actions %tiles);
+use vars qw(%actions %tiles %options);
 
 our %actions = (
     ACT1 => { cost => { PW => 3 }, gain => { BRIDGE => 1 },
@@ -102,7 +102,11 @@ our %tiles = (
     TW2 => { gain => { KEY => 1, VP => 7, W => 2 } },
     TW3 => { gain => { KEY => 1, VP => 9, P => 1 } },
     TW4 => { gain => { KEY => 1, VP => 6, PW => 8 } },
-    TW5 => { gain => { KEY => 1, VP => 8, FIRE => 1, WATER => 1, EARTH => 1, AIR => 1 } }
+    TW5 => { gain => { KEY => 1, VP => 8, FIRE => 1, WATER => 1, EARTH => 1, AIR => 1 } },
+    TW6 => { gain => { KEY => 2, VP => 2, FIRE => 2, WATER => 2, EARTH => 2, AIR => 2 }, count => 1, option => 'mini-expansion-1' },
+    TW7 => { gain => { KEY => 1, VP => 4, GAIN_SHIP => 1, carpet_range => 1 },
+             option => 'mini-expansion-1' },
+    TW8 => { gain => { KEY => 1, VP => 11 }, count => 1, option => 'mini-expansion-1' },
 );
 
 for (keys %tiles) {

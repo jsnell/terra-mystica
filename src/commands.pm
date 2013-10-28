@@ -861,8 +861,10 @@ sub command {
         return 0 if full_action_required;
         command_start;
     } elsif ($command =~ /^setup (\w+)(?: for (\S+?))?(?: email (\S+))?$/i) {
+        maybe_setup_pool;
         setup lc $1, $2, $3;
     } elsif ($command =~ /delete (\w+)$/i) {
+        maybe_setup_pool;
         my $x = ($faction ? $faction : \%pool);
 
         my $name = uc $1;
@@ -902,7 +904,7 @@ sub command {
         $admin_email = $1;
     } elsif ($command =~ /^option (\S+)$/i) {
         my $opt = lc $1;
-        if ($opt !~ /^(errata-cultist-power)$/) {
+        if ($opt !~ /^(errata-cultist-power|mini-expansion-1)$/) {
             die "Unknown option $opt\n";
         }
         $options{$opt} = 1;
@@ -910,6 +912,7 @@ sub command {
     } elsif ($command =~ /^player (\S+)(?: email (\S*))?$/i) {
         push @players, { name => $1, email => $2 };
     } elsif ($command =~ /^randomize v1 seed (.*)/i) {
+        maybe_setup_pool;
         command_randomize_v1 $1;
     } elsif ($command =~ /^wait$/i) {
         ($assert_faction->())->{waiting} = 1;

@@ -605,7 +605,11 @@ function renderTown(div, name, faction, count) {
         div.insert(name);
     }
 
-    div.insert("<div>#{VP} vp</div>".interpolate(state.towns[name].gain));
+    var head = "#{VP} vp".interpolate(state.towns[name].gain);
+    if (state.towns[name].gain.KEY != 1) {
+        head += ", #{KEY} keys".interpolate(state.towns[name].gain);
+    } 
+    div.insert(new Element("div").update(head));
     $H(state.towns[name].gain).each(function(elem, index) {
         var key = elem.key;
         var value = elem.value;
@@ -806,6 +810,10 @@ function drawFactions() {
         if (faction.dig.max_level > 0) {
             var dig = "dig level #{dig.level}<span style='color:#888'>/#{dig.max_level}</span>".interpolate(faction);
             levels.push(dig);
+        }
+
+        if (faction.teleport) {
+            levels.push("range " + faction[faction.teleport.type + "_range"] + "/" + faction[faction.teleport.type + "_max_range"]);
         }
 
         if (faction.ship.max_level > 0) {

@@ -8,6 +8,11 @@ use tiles;
 
 use vars qw(%pool %bonus_coins $leech_id);
 
+sub maybe_setup_pool() {
+    return if keys %pool;
+    setup_pool();
+}
+
 sub setup_pool {
     %bonus_coins = ();
 
@@ -44,18 +49,24 @@ sub setup_pool {
         BRIDGE => 10000,
         CONVERT_W_TO_P => 3,
         TOWN_SIZE => 10000,
+        carpet_range => 3,
         );
 
     $pool{"ACT$_"}++ for 1..6;
 
     for (keys %tiles) {
+        my $option = $tiles{$_}{option};
+        if (defined $option and not defined $options{$option}) {
+            delete $tiles{$_};
+            next;
+        }
         if (/^BON/) {
             $pool{$_}++;
             $bonus_coins{$_}{C} = 0;
         } elsif (/^FAV/) {
             $pool{$_} += $tiles{$_}{count} || 3;
         } elsif (/^TW/) {
-            $pool{$_} += 2;
+            $pool{$_} += $tiles{$_}{count} || 2;
         }
     }
 }

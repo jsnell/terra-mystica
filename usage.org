@@ -282,6 +282,7 @@ Set a game variant or option. Should be done before randomization or
 faction selection. The following options are available:
 
 - =errata-cultist-power=: Official rules change, http://boardgamegeek.com/thread/1009456/rules-update-for-cultists
+- =mini-expansion-1=: First mini-expansion, 4 town tiles
 
 ** =admin email= /email/
 

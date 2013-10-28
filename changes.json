@@ -1,5 +1,9 @@
 {
     "changes": [
+        { "date": "2013-10-27",
+          "title": "Mini expansion #1 (new town tiles)",
+          "description": "The 4 mini-expansion tiles have been added. Use 'option mini-expansion-1' to enable them in new games."
+        },
         { "date": "2013-07-22",
           "title": "Cultist errata",
           "description": "There has been an official rules change to the Cultists. If some opponents could gain power from a Cultist build / upgrade and they all decline it, the Cultists gain a power. This change will be on by default for new games ('option errata-cultist-power'), but doesn't apply to games that already started."

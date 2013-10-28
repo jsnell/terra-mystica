@@ -255,10 +255,13 @@ my %setups = (
                 },
                 teleport => {
                     level => 0, max_level => 1,
+                    type => 'carpet',
                     cost => [ { P => 1 }, { P => 1 } ],
                     gain => [ { VP => 4 }, { VP => 4 } ],
-                    range => [ 1, 2 ],
+                    advance_gain => [ { carpet_range => 1 } ],
                 },
+                carpet_range => 1,
+                carpet_max_range => 4,
                 dig => {
                     level => 0, max_level => 1,
                     cost => [ { W => 3 }, { W => 2 } ],
@@ -320,10 +323,12 @@ my %setups = (
                 },
                 teleport => {
                     level => 0, max_level => 1,
+                    type => 'tunnel',
                     cost => [ { W => 2 }, { W => 1 } ],
                     gain => [ { VP => 4 }, { VP => 4 } ],
-                    range => [ 1, 1 ],
                 },
+                tunnel_range => 1,
+                tunnel_max_range => 1,
                 dig => {
                     level => 0, max_level => 2,
                     cost => [ { W => 3 }, { W => 2 }, { W => 1 } ],

@@ -84,7 +84,7 @@ sub setup_direct_adjacencies {
 sub setup_hex_ranges {
     my ($from, $river_only) = @_;
     my %aux = ();
-    my $max = ($river_only ? 6 : 2);
+    my $max = ($river_only ? 6 : 4);
 
     return if $from =~ /^r/;
 
@@ -194,7 +194,8 @@ sub check_reachable {
     if ($faction->{teleport} and !$faction->{passed}) {
         my $t = $faction->{teleport};
         my $level = $t->{level};
-        my $range = $t->{range}[$level];
+        my $type = $t->{type};
+        my $range = $faction->{"${type}_range"};
 
         # XXX: shouldn't do payment here.
         for my $loc (@{$faction->{locations}}) {
@@ -239,8 +240,8 @@ sub compute_network_size {
 
     if ($faction->{teleport}) {
         my $t = $faction->{teleport};
-        my $level = $t->{level};
-        $range = $t->{range}[$level];
+        my $type = $t->{type};
+        $range = $faction->{"${type}_range"};
         $ship = 0;
     } else {
         $range = $faction->{ship}{level};        
