@@ -114,7 +114,7 @@ my %setups = (
     witches => { C => 15, W => 3, P1 => 5, P2 => 7,
                  AIR => 2, color => 'green',
                  special => {
-                     map(("TW$_", { VP => 5 }), 1..5)
+                     map(("TW$_", { VP => 5 }), 1..8)
                  },
                  display => "Witches",
                  ship => { 
@@ -200,7 +200,7 @@ my %setups = (
                                           { VP => 6 } ]
                     },
                     special => {
-                        map(("TW$_", { W => 3 }), 1..5)
+                        map(("TW$_", { W => 3 }), 1..8)
                     },
                     buildings => {
                         D => { advance_cost => { W => 2, C => 3 },

@@ -62,7 +62,7 @@ our %tiles = (
                 cult => 'EARTH',
                 req => 1, 
                 income => { C => 1 } },
-    SCORE2 => { vp => { map(("TW$_", 5), 1..5) },
+    SCORE2 => { vp => { map(("TW$_", 5), 1..8) },
                 vp_display => 'TOWN >> 5',
                 cult => 'EARTH',
                 req => 4, 
