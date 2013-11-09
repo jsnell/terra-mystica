@@ -45,7 +45,7 @@ An action was taken by $who_moved:
 $moves
 
 No longer interested in email notifications for your games? Change
-your email settings at $domain/settings
+your email settings at $domain/settings/
 ";
 
     ($subject, $body);
@@ -61,7 +61,7 @@ An action was taken in game $game->{name} by $who_moved:
 $moves
 
 No longer interested in email notifications for your games? Change
-your email settings at $domain/settings
+your email settings at $domain/settings/
 ";
     ($subject, $body);
 }
@@ -76,7 +76,7 @@ A chat message was sent in $game->{name} by $who_moved:
 $moves
 
 No longer interested in email notifications for your games? Change
-your email settings at $domain/settings
+your email settings at $domain/settings/
 ";
     ($subject, $body);
 }
