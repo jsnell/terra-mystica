@@ -72,4 +72,5 @@ create table chat_message (
     posted_at timestamp default now(),
     primary key (id)
 );
+create index chat_message_game_idx on chat_message (game);
 
