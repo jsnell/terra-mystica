@@ -1,5 +1,13 @@
 {
     "changes": [
+        { "date": "2013-11-09",
+          "title": "In-game chat",
+          "description": "Games now have a built-in chat system. The chat is only available for games with automatic email notifications turned on."
+        },
+        { "date": "2013-11-09",
+          "title": "Email notifications",
+          "description": "Games can now be created with automatic email notifications. Use 'option email-notify' to enable this feature. The feature is only available if all players have registered on the site. Players can control the notifications they receive from the settings page."
+        },
         { "date": "2013-10-27",
           "title": "Mini expansion #1 (new town tiles)",
           "description": "The 4 mini-expansion tiles have been added. Use 'option mini-expansion-1' to enable them in new games."
