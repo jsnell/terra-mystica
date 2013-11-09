@@ -13,23 +13,7 @@ function listGames(games, div, mode, status) {
             action_required_count++;
         }
         if (elem.seconds_since_update) {
-            var amount;
-            var unit;
-            if (elem.seconds_since_update > 86400) {
-                amount = Math.round(elem.seconds_since_update / 86400);
-                unit = "day";
-            } else if (elem.seconds_since_update > 3600) {
-                amount = Math.round(elem.seconds_since_update / 3600);
-                unit = "hour";
-            } else if (elem.seconds_since_update > 60) {
-                amount = Math.round(elem.seconds_since_update / 60);
-                unit = "minute";
-            } else {
-                amount = Math.round(elem.seconds_since_update);
-                unit = "second";
-            }
-            if (amount > 1) { unit += "s" }
-            elem.time_since_update = amount + " " + unit + " ago";
+            elem.time_since_update = seconds_to_pretty_time(elem.seconds_since_update);
         }
         if (elem.vp) { elem.vp += " vp"; }
         if (elem.rank) { elem.vp += " (" + elem.rank + ")"; }

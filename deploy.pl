@@ -78,6 +78,7 @@ sub deploy_cgi {
     for my $f (qw(alias.pl
                   append.pl
                   bridge.pl
+                  chat.pl
                   edit.pl
                   gamelist.pl
                   login.pl

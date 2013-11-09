@@ -119,3 +119,23 @@ function showChangelog(data, div, heading, max_age) {
         div.insert(e);
     });
 }
+
+function seconds_to_pretty_time(seconds) {
+    var amount;
+    var unit;
+    if (seconds > 86400) {
+        amount = Math.round(seconds / 86400);
+        unit = "day";
+    } else if (seconds > 3600) {
+        amount = Math.round(seconds / 3600);
+        unit = "hour";
+    } else if (seconds > 60) {
+        amount = Math.round(seconds / 60);
+        unit = "minute";
+    } else {
+        amount = Math.round(seconds);
+        unit = "second";
+    }
+    if (amount > 1) { unit += "s" }
+    return amount + " " + unit + " ago";
+}

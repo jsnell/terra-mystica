@@ -1153,9 +1153,13 @@ function drawActionRequired() {
         $("data_entry_tabs").insert("<button onclick='dataEntrySelect(\"move\")' id='data_entry_tab_move' class='tab'>Moves</button>");
         $("data_entry_tabs").insert("<button onclick='initPlanIfNeeded(); dataEntrySelect(\"planning\")' id='data_entry_tab_planning' class='tab'>Planning</button>");
         $("data_entry_tabs").insert("<button onclick='dataEntrySelect(\"recent\")' id='data_entry_tab_recent' class='tab'>Recent Moves</button>");
+        if (state.options["email-notify"]) {
+          $("data_entry_tabs").insert("<button onclick='initChatIfNeeded(); dataEntrySelect(\"chat\")' id='data_entry_tab_recent' class='tab'>Chat</button>");
+        }
         $("data_entry").insert("<div id='move_entry' class='tab_content'></div>");
         $("data_entry").insert("<div id='planning_entry' class='tab_content'></div>");
         $("data_entry").insert("<div id='recent_entry' class='tab_content'></div>");
+        $("data_entry").insert("<div id='chat_entry' class='tab_content'></div>");
         dataEntrySelect("move");
     }
 
@@ -1169,6 +1173,16 @@ function drawActionRequired() {
     if ($("recent_entry") && $("recent_entry").innerHTML == "") {
         var recent = new Element("table", { "id": "recent_moves" });
         $("recent_entry").insert(recent);
+    }
+
+    if (state.options["email-notify"] &&
+        $("chat_entry") && $("chat_entry").innerHTML == "") {
+        $("chat_entry").insert(new Element("table", {"id": "chat_messages" }));
+        var input = new Element("textarea", {"id": "chat_entry_input",
+                                             "style": "font-family: monospace; width: 60ex; height: 5em;" } );
+        $("chat_entry").insert(input);
+        $("chat_entry").insert(new Element("br"));
+        $("chat_entry").insert(new Element("button", {"id": "chat_entry_submit", "onclick": "javascript:sendChat()"}).update("Send"));
     }
 
     if (needMoveEntry && $("move_entry").innerHTML == "") {

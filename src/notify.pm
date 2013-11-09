@@ -88,6 +88,8 @@ sub notify_after_move {
 
     $moves =~ s/^$who_moved:/  /gm;
 
+    # TODO: should send a message when game is over
+
     for my $faction (values %{$game->{factions}}) {
         my $email = $faction->{email};
         my $settings = fetch_email_settings $dbh, $email;

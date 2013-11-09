@@ -59,3 +59,17 @@ create table secret (
     primary key (secret)
 );
 
+CREATE OR REPLACE FUNCTION uuid_generate_v4()
+RETURNS uuid
+AS '$libdir/uuid-ossp', 'uuid_generate_v4'
+VOLATILE STRICT LANGUAGE C;
+
+create table chat_message (
+    id uuid not null default uuid_generate_v4(),
+    game text references game (id),
+    faction text,
+    message text,
+    posted_at timestamp default now(),
+    primary key (id)
+);
+

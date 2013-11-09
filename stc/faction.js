@@ -211,3 +211,74 @@ function initPlanIfNeeded() {
     loadPlan();
     plan_loaded = 1;
 }
+
+{
+    Element.addMethods({
+        updateText: function(element, text) {
+            $(element).textContent = text;
+            return element;
+        }
+    });
+}                      
+
+function loadOrSendChat(send) {
+    dataEntrySetStatus(true);
+
+    var target = "/cgi-bin/chat.pl";
+    target = "http://" + backendDomain + target;
+
+    var form_params = {
+        "cache-token": new Date() - Math.random(),
+        "game": params.game,
+        "faction-key": params.key,
+        "faction": currentFaction,
+    };
+
+    if (send && $("chat_entry_input").value) {
+        form_params['add-message'] = $("chat_entry_input").value;
+    }
+
+    new Ajax.Request(target, {
+        method: "get",
+        parameters: form_params,
+        onSuccess: function(transport){
+            var messages = transport.responseText.evalJSON();
+            if (send) {
+                $("chat_entry_input").value = "";
+            }
+            $("chat_messages").update("");
+
+            messages.messages.each(function (entry) {
+                var row = new Element("tr");
+                row.insert(new Element("td").update(coloredFactionSpan(entry.faction)));
+
+                var message_div = new Element("div");
+                entry.message.split(/\n/).each(function (message_row) {
+                    message_div.insert(new Element("div").updateText(message_row));
+                });
+                message_div.insert(new Element("div", {"style": "color: #888; font-size: 75%;"}).update("(" + seconds_to_pretty_time(entry.message_age) + " ago)"));
+                row.insert(new Element("td").insert(message_div));
+
+                $("chat_messages").insert(row);
+            });
+            dataEntrySetStatus(false);
+        }
+    });
+}
+
+function loadChat() {
+    loadOrSendChat(false);
+}
+
+function sendChat() {
+    loadOrSendChat(true);
+}
+
+var chat_loaded = 0;
+function initChatIfNeeded() {
+    if (chat_loaded) {
+        return;
+    }
+    loadChat();
+    chat_loaded = 1;
+}
