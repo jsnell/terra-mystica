@@ -904,7 +904,7 @@ sub command {
         $admin_email = $1;
     } elsif ($command =~ /^option (\S+)$/i) {
         my $opt = lc $1;
-        if ($opt !~ /^(errata-cultist-power|mini-expansion-1)$/) {
+        if ($opt !~ /^(errata-cultist-power|mini-expansion-1|email-notify)$/) {
             die "Unknown option $opt\n";
         }
         $options{$opt} = 1;

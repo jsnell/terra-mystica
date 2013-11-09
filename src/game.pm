@@ -26,7 +26,7 @@ sub get_game_content {
             die "Invalid write_id $write_id"
         }
     } else {
-        $content =~ s/email\s*\S+/email redacted/g;
+        $content =~ s/email(?!-)\s*\S+/email redacted/g;
     }
 
     return $content;
