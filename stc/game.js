@@ -1154,7 +1154,7 @@ function drawActionRequired() {
         $("data_entry_tabs").insert("<button onclick='initPlanIfNeeded(); dataEntrySelect(\"planning\")' id='data_entry_tab_planning' class='tab'>Planning</button>");
         $("data_entry_tabs").insert("<button onclick='dataEntrySelect(\"recent\")' id='data_entry_tab_recent' class='tab'>Recent Moves</button>");
         if (state.options["email-notify"]) {
-          $("data_entry_tabs").insert("<button onclick='initChatIfNeeded(); dataEntrySelect(\"chat\")' id='data_entry_tab_recent' class='tab'>Chat</button>");
+          $("data_entry_tabs").insert("<button onclick='initChatIfNeeded(); dataEntrySelect(\"chat\")' id='data_entry_tab_chat' class='tab'>Chat</button>");
         }
         $("data_entry").insert("<div id='move_entry' class='tab_content'></div>");
         $("data_entry").insert("<div id='planning_entry' class='tab_content'></div>");
