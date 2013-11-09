@@ -10,6 +10,10 @@ p {
     max-width: 65ex;
 }
 
+li {
+    max-width: 65ex;
+}
+
 pre {
     font-family: monospace;
     max-width: 80ex;
