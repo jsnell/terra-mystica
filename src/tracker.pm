@@ -204,6 +204,7 @@ sub evaluate_game {
         finished => $finished,
         cults => \%cults,
         players => \@players,
+        options => \%options,
         admin => $data->{delete_email} ? '' : $admin_email,
     }
 
