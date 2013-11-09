@@ -279,6 +279,17 @@ function initChatIfNeeded() {
     if (chat_loaded) {
         return;
     }
+    if (localStorage) {
+        localStorage["chat_message_count:" + params.key] = state.chat_message_count;
+    }
     loadChat();
     chat_loaded = 1;
+}
+
+function newChatMessages() {
+    if (localStorage) {
+        return localStorage["chat_message_count:" + params.key] != state.chat_message_count;
+    } else {
+        return false;
+    }
 }

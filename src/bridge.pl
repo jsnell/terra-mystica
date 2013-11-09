@@ -3,6 +3,8 @@
 use CGI qw(:cgi);
 use JSON;
 
+use strict;
+
 use db;
 use exec_timer;
 use game;
@@ -30,6 +32,14 @@ sub print_json {
 
 my $dbh = get_db_connection;
 
+sub get_chat_count {
+    my ($dbh, $id) = @_;
+
+    $dbh->selectrow_array("select count(*) from chat_message where game=?",
+                          {},
+                          $id);
+}
+
 if (game_exists $dbh, $id) {
     print "\r\n";
     my @rows = get_game_commands($dbh, $id);
@@ -49,6 +59,10 @@ if (game_exists $dbh, $id) {
         players => get_game_players($dbh, $id),
         max_row => $max_row
     };
+    eval {
+        $res->{chat_message_count} = get_chat_count($dbh, $id);
+    };
+
     print_json $res;
 } else {
     print "Status: 404 Not Found\r\n";
