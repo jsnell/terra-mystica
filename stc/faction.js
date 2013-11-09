@@ -250,9 +250,9 @@ function loadOrSendChat(send) {
 
             messages.messages.each(function (entry) {
                 var row = new Element("tr");
-                row.insert(new Element("td").update(coloredFactionSpan(entry.faction)));
+                row.insert(new Element("td", {"style": "white-space:nowrap"}).update(coloredFactionSpan(entry.faction)));
 
-                var message_div = new Element("div");
+                var message_div = new Element("div", {"style": "max-width: 60ex"});
                 entry.message.split(/\n/).each(function (message_row) {
                     message_div.insert(new Element("div").updateText(message_row));
                 });

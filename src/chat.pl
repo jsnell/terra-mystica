@@ -7,6 +7,7 @@ use Crypt::CBC;
 use JSON;
 
 use db;
+use notify;
 use secret;
 
 my $q = CGI->new;
@@ -56,6 +57,16 @@ eval {
             $id,
             $add_message);
         $dbh->do('commit');
+
+        my $factions = $dbh->selectall_arrayref(
+            "select faction as name, email from game_role where game = ? and faction != 'admin' and email is not null",
+            { Slice => {} },
+            $id);
+
+        notify_new_chat $dbh, {
+            name => $id,
+            factions => { map { ($_->{name}, $_) } @{$factions} }
+        }, $faction_name, $add_message;
     }
 
     my $rows = $dbh->selectall_arrayref(

@@ -66,6 +66,21 @@ your email settings at $domain/settings
     ($subject, $body);
 }
 
+sub notification_text_for_chat {
+    my ($game, $who_moved, $moves) = @_;
+
+    my $subject = "Terra Mystica PBEM ($game->{name})";
+    my $body = "
+A chat message was sent in $game->{name} by $who_moved:
+
+$moves
+
+No longer interested in email notifications for your games? Change
+your email settings at $domain/settings
+";
+    ($subject, $body);
+}
+
 sub fetch_email_settings {
     my ($dbh, $email) = @_;
     my $settings = $dbh->selectrow_hashref(
@@ -108,6 +123,25 @@ sub notify_after_move {
 
         if ($acting and $settings->{email_notify_turn} or
             $settings->{email_notify_all_moves}) {
+            notify_by_email $game, $email, $subject, $body;
+        }
+    }
+}
+
+sub notify_new_chat {
+    my ($dbh, $game, $who_sent, $message) = @_;
+
+    $message =~ s/^/  /gm;
+
+    for my $faction (values %{$game->{factions}}) {
+        my $email = $faction->{email};
+        my $settings = fetch_email_settings $dbh, $email;
+        my ($subject, $body) =
+            notification_text_for_chat $game, $who_sent, $message;
+
+        next if $who_sent eq $faction->{name};
+
+        if ($settings->{email_notify_chat}) {
             notify_by_email $game, $email, $subject, $body;
         }
     }
