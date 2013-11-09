@@ -283,6 +283,7 @@ faction selection. The following options are available:
 
 - =errata-cultist-power=: Official rules change, http://boardgamegeek.com/thread/1009456/rules-update-for-cultists
 - =mini-expansion-1=: First mini-expansion, 4 town tiles
+- =email-notify=: Automatically send email notifications after moves (players can configure exactly which emails they want to see). Can't be used in games with unregistered players.
 
 ** =admin email= /email/
 
@@ -393,12 +394,16 @@ after taking the town tile will unjustly award 3 power to the player.
 
 * Browser and Email Setup
 
-The "Send email" functionality works by opening a pre-formatted email
-message in your normal email program, addressed to the other players.
-This only works if your browser is configured to use the correct email
-program. It should work by default at least on Android devices, iPhones
-and iPads. This section lists hints to configuring some common browsers
-or mail programs.
+This section applies to the older "Send email" functionality, which is
+available for games where automatic email notifications are not
+enabled. 
+
+The feature works by opening a pre-formatted email message in your
+normal email program, addressed to the other players.  This only works
+if your browser is configured to use the correct email program. It
+should work by default at least on Android devices, iPhones and
+iPads. This section lists hints to configuring some common browsers or
+mail programs.
 
 ** Gmail and Chrome
 
