@@ -279,3 +279,8 @@ div#settings table tr td {
 div#settings ul {
     margin-top: 0px
 }
+
+table.settings-table td {
+    padding-left: 2ex;
+    vertical-align: top;
+}

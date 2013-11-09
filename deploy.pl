@@ -109,6 +109,7 @@ sub deploy_cgi {
                   indexgame.pm
                   map.pm
                   natural_cmp.pm
+                  notify.pm
                   results.pm
                   resources.pm
                   rlimit.pm

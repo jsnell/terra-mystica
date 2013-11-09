@@ -9,6 +9,9 @@ function loadOrSaveSettings(save) {
     };
     if (save) {
         form_params['displayname'] = $("displayname").value;
+        form_params['email_notify_turn'] = $("email_notify_turn").checked;
+        form_params['email_notify_all_moves'] = $("email_notify_all_moves").checked;
+        form_params['email_notify_chat'] = $("email_notify_chat").checked;
         form_params['save'] = 1;
     }
 
@@ -49,6 +52,10 @@ function renderSettings(state) {
     newEmailList.insert(new Element("li").update(
         new Element("a", { "href": "/alias/"}).update(
             "Add new address")));
+
+    $("email_notify_turn").checked = state.email_notify_turn;
+    $("email_notify_all_moves").checked = state.email_notify_all_moves;
+    $("email_notify_chat").checked = state.email_notify_chat;
 
     $("email").update(newEmailList);
 }

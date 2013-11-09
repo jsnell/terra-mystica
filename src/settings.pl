@@ -43,12 +43,11 @@ my %res = (
 );
 
 sub fetch_user_settings {
-    my ($username, $displayname) = $dbh->selectrow_array(
-        "select username, displayname from player where username = ?",
+    my $player = $dbh->selectrow_hashref(
+        "select username, displayname, email_notify_turn, email_notify_all_moves, email_notify_chat from player where username = ?",
         {},
         $username);
-    $res{username} = $username;
-    $res{displayname} = $displayname;
+    $res{$_} = $player->{$_} for keys %{$player};
 
     my $rows = $dbh->selectall_arrayref(
         "select address, validated from email where player = ?",
@@ -67,9 +66,12 @@ sub save_user_settings {
         error "Display Name too long";
     }
 
-    $dbh->do("update player set displayname=? where username=?",
+    $dbh->do("update player set displayname=?, email_notify_turn=?, email_notify_all_moves=?, email_notify_chat=? where username=?",
              {},
              $displayname,
+             $q->param('email_notify_turn'),
+             $q->param('email_notify_all_moves'),
+             $q->param('email_notify_chat'),
              $username);
 }
 

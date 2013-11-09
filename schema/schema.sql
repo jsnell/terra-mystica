@@ -1,7 +1,10 @@
 create table player (
   username text primary key,
   password text,
-  displayname text
+  displayname text,
+  email_notify_turn boolean default true,
+  email_notify_all_moves boolean default false,
+  email_notify_chat boolen default true
 );
 create unique index player_username_lowercase_idx on player(lower(username));
 

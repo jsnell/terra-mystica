@@ -5,8 +5,10 @@ use strict;
 use editlink;
 use Net::SMTP;
 
+my $domain = "http://terra.snellman.net";
+
 sub notify_by_email {
-    my ($email, $subject, $body) = @_;
+    my ($game, $email, $subject, $body) = @_;
 
     return if !$body or !$subject or !$email;
 
@@ -18,7 +20,7 @@ sub notify_by_email {
     } else {
         $smtp->data();
         $smtp->datasend("To: $email\n");
-        $smtp->datasend("From: noreply+notify\@terra.snellman.net\n");
+        $smtp->datasend("From: TM Game Notification <noreply+notify-game-$game->{name}\@terra.snellman.net>\n");
         $smtp->datasend("Subject: $subject\n");
         $smtp->datasend("\n");
         $smtp->datasend("$body\n");
@@ -33,7 +35,6 @@ sub notification_text_for_active {
 
     my $subject = "Terra Mystica PBEM ($game->{name}) - your move";
 
-    my $domain = "http://terra.snellman.net";
     my $link = edit_link_for_faction $dbh, $write_id, $faction->{name};
     my $body = "
 It's your turn to move in Terra Mystica game $game->{name}.
@@ -42,6 +43,9 @@ Link: $domain$link
 
 An action was taken by $who_moved:
 $moves
+
+No longer interested in email notifications for your games? Change
+your email settings at $domain/settings
 ";
 
     ($subject, $body);
@@ -55,8 +59,21 @@ sub notification_text_for_observer {
 An action was taken in game $game->{name} by $who_moved:
 
 $moves
+
+No longer interested in email notifications for your games? Change
+your email settings at $domain/settings
 ";
     ($subject, $body);
+}
+
+sub fetch_email_settings {
+    my ($dbh, $email) = @_;
+    my $settings = $dbh->selectrow_hashref(
+        "select email_notify_turn, email_notify_all_moves, email_notify_chat from player where username=(select player from email where address=?)",
+        {},
+        $email);
+
+    $settings;
 }
 
 sub notify_after_move {
@@ -73,14 +90,23 @@ sub notify_after_move {
 
     for my $faction (values %{$game->{factions}}) {
         my $email = $faction->{email};
+        my $settings = fetch_email_settings $dbh, $email;
+
+        # Shouldn't happen, but ensure that we never send email to an
+        # unregistered address.
+        next if !$settings;
+        # Don't send notifications for your own moves.
+        next if $faction->{name} eq $who_moved;
+
         my $acting = $acting{$faction->{name}};
         my ($subject, $body) =
             ($acting ?
              notification_text_for_active $dbh, $write_id, $game, $email, $faction, $who_moved, $moves :
              notification_text_for_observer $game, $who_moved, $moves);
 
-        if ($acting) {
-            notify_by_email $email, $subject, $body;
+        if ($acting and $settings->{email_notify_turn} or
+            $settings->{email_notify_all_moves}) {
+            notify_by_email $game, $email, $subject, $body;
         }
     }
 }
