@@ -11,6 +11,7 @@ use editlink;
 use exec_timer;
 use game;
 use indexgame;
+use notify;
 use rlimit;
 use save;
 use secret;
@@ -97,20 +98,28 @@ if (!@{$res->{error}}) {
 finish_game_transaction $dbh;
 
 my @email = ();
+$res->{name} = $read_id;
 
-if ($terra_mystica::email) {
-    push @email, $terra_mystica::email;
-}
+if (!@{$res->{error}}) {
+    if ($res->{options}{'email-notify'}) {
+        notify_after_move $dbh, $write_id, $res, $faction_name, $append;
+    } else {
+        # Automatic notifications are off, allow for manual emailing.
+        if ($terra_mystica::email) {
+            push @email, $terra_mystica::email;
+        }
 
-for my $faction (values %{$res->{factions}}) {
-    if ($faction->{name} ne $faction_name and $faction->{email}) {
-        push @email, $faction->{email}
-    }
-}
+        for my $faction (values %{$res->{factions}}) {
+            if ($faction->{name} ne $faction_name and $faction->{email}) {
+                push @email, $faction->{email}
+            }
+        }
 
-for (@{$res->{players}}) {
-    if ($_->{email}) {
-        push @email, $_->{email}
+        for (@{$res->{players}}) {
+            if ($_->{email}) {
+                push @email, $_->{email}
+            }
+        }
     }
 }
 
