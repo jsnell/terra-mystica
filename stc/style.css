@@ -265,6 +265,7 @@ table.gamelist thead {
 
 table.gamelist td {
     padding-right: 2ex;
+    white-space: nowrap;
 }
 
 button {
