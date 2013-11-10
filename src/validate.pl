@@ -22,14 +22,20 @@ sub add_user {
 
     my $dbh = get_db_connection;
 
-    $dbh->do('begin');
-    $dbh->do('insert into player (username, displayname, password) values (?, ?, ?)', {},
+    my ($already_done) = $dbh->selectrow_array("select count(*) from email where lower(address) = lower(?) and player = ?", {}, $email, $user);
+
+    if (!$already_done) {
+        $dbh->do('begin');
+        $dbh->do('insert into player (username, displayname, password) values (?, ?, ?)', {},
              $user, $user, $hashed_password);
-    $dbh->do('insert into email (address, player, validated) values (lower(?), ?, ?)',
-             {}, $email, $user, 1);
-    $dbh->do('commit');
+        $dbh->do('insert into email (address, player, validated) values (lower(?), ?, ?)',
+                 {}, $email, $user, 1);
+        $dbh->do('commit');
+    }
 
     $dbh->disconnect();
+
+    $already_done;
 }
 
 sub check_token {
@@ -39,8 +45,12 @@ sub check_token {
 }
 
 eval {
-    check_token;
-    print "<h3>Account created</h3>";
+    my $already_done = check_token;
+    if ($already_done) {
+        print "<h3>Account already exists</h3>";
+    } else {
+        print "<h3>Account created</h3>";
+    }
 }; if ($@) {
     print STDERR "token: $token\n";
     print STDERR $@;
