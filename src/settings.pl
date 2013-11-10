@@ -3,7 +3,6 @@
 use strict;
 
 use CGI qw(:cgi -utf8);
-use Crypt::CBC;
 use JSON;
 use utf8 qw(decode);
 

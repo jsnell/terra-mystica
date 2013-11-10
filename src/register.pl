@@ -1,11 +1,13 @@
 #!/usr/bin/perl -w
 
+use strict;
+
 use CGI qw(:cgi);
-use Crypt::CBC;
 use Crypt::Eksblowfish::Bcrypt qw(bcrypt en_base64);
 use JSON;
 use Net::SMTP;
 
+use cryptutil;
 use db;
 use secret;
 
@@ -45,21 +47,8 @@ if (!@error) {
     my $salt = en_base64 (join '', map { chr int rand 256} 1..16);
     my $hashed_password = bcrypt($password, 
                                  '$2a$08$'.$salt);
-    my $data = join "\t", ($username, $email, $hashed_password);
-    my $url;
-
-    do {
-        my $iv = Crypt::CBC->random_bytes(8);
-        my $cipher = Crypt::CBC->new(-key => $secret,
-                                     -iv => $iv,
-                                     -blocksize => 8,
-                                     -header => 'randomiv',
-                                     -cipher => 'Blowfish');
-        my $token = en_base64 $cipher->encrypt($data);
-        $url = sprintf "http://terra.snellman.net/validate/%s", $token;
-        # Continue until the URL ends in a non-special character, to
-        # reduce the chances of the link being mis-.
-    } while ($url !~ /[A-Za-z0-9]$/);
+    my $token = encrypt_validation_token $secret, $username, $email, $hashed_password;
+    my $url = sprintf "http://terra.snellman.net/validate/%s", $token;
 
     my $smtp = Net::SMTP->new('localhost', ( Debug => 0 ));
 

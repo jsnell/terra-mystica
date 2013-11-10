@@ -100,6 +100,7 @@ sub deploy_cgi {
     for my $f (qw(buildings.pm
                   commands.pm
                   create_game.pm
+                  cryptutil.pm
                   cults.pm
                   db.pm
                   editlink.pm

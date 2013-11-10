@@ -1,11 +1,10 @@
 #!/usr/bin/perl -w
 
 use CGI qw(:cgi);
-use Crypt::CBC;
-use Crypt::Eksblowfish::Bcrypt qw(bcrypt en_base64);
 use JSON;
 use Net::SMTP;
 
+use cryptutil;
 use db;
 use secret;
 use session;
@@ -34,19 +33,8 @@ if (!@error) {
 if (!@error) {
     my $secret = get_secret $dbh;
 
-    my $data = join "\t", ($username, $email);
-    my $url;
-
-    do {
-        my $iv = Crypt::CBC->random_bytes(8);
-        my $cipher = Crypt::CBC->new(-key => $secret,
-                                     -iv => $iv,
-                                     -blocksize => 8,
-                                     -header => 'randomiv',
-                                     -cipher => 'Blowfish');
-        my $token = en_base64 $cipher->encrypt($data);
-        $url = sprintf "http://terra.snellman.net/validate-alias/%s", $token;
-    } while ($url !~ /[A-Za-z0-9]$/);
+    my $token = encrypt_validation_token $secret, ($username, $email);
+    $url = sprintf "http://terra.snellman.net/validate-alias/%s", $token;
 
     my $smtp = Net::SMTP->new('localhost', ( Debug => 0 ));
 

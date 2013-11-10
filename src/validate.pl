@@ -1,9 +1,10 @@
 #!/usr/bin/perl -w
 
-use CGI qw(:cgi);
-use Crypt::CBC;
-use Crypt::Eksblowfish::Bcrypt qw(de_base64);
+use strict;
 
+use CGI qw(:cgi);
+
+use cryptutil;
 use db;
 use secret;
 
@@ -34,12 +35,7 @@ sub add_user {
 sub check_token {
     my ($secret, $iv) = get_secret;
 
-    my $cipher = Crypt::CBC->new(-key => $secret,
-                                 -blocksize => 8,
-                                 -header => 'randomiv',
-                                 -cipher => 'Blowfish');
-    my $data = $cipher->decrypt(de_base64 $token);
-    add_user split /\t/, $data;
+    add_user decrypt_validation_token $secret, $token;
 }
 
 eval {
