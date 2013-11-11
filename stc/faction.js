@@ -288,7 +288,11 @@ function initChatIfNeeded() {
 
 function newChatMessages() {
     if (localStorage) {
-        return localStorage["chat_message_count:" + params.key] != state.chat_message_count;
+        var seenMessages = 0;
+        if (localStorage["chat_message_count:" + params.key]) {
+            seenMessages = localStorage["chat_message_count:" + params.key];
+        }
+        return seenMessages != state.chat_message_count;
     } else {
         return false;
     }
