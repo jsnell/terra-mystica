@@ -98,7 +98,7 @@ sub notify_after_move {
     return if !$game->{options}{'email-notify'};
 
     for (@{$game->{action_required}}) {
-        $acting{$_->{faction}} = 1;
+        $acting{$_->{faction} // $_->{player_index}} = 1;
     }
 
     $moves =~ s/^$who_moved:/  /gm;

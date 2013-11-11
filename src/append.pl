@@ -98,11 +98,20 @@ if (!@{$res->{error}}) {
 finish_game_transaction $dbh;
 
 my @email = ();
-$res->{name} = $read_id;
 
 if (!@{$res->{error}}) {
     if ($res->{options}{'email-notify'}) {
-        notify_after_move $dbh, $write_id, $res, $faction_name, $append;
+        my $factions = $dbh->selectall_arrayref(
+            "select faction as name, email from game_role where game = ? and faction != 'admin' and email is not null",
+            { Slice => {} },
+            $read_id);
+        my $game = {
+            name => $read_id,
+            factions => { map { ($_->{name}, $_) } @{$factions} },
+            options => $res->{options},
+            action_required => $res->{action_required},
+        };
+        notify_after_move $dbh, $write_id, $game, $faction_name, $append;
     } else {
         # Automatic notifications are off, allow for manual emailing.
         if ($terra_mystica::email) {
