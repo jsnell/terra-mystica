@@ -84,7 +84,7 @@ your email settings at $domain/settings/
 sub fetch_email_settings {
     my ($dbh, $email) = @_;
     my $settings = $dbh->selectrow_hashref(
-        "select email_notify_turn, email_notify_all_moves, email_notify_chat from player where username=(select player from email where address=?)",
+        "select email_notify_turn, email_notify_all_moves, email_notify_chat from player where username=(select player from email where address=lower(?))",
         {},
         $email);
 
