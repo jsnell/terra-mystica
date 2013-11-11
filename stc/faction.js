@@ -259,8 +259,10 @@ function loadOrSendChat(send) {
                 row.insert(new Element("td", {"style": "white-space:nowrap"}).update(from));
 
                 var message_div = new Element("div", {"style": "max-width: 60ex"});
-                entry.message.split(/\n/).each(function (message_row) {
-                    message_div.insert(new Element("div").updateText(message_row));
+                // Normalize
+                var message_text = entry.message.sub(/\n$/, "");
+                message_text.split(/\n/).each(function (message_row) {
+                    message_div.insert(new Element("div").updateText(message_row).insert(new Element("span").update("&nbsp")));
                 });
                 message_div.insert(new Element("div", {"style": "color: #888; font-size: 75%;"}).update("(" + seconds_to_pretty_time(entry.message_age) + " ago)"));
                 row.insert(new Element("td").insert(message_div));
