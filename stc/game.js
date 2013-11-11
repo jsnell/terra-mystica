@@ -1040,9 +1040,21 @@ function drawScoringTiles() {
 
 function coloredFactionSpan(faction_name) {
     record = {};
-    record.bg = colors[state.factions[faction_name].color];
-    record.fg = (record.bg == '#000000' ? '#ccc' : '#000');
-    record.display = factionDisplayName(state.factions[faction_name]);
+    if (state.factions[faction_name]) {
+        record.bg = colors[state.factions[faction_name].color];
+        record.fg = (record.bg == '#000000' ? '#ccc' : '#000');
+        record.display = factionDisplayName(state.factions[faction_name]);
+    } else {
+        var players = {};
+        state.players.each(function (value, index) {
+            players["player" + (index + 1)] = value.name.escapeHTML();
+        });
+        if (players[faction_name]) {
+            return faction_name + " (" + players[faction_name] + ")"
+        } else {
+            return faction_name;
+        }
+    }
 
     return "<span style='background-color:#{bg}; color: #{fg}'>#{display}</span>".interpolate(record);
 }
