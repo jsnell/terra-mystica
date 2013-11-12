@@ -289,3 +289,7 @@ table.settings-table td {
 table#chat_messages td {
     vertical-align: top;
 }
+
+tr.chat-message-hidden {
+    display: none;
+}

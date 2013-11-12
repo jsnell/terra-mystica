@@ -248,8 +248,15 @@ function loadOrSendChat(send) {
             }
             $("chat_messages").update("");
 
-            messages.messages.each(function (entry) {
-                var row = new Element("tr");
+            if (state.chat_hide_message_count > 0) {
+                $("chat_messages").insert("<tr id='chat_messages_show_old'><td><td><span style='text-decoration: underline' onclick='showOldMessages()'>Show #{chat_hide_message_count} older messages</span></tr>".interpolate(state));                
+            }
+
+            messages.messages.each(function (entry, index) {
+                var cssClass = (index < state.chat_hide_message_count ?
+                                "chat-message-hidden" :
+                                "chat-message-visible");
+                var row = new Element("tr", {"class": cssClass});
                 var from = entry.faction;
                 try {
                     from = coloredFactionSpan(entry.faction);
@@ -294,5 +301,15 @@ function initChatIfNeeded() {
 }
 
 function newChatMessages() {
+    state.chat_hide_message_count = Math.min(state.chat_message_count - state.chat_unread_message_count,
+                                             Math.max(0, state.chat_message_count - 5));
+    
     return state.chat_unread_message_count > 0;
+}
+
+function showOldMessages() {
+    $$("#chat_messages tr.chat-message-hidden").each(function(row) {
+        row.className = "chat-message-visible";
+    });    
+    $("chat_messages_show_old").hide();
 }
