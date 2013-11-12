@@ -1172,7 +1172,9 @@ function drawActionRequired() {
             }
             var chat_button = new Element("button", {"onclick": "initChatIfNeeded(); dataEntrySelect('chat')", "id": 'data_entry_tab_chat', "class":'tab', "style": style, "accesskey":  'c'});
             var label = "Chat";
-            if (state.chat_message_count > 0) {
+            if (state.chat_unread_message_count > 0) {
+                label += " [#{chat_unread_message_count} unread]".interpolate(state);
+            } else if (state.chat_message_count > 0) {
                 label += " [#{chat_message_count}]".interpolate(state);
             }
             chat_button.updateText(label);
