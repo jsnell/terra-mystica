@@ -36,7 +36,7 @@ sub verify_email_notification_settings {
         }
 
         my ($email_valid) =
-            $dbh->selectrow_array("select count(*) from email where address=? and validated=true",
+            $dbh->selectrow_array("select count(*) from email where address=lower(?) and validated=true",
                                   {},
                                   $faction->{email});
 
