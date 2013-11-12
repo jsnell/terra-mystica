@@ -74,3 +74,9 @@ create table chat_message (
 );
 create index chat_message_game_idx on chat_message (game);
 
+create table chat_read (
+    game text references game (id),
+    player text references player (username),
+    last_read timestamp,
+    primary key (game, player)
+);

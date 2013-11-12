@@ -9,6 +9,7 @@ use db;
 use exec_timer;
 use game;
 use rlimit;
+use session;
 use tracker;
 
 my $q = CGI->new;
@@ -31,13 +32,25 @@ sub print_json {
 }
 
 my $dbh = get_db_connection;
+my $username = username_from_session_token($dbh,
+                                           $q->cookie('session-token') // '');
 
 sub get_chat_count {
     my ($dbh, $id) = @_;
 
-    $dbh->selectrow_array("select count(*) from chat_message where game=?",
-                          {},
-                          $id);
+    my $count = $dbh->selectrow_array("select count(*) from chat_message where game=?",
+                                      {},
+                                      $id);
+    my $unread_count = 0;
+
+    if ($username) {
+        $unread_count = $dbh->selectrow_array("select count(*) from chat_message where game=? and posted_at > (select coalesce((select last_read from chat_read where game=chat_message.game and player=?), '2012-01-01'))",
+                                              {},
+                                              $id,
+                                              $username);
+    }
+
+    ($count, $unread_count);
 }
 
 if (game_exists $dbh, $id) {
@@ -60,7 +73,8 @@ if (game_exists $dbh, $id) {
         max_row => $max_row
     };
     eval {
-        $res->{chat_message_count} = get_chat_count($dbh, $id);
+        ($res->{chat_message_count},
+         $res->{chat_unread_message_count}) = get_chat_count($dbh, $id);
     };
 
     print_json $res;

@@ -9,6 +9,7 @@ use JSON;
 use db;
 use notify;
 use secret;
+use session;
 
 my $q = CGI->new;
 my $dbh = get_db_connection;
@@ -20,6 +21,8 @@ $id =~ s{[^A-Za-z0-9_]}{}g;
 my $faction_name = $q->param('faction');
 my $faction_key = $q->param('faction-key');
 my $add_message = $q->param('add-message');
+my $username = username_from_session_token($dbh,
+                                           $q->cookie('session-token') // '');
 
 sub verify_key {
     my ($secret, $iv) = get_secret $dbh;
@@ -73,6 +76,23 @@ eval {
         "select faction, message, extract(epoch from now() - posted_at) as message_age from chat_message where game = ? order by posted_at asc",
         { Slice => {} },
         $id);
+    
+    if ($username) {
+        $dbh->do("begin");
+        my $count =
+            $dbh->do("update chat_read set last_read = now() where game=? and player=?",
+                     {},
+                     $id,
+                     $username);
+        if ($count == 0) {
+            $dbh->do("insert into chat_read (last_read, game, player) values (now(), ?, ?)",
+                     {},
+                     $id,
+                     $username);
+        }
+        $dbh->do("commit");
+    }
+
     $res{messages} = $rows;
 }; if ($@) {
     $res{error} = "$@";

@@ -270,7 +270,6 @@ function loadOrSendChat(send) {
                 $("chat_messages").insert(row);
             });
 
-            localStorage["chat_message_count:" + params.key] = messages.messages.length;
             $("data_entry_tab_chat").style.color = "#000";
             dataEntrySetStatus(false);
         }
@@ -295,13 +294,5 @@ function initChatIfNeeded() {
 }
 
 function newChatMessages() {
-    if (localStorage) {
-        var seenMessages = 0;
-        if (localStorage["chat_message_count:" + params.key]) {
-            seenMessages = localStorage["chat_message_count:" + params.key];
-        }
-        return seenMessages != state.chat_message_count;
-    } else {
-        return false;
-    }
+    return state.chat_unread_message_count > 0;
 }
