@@ -3,6 +3,7 @@
 use strict;
 
 use editlink;
+use factions;
 use Net::SMTP;
 
 my $domain = "http://terra.snellman.net";
@@ -91,8 +92,21 @@ sub fetch_email_settings {
     $settings;
 }
 
+sub pretty_faction_name {
+    my ($game, $faction) = @_;
+    my $faction_pretty = ($terra_mystica::setups{$faction}{display} or $faction);
+    my $displayname = $game->{factions}{$faction}{displayname};
+    if (defined $displayname) {
+        $faction_pretty .= " ($displayname)";
+    }
+
+    $faction_pretty;
+}
+
 sub notify_after_move {
     my ($dbh, $write_id, $game, $who_moved, $moves) = @_;
+    my $who_moved_pretty = pretty_faction_name $game, $who_moved;
+
     my %acting = ();
 
     return if !$game->{options}{'email-notify'};
@@ -118,8 +132,8 @@ sub notify_after_move {
         my $acting = $acting{$faction->{name}};
         my ($subject, $body) =
             ($acting ?
-             notification_text_for_active $dbh, $write_id, $game, $email, $faction, $who_moved, $moves :
-             notification_text_for_observer $game, $who_moved, $moves);
+             notification_text_for_active $dbh, $write_id, $game, $email, $faction, $who_moved_pretty, $moves :
+             notification_text_for_observer $game, $who_moved_pretty, $moves);
 
         if (($acting and $settings->{email_notify_turn}) or
             $settings->{email_notify_all_moves}) {
@@ -130,6 +144,7 @@ sub notify_after_move {
 
 sub notify_new_chat {
     my ($dbh, $game, $who_sent, $message) = @_;
+    my $who_sent_pretty = pretty_faction_name $game, $who_sent;
 
     $message =~ s/^/  /gm;
 
@@ -137,7 +152,7 @@ sub notify_new_chat {
         my $email = $faction->{email};
         my $settings = fetch_email_settings $dbh, $email;
         my ($subject, $body) =
-            notification_text_for_chat $game, $who_sent, $message;
+            notification_text_for_chat $game, $who_sent_pretty, $message;
 
         next if $who_sent eq $faction->{name};
 

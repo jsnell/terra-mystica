@@ -62,7 +62,7 @@ eval {
         $dbh->do('commit');
 
         my $factions = $dbh->selectall_arrayref(
-            "select faction as name, email from game_role where game = ? and faction != 'admin' and email is not null",
+            "select game_role.faction as name, email, player.displayname from game_role left join email on email.address = game_role.email left join player on email.player = player.username where game = ? and faction != 'admin' and email is not null",
             { Slice => {} },
             $id);
 
