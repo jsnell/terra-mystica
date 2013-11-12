@@ -392,6 +392,30 @@ after taking the town tile will unjustly award 3 power to the player.
 
 
 
+# <<keyboard-shortcuts>>
+* Keyboard shortcuts
+
+The application has a small number of keyboard shortcuts defined for
+navigating the interface. To trigger the shortcut, you need to combine
+it with a browser-dependent modifier key, for example "Alt" on Chrome
+or "Alt-Shift" on Firefox. See http://en.wikipedia.org/wiki/Access_key
+for information on which modifier key is used by your browser and
+operating system.
+
+The following shortcuts are defined on most views, such as the game view
+and the game list:
+
+- =h= (home): Return to the home page / list of games.
+- =n= (next game): Refresh game information. Go to next game where it's your turn to move.
+
+The following additional keyboard shortcuts are defined only in the game
+view:
+
+- =m= (moves): Switch to the moves tab
+- =p= (planning): Switch to the planning / notes tab
+- =r= (recent): Switch to the recent moves tab
+- =c= (chat): Switch to the chat tab
+
 * Browser and Email Setup
 
 This section applies to the older "Send email" functionality, which is
