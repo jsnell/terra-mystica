@@ -121,7 +121,7 @@ sub notify_after_move {
              notification_text_for_active $dbh, $write_id, $game, $email, $faction, $who_moved, $moves :
              notification_text_for_observer $game, $who_moved, $moves);
 
-        if ($acting and $settings->{email_notify_turn} or
+        if (($acting and $settings->{email_notify_turn}) or
             $settings->{email_notify_all_moves}) {
             notify_by_email $game, $email, $subject, $body;
         }
