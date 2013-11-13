@@ -1162,6 +1162,8 @@ sub maybe_advance_to_next_player {
                 $_->{type} ne 'full'
         } @action_required;
 
+        $factions{$faction_name}{recent_moves} = [];
+
         # Advance to the next player, unless everyone has passed
         my $next = next_faction_in_turn $faction_name;
         if (defined $next) {
@@ -1229,6 +1231,12 @@ sub finish_row {
                  warning => $warn,
                  commands => (join ". ", @row_commands),
                  map { $_, $pretty_delta{$_} } @data_fields};
+
+    my $row_summary = "$faction_name: $info->{commands}";
+
+    for my $f (values %factions) {
+        push @{$f->{recent_moves}}, $row_summary;
+    }
 
     push @ledger, $info;
     $row_faction = 'none';

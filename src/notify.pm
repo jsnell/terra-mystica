@@ -40,7 +40,15 @@ sub notification_text_for_active {
     my $body = "
 It's your turn to move in Terra Mystica game $game->{name}.
 
-Link: $domain$link
+Link: $domain$link";
+
+    if ($faction->{recent_moves}) {
+        $body .= "\n\nThe following has happened since your last full move:\n";
+        for (@{$faction->{recent_moves}}) {
+            $body .= "  $_\n";
+        }
+    } else {
+        $body .= "
 
 An action was taken by $who_moved:
 $moves
@@ -48,6 +56,7 @@ $moves
 No longer interested in email notifications for your games? Change
 your email settings at $domain/settings/
 ";
+    }
 
     ($subject, $body);
 }

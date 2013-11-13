@@ -105,6 +105,12 @@ if (!@{$res->{error}}) {
             "select game_role.faction as name, email, player.displayname from game_role left join email on email.address = game_role.email left join player on email.player = player.username where game = ? and faction != 'admin' and email is not null",
             { Slice => {} },
             $read_id);
+        for my $faction (@{$factions}) {
+            my $eval_faction = $res->{factions}{$faction->{name}};
+            if ($eval_faction) {
+                $faction->{recent_moves} = $eval_faction->{recent_moves};
+            }
+        }
         my $game = {
             name => $read_id,
             factions => { map { ($_->{name}, $_) } @{$factions} },
