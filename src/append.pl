@@ -109,11 +109,13 @@ if (!@{$res->{error}}) {
             my $eval_faction = $res->{factions}{$faction->{name}};
             if ($eval_faction) {
                 $faction->{recent_moves} = $eval_faction->{recent_moves};
+                $faction->{VP} = $eval_faction->{VP};
             }
         }
         my $game = {
             name => $read_id,
             factions => { map { ($_->{name}, $_) } @{$factions} },
+            finished => $res->{finished},
             options => $res->{options},
             action_required => $res->{action_required},
         };

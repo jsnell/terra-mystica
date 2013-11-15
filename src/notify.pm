@@ -91,6 +91,25 @@ your email settings at $domain/settings/
     ($subject, $body);
 }
 
+sub notification_text_for_game_over {
+    my ($game) = @_;
+    my $order = join("\n",
+                     map { "$_->{VP} ".pretty_faction_name($game, $_->{name}) }
+                     sort { $b->{VP} <=> $a->{VP} }
+                     grep { $_->{VP} } values %{$game->{factions}});
+
+    my $subject = "Terra Mystica PBEM ($game->{name}) - game over";
+    my $body = "
+Game $game->{name} is over:
+
+$order
+
+No longer interested in email notifications for your games? Change
+your email settings at $domain/settings/
+";
+    ($subject, $body);
+}
+
 sub fetch_email_settings {
     my ($dbh, $email) = @_;
     my $settings = $dbh->selectrow_hashref(
@@ -136,15 +155,18 @@ sub notify_after_move {
         # unregistered address.
         next if !$settings;
         # Don't send notifications for your own moves.
-        next if $faction->{name} eq $who_moved;
+        next if !$game->{finished} and ($faction->{name} eq $who_moved);
 
         my $acting = $acting{$faction->{name}};
         my ($subject, $body) =
-            ($acting ?
-             notification_text_for_active $dbh, $write_id, $game, $email, $faction, $who_moved_pretty, $moves :
-             notification_text_for_observer $game, $who_moved_pretty, $moves);
+            ($game->{finished} ?
+             notification_text_for_game_over $game :
+             ($acting ?
+              notification_text_for_active $dbh, $write_id, $game, $email, $faction, $who_moved_pretty, $moves :
+              notification_text_for_observer $game, $who_moved_pretty, $moves));
 
-        if (($acting and $settings->{email_notify_turn}) or
+        if ($game->{finished} or
+            ($acting and $settings->{email_notify_turn}) or
             $settings->{email_notify_all_moves}) {
             notify_by_email $game, $email, $subject, $body;
         }
