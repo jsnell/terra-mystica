@@ -13,7 +13,7 @@ function listGames(games, div, mode, status) {
             action_required_count++;
         }
         if (elem.seconds_since_update) {
-            elem.time_since_update = seconds_to_pretty_time(elem.seconds_since_update);
+            elem.time_since_update = seconds_to_pretty_time(elem.seconds_since_update) + " ago";
         }
         if (elem.vp) { elem.vp += " vp"; }
         if (elem.rank) { elem.vp += " (" + elem.rank + ")"; }

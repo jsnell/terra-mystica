@@ -121,21 +121,42 @@ function showChangelog(data, div, heading, max_age) {
 }
 
 function seconds_to_pretty_time(seconds) {
+    var subamount = '';
     var amount;
     var unit;
-    if (seconds > 86400) {
-        amount = Math.round(seconds / 86400);
+
+    var hour = 3600;
+    var day = 24*hour;
+    var year = day*365;
+    var month = day*30;
+
+    if (seconds >= year) {
+        amount = Math.floor(seconds / year);
+        unit = "year";
+        var remainder = (seconds - amount * year) % day;
+        if (remainder >= month) {
+            subamount = ' ' + seconds_to_pretty_time(remainder);
+        }
+    } else if (seconds >= month) {
+        amount = Math.floor(seconds / month);
+        unit = "month";
+        var remainder = seconds - amount * month;
+        if (remainder >= day) {
+            subamount = ' ' + seconds_to_pretty_time(remainder);
+        }
+    } else if (seconds >= day) {
+        amount = Math.floor(seconds / day);
         unit = "day";
-    } else if (seconds > 3600) {
-        amount = Math.round(seconds / 3600);
+    } else if (seconds >= hour) {
+        amount = Math.floor(seconds / hour);
         unit = "hour";
     } else if (seconds > 60) {
-        amount = Math.round(seconds / 60);
+        amount = Math.floor(seconds / 60);
         unit = "minute";
     } else {
-        amount = Math.round(seconds);
+        amount = Math.floor(seconds);
         unit = "second";
     }
     if (amount > 1) { unit += "s" }
-    return amount + " " + unit + " ago";
+    return amount + " " + unit + subamount;
 }
