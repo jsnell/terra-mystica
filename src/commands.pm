@@ -868,12 +868,15 @@ sub command {
         maybe_setup_pool;
         setup lc $1, $2, $3;
     } elsif ($command =~ /delete (\w+)$/i) {
+        my $name = uc $1;
+
         maybe_setup_pool;
         my $x = ($faction ? $faction : \%pool);
 
-        my $name = uc $1;
         push @ledger, { comment => "Removing tile $name" };
-        if (!defined $x->{name} or $x->{$name} <= 1) {
+        if (!defined $x->{$name} or
+            $name eq 'TELEPORT_TO' or
+            $x->{$name} <= 1) {
             delete $x->{$name};
         } else {
             $x->{$name}--;
