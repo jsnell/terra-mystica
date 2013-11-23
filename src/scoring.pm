@@ -134,8 +134,9 @@ sub do_pass_vp {
         my $pass_vp = $tiles{$_}{pass_vp};
         if ($pass_vp) {
             for my $type (keys %{$pass_vp}) {
-                $fun->($pass_vp->{$type}[$faction->{buildings}{$type}{level}],
-                       $_);
+                my $level = $faction->{buildings}{$type}{level} //
+                    $faction->{$type}{level};
+                $fun->($pass_vp->{$type}[$level], $_);
             }
         }
     }

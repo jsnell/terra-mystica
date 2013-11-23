@@ -749,8 +749,12 @@ sub command_randomize_v1 {
     } until $score[4] ne "Score1" and $score[5] ne "Score1";
     handle_row_internal "", "score ".(join ",", @score[0..5]);
 
-    my @bon = mt_shuffle $rand, map { "Bon$_" } 1..9;
-    for (0..(5-@players)) {
+    my @bon = mt_shuffle $rand, sort grep {
+        /^BON/
+    } keys %tiles;
+
+    
+    while (@bon != @players + 3) {
         handle_row_internal "", "delete ".(shift @bon);
     }
 
@@ -904,7 +908,12 @@ sub command {
         $admin_email = $1;
     } elsif ($command =~ /^option (\S+)$/i) {
         my $opt = lc $1;
-        if ($opt !~ /^(errata-cultist-power|mini-expansion-1|email-notify)$/) {
+        my %valid_options = map { ($_, 1) } qw(
+            errata-cultist-power
+            mini-expansion-1
+            shipping-bonus
+            email-notify);
+        if (!$valid_options{$opt}) {
             die "Unknown option $opt\n";
         }
         $options{$opt} = 1;

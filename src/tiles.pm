@@ -40,6 +40,9 @@ our %tiles = (
     BON8 => { income => { P => 1 } },
     BON9 => { income => { C => 2 },
               pass_vp => { D => [ map { $_ } 0..8 ] } },
+    BON10 => { income => { PW => 3 },
+               pass_vp => { ship => [ map { $_ * 3 } 0..5 ] },
+               option => 'shipping-bonus' },
 
     FAV1 => { gain => { FIRE => 3 }, income => {}, count => 1 },
     FAV2 => { gain => { WATER => 3 }, income => {}, count => 1 },

@@ -1,5 +1,9 @@
 {
     "changes": [
+        { "date": "2013-11-23",
+          "title": "Shipping bonus tile",
+          "description": "The <a href='http://boardgamegeek.com/image/1843355/terra-mystica-navigation-round-bonus-tile'>shipping bonus tile</a> from Spielbox 6/2013 has been added. Enable it for new games with 'option shipping-bonus'. You can't enable the game for existing games."
+        },
         { "date": "2013-11-12",
           "title": "More keyboard shortcuts",
           "description": "There are now keyboard shortcuts for switching between tabs in the game view. See the manual for the <a href='/usage.html#keyboard-shortcuts'>list of keyboard shortcuts</a>."

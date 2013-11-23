@@ -39,9 +39,10 @@ div.bonus {
     background-color: #ffd;
     margin: 2px;
     padding: 3px;
-    width: 80px;
+    width: 90px;
     height: 80px;
     float: left;
+    white-space: nowrap;
 }
 
 div.favor {
@@ -51,7 +52,7 @@ div.favor {
     font: 11px Verdana;
     margin: 2px;
     padding: 3px;
-    width: 80px;
+    width: 90px;
     height: 80px;
 }
 
@@ -76,7 +77,7 @@ div.town {
     font: 11px Verdana;
     margin: 2px;
     padding: 3px;
-    width: 80px;
+    width: 90px;
     height: 80px;
 }
 
