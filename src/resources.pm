@@ -198,8 +198,10 @@ sub adjust_resource {
         for (1..$delta) {
             my $track = $faction->{$track_name};
             my $gain = $track->{advance_gain}[$track->{level}];
-            gain $faction, $gain, "advance_$track_name";
-            $track->{level}++
+            if ($track->{level}  < $track->{max_level}) {
+                gain $faction, $gain, "advance_$track_name";
+                $track->{level}++
+            }
         }
         $type = '';
     } elsif ($type eq 'GAIN_ACTION') {
