@@ -635,7 +635,7 @@ sub command_start {
         $bonus_coins{$_}{C}++;
     }
 
-    push @ledger, { comment => "Start round $round" };
+    push @ledger, { comment => "Round $round, turn 1" };
 
     my @order = factions_in_turn_order;
     my $i = 0;
