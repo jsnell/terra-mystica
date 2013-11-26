@@ -1135,9 +1135,11 @@ sub maybe_advance_turn {
         print_turn_ledger_comment;
     }
 
+    my $all_passed = 1;
     my $max_order = max map {
         $_->{order}
     } grep {
+        $all_passed &&= $_->{passed};
         (!$_->{passed}) or ($_->{name} eq $faction_name)
     } values %factions;
 
@@ -1145,7 +1147,9 @@ sub maybe_advance_turn {
         return;
     }
 
-    $turn++;
+    if (!$all_passed) {
+        $turn++;
+    }
 }
 
 sub maybe_advance_to_next_player {
