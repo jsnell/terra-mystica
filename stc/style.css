@@ -294,3 +294,7 @@ table#chat_messages td {
 tr.chat-message-hidden {
     display: none;
 }
+
+a.turnlink {
+    color: #888;
+}

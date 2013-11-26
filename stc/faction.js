@@ -232,6 +232,7 @@ function loadOrSendChat(send) {
         "game": params.game,
         "faction-key": params.key,
         "faction": currentFaction,
+        "turn": "round #{round}, turn #{turn}".interpolate(state)
     };
 
     if (send && $("chat_entry_input").value) {
@@ -271,7 +272,12 @@ function loadOrSendChat(send) {
                 message_text.split(/\n/).each(function (message_row) {
                     message_div.insert(new Element("div").updateText(message_row).insert(new Element("span").update("&nbsp")));
                 });
-                message_div.insert(new Element("div", {"style": "color: #888; font-size: 75%;"}).update("(" + seconds_to_pretty_time(entry.message_age) + " ago)"));
+                var turn = "";
+
+                if (entry.posted_on_turn) {
+                    turn = ", <a class='turnlink' href='#" + commentAnchor(entry.posted_on_turn) + "'>" + entry.posted_on_turn.escapeHTML() + "</a>";
+                }
+                message_div.insert(new Element("div", {"style": "color: #888; font-size: 75%;"}).update("(" + seconds_to_pretty_time(entry.message_age) + " ago" + turn + ")"));
                 row.insert(new Element("td").insert(message_div));
 
                 $("chat_messages").insert(row);

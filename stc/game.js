@@ -754,6 +754,10 @@ function toggleVP(id) {
     $(id).style.display = ($(id).style.display == 'none' ? '' : 'none');
 }
 
+function commentAnchor(string) {
+    return string.replace(/[^A-Za-z0-9]/g, "").toLowerCase();
+}
+
 function drawFactions() {
     $("factions").innerHTML = "";
 
@@ -944,9 +948,10 @@ function drawLedger() {
 
     state.ledger.each(function(record, index) {
         if (record.comment) {
-            ledger.insert("<tr><td><td colspan=13><b>" + 
+            ledger.insert("<tr id='" + commentAnchor(record.comment) + "'>" +
+                          "<td><td colspan=13><b>" + 
                           record.comment.escapeHTML() +
-                          "</b>" + 
+                          "</b>" +
                           "<td><a href='" + showHistory(index + 1) +
                           "'>show history</a></tr>");
 

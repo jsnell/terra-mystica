@@ -70,6 +70,7 @@ create table chat_message (
     faction text,
     message text,
     posted_at timestamp default now(),
+    posted_on_turn text,
     primary key (id)
 );
 create index chat_message_game_idx on chat_message (game);

@@ -21,6 +21,7 @@ $id =~ s{[^A-Za-z0-9_]}{}g;
 my $faction_name = $q->param('faction');
 my $faction_key = $q->param('faction-key');
 my $add_message = $q->param('add-message');
+my $turn = $q->param('turn');
 my $username = username_from_session_token($dbh,
                                            $q->cookie('session-token') // '');
 
@@ -54,11 +55,12 @@ eval {
     if (defined $add_message) {
         $dbh->do('begin');
         $dbh->do(
-            "insert into chat_message (faction, game, message) values (?, ?, ?)",
+            "insert into chat_message (faction, game, message, posted_on_turn) values (?, ?, ?, ?)",
             {},
             $faction_name,
             $id,
-            $add_message);
+            $add_message,
+            $turn);
         $dbh->do('commit');
 
         my $factions = $dbh->selectall_arrayref(
@@ -73,7 +75,7 @@ eval {
     }
 
     my $rows = $dbh->selectall_arrayref(
-        "select faction, message, extract(epoch from now() - posted_at) as message_age from chat_message where game = ? order by posted_at asc",
+        "select faction, message, extract(epoch from now() - posted_at) as message_age, posted_on_turn from chat_message where game = ? order by posted_at asc",
         { Slice => {} },
         $id);
     
