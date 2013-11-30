@@ -15,6 +15,7 @@ use notify;
 use rlimit;
 use save;
 use secret;
+use session;
 use tracker;
 
 my $q = CGI->new;
@@ -31,6 +32,8 @@ my $preview = $q->param('preview');
 my $append = '';
 
 my $dbh = get_db_connection;
+my $username = username_from_session_token($dbh,
+                                           $q->cookie('session-token') // '');
 
 sub verify_key {
     my ($secret, $iv) = get_secret $dbh;
@@ -149,5 +152,9 @@ my $out = encode_json {
     new_faction_key => ($orig_faction_name eq $faction_name ?
                         undef :
                         edit_link_for_faction $dbh, $write_id, $faction_name),
+};
+eval {
+    ($out->{chat_message_count},
+     $out->{chat_unread_message_count}) = get_chat_count($dbh, $read_id, $username);
 };
 print $out;

@@ -35,24 +35,6 @@ my $dbh = get_db_connection;
 my $username = username_from_session_token($dbh,
                                            $q->cookie('session-token') // '');
 
-sub get_chat_count {
-    my ($dbh, $id) = @_;
-
-    my $count = $dbh->selectrow_array("select count(*) from chat_message where game=?",
-                                      {},
-                                      $id);
-    my $unread_count = 0;
-
-    if ($username) {
-        $unread_count = $dbh->selectrow_array("select count(*) from chat_message where game=? and posted_at > (select coalesce((select last_read from chat_read where game=chat_message.game and player=?), '2012-01-01'))",
-                                              {},
-                                              $id,
-                                              $username);
-    }
-
-    ($count, $unread_count);
-}
-
 if (game_exists $dbh, $id) {
     print "\r\n";
     my @rows = get_game_commands($dbh, $id);
@@ -74,7 +56,7 @@ if (game_exists $dbh, $id) {
     };
     eval {
         ($res->{chat_message_count},
-         $res->{chat_unread_message_count}) = get_chat_count($dbh, $id);
+         $res->{chat_unread_message_count}) = get_chat_count($dbh, $id, $username);
     };
 
     print_json $res;

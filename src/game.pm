@@ -69,4 +69,22 @@ sub finish_game_transaction {
     $dbh->do("commit");
 }
 
+sub get_chat_count {
+    my ($dbh, $id, $username) = @_;
+
+    my $count = $dbh->selectrow_array("select count(*) from chat_message where game=?",
+                                      {},
+                                      $id);
+    my $unread_count = 0;
+
+    if ($username) {
+        $unread_count = $dbh->selectrow_array("select count(*) from chat_message where game=? and posted_at > (select coalesce((select last_read from chat_read where game=chat_message.game and player=?), '2012-01-01'))",
+                                              {},
+                                              $id,
+                                              $username);
+    }
+
+    ($count, $unread_count);
+}
+
 1;
