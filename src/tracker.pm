@@ -106,7 +106,6 @@ sub finalize {
         delete $hex->{adjacent};
         delete $hex->{range};
         delete $hex->{bridge};
-        delete $hex->{bridgable};
     }
     
     for my $key (keys %cults) {

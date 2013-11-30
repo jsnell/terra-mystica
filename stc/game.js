@@ -1355,6 +1355,42 @@ function addFactionInput(parent, record, index) {
         });
         parent.insert(div);
     }
+    if (record.type == "bridge") {
+        var div = new Element("div", { "id": "leech-" + index,
+                                       "style": "padding-left: 2em" });
+        var already_added = {};
+
+        $H(state.map).sortBy(naturalSortKey).each(function(elem) {
+            var hex = elem.value;
+
+            if (hex.row == null) {
+                return;
+            }
+
+            if (hex.color != state.factions[currentFaction].color) {
+                return;
+            }
+
+            if (!hex.building) {
+                return;
+            }
+
+            $H(hex.bridgable).each(function(to) {
+                var br = [elem.key, to.key].sort().join(":");
+                if (already_added[br]) {
+                    return;
+                }
+                already_added[br] = true;
+                var button = new Element("button").update(br);
+                button.onclick = function() {
+                    $("leech-" + index).style.display = "none";
+                    appendCommand("bridge " + br);
+                };
+                div.insert(button);
+            });
+        });
+        parent.insert(div);
+    }
 }
 
 function appendCommand(cmd) {
