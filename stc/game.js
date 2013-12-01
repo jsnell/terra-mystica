@@ -1713,6 +1713,8 @@ function addPassToMovePicker(picker, faction) {
         });
         row.insert(bonus_tiles);
     }
+
+    validate();
     
     if (faction.allowed_actions) {
         row.show();
