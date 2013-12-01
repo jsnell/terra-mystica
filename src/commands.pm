@@ -969,6 +969,14 @@ sub detect_incomplete_state {
         };
     }
 
+    if ($faction->{FREE_D}) {
+        $warn = "Unused free dwelling post for $prefix\n";
+        push @extra_action_required, {
+            type => 'dwelling',
+            faction => $prefix
+        };
+    }
+
     if ($faction->{CULT}) {
         $warn = "Unused cult advance for $prefix\n";
         push @extra_action_required, {
