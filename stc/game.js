@@ -1792,14 +1792,10 @@ function addBuildToMovePicker(picker, faction) {
         }         
     } else if (faction.allowed_actions) {
         location.insert(new Element("option").update("-"));
-        $H(state.map).each(function (elem) {
-            var hex = elem.value;
-            if (!hex.row || hex.color != faction.color || hex.building) {
-                return;
-            }
-            location.insert(new Element("option").update(elem.key));
+        faction.reachable_build_locations.each(function (loc) {
+            location.insert(new Element("option").update(loc));
             location_count++;
-        });        
+        });
     }
 
     row.insert(button);

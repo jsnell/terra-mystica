@@ -6,7 +6,7 @@ use strict;
 
 use factions;
 
-use vars qw(%map %reverse_map @bridges);
+use vars qw(%map %reverse_map @bridges $active_faction);
 
 my @map = qw(brown gray green blue yellow red brown black red green blue red black E
              yellow x x brown black x x yellow black x x yellow E
@@ -151,7 +151,7 @@ sub setup_valid_bridges {
 #
 # If the faction needs to teleport, also pay the teleport cost here.
 sub check_reachable {
-    my ($faction, $where) = @_;
+    my ($faction, $where, $dryrun) = @_;
 
     return if $round == 0;
 
@@ -204,14 +204,16 @@ sub check_reachable {
                 $faction->{TELEPORT_TO} = $where;
                 my $cost = $t->{cost}[$level];
                 my $gain = $t->{gain}[$level];
-                pay($faction, $cost);
-                gain($faction, $gain, 'faction');
+                if (!$dryrun) {
+                    pay($faction, $cost);
+                    gain($faction, $gain, 'faction');
+                }
                 return;
             }
         }
     }
 
-    die "$faction->{color} can't reach $where\n";
+    die "$faction->{name} can't reach $where\n";
 }
 
 # Given a faction and a hex, return a list of all directly adjacent hexes
@@ -359,6 +361,30 @@ sub compute_leech {
     }
 
     return %this_leech;
+}
+
+sub update_reachable_build_locations {
+    for my $faction (values %factions) {
+        if ($faction->{name} eq $active_faction) {
+            $faction->{reachable_build_locations} = [
+                grep {
+                    my $loc = $_;
+                    my $ret = 0;
+                    if ($map{$loc}{row} and
+                        $map{$loc}{color} eq $faction->{color} and
+                        !$map{$loc}{building}) {
+                        eval {
+                            check_reachable $faction, $loc, 1;
+                            $ret = 1;
+                        };
+                    }
+                    $ret;
+                } keys %map
+            ];
+        } else {
+            $faction->{reachable_build_locations} = [];
+        }
+    }
 }
 
 sub setup_map {

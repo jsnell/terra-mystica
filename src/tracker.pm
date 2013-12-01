@@ -21,6 +21,8 @@ sub finalize {
 
     my $spade_seen = 0;
 
+    update_reachable_build_locations;
+
     if ($delete_email) {
         for (@players) {
             delete $_->{email};
