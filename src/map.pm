@@ -201,10 +201,10 @@ sub check_reachable {
         for my $loc (@{$faction->{locations}}) {
             if (exists $map{$where}{range}{0}{$loc} and 
                 $map{$where}{range}{0}{$loc} <= $range) {
-                $faction->{TELEPORT_TO} = $where;
                 my $cost = $t->{cost}[$level];
                 my $gain = $t->{gain}[$level];
                 if (!$dryrun) {
+                    $faction->{TELEPORT_TO} = $where;
                     pay($faction, $cost);
                     gain($faction, $gain, 'faction');
                 }
