@@ -1594,11 +1594,12 @@ function addUndoToMovePicker(picker, faction) {
                 active_count++;
             }
         });
-        if (faction.passed == true || active_count != 1 &&
+        if (active_count == 1 &&
+            !faction.passed &&
             faction.allowed_actions) {
-            done.disable();
-        } else {
             done.enable();
+        } else {
+            done.disable();
         }
     };
     var execute_undo = function() {
