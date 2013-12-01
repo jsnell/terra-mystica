@@ -1884,7 +1884,7 @@ function addUpgradeToMovePicker(picker, faction) {
                        'TE': 'TP',
                        'SA': 'TE',
                        'SH': 'TP' });
-    $H(state.map).each(function (elem) {
+    $H(state.map).sortBy(naturalSortKey).each(function (elem) {
         var hex = elem.value;
         var id = elem.key;
         if (hex.row == null || 
