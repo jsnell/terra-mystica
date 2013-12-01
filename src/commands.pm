@@ -961,6 +961,12 @@ sub detect_incomplete_state {
 
     if ($faction->{FREE_TP}) {
         $warn = "Unused free trading post for $prefix\n";
+        push @extra_action_required, {
+            type => 'upgrade',
+            from_building => 'D',
+            to_building => 'TP',
+            faction => $prefix
+        };
     }
 
     if ($faction->{CULT}) {

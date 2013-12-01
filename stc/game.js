@@ -1173,6 +1173,8 @@ function drawActionRequired() {
             }
         } else if (record.type == 'dwelling') {
             record.pretty = 'should place a dwelling';
+        } else if (record.type == 'upgrade') {
+            record.pretty = 'should place a free #{to_building} upgrade'.interpolate(record);
         } else if (record.type == 'bonus') {
             record.pretty = 'should pick a bonus tile';
         } else if (record.type == 'gameover') {
@@ -1413,6 +1415,33 @@ function addFactionInput(parent, record, index) {
             button.onclick = function() {
                 $("leech-" + index).style.display = "none";
                 appendCommand("Build #{key}\n".interpolate(elem));
+            };
+            div.insert(button);                                               
+        });
+        parent.insert(div);
+    }
+    if (record.type == "upgrade") {
+        var div = new Element("div", { "id": "leech-" + index,
+                                       "style": "padding-left: 2em" });
+        $H(state.map).sortBy(naturalSortKey).each(function(elem) {
+            var hex = elem.value;
+            
+            if (hex.row == null) {
+                return;
+            }
+
+            if (hex.color != state.factions[currentFaction].color) {
+                return;
+            }
+
+            if (hex.building != record.from_building) {
+                return;
+            }
+
+            var button = new Element("button").update(elem.key);
+            button.onclick = function() {
+                $("leech-" + index).style.display = "none";
+                appendCommand("Upgrade " + elem.key + " to #{to_building}\n".interpolate(record));
             };
             div.insert(button);                                               
         });
