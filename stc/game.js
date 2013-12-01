@@ -1908,6 +1908,10 @@ function addConvertToMovePicker(picker, faction) {
         appendAndPreview(command);
     };
     faction.PW = faction.P3;
+    if (faction.CONVERT_W_TO_P) {
+        faction.exchange_rates["W"]["P"] = 1;
+    }
+
     var generate = function () {
         amount.update("");
         if (type.value == '-') {
