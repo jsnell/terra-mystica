@@ -1736,9 +1736,8 @@ function addBuildToMovePicker(picker, faction) {
     var row = insertOrClearPickerRow(picker, "move_picker_build");
     var button = new Element("button").update("Build");
     button.onclick = execute;
-    button.disable();
 
-    var location = makeSelectWithOptions(["-"]);
+    var location = makeSelectWithOptions([]);
     location.onchange = validate;
     var location_count = 0;
 
@@ -1748,7 +1747,11 @@ function addBuildToMovePicker(picker, faction) {
             location.insert(new Element("option").update(loc));
             location_count++;
         });
+        if (!location_count) {
+            location.insert(new Element("option").update("-"));
+        }         
     } else if (faction.allowed_actions) {
+        location.insert(new Element("option").update("-"));
         $H(state.map).each(function (elem) {
             var hex = elem.value;
             if (!hex.row || hex.color != faction.color || hex.building) {
@@ -1762,6 +1765,8 @@ function addBuildToMovePicker(picker, faction) {
     row.insert(button);
     row.insert(" in ");
     row.insert(location);
+
+    validate();
     
     if ((faction.allowed_actions ||
          faction.allowed_sub_actions.build) &&
