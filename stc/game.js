@@ -1577,12 +1577,31 @@ function insertOrClearPickerRow(picker, id) {
 function addUndoToMovePicker(picker, faction) {
     var validate = function() {
         if ($("move_entry_input").value == "") {
-            button.disable();
+            undo.disable();
+            done.disable();
+            return;
+        }
+        undo.enable();
+
+        // "Done" only makes sense when this is the only faction that has
+        // not yet passed.
+        var active_count = 0;
+        var passed_count = 0;
+        $H(state.factions).each(function (elem) {
+            if (elem.value.passed) {
+                passed_count++;
+            } else {
+                active_count++;
+            }
+        });
+        if (faction.passed == true || active_count != 1 &&
+            faction.allowed_actions) {
+            done.disable();
         } else {
-            button.enable();
+            done.enable();
         }
     };
-    var execute = function() {
+    var execute_undo = function() {
         var value = $("move_entry_input").value;
         var rows = value.split(/\n/);
         // Remove all trailing empty lines
@@ -1594,12 +1613,22 @@ function addUndoToMovePicker(picker, faction) {
         $("move_entry_input").value = rows.join("\n");
         preview();
     };
+    var execute_done = function() {
+        appendAndPreview("done");
+    }
         
     var row = insertOrClearPickerRow(picker, "move_picker_undo");
-    var button = new Element("button").update("Undo");
-    button.onclick = execute;
-    button.disable();
-    row.insert(button);
+    var undo = new Element("button").update("Undo");
+    undo.onclick = execute_undo;
+    undo.disable();
+
+    var done = new Element("button").update("Done");
+    done.onclick = execute_done;
+    done.disable();
+
+    row.insert(undo);
+    row.insert(" /  ");
+    row.insert(done);
     
     validate();
     row.show();
