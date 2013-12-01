@@ -46,6 +46,34 @@ sub verify_email_notification_settings {
     }
 }
 
+sub check_email_is_registered {
+    my ($dbh, $address) = @_;
+
+    my ($username) =
+        $dbh->selectrow_array("select player from email where address=lower(?) and validated=true",
+                              {},
+                              $address);
+
+    if (!defined $username) {
+        die "Sorry. Adding unregistered or unvalidated email addresses to games is no longer supported. Please ask your players to register on the site, or to add an alias for their new email address on the settings page.\n";
+    }
+
+    $username;
+}
+
+sub check_username_is_registered {
+    my ($dbh, $username) = @_;
+
+    my ($exists) =
+        $dbh->selectrow_array("select count(*) from player where username=?",
+                              {},
+                              $username);
+
+    if (!$exists) {
+        die "There is no account with the username '$username'.\n";
+    }
+}
+
 sub verify_and_save {
     my ($game, $timestamp) = @_;
 
@@ -54,6 +82,20 @@ sub verify_and_save {
     if (sha1_hex($orig_content) ne $orig_hash) {
         print STDERR "Concurrent modification [$orig_hash] [", sha1_hex($orig_content), "]";
         die "Someone else made changes to the game. Please reload\n";
+    }
+
+    for my $faction (values %{$game->{factions}}) {
+        if (defined $faction->{email}) {
+            $faction->{username} = check_email_is_registered $dbh, $faction->{email};
+        }
+    }
+
+    for my $player (@{$game->{players}}) {
+        if (defined $player->{email}) {
+            $player->{username} = check_email_is_registered $dbh, $player->{email};
+        } elsif (defined $player->{username}) {
+            check_username_is_registered $dbh, $player->{username};
+        }
     }
 
     verify_email_notification_settings $dbh, $game;

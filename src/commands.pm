@@ -921,8 +921,8 @@ sub command {
         }
         $options{$opt} = 1;
         push @ledger, { comment => "option $opt" };
-    } elsif ($command =~ /^player (\S+)(?: email (\S*))?$/i) {
-        push @players, { name => $1, email => $2 };
+    } elsif ($command =~ /^player (\S+)(?: email (\S*))?(?: username (\S+))?$/i) {
+        push @players, { name => $1, email => $2, username => $3 };
     } elsif ($command =~ /^randomize v1 seed (.*)/i) {
         maybe_setup_pool;
         command_randomize_v1 $1;

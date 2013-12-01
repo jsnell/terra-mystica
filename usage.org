@@ -239,7 +239,8 @@ and want to break the chain of actions at a specific place. For example
 when using Dwarves or Fakirs to first tunnel to a space to terraform it,
 and right afterwards tunnel to the same space to build a dwelling.
 
-** =setup= /faction/ =for= /player/ =email= /address/
+
+** =setup= /faction/ =for= /player/
 
 Example:
 #+BEGIN_EXAMPLE
@@ -248,16 +249,6 @@ setup Nomads for Alice
 
 Add this faction to the game. The player name is optional, you also do just
 =setup Nomads=.
-
-Example:
-#+BEGIN_EXAMPLE
-setup Nomads for Alice email alice@example.com
-#+END_EXAMPLE
-
-For a PBEM game, associate the email address with this faction. Gets
-added to the list of addresses that the "send email" functionality sends
-email to, except those sent by this faction.
-
 
 ** =#=
 
