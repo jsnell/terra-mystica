@@ -70,9 +70,9 @@ sub finalize {
         if ($round == 6 and !$finished) {
             $faction->{vp_projection} = { faction_vps $faction };
         }
-        delete $faction->{allowed_actions};
-        delete $faction->{allowed_sub_actions};
-        delete $faction->{allowed_build_locations};
+        # delete $faction->{allowed_actions};
+        # delete $faction->{allowed_sub_actions};
+        # delete $faction->{allowed_build_locations};
         delete $faction->{locations};
         delete $faction->{BRIDGE_COUNT};
         delete $faction->{leech_not_rejected};
@@ -144,6 +144,7 @@ sub evaluate_game {
     local @players = ();
     local $admin_email = '';
     local %options = ();
+    local $active_faction = '';
 
     setup_map;
 
@@ -187,6 +188,7 @@ sub evaluate_game {
     return {
         order => \@factions,
         map => \%map,
+        actions => \%actions,
         factions => \%factions,
         pool => \%pool,
         bridges => \@bridges,
@@ -197,6 +199,7 @@ sub evaluate_game {
         bonus_tiles => { map({$_, $tiles{$_}} grep { /^BON/ } keys %tiles ) },
         favors => { map({$_, $tiles{$_}} grep { /^FAV/ } keys %tiles ) },
         action_required => \@action_required,
+        active_faction => $active_faction,
         history_view => $history_view,
         round => $round,
         turn => $turn,

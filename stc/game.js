@@ -283,6 +283,39 @@ function drawMap() {
     }
 }
 
+function hexClickHandler(fun) {
+    return function (event) {
+        var position = $("map").getBoundingClientRect();
+        var x = event.clientX - position.left;
+        var y = event.clientY - position.top;
+        var best_dist = null;
+        var best_loc = null;
+        for (var r = 0; r < 9; ++r) {
+            for (var c = 0; c < 13; ++c) {
+                var center = hexCenter(r, c);
+                var xd = (x - center[0]);
+                var yd = (y - center[1]);
+                var dist = xd*xd + yd*yd;
+                if (best_dist == null || dist < best_dist) {
+                    best_loc = [r, c];
+                    best_dist = dist;
+                }
+            }
+        }
+        var hex_id = null;
+        $H(state.map).each(function(elem) {
+            var hex = elem.value;
+            if (hex.row == best_loc[0] &&
+                hex.col == best_loc[1]) {
+                hex_id = elem.key;
+            }
+        });
+        if (hex_id != null && fun != null) {
+            fun(hex_id);
+        }
+    };
+}
+
 var cults = ["FIRE", "WATER", "EARTH", "AIR"];
 
 function drawCults() {
@@ -1099,10 +1132,14 @@ function drawActionRequired() {
             }
         } else if (record.type == 'transform') {
             if (record.amount == 1) {
-                record.pretty = 'may use a spade'.interpolate(record);
+                record.pretty = 'may use a spade (click on map to transform)'.interpolate(record);
             } else {
-                record.pretty = 'may use #{amount} spades'.interpolate(record);
+                record.pretty = 'may use #{amount} spades (click on map to transform)'.interpolate(record);
             }
+            $("map").onclick = hexClickHandler(function(hex) {
+                $("map").onclick = null;
+                appendAndPreview("transform " + hex);
+            });
         } else if (record.type == 'cult') {
             if (record.amount == 1) {
                 record.pretty = 'may advance 1 step on a cult track'.interpolate(record);
@@ -1215,12 +1252,27 @@ function drawActionRequired() {
     }
 
     if (needMoveEntry && $("move_entry").innerHTML == "") {
+        var table = new Element("table");
+        $("move_entry").insert(table);
+        var row = new Element("tr");
+        table.insert(row);
+        
+        var entry_cell = new Element("td", {"valign": "top",
+                                            "style": "width: 40ex"});
+        row.insert(entry_cell);
         var input = new Element("textarea", {"id": "move_entry_input",
                                              "onInput": "javascript:moveEntryInputChanged()",
-                                             "style": "font-family: monospace; width: 60ex; height: 6em;" } );
-        $("move_entry").insert(input);
-        $("move_entry").insert("<div style='padding-left: 2em'><button id='move_entry_action' onclick='javascript:preview()'>Preview</button><br><div id='move_entry_explanation'></div>")
+                                             "style": "font-family: monospace; height: 6em; width: 100%" } );
+        $(entry_cell).insert(input);
+        $(entry_cell).insert("<div style='padding-left: 2em'><button id='move_entry_action' onclick='javascript:preview()'>Preview</button><br><div id='move_entry_explanation'></div>");
+
+        var picker_cell = new Element("td", {"valign": "top",
+                                             "style": "padding-left: 3em"});
+        row.insert(picker_cell);
+        $(picker_cell).insert(new Element("div", { 'id': 'move_picker' }));
     }
+
+    updateMovePicker();
 }
 
 function dataEntrySelect(select) {
@@ -1394,14 +1446,7 @@ function addFactionInput(parent, record, index) {
 }
 
 function appendCommand(cmd) {
-    var val = $("move_entry_input").value;
-
-    if (val != "" && !val.endsWith("\n")) {
-        cmd = ". " + cmd;
-    }
-
-    $("move_entry_input").value += cmd;
-    moveEntryInputChanged();
+    appendAndPreview(cmd);
 }
 
 function acceptLeech(index) {
@@ -1436,6 +1481,7 @@ function moveEntryInputChanged() {
     $("move_entry_input").oninput = null;
     $("move_entry_action").innerHTML = "Preview";
     $("move_entry_action").onclick = preview;
+    $("move_entry_action").enable();
     $("move_entry_explanation").innerHTML = "";
 } 
 
@@ -1447,6 +1493,10 @@ function dataEntrySetStatus(disabled) {
 
 function moveEntryAfterPreview() {
     if ($("move_entry_action")) {
+        $("move_entry_explanation").innerHTML = "";
+        $("move_entry_action").innerHTML = "Preview";
+        $("move_entry_action").onclick = preview;
+
         if ($("move_entry_input").value != "") {
             if ($("error").innerHTML != "") {
                 $("move_entry_explanation").innerHTML = "Can't save yet - input had errors";
@@ -1462,6 +1512,605 @@ function moveEntryAfterPreview() {
         $("move_entry_input").oninput = moveEntryInputChanged;
     }
     dataEntrySetStatus(false);
+    updateMovePicker();
+    // Disable preview until something changes, but don't disable a save
+    if ($("move_entry_action") &&
+        $("move_entry_action").innerHTML == "Preview") {
+        $("move_entry_action").disable();
+    }
+}
+
+function updateMovePicker() {
+    var picker = $('move_picker');
+    var faction = state.factions[currentFaction];
+    if (!picker || !faction) {
+        return;
+    }
+
+    var undo = addUndoToMovePicker(picker, faction);
+    var pass = addPassToMovePicker(picker, faction);
+    var action = addActionToMovePicker(picker, faction);
+    var build = addBuildToMovePicker(picker, faction);
+    var upgrade = addUpgradeToMovePicker(picker, faction);
+    var burn = addBurnToMovePicker(picker, faction);
+    var convert = addConvertToMovePicker(picker, faction);
+    var dig = addDigToMovePicker(picker, faction);
+    var send = addSendToMovePicker(picker, faction);
+    var advance = addAdvanceToMovePicker(picker, faction);
+    // Connect (tricky)
+}
+
+function makeSelectWithOptions(options) {
+    var select = new Element("select");
+    options.each(function (elem) {
+        select.insert(new Element("option").update(elem));
+    });
+    return select;
+}
+
+function ensureMoveEntryNewRow() {
+    var input = $("move_entry_input").value;
+    if (input.length > 0 &&
+        input[input.length - 1] != "\n") {
+        $("move_entry_input").value += "\n";
+    }
+}
+
+function appendAndPreview(command) {
+    ensureMoveEntryNewRow();
+    $("move_entry_input").value += command;
+    preview();
+}
+
+function insertOrClearPickerRow(picker, id) {
+    var row = $(id);
+    if (!row) {
+        row = new Element("div", {"id": id});
+        picker.insert(row);
+    } else {
+        row.update("");
+    }
+
+    return row;
+}
+
+function addUndoToMovePicker(picker, faction) {
+    var validate = function() {
+        if ($("move_entry_input").value == "") {
+            button.disable();
+        } else {
+            button.enable();
+        }
+    };
+    var execute = function() {
+        var value = $("move_entry_input").value;
+        var rows = value.split(/\n/);
+        // Remove all trailing empty lines
+        while (rows.length && rows[rows.length - 1] == "") {
+            rows.pop();
+        }
+        // The remove the last real line
+        rows.pop();
+        $("move_entry_input").value = rows.join("\n");
+        preview();
+    };
+        
+    var row = insertOrClearPickerRow(picker, "move_picker_undo");
+    var button = new Element("button").update("Undo");
+    button.onclick = execute;
+    button.disable();
+    row.insert(button);
+    
+    validate();
+    row.show();
+
+    return row;
+}
+
+function addPassToMovePicker(picker, faction) {
+    var validate = function() {
+        if (state.round < 6 &&
+            bonus_tiles.value == "-") {
+            button.disable();
+        } else {
+            button.enable();
+        }
+    };
+    var execute = function() {
+        var command = "pass";
+        if (state.round != 6) {
+            command += " " + bonus_tiles.value;
+        }
+        appendAndPreview(command);
+    };
+
+    var row = insertOrClearPickerRow(picker, "move_picker_pass");
+    var button = new Element("button").update("Pass");
+    button.onclick = execute;
+    button.disable();
+    row.insert(button);
+
+    var bonus_tiles = makeSelectWithOptions(["-"]);
+    bonus_tiles.onchange = validate;
+    if (state.round < 6) {
+        row.insert(" and take tile ");
+        $H(state.pool).each(function (tile) {
+            if (tile.key.startsWith("BON") && tile.value > 0) {
+                bonus_tiles.insert(new Element("option").update(tile.key));
+            }
+        });
+        row.insert(bonus_tiles);
+    }
+    
+    if (faction.allowed_actions) {
+        row.show();
+    } else {
+        row.hide();
+    }
+
+    return row;
+}
+
+function addActionToMovePicker(picker, faction) {
+    var validate = function() {
+        if (action.value == "-") {
+            button.disable();
+        } else {
+            button.enable();
+        }
+    };
+    var execute = function() {
+        var command = "action " + action.value;
+        var pw_cost = state.actions[action.value].cost.PW;
+        if (burn.checked && pw_cost > faction.P3) {
+            command = "burn " + (pw_cost - faction.P3) + ". " + command;
+        }
+        appendAndPreview(command);
+    };
+
+    var row = insertOrClearPickerRow(picker, "move_picker_action");
+    var button = new Element("button").update("Action");
+    button.onclick = execute;
+    button.disable();
+    row.insert(button);
+
+    var action = makeSelectWithOptions([]);
+    var generate = function () {
+        action.update("");
+        action.insert(new Element("option").update("-"));
+        action.onchange = validate;
+        var pw = faction.P3;
+        if (burn.checked) { pw += faction.P2 / 2 };
+        $H(state.pool).sortBy(naturalSortKey).each(function (elem) {
+            var key = elem.key;
+            if (key.startsWith("ACT") &&
+                !(state.map[key] && state.map[key].blocked) &&
+                (pw >= state.actions[key].cost.PW)) {
+                action.insert(new Element("option").update(key));
+            }
+        });
+        $H(faction).sortBy(naturalSortKey).each(function (elem) {
+            var key = elem.key;
+            var fkey = elem.key + "/" + faction.name;
+            if (elem.value > 0 &&
+                state.actions[key] &&
+                !(state.map[fkey] && state.map[fkey].blocked)) {
+                action.insert(new Element("option").update(key));
+            }
+        });
+    }
+    var burn = new Element("input", {"id": "move_picker_action_burn",
+                                     "checked": true,
+                                     "type": "checkbox"});
+    burn.onchange = generate;
+
+    generate();
+
+    row.insert(action);
+    row.insert(new Element("label", {'for':'move_picker_action_burn'}).
+               update(", burn power if needed"));
+    row.insert(burn);
+    
+    if (faction.allowed_actions) {
+        row.show();
+    } else {
+        row.hide();
+    }
+
+    return row;
+}
+
+function addBuildToMovePicker(picker, faction) {
+    var validate = function() {
+        if (location.value == "-") {
+            button.disable();
+        } else {
+            button.enable();
+        }
+    };
+    var execute = function() {
+        var command = "build " + location.value;
+        appendAndPreview(command);
+    };
+
+    var row = insertOrClearPickerRow(picker, "move_picker_build");
+    var button = new Element("button").update("Build");
+    button.onclick = execute;
+    button.disable();
+
+    var location = makeSelectWithOptions(["-"]);
+    location.onchange = validate;
+    var location_count = 0;
+
+    if (faction.allowed_sub_actions.build) {
+        $H(faction.allowed_build_locations).each(function (elem) {
+            var loc = elem.key;
+            location.insert(new Element("option").update(loc));
+            location_count++;
+        });
+    } else if (faction.allowed_actions) {
+        $H(state.map).each(function (elem) {
+            var hex = elem.value;
+            if (!hex.row || hex.color != faction.color || hex.building) {
+                return;
+            }
+            location.insert(new Element("option").update(elem.key));
+            location_count++;
+        });        
+    }
+
+    row.insert(button);
+    row.insert(" in ");
+    row.insert(location);
+    
+    if ((faction.allowed_actions ||
+         faction.allowed_sub_actions.build) &&
+        location_count > 0) {
+        row.show();
+    } else {
+        row.hide();
+    }
+
+    return row;
+}
+
+function addUpgradeToMovePicker(picker, faction) {
+    var validate = function() {
+        if (location.value == "-") {
+            button.disable();
+        } else {
+            button.enable();
+        }
+    };
+    var execute = function() {
+        var command = "upgrade " + location.value;
+        appendAndPreview(command);
+    };
+
+    var row = insertOrClearPickerRow(picker, "move_picker_upgrade");
+    var button = new Element("button").update("Upgrade");
+    button.onclick = execute;
+    button.disable();
+    row.insert(button);
+
+    var location = makeSelectWithOptions(["-"]);
+    var location_count = 0;
+    location.onchange = validate;
+
+    var upgrade = $H({ 'TP': 'D',
+                       'TE': 'TP',
+                       'SA': 'TE',
+                       'SH': 'TP' });
+    $H(state.map).each(function (elem) {
+        var hex = elem.value;
+        var id = elem.key;
+        if (hex.row == null || 
+            hex.color != faction.color) {
+            return
+        }
+        upgrade.each(function (type_elem) {
+            var wanted_new = type_elem.key;
+            var wanted_old = type_elem.value;
+            if (hex.building != wanted_old) {
+                return;
+            }
+            if (faction.buildings[wanted_new].level >=
+                faction.buildings[wanted_new].max_level) {
+                return;
+            }
+            var costs = faction.buildings[wanted_new].advance_cost;
+            var can_afford = true;
+            $H(costs).each(function (cost_elem) {
+                if (faction[cost_elem.key] < cost_elem.value) {
+                    can_afford = false;
+                }
+            });
+            if (can_afford) {
+                location.insert(new Element("option").update(
+                    id + " to " + wanted_new));
+                location_count++;
+            }
+        });
+    });
+    row.insert(location);
+    
+    if (faction.allowed_actions && location_count > 0) {
+        row.show();
+    } else {
+        row.hide();
+    }
+
+    return row;
+}
+
+function addBurnToMovePicker(picker, faction) {
+    var validate = function() {
+        if (amount.value == '-') {
+            button.disable()
+            return;
+        }
+        button.enable()
+    };
+    var execute = function() {
+        var command = "burn " + amount.value;
+        appendAndPreview(command);
+    };
+
+    var row = insertOrClearPickerRow(picker, "move_picker_burn");
+
+    var button = new Element("button").update("Burn");
+    button.onclick = execute;
+    button.disable();
+
+    var amounts = ['-'];
+    for (var i = 0; i <= faction.P2 / 2; ++i) {
+        amounts.push(i);
+    }
+    var amount = makeSelectWithOptions(amounts);
+    amount.onchange = validate;
+
+    row.insert(button);
+    row.insert(amount);
+    row.insert(" power");
+
+    // XXX: should allow burning after main move (even if it'll probably never
+    // matter).
+    if (faction.P2 > 1 && faction.allowed_actions) {
+        row.show();
+    } else {
+        row.hide();
+    }
+
+    return row;
+}
+
+function addConvertToMovePicker(picker, faction) {
+    var validate = function() {
+        if (amount.value == '-') {
+            button.disable()
+            return;
+        }
+        button.enable()
+    };
+    var execute = function() {
+        var types = type.value.split(/,/);
+        var from_type = types[0];
+        var to_type = types[1];
+        var rate = faction.exchange_rates[from_type][to_type];
+        var from = rate * amount.value + from_type;
+        var to = amount.value + to_type;
+        var command = "convert " + from + " to " + to;
+        appendAndPreview(command);
+    };
+    faction.PW = faction.P3;
+    var generate = function () {
+        amount.update("");
+        if (type.value == '-') {
+            amount.insert(new Element("option").update("-"));
+        } else {
+            var types = type.value.split(/,/);
+            var from_type = types[0];
+            var to_type = types[1];
+            var rate = faction.exchange_rates[from_type][to_type];
+            for (var i = 1; rate * i <= faction[from_type]; i++) {
+                amount.insert(new Element("option").update(i));
+            }
+        }
+    };
+
+    var row = insertOrClearPickerRow(picker, "move_picker_convert");
+
+    var button = new Element("button").update("Convert");
+    button.onclick = execute;
+    button.disable();
+
+    var type = makeSelectWithOptions(["-"]);
+    type.onchange = function() {
+        generate();
+        validate();
+    };
+
+    var rates = $H(faction.exchange_rates);
+    rates.each(function (elem) {
+        var from = elem.key;
+        var to = $H(elem.value);
+        to.each(function (to_elem) {
+            var to_type = to_elem.key;
+            var rate = to_elem.value;
+
+            if (faction[from] >= rate) {
+                var label = from + " to " + to_type;
+                if (rate > 1) {
+                    label = rate + label;
+                }
+                type.insert(new Element("option",
+                                        { "value": from + "," + to_type }).
+                            update(label));
+            }
+        });
+    });
+
+    var amount = makeSelectWithOptions(["-"]);
+
+    row.insert(button);
+    row.insert(type);
+    row.insert(amount);
+    row.insert(" times");
+ 
+    // XXX: should allow conversions after main move
+    if (faction.allowed_actions) {
+        row.show();
+    } else {
+        row.hide();
+    }
+
+    return row;
+}
+
+function addDigToMovePicker(picker, faction) {
+    var validate = function() {
+        if (amount.value == '-') {
+            button.disable()
+            return;
+        }
+        button.enable()
+    };
+    var execute = function() {
+        var command = "dig " + amount.value;
+        appendAndPreview(command);
+    };
+
+    var row = insertOrClearPickerRow(picker, "move_picker_dig");
+
+    var button = new Element("button").update("Dig");
+    button.onclick = execute;
+    button.disable();
+
+    var amount = makeSelectWithOptions(["-"]);
+    var amount_count = 0;
+    amount.onchange = validate;
+
+    var cost = $H(faction.dig.cost[faction.dig.level]);
+    for (var i = 1; i <= 7; ++i) {
+        var can_afford = true;
+        cost.each(function (cost_elem) {
+            if (i * cost_elem.value > faction[cost_elem.key]) {
+                can_afford = false;
+            }
+        });
+        if (can_afford) {
+            amount_count++;
+            amount.insert(new Element("option").update(i));
+        }
+    }
+
+    row.insert(button);
+    row.insert(amount);
+    row.insert(" times");
+ 
+    if (faction.allowed_actions || faction.allowed_sub_actions.dig) {
+        row.show();
+    } else {
+        row.hide();
+    }
+
+    return row;
+}
+
+function addSendToMovePicker(picker, faction) {
+    var validate = function() {
+        var cult = cults.value.toUpperCase();
+        if (cult == "-") {
+            button.disable()
+            return;
+        }
+        button.enable()
+    };
+    var execute = function() {
+        var command = "send p to " + cults.value;
+        if (amount.value != 'max') {
+            command += " amount " + amount.value;
+        }
+        appendAndPreview(command);
+    };
+
+    var row = insertOrClearPickerRow(picker, "move_picker_send");
+
+    var button = new Element("button").update("Send");
+    button.onclick = execute;
+    button.disable();
+    var cults = makeSelectWithOptions(["-", "Fire", "Water", "Earth", "Air"]);
+    cults.onchange = validate;
+    var amount = makeSelectWithOptions(["max", "3", "2", "1"]);
+    amount.onchange = validate;
+
+    row.insert(button);
+    row.insert("priest to ");
+    row.insert(cults);
+    row.insert(" for ");
+    row.insert(amount);
+
+    if (faction.P > 0 && faction.allowed_actions) {
+        row.show();
+    } else {
+        row.hide();
+    }
+
+    return row;
+}
+
+function addAdvanceToMovePicker(picker, faction) {
+    var validate = function() {
+        var advance_on = track.value;
+        if (advance_on == "-") {
+            button.disable()
+            return;
+        }
+        button.enable()
+    };
+    var execute = function() {
+        var command = "advance " + track.value;
+        appendAndPreview(command);
+    };
+
+    var row = insertOrClearPickerRow(picker, "move_picker_advance");
+
+    var button = new Element("button").update("Advance");
+    button.onclick = execute;
+    button.disable();
+
+    var track = makeSelectWithOptions(["-"]);
+    var track_count = 0;
+    track.onchange = validate;
+
+    ["dig", "ship"].each(function (type) {
+        if (faction[type].level >= faction[type].max_level) {
+            return;
+        }
+
+        var can_afford = true;
+        $H(faction[type].advance_cost).each(function (cost_elem) {
+            if (faction[cost_elem.key] < cost_elem.value) {
+                can_afford = false;
+            }
+        });
+        if (can_afford) {
+            track.insert(new Element("option").update(type));
+            track_count++;
+        }
+    });
+
+    row.insert(button);
+    row.insert(" on ");
+    row.insert(track);
+
+    if (track_count && faction.allowed_actions) {
+        row.show();
+    } else {
+        row.hide();
+    }
+
+    return row;
 }
 
 function draw() {

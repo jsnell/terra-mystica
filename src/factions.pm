@@ -575,6 +575,22 @@ sub setup {
 
     $faction->{planning} = 0;
 
+    my %base_exchange_rates = (
+        PW => { C => 1, W => 3, P => 5 },
+        W => { C => 1 },
+        P => { C => 1, W => 1 },
+        C => { VP => 3 }
+    );
+    if ($faction->{exchange_rates}) {
+        for my $from_key (keys %{$faction->{exchange_rates}}) {
+            my $from = $faction->{exchange_rates}{$from_key};
+            for my $to_key (keys %{$from}) {
+                $base_exchange_rates{$from_key}{$to_key} = $from->{$to_key};
+            }
+        }
+    }
+    $faction->{exchange_rates} = \%base_exchange_rates;
+
     @action_required = ({ type => 'dwelling', faction => $setup_order[0] });
 }
 

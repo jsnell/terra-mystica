@@ -18,10 +18,9 @@ use towns;
 my @warn = ();
 my $printed_turn = 0;
 my $force_finish = 0;
-my $active_faction;
 my @data_fields = qw(VP C W P P1 P2 P3 PW FIRE WATER EARTH AIR CULT);
 
-use vars qw($admin_email %options);
+use vars qw($admin_email %options $active_faction);
 
 sub handle_row;
 sub handle_row_internal;
@@ -290,19 +289,12 @@ sub command_convert {
         $from_count, $from_type,
         $to_count, $to_type) = @_;
 
-    my %exchange_rates = (
-        PW => { C => 1, W => 3, P => 5 },
-        W => { C => 1 },
-        P => { C => 1, W => 1 },
-        C => { VP => 3 }
-        );
+    my %exchange_rates = ();
 
-    if ($faction->{exchange_rates}) {
-        for my $from_key (keys %{$faction->{exchange_rates}}) {
-            my $from = $faction->{exchange_rates}{$from_key};
-            for my $to_key (keys %{$from}) {
-                $exchange_rates{$from_key}{$to_key} = $from->{$to_key};
-            }
+    for my $from_key (keys %{$faction->{exchange_rates}}) {
+        my $from = $faction->{exchange_rates}{$from_key};
+        for my $to_key (keys %{$from}) {
+            $exchange_rates{$from_key}{$to_key} = $from->{$to_key};
         }
     }
 

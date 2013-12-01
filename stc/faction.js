@@ -302,6 +302,7 @@ function initChatIfNeeded() {
     if (chat_loaded) {
         return;
     }
+    newChatMessages();
     loadChat();
     chat_loaded = 1;
 }
