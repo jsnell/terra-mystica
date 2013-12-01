@@ -1749,18 +1749,24 @@ function addActionToMovePicker(picker, faction) {
     row.insert(button);
 
     var action = makeSelectWithOptions([]);
+    var action_count = 0;
+
     var generate = function () {
         action.update("");
         action.insert(new Element("option").update("-"));
         action.onchange = validate;
         var pw = faction.P3;
-        if (burn.checked) { pw += faction.P2 / 2 };
+        var max_pw = pw + faction.P2 / 2;
+        if (burn.checked) { pw += max_pw; }
         $H(state.pool).sortBy(naturalSortKey).each(function (elem) {
             var key = elem.key;
             if (key.startsWith("ACT") &&
                 !(state.map[key] && state.map[key].blocked) &&
-                (pw >= state.actions[key].cost.PW)) {
-                action.insert(new Element("option").update(key));
+                max_pw >= state.actions[key].cost.PW) {
+                if (pw >= state.actions[key].cost.PW) {
+                    action.insert(new Element("option").update(key));
+                }
+                action_count++;
             }
         });
         $H(faction).sortBy(naturalSortKey).each(function (elem) {
@@ -1770,6 +1776,7 @@ function addActionToMovePicker(picker, faction) {
                 state.actions[key] &&
                 !(state.map[fkey] && state.map[fkey].blocked)) {
                 action.insert(new Element("option").update(key));
+                action_count++;
             }
         });
     }
@@ -1785,7 +1792,7 @@ function addActionToMovePicker(picker, faction) {
                update(", burn power if needed"));
     row.insert(burn);
     
-    if (faction.allowed_actions) {
+    if (faction.allowed_actions && action_count > 0) {
         row.show();
     } else {
         row.hide();
