@@ -1332,6 +1332,10 @@ sub play {
             finish_row;
             die "Error in command '".($this->[1])."': $@";
         }
+        if (!defined $next and $active_faction) {
+            $factions{$active_faction}{allowed_sub_actions}{burn} = 1;
+            $factions{$active_faction}{allowed_sub_actions}{convert} = 1;
+        }
         if (($next->[0] // '') ne ($this->[0] // '')) {
             finish_row;
         }

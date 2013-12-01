@@ -1915,9 +1915,9 @@ function addBurnToMovePicker(picker, faction) {
     row.insert(amount);
     row.insert(" power");
 
-    // XXX: should allow burning after main move (even if it'll probably never
-    // matter).
-    if (faction.P2 > 1 && faction.allowed_actions) {
+    if (faction.P2 > 1 &&
+        (faction.allowed_actions > 0||
+         faction.allowed_sub_actions.burn > 0)) {
         row.show();
     } else {
         row.hide();
@@ -2003,8 +2003,8 @@ function addConvertToMovePicker(picker, faction) {
     row.insert(amount);
     row.insert(" times");
  
-    // XXX: should allow conversions after main move
-    if (faction.allowed_actions) {
+    if (faction.allowed_actions > 0 ||
+        faction.allowed_sub_actions.burn > 0) {
         row.show();
     } else {
         row.hide();
