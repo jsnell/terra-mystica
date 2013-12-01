@@ -413,8 +413,12 @@ sub command_transform {
     my $faction_name = $faction->{name};
 
     if (!$color) {
-        $color = color_at_offset($map{$where}{color}, $faction->{color},
-                                 $faction->{SPADE});
+        if ($faction->{FREE_TF}) {
+            $color = $faction->{color};
+        } else {
+            $color = color_at_offset($map{$where}{color}, $faction->{color},
+                                     $faction->{SPADE});
+        }
     }
 
     if ($map{$where}{color} eq $color) {
@@ -957,6 +961,10 @@ sub detect_incomplete_state {
 
     if ($faction->{FREE_TF}) {
         $warn = "Unused free terraform for $prefix\n";
+        push @extra_action_required, {
+            type => 'transform',
+            faction => $prefix
+        };
     }
 
     if ($faction->{FREE_TP}) {

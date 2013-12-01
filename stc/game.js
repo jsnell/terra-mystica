@@ -1144,6 +1144,8 @@ function drawActionRequired() {
         } else if (record.type == 'transform') {
             if (record.amount == 1) {
                 record.pretty = 'may use a spade (click on map to transform)'.interpolate(record);
+            } else if (record.amount == null) {
+                record.pretty = 'may transform a space for free (click on map)'.interpolate(record);
             } else {
                 record.pretty = 'may use #{amount} spades (click on map to transform)'.interpolate(record);
             }
