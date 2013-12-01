@@ -1675,7 +1675,7 @@ function addPassToMovePicker(picker, faction) {
     bonus_tiles.onchange = validate;
     if (state.round < 6) {
         row.insert(" and take tile ");
-        $H(state.pool).each(function (tile) {
+        $H(state.pool).sortBy(naturalSortKey).each(function (tile) {
             if (tile.key.startsWith("BON") && tile.value > 0) {
                 bonus_tiles.insert(new Element("option").update(tile.key));
             }
