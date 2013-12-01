@@ -370,7 +370,7 @@ sub update_reachable_build_locations {
                 grep {
                     my $loc = $_;
                     my $ret = 0;
-                    if ($map{$loc}{row} and
+                    if (exists $map{$loc}{row} and
                         $map{$loc}{color} eq $faction->{color} and
                         !$map{$loc}{building}) {
                         eval {
