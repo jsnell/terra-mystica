@@ -3,8 +3,9 @@
 #+EMAIL: jsnell@iki.fi
 #+STYLE: <link rel="stylesheet" type="text/css" href="stc/org.css" />
 
-A PBEM moderator for the boardgame Terra Mystica.
+A play-by-email / play-by-web moderator for the boardgame Terra Mystica.
 
+- Full rules enforcement, automatic email notifications, command language + simple UI
 - Written in Perl and JavaScript
-- Uses git as the backing storage for games, no database
+- Uses PostgreSQL as the backing storage
 
