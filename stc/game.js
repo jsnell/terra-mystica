@@ -1215,7 +1215,7 @@ function drawActionRequired() {
 
     if (currentFaction && $("data_entry").innerHTML == "") {
         $("data_entry").insert("<div id='data_entry_tabs'></div>");
-        $("data_entry_tabs").insert("<button onclick='dataEntrySelect(\"move\")' id='data_entry_tab_move' class='tab' accesskey='m'>Moves</button>");
+        $("data_entry_tabs").insert("<button onclick='dataEntrySelect(\"move\"); updateMovePicker();' id='data_entry_tab_move' class='tab' accesskey='m'>Moves</button>");
         $("data_entry_tabs").insert("<button onclick='initPlanIfNeeded(); dataEntrySelect(\"planning\")' id='data_entry_tab_planning' class='tab' accesskey='p'>Planning</button>");
         $("data_entry_tabs").insert("<button onclick='dataEntrySelect(\"recent\")' id='data_entry_tab_recent' class='tab' accesskey='r'>Recent Moves</button>");
         if (state.options["email-notify"]) {
