@@ -22,6 +22,7 @@ sub finalize {
     my $spade_seen = 0;
 
     update_reachable_build_locations;
+    update_mermaid_town_connections;
 
     if ($delete_email) {
         for (@players) {

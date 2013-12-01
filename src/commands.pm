@@ -848,6 +848,10 @@ sub command {
         command_bridge $assert_active_faction->(), uc $1, uc $2, $3;
     } elsif ($command =~ /^connect (\w+):(\w+)(?::(\w+))?$/i) {
         command_connect $assert_active_faction->(), uc $1, uc $2, uc $3;
+    } elsif ($command =~ /^connect (r\d+)?$/i) {
+        my $river = lc $1;
+        my @neighbors = keys %{$map{$river}{adjacent}};
+        command_connect $assert_active_faction->(), @neighbors;
     } elsif ($command =~ /^pass(?: (bon\d+))?$/i) {
         command_pass $assert_active_faction->(), uc ($1 // '');
         $force_finish = 1;

@@ -191,20 +191,32 @@ function drawHex(ctx, elem) {
         return;
     }
 
+    var loc = hexCenter(hex.row, hex.col);
+
     if (hex.color == 'white') {
-        if (hex.town) {
+        if (hex.town || hex.possible_town) {
             var loc = hexCenter(hex.row, hex.col);
             ctx.save();
-            makeMapHexPath(ctx, hex, hex_size / 2);
+            var scale = hex.town ? 2 : 2.5;
+            makeMapHexPath(ctx, hex, hex_size / scale);
 
-            ctx.fillStyle = "#def";
-            ctx.fill();
+            if (hex.town) {
+                ctx.fillStyle = "#def";
+                ctx.fill();
 
-            ctx.strokeStyle = "#456";
+                ctx.strokeStyle = "#456";
+            } else {
+                ctx.strokeStyle = "#bbb";
+            }
             ctx.lineWidth = 2;
             ctx.stroke();
 
             ctx.restore();
+        }
+
+        if (hex.possible_town) {
+            drawText(ctx, id, loc[0] - 9, loc[1] + 25,
+                     "12px Verdana");
         }
 
         return;
@@ -237,7 +249,6 @@ function drawHex(ctx, elem) {
     }
 
     ctx.save();
-    var loc = hexCenter(hex.row, hex.col);
     if (hex.color == "black") {
         ctx.strokeStyle = "#c0c0c0";
     } else {
@@ -1537,7 +1548,7 @@ function updateMovePicker() {
     var dig = addDigToMovePicker(picker, faction);
     var send = addSendToMovePicker(picker, faction);
     var advance = addAdvanceToMovePicker(picker, faction);
-    // Connect (tricky)
+    var connect = addConnectToMovePicker(picker, faction);
 }
 
 function makeSelectWithOptions(options) {
@@ -2152,6 +2163,46 @@ function addAdvanceToMovePicker(picker, faction) {
     row.insert(track);
 
     if (track_count && faction.allowed_actions) {
+        row.show();
+    } else {
+        row.hide();
+    }
+
+    return row;
+}
+
+function addConnectToMovePicker(picker, faction) {
+    if (!faction.possible_towns) {
+        return;
+    }
+
+    var validate = function() {
+        if (location.value == "-") {
+            button.disable();
+        } else {
+            button.enable();
+        }
+    };
+    var execute = function() {
+        appendAndPreview("connect " + location.value);
+    };
+
+    var row = insertOrClearPickerRow(picker, "move_picker_connect");
+    var button = new Element("button").update("Connect");
+    button.onclick = execute;
+
+    var location = makeSelectWithOptions(["-"].concat(faction.possible_towns));
+    location.onchange = validate;
+    var location_count = 0;
+
+    row.insert(button);
+    row.insert(" over ");
+    row.insert(location);
+    row.insert(" to form town ");
+
+    validate();
+    
+    if (faction.possible_towns.size() > 0) {
         row.show();
     } else {
         row.hide();

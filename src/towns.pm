@@ -3,6 +3,7 @@ package terra_mystica;
 use strict;
 
 use map;
+use natural_cmp;
 use vars qw(%pool);
 
 # Add a hex with a building owned by faction to the town denoted by tid.
@@ -79,6 +80,67 @@ sub detect_towns_from {
     }
 
     return 0;
+}
+
+sub check_mermaid_river_connection_town {
+    my ($faction, $river) = @_;
+
+    # Already a town bordering that river space.
+    for my $adjacent (adjacent_own_buildings $faction, $river) {
+        if ($map{$adjacent}{town}) {
+            return 0;
+        }
+    }    
+
+    my %reachable = ();
+    my $power = 0;
+    my $count = 0;
+
+    # Count the number and power of the buildings reachable from this
+    # hex.
+    my $handle;
+    $handle = sub {
+        my ($loc) = @_;
+        return if exists $reachable{$loc};
+
+        $reachable{$loc} = 1;
+        if ($map{$loc}{building}) {
+            $power += $building_strength{$map{$loc}{building}};
+            $count++;
+            # Sanctuary counts as two buildings.
+            $count++ if $map{$loc}{building} eq 'SA';
+        }
+
+        for my $adjacent (adjacent_own_buildings $faction, $loc) {
+            $handle->($adjacent);
+        }
+    };
+    $handle->($river);
+
+    if ($power >= $faction->{TOWN_SIZE} and $count >= 4 and
+        grep { /^TW/ and $pool{$_} > 0 } keys %pool) {
+        return 1;
+    }
+
+    return 0;
+}
+
+sub update_mermaid_town_connections {
+    return if !exists $factions{mermaids};
+
+    my @valid_spaces = ();
+
+    for my $river (keys %map) {
+        next if $river !~ /^r/;
+        if (check_mermaid_river_connection_town $factions{mermaids}, $river) {
+            push @valid_spaces, $river;
+            $map{$river}{possible_town} = 1;
+        }
+    }
+
+    $factions{mermaids}{possible_towns} = [
+        sort { natural_cmp $a, $b } @valid_spaces
+    ];
 }
 
 1;
