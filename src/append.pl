@@ -80,6 +80,9 @@ $new_content .= "\n";
 
 chomp $append;
 $append .= "\n";
+# Strip empty lines from new content
+$append =~ s/(\r\n)+/$1/g;
+$append =~ s/(\n)+/$1/g;
 
 $new_content .= $append;
 
