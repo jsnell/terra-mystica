@@ -49,17 +49,19 @@ sub fetch_user_settings {
     $res{$_} = $player->{$_} for keys %{$player};
 
     my $rows = $dbh->selectall_arrayref(
-        "select address, validated from email where player = ?",
+        "select address, validated, is_primary from email where player = ?",
         {},
         $username);
 
     for (@{$rows}) {
         $res{email}{$_->[0]}{validated} = !!$_->[1];
+        $res{email}{$_->[0]}{is_primary} = !!$_->[2];
     }
 }
 
 sub save_user_settings {
     my $displayname = $q->param('displayname');
+    my $primary_email = $q->param('primary_email');
 
     if (length $displayname > 30) {
         error "Display Name too long";
@@ -72,6 +74,16 @@ sub save_user_settings {
              $q->param('email_notify_all_moves'),
              $q->param('email_notify_chat'),
              $username);
+
+    if ($primary_email) {
+        $dbh->do("update email set is_primary=false where player=?",
+                 {},
+                 $username);
+        $dbh->do("update email set is_primary=true where player=? and address=lower(?)",
+                 {},
+                 $username,
+                 $primary_email);
+    }
 }
 
 eval {

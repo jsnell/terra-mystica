@@ -11,6 +11,7 @@ create unique index player_username_lowercase_idx on player(lower(username));
 create table email (
   address text unique,
   player text references player (username),
+  is_primary boolean,
   validated boolean
 );
 create unique index email_address_lowercase_idx on email(lower(address));
