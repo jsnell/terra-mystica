@@ -40,7 +40,7 @@ sub get_game_players {
     my ($dbh, $id) = @_;
 
     my ($rows) =
-        $dbh->selectall_arrayref("select faction, player, email, displayname from email inner join game_role on game_role.email=email.address inner join player on player.username=email.player where game=? and faction != 'admin'",
+        $dbh->selectall_arrayref("select game_role.faction, player.username, game_role.email, player.displayname from email inner join game_role on game_role.email=email.address inner join player on player.username=email.player where game_role.game=? and game_role.faction != 'admin'",
                                  {},
                                  $id);
 
