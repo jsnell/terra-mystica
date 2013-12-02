@@ -7,6 +7,7 @@ use db;
 use create_game;
 use game;
 use session;
+use user_validate;
 
 my $q = CGI->new;
 my $dbh = get_db_connection;
@@ -44,7 +45,29 @@ if ($gameid =~ /([^A-Za-z0-9])/) {
     error "Invalid character in game id '$1'";
 }
 
+my $players = $q->param('players');
+my @players = grep {
+    /\S/
+} map {
+    s/^\s*|\s*$//g;
+    $_;
+} split /[\n\r]+/, $players;
+
 begin_game_transaction $dbh, $gameid;
+
+eval {
+    @players = map {
+        my $player = $_;
+        if ($player =~ /\@/) {
+            check_email_is_registered $dbh, $player;
+        } else {
+            check_username_is_registered $dbh, $player;
+            $player;
+        }
+    } @players;
+}; if ($@) {
+    error $@;
+}
 
 if (game_exists $dbh, $gameid) {
     error "Game $gameid already exists";
@@ -55,7 +78,7 @@ my ($email) = $dbh->selectrow_array("select address from email where player = ? 
 my @options = $q->param('game-options');
 
 eval {
-    my $write_id = create_game $dbh, $gameid, $email, @options;
+    my $write_id = create_game $dbh, $gameid, $email, [@players], @options;
 
     print encode_json {
         error => [],

@@ -510,6 +510,7 @@ sub setup {
 
     if ($player) {
         $faction->{player} = "$player";
+        $faction->{username} = $player_record->{username};
     }
 
     $faction->{name} = $faction_name;

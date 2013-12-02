@@ -18,6 +18,17 @@
     <h3>Create new game</h3>
     <script>
       var state = null;
+      function validate() {
+          var disabled = false;
+          if ($("gameid").value == "") {
+              disabled = true;
+          }
+          if ($("players").value == "") {
+              disabled = true;
+          }
+          $("submit").disabled = disabled;
+      }
+
       function newGame() {
         $("error").innerHTML = "";
         $("csrf-token").value = getCSRFToken();
@@ -39,7 +50,7 @@
     <form id="newgame" action="/cgi-bin/newgame.pl" onsubmit="return false">
       <table>
         <tr style="vertical-align: top">
-          <td>Game id<td><input name="gameid" id="gameid"></input>
+          <td>Game id<td><input name="gameid" id="gameid" oninput="javascript:validate()"></input>
         <tr style="vertical-align: top">
           <td>Options <a href="/usage.html#sec-4.1">(help)</a>
           <td>
@@ -47,12 +58,23 @@
             <input name="game-options" type="checkbox" id="option-mini-expansion-1" value="mini-expansion-1"></input><label for="option-mini-expansion-1">Mini Expansion #1 (town tiles)</label><br>
             <input name="game-options" type="checkbox" id="option-shipping-bonus" value="shipping-bonus"></input><label for="option-shipping-bonus">Shipping bonus tile (Spielbox 6/2013)</label><br>
             <input name="game-options" type="checkbox" id="option-email-notify" value="email-notify" checked></input><label for="option-email-notify">Automatic email notifications</label><br>
+        <tr style="vertical-align: top">
+          <td>Players<td><textarea name="players" id="players" style="width: 40ex; height: 6em;" oninput="javascript:validate()" placeholder="usernames or email addresses"></textarea>
         <tr><td><td><input id="submit" type="button" value="New Game" onclick="javascript:newGame()"></input>
       </table>
       <input type="hidden" id="csrf-token" name="csrf-token"></input>
+      <script language="javascript">validate();</script>
     </form>
     <p>
       The id of the game should be unique, and only contain
       the letters A-Z and a-z and the digits 0-9.
+    <p>
+      You can specify the players either using a username or an email
+      address (must be registered on the site). One player per row.
+      Please do not add players to games if they aren't expecting it.
+    <p>
+      Please note that this site does not currently have a matchmaking
+      service. Before creating a game, you must find players from some
+      other forum.
   </body>
 </html>

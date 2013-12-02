@@ -121,7 +121,8 @@ sub deploy_cgi {
                   session.pm
                   tiles.pm
                   towns.pm
-                  tracker.pm)) {
+                  tracker.pm
+                  user_validate.pm)) {
         copy_with_mode 0444, "src/$f", "$target/cgi-bin/$f";
     }
 }
