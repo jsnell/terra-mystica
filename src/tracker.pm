@@ -54,9 +54,17 @@ sub finalize {
             @action_required = ({ type => 'planning',
                                   faction => $faction->{name}});
         }
+        my $faction_count = scalar keys %factions;
+        my $info;
         if (exists $faction_info->{$faction->{name}}) {
-            $faction->{username} = $faction_info->{$faction->{name}}{username};
-            $faction->{player} = $faction_info->{$faction->{name}}{displayname};
+            $info = $faction_info->{$faction->{name}};
+        } elsif (exists $faction_info->{"player${faction_count}"}) {
+            $info = $faction_info->{"player${faction_count}"}
+        }
+        if (defined $info) {
+            $faction->{username} = $info->{username};
+            $faction->{email} //= $info->{email};
+            $faction->{player} = $info->{displayname};
             $faction->{registered} = 1;
         } else {
             $faction->{registered} = 0;
