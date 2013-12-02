@@ -1820,6 +1820,7 @@ function addBuildToMovePicker(picker, faction) {
             rows.pop();
             rows.push(command);
             $("move_entry_input").value = rows.join("\n");
+            preview();
         } else {
             appendAndPreview(command);
         }
