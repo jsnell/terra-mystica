@@ -61,8 +61,7 @@ eval {
         if ($player =~ /\@/) {
             check_email_is_registered $dbh, $player;
         } else {
-            check_username_is_registered $dbh, $player;
-            $player;
+            ($player) = check_username_is_registered $dbh, $player;
         }
     } @players;
 }; if ($@) {

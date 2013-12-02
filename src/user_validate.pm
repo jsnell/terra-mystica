@@ -19,8 +19,8 @@ sub check_username_is_registered {
     my ($dbh, $username) = @_;
 
     # XXX: primary address support
-    my ($address) =
-        $dbh->selectrow_array("select address from email where player=?",
+    my ($address, $actual_username) =
+        $dbh->selectrow_array("select address, player from email where lower(player)=lower(?) and is_primary=true",
                               {},
                               $username);
 
@@ -28,7 +28,7 @@ sub check_username_is_registered {
         die "There is no account with the username '$username'.\n";
     }
 
-    $address;
+    ($actual_username, $address);
 }
 
 1;

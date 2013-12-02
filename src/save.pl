@@ -61,7 +61,9 @@ sub verify_and_save {
         if (defined $faction->{email}) {
             $faction->{username} = check_email_is_registered $dbh, $faction->{email};
         } elsif (defined $faction->{username}) {
-            $faction->{email} = check_username_is_registered $dbh, $faction->{username};
+            ($faction->{username},
+             $faction->{email}) =
+                 check_username_is_registered $dbh, $faction->{username};
         }
     }
 
@@ -69,7 +71,8 @@ sub verify_and_save {
         if (defined $player->{email}) {
             $player->{username} = check_email_is_registered $dbh, $player->{email};
         } elsif (defined $player->{username}) {
-            $player->{email} = check_username_is_registered $dbh, $player->{username};
+            ($player->{username}, $player->{email}) =
+                check_username_is_registered $dbh, $player->{username};
         }
     }
 
