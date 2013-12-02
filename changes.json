@@ -1,5 +1,17 @@
 {
     "changes": [
+        { "date": "2013-12-02",
+          "title": "New UI for entering moves",
+          "description": "<p>A crude graphical UI for move entry has been added for uses where entering text is difficult (for example phones). The original text-based interface will continue to be available. The UI is only available for entering real moves. <p>The interface is still a work in progress. Please let me know of any instances where it shows incorrect options. That is, suggests an invalid move or doesn't allow entering a valid one."
+        },
+        { "date": "2013-12-02",
+          "title": "Improved game creation",
+          "description": "Players can now be added to the game right from the game creation screen, either by email address or username, rather than require editing the game in admin mode."
+        },
+        { "date": "2013-12-02",
+          "title": "Registration required",
+          "description": "Games with unregistered players are no longer supported. Existing games with unregistered email addresses will continue working, but new ones can't be created."
+        },
         { "date": "2013-11-23",
           "title": "Shipping bonus tile",
           "description": "The <a href='http://boardgamegeek.com/image/1843355/terra-mystica-navigation-round-bonus-tile'>shipping bonus tile</a> from Spielbox 6/2013 has been added. Enable it for new games with 'option shipping-bonus'. You can't enable the option for existing games."
