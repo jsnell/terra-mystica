@@ -45,9 +45,8 @@ randomize v1 seed $id
 EOF
  
     my $write_id = "${id}_${hash}";
-    my $game = $admin ? { admin => $admin } : {};
 
-    save $dbh, $write_id, $content, $game;
+    evaluate_and_save $dbh, $id, $write_id, $content;
 
     return $write_id;
 }

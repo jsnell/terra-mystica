@@ -72,7 +72,7 @@ if (game_exists $dbh, $gameid) {
     error "Game $gameid already exists";
 }
 
-my ($email) = $dbh->selectrow_array("select address from email where player = ? limit 1", {}, $username);
+my ($email) = $dbh->selectrow_array("select address from email where player = ? and is_primary", {}, $username);
 
 my @options = $q->param('game-options');
 

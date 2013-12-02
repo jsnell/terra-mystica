@@ -28,6 +28,13 @@ sub finalize {
         for (@players) {
             delete $_->{email};
         }
+    } else {
+        my $pi = 0;
+        for (@players) {
+            if (!defined $_->{email}) {
+                $_->{email} = $faction_info->{"player".++$pi}{email};
+            }
+        }
     }
 
     for (@action_required) {

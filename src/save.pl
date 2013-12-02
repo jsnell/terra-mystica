@@ -26,80 +26,20 @@ my $new_content = $q->param('content');
 
 my $dbh = get_db_connection;
 
-sub verify_email_notification_settings {
-    my ($dbh, $game) = @_;
-
-    return if !$game->{options}{'email-notify'};
-
-    for my $faction (values %{$game->{factions}}) {
-        if (!$faction->{email}) {
-            die "When option email-notify is on, all players must have an email address defined ('$faction->{player}' does not)\n"
-        }
-
-        my ($email_valid) =
-            $dbh->selectrow_array("select count(*) from email where address=lower(?) and validated=true",
-                                  {},
-                                  $faction->{email});
-
-        if (!$email_valid) {
-            die "When option email-notify is on, all players must be registered ('$faction->{player}' is not)\n"
-        }                              
-    }
-}
-
-sub verify_and_save {
-    my ($game, $timestamp) = @_;
-
-    my $orig_content = get_game_content $dbh, $read_id, $write_id;
-
-    if (sha1_hex($orig_content) ne $orig_hash) {
-        print STDERR "Concurrent modification [$orig_hash] [", sha1_hex($orig_content), "]";
-        die "Someone else made changes to the game. Please reload\n";
-    }
-
-    for my $faction (values %{$game->{factions}}) {
-        if (defined $faction->{email}) {
-            $faction->{username} = check_email_is_registered $dbh, $faction->{email};
-        } elsif (defined $faction->{username}) {
-            ($faction->{username},
-             $faction->{email}) =
-                 check_username_is_registered $dbh, $faction->{username};
-        }
-    }
-
-    for my $player (@{$game->{players}}) {
-        if (defined $player->{email}) {
-            $player->{username} = check_email_is_registered $dbh, $player->{email};
-        } elsif (defined $player->{username}) {
-            ($player->{username}, $player->{email}) =
-                check_username_is_registered $dbh, $player->{username};
-        }
-    }
-
-    verify_email_notification_settings $dbh, $game;
-
-    save $dbh, $write_id, $new_content, $game, $timestamp;
-}
-
 begin_game_transaction $dbh, $read_id;
 
-my $res = terra_mystica::evaluate_game {
-    rows => [ split /\n/, $new_content ],
-    delete_email => 0
-};
+my $orig_content = get_game_content $dbh, $read_id, $write_id;
 
-if (!@{$res->{error}}) {
-    eval {
-        my ($timestamp) =
-            $dbh->selectrow_array("select extract(epoch from last_update) from game where id=?",
-                                  {},
-                                  $read_id);
-        verify_and_save $res, $timestamp;
-    }; if ($@) {
-        print STDERR "error: $@\n";
-        $res->{error} = [ $@ ]
-    }
-};
+my $res = {};
+
+if (sha1_hex($orig_content) ne $orig_hash) {
+    print STDERR "Concurrent modification [$orig_hash] [", sha1_hex($orig_content), "]";
+    $res->{error} = [
+        "Someone else made changes to the game. Please reload\n"
+    ];
+} else {
+    $res = evaluate_and_save $dbh, $read_id, $write_id, $new_content;
+}
 
 finish_game_transaction $dbh;
 
