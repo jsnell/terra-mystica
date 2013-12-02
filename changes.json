@@ -2,7 +2,7 @@
     "changes": [
         { "date": "2013-12-02",
           "title": "New UI for entering moves",
-          "description": "<p>A crude graphical UI for move entry has been added for uses where entering text is difficult (for example phones). The original text-based interface will continue to be available. The UI is only available for entering real moves. <p>The interface is still a work in progress. Please let me know of any instances where it shows incorrect options. That is, suggests an invalid move or doesn't allow entering a valid one."
+          "description": "<p>A crude graphical UI for move entry has been added for uses where entering text is difficult (for example phones). The original text-based interface will continue to be available. The UI is only available for entering real moves, not on the planning tab. <p>The interface is still a work in progress. Please let me know of any instances where it shows incorrect options. That is, suggests an invalid move or doesn't allow entering a valid one."
         },
         { "date": "2013-12-02",
           "title": "Improved game creation",
