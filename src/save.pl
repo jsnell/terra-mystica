@@ -51,6 +51,10 @@ my $out = encode_json {
     error => $res->{error},
     hash => sha1_hex($new_content),
     action_required => $res->{action_required},
-    factions => $res->{factions},
+    factions => {
+        map {
+            ($_->{name}, { display => $_->{display}, color => $_->{color} })
+        } values %{$res->{factions}}
+    }
 };
 print $out;
