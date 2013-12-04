@@ -2107,7 +2107,8 @@ function addDigToMovePicker(picker, faction) {
     row.insert(amount);
     row.insert(" times");
  
-    if (faction.allowed_actions || faction.allowed_sub_actions.dig) {
+    if ((faction.allowed_actions || faction.allowed_sub_actions.dig) &&
+        amount_count > 0) {
         row.show();
     } else {
         row.hide();
