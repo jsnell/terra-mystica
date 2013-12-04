@@ -1826,6 +1826,8 @@ function addBuildToMovePicker(picker, faction) {
         }
     };
 
+    var dwelling_costs = faction.buildings["D"].advance_cost;
+
     var row = insertOrClearPickerRow(picker, "move_picker_build");
     var button = new Element("button").update("Build");
     button.onclick = execute;
@@ -1835,19 +1837,35 @@ function addBuildToMovePicker(picker, faction) {
     var location_count = 0;
 
     if (faction.allowed_sub_actions.build) {
-        $H(faction.allowed_build_locations).each(function (elem) {
-            var loc = elem.key;
-            location.insert(new Element("option").update(loc));
-            location_count++;
+        var can_afford_build = true;
+        $H(dwelling_costs).each(function (cost_elem) {
+            if (faction[cost_elem.key] < cost_elem.value) {
+                can_afford_build = false;
+            }
         });
-        if (!location_count) {
-            location.insert(new Element("option").update("-"));
-        }         
+        if (can_afford_build) {
+            $H(faction.allowed_build_locations).each(function (elem) {
+                var loc = elem.key;
+                location.insert(new Element("option").update(loc));
+                location_count++;
+            });
+        }
     } else if (faction.allowed_actions) {
         location.insert(new Element("option").update("-"));
-        faction.reachable_build_locations.each(function (loc) {
-            location.insert(new Element("option").update(loc));
-            location_count++;
+        var resources = ["W", "P"];
+        faction.reachable_build_locations.each(function (elem) {
+            var loc = elem.hex;
+            var loc_cost = elem.extra_cost;
+            var can_afford_build = true;
+            resources.each(function (res) {
+                if (faction[res] < dwelling_costs[res] + loc_cost[res]) {
+                    can_afford_build = false;
+                }
+            });
+            if (can_afford_build) {
+                location.insert(new Element("option").update(loc));
+                location_count++;
+            }
         });
     }
 

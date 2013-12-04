@@ -153,7 +153,7 @@ sub setup_valid_bridges {
 sub check_reachable {
     my ($faction, $where, $dryrun) = @_;
 
-    return if $round == 0;
+    return {} if $round == 0;
 
     my $range = $faction->{ship}{level};
     if ($faction->{ship}{max_level}) {
@@ -169,7 +169,7 @@ sub check_reachable {
     # if it isn't needed).
     for my $loc (@{$faction->{locations}}) {
         if ($map{$where}{adjacent}{$loc}) {
-            return;
+            return {};
         }
     }
 
@@ -178,14 +178,14 @@ sub check_reachable {
         for my $loc (@{$faction->{locations}}) {
             if (exists $map{$where}{range}{1}{$loc} and 
                 $map{$where}{range}{1}{$loc} <= $range) {
-                return;
+                return {};
             }
         }
     }
 
     if ($faction->{TELEPORT_TO}) {
         if ($faction->{TELEPORT_TO} eq $where) {
-            return;
+            return {};
         } else {
             die "Can't use tunnel / carpet flight multiple times in one round\n"
         }
@@ -208,7 +208,7 @@ sub check_reachable {
                     pay($faction, $cost);
                     gain($faction, $gain, 'faction');
                 }
-                return;
+                return $cost;
             }
         }
     }
@@ -368,17 +368,23 @@ sub update_reachable_build_locations {
         if ($faction->{name} eq $active_faction) {
             $faction->{reachable_build_locations} = [
                 grep {
-                    my $loc = $_;
+                    $_
+                } map {
                     my $ret = 0;
+                    my $loc = $_;
+                    my $cost = {};
                     if (exists $map{$loc}{row} and
                         $map{$loc}{color} eq $faction->{color} and
                         !$map{$loc}{building}) {
                         eval {
-                            check_reachable $faction, $loc, 1;
+                            $cost = check_reachable $faction, $loc, 1 || {};
                             $ret = 1;
                         };
                     }
-                    $ret;
+                    # [$ret, $cost]
+                    if ($ret) {
+                        { hex => $loc, extra_cost => $cost }
+                    }
                 } keys %map
             ];
         } else {
