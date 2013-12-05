@@ -1,5 +1,9 @@
 {
     "changes": [
+        { "date": "2013-12-05",
+          "title": "Primary email address selection",
+          "description": "Players with multiple registered email addresses can choose which address is the primary one (receives any notification messages). The selection can be made on the settings page. This change is retroactive -- one of the addresses has already been assigned as the primary for all existing users."
+        },
         { "date": "2013-12-02",
           "title": "New UI for entering moves",
           "description": "<p>A crude graphical UI for move entry has been added for uses where entering text is difficult (for example phones). The original text-based interface will continue to be available. The UI is only available for entering real moves, not on the planning tab. <p>The interface is still a work in progress. Please let me know of any instances where it shows incorrect options. That is, suggests an invalid move or doesn't allow entering a valid one."

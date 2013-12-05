@@ -13,7 +13,7 @@ function loadOrSaveSettings(save) {
         form_params['email_notify_all_moves'] = $("email_notify_all_moves").checked;
         form_params['email_notify_chat'] = $("email_notify_chat").checked;
         try {
-            form_params['primary_email'] = $$(".primary-email-radio:checked")[0].value;
+            form_params['primary_email'] = $("primary_email").value;
         } catch (e) {
         }
         form_params['save'] = 1;
@@ -49,21 +49,20 @@ function saveSettings() {
 function renderSettings(state) {
     $("username").innerHTML = state.username;
     $("displayname").value = state.displayname;
-    var newEmailList = new Element("div");
+    var newEmailList = new Element("ul");
     var first = true;
+    var primarySelect = new Element("select", {"id": "primary_email"});
     $H(state.email).each(function (elem) {
-        var row = new Element("div");
-        var radio = new Element("input", { "type": "radio",
-                                           "class": "primary-email-radio",
-                                           "name": "primary_email",
-                                           "id": "primary_email_" + elem.key,
-                                           "checked": first || elem.value.is_primary,
-                                           "value": elem.key })
-        var label = new Element("label",
-                                { "for": "primary_email_" + elem.key }).update(elem.key);
-        row.insert(radio);
-        row.insert(label);
+        var row = new Element("li");
+        var option = new Element("option").update(elem.key);
+        
+        if (first || elem.value.is_primary) {
+            option.selected = true;
+        }
+
+        row.update(elem.key);
         newEmailList.insert(row);
+        primarySelect.insert(option);
         first = false;
     });
     newEmailList.insert(new Element("div").update(
@@ -75,4 +74,5 @@ function renderSettings(state) {
     $("email_notify_chat").checked = state.email_notify_chat;
 
     $("email").update(newEmailList);
+    $("primary-email-container").update(primarySelect);
 }
