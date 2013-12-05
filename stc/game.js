@@ -607,20 +607,7 @@ function renderTile(div, name, record, faction, count) {
         div.insert("<div>#{key} &gt;&gt; #{value} vp</div>".interpolate(elem));
     });
     $H(record.pass_vp).each(function (elem, index) {
-        var stride = elem.value[1] - elem.value[0];
-        for (var i = 1; i < elem.value.length; ++i) {
-            if (elem.value[i-1] + stride != elem.value[i]) {
-                stride = null;
-                break;
-            }
-        }
-
-        if (stride) {
-            elem.value = "*" + stride;
-        } else {
-            elem.value = " [" + elem.value + "]";
-        }
-
+        elem.value = passVpString(elem.value);
         div.insert("<div>pass-vp:#{key}#{value}</div>".interpolate(elem));
     });
     if (record.action) {
@@ -632,6 +619,22 @@ function renderTile(div, name, record, faction, count) {
     $H(record.special).each(function (elem, index) {
         div.insert("<div>#{value} #{key}</div>".interpolate(elem));
     });
+}
+
+function passVpString(vps) {
+    var stride = vps[1] - vps[0];
+    for (var i = 1; i < vps.length; ++i) {
+        if (vps[i-1] + stride != vps[i]) {
+            stride = null;
+            break;
+        }
+    }
+    
+    if (stride) {
+        return "*" + stride;
+    } else {
+        return" [" + vps + "]";
+    }
 }
 
 function renderBonus(div, name, faction) {
@@ -1708,7 +1711,8 @@ function addPassToMovePicker(picker, faction) {
         row.insert(" and take tile ");
         $H(state.pool).sortBy(naturalSortKey).each(function (tile) {
             if (tile.key.startsWith("BON") && tile.value > 0) {
-                bonus_tiles.insert(new Element("option").update(tile.key));
+                addAnnotatedOptionToSelect(bonus_tiles, tile.key,
+                                        state.bonus_tiles[tile.key])
             }
         });
         row.insert(bonus_tiles);
@@ -1764,7 +1768,7 @@ function addActionToMovePicker(picker, faction) {
                 !(state.map[key] && state.map[key].blocked) &&
                 max_pw >= state.actions[key].cost.PW) {
                 if (pw >= state.actions[key].cost.PW) {
-                    action.insert(new Element("option").update(key));
+                    addAnnotatedOptionToSelect(action, key, state.actions[key]);
                 }
                 action_count++;
             }
@@ -1775,7 +1779,7 @@ function addActionToMovePicker(picker, faction) {
             if (elem.value > 0 &&
                 state.actions[key] &&
                 !(state.map[fkey] && state.map[fkey].blocked)) {
-                action.insert(new Element("option").update(key));
+                addAnnotatedOptionToSelect(action, key, state.actions[key]);
                 action_count++;
             }
         });
@@ -1799,6 +1803,101 @@ function addActionToMovePicker(picker, faction) {
     }
 
     return row;
+}
+
+function addAnnotatedOptionToSelect(select, name, record) {
+    var label = "";
+
+    if (name.match(/BON/)) {
+        label = tileLabel(record);
+    } else {
+        label = actionLabel(record)
+    }
+
+    if (label) {
+        label = ": " + label;
+    }
+    var bonus_coins = ""
+    if (record.bonus_coins && record.bonus_coins.C > 0) {
+        bonus_coins = " [" + record.bonus_coins.C + "c]";
+    }
+    label = name + bonus_coins + label;
+
+    select.insert(new Element("option", {"value": name}).update(label));
+}
+
+function tileLabel(record) {
+    var label = [];
+
+    var income = record.income;
+    var pass_vp = record.pass_vp;
+    var action = record.action;
+    var special = record.special;
+
+    if (pass_vp) {
+        var vp_strs = [];
+        $H(pass_vp).each(function (elem) {
+            elem.value = passVpString(elem.value);
+            vp_strs.push("#{key}#{value}".interpolate(elem));
+        });
+        if (vp_strs) {
+            label.push("pass-vp " + vp_strs.join(" "))
+        }
+    }
+    if (income) {
+        var income_strs = [];
+        $H(income).each(function (elem) {
+            income_strs.push("#{value}#{key}".interpolate(elem));
+        });
+        if (income_strs) {
+            label.push("income " + income_strs.join(" "))
+        }
+    }
+    if (action) {
+        label.push("action " + actionLabel(record.action));
+    }
+    if (special) {
+        var special_strs = [];
+        $H(special).each(function (elem, index) {
+            special_strs.push("#{value} #{key}".interpolate(elem));
+        });
+        if (special_strs) {
+            label.push("special " + special_strs.join(" "));
+        }
+    }
+
+    return label.join(", ");
+}
+
+function actionLabel(record) {
+    var label = "";
+
+    var cost = record.cost;
+    var gain = record.gain;
+
+    if (cost) {
+        var cost_strs = [];
+        $H(cost).each(function (elem) {
+            cost_strs.push("#{value}#{key}".interpolate(elem));
+        });
+        label += cost_strs.join(", ");
+    }
+
+    if (gain) {
+        var gain_strs = [];
+        $H(gain).each(function (elem) {
+            if (elem.value == 1) {
+                gain_strs.push(elem.key);
+            } else {
+                gain_strs.push("#{value}#{key}".interpolate(elem));
+            }
+        });
+        if (gain_strs) {
+            label += " &#8594; " + gain_strs.join(", ");
+        }
+    }    
+
+    return label;
 }
 
 function addBuildToMovePicker(picker, faction) {
