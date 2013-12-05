@@ -67,6 +67,8 @@ sub save_user_settings {
         error "Display Name too long";
     }
 
+    $dbh->do("begin");
+
     $dbh->do("update player set displayname=?, email_notify_turn=?, email_notify_all_moves=?, email_notify_chat=? where username=?",
              {},
              $displayname,
@@ -84,6 +86,8 @@ sub save_user_settings {
                  $username,
                  $primary_email);
     }
+
+    $dbh->do("commit");
 }
 
 eval {
