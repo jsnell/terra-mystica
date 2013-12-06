@@ -38,7 +38,9 @@ function newGameValidate() {
         $("players-row").show();
         $("description-row").hide();
         $("player-count-row").hide();
-        if ($("players").value == "") {
+        var players = $("players").value.gsub(/^\s+|\s+$/, '').split(/\n/);
+        
+        if (players.size() < 2) {
             disabled = true;
             validateHighlights["players"] = badColor;
         }
