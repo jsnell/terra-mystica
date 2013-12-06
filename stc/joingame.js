@@ -47,7 +47,8 @@ function showOpenGames(games) {
 
     games.each(function (game) {
         var row = new Element("tr");
-        row.insert(new Element("td").updateText(game.id));
+        row.insert(new Element("td").update(
+            new Element("a", {"href": "/game/" + game.id}).updateText(game.id)));
         row.insert(new Element("td").updateText("#{player_count}/#{wanted_player_count}".interpolate(game)));
         row.insert(new Element("td").updateText(game.description));
         var join = new Element("button").updateText("Join");
