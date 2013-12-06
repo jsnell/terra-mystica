@@ -32,12 +32,12 @@ begin_game_transaction $dbh, $read_id;
 my $write_id = $dbh->selectrow_array("select write_id from game where id=?",
                                      {},
                                      $read_id);
-my ($orig_content) = get_game_content $dbh, $read_id, $write_id;
+my ($prefix_content, $orig_content) = get_game_content $dbh, $read_id, $write_id;
 
 my  $content ="player $username username $username\n$orig_content";
 
 my $res = terra_mystica::evaluate_game {
-    rows => [ split /\n/, "$content\n" ],
+    rows => [ split /\n/, "$prefix_content\n$content\n" ],
     players => get_game_players($dbh, $read_id),
     delete_email => 0
 };

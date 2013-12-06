@@ -34,7 +34,7 @@ if (!defined $username) {
     print $out;
 } else {
     my ($read_id) = $write_id =~ /(.*?)_/g;
-    my $data = get_game_content $dbh, $read_id, $write_id;
+    my ($prefix_data, $data) = get_game_content $dbh, $read_id, $write_id;
 
     my $res = terra_mystica::evaluate_game {
         rows => [ split /\n/, $data ],

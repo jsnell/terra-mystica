@@ -61,7 +61,7 @@ EOF
                  "player".(++$i));
     }
 
-    evaluate_and_save $dbh, $id, $write_id, $content;
+    evaluate_and_save $dbh, $id, $write_id, '', $content;
 
     return $write_id;
 }

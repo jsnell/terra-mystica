@@ -16,10 +16,11 @@ sub game_exists {
 sub get_game_content {
     my ($dbh, $id, $write_id) = @_;
 
-    my ($actual_write_id, $content) =
-        $dbh->selectrow_array("select write_id, commands from game where id=?",
-                              {},
-                              $id);
+    my ($actual_write_id, $content, $wanted_player_count) =
+        $dbh->selectrow_array(
+            "select write_id, commands, wanted_player_count from game where id=?",
+            {},
+            $id);
 
     if (defined $write_id) {
         if ($write_id ne $actual_write_id) {
@@ -29,11 +30,17 @@ sub get_game_content {
         $content =~ s/email(?!-)\s*\S+/email redacted/g;
     }
 
-    return $content;
+    my $prefix_content = "";
+    if (defined $wanted_player_count) {
+        $prefix_content = "player-count $wanted_player_count\n";
+    }
+
+    return ($prefix_content, $content);
 }
 
 sub get_game_commands {
-    split /\n/, get_game_content @_;    
+    my ($prefix_content, $content) = get_game_content @_;
+    split /\n/, "$prefix_content\n$content\n";
 }
 
 sub get_game_players {

@@ -28,7 +28,8 @@ my $dbh = get_db_connection;
 
 begin_game_transaction $dbh, $read_id;
 
-my $orig_content = get_game_content $dbh, $read_id, $write_id;
+my ($prefix_content, $orig_content) =
+    get_game_content $dbh, $read_id, $write_id;
 
 my $res = {};
 
@@ -38,7 +39,7 @@ if (sha1_hex($orig_content) ne $orig_hash) {
         "Someone else made changes to the game. Please reload\n"
     ];
 } else {
-    $res = evaluate_and_save $dbh, $read_id, $write_id, $new_content;
+    $res = evaluate_and_save $dbh, $read_id, $write_id, $prefix_content, $new_content;
 }
 
 finish_game_transaction $dbh;

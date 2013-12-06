@@ -74,7 +74,7 @@ if ($faction_name =~ /^player/) {
 }
 
 
-my $new_content = get_game_content $dbh, $read_id, $write_id;
+my ($prefix_content, $new_content) = get_game_content $dbh, $read_id, $write_id;
 chomp $new_content;
 $new_content .= "\n";
 
@@ -87,7 +87,7 @@ $append =~ s/(\n)+/$1/g;
 $new_content .= $append;
 
 my $res = terra_mystica::evaluate_game {
-    rows => [ split /\n/, $new_content ],
+    rows => [ split /\n/, "$prefix_content\n$new_content" ],
     players => get_game_players($dbh, $read_id),
     delete_email => 0
 };

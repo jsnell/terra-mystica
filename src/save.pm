@@ -68,10 +68,10 @@ sub verify_and_save {
 }
 
 sub evaluate_and_save {
-    my ($dbh, $read_id, $write_id, $new_content) = @_;
+    my ($dbh, $read_id, $write_id, $prefix_content, $new_content) = @_;
 
     my $res = terra_mystica::evaluate_game {
-        rows => [ split /\n/, $new_content ],
+        rows => [ split /\n/, "$prefix_content\n$new_content" ],
         players => get_game_players($dbh, $read_id),
         delete_email => 0
     };
