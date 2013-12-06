@@ -100,6 +100,19 @@ function load() {
         onSuccess: function(transport){
             try {
                 var res = transport.responseText.evalJSON();
+
+                if (res.location) {
+                    document.location = res.location;
+                }
+
+                if (res.error.size()) {
+                    res.error.each(function(line) {
+                        $("error").insert(line.escapeHTML() + "<br>");
+                        
+                    });
+                    return;
+                }
+
                 setEditorContent(res.data);
                 hash = res.hash;
 
@@ -119,9 +132,11 @@ function load() {
                     $H(res.factions).each(function (elem) {
                         var div = new Element("div", {"style": "margin-left: 20px" });
                         var link = new Element("a", {"href": elem.value.edit_link});
-                        link.update(elem.key);
-                        div.insert(link);
-                        $("links").insert(div);
+                        if (elem.value.edit_link) {
+                            link.update(elem.key);
+                            div.insert(link);
+                            $("links").insert(div);
+                        }
                     });
                 }
             } catch (e) {
