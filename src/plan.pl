@@ -65,11 +65,12 @@ eval {
             $faction_name,
             $id);
         $res = $dbh->do(
-            "insert into game_note (faction, game, note) values (?, ?, ?)",
+            "insert into game_note (faction, game, note, author) values (?, ?, ?, ?)",
             {},
             $faction_name,
             $id,
-            $set_note);
+            $set_note,
+            $username);
         $dbh->do('commit');
     } else {
         my $rows = $dbh->selectall_arrayref(

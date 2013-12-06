@@ -53,6 +53,7 @@ create table game_note (
     game text references game (id),
     faction text,
     note text,
+    author text references player(username),
     primary key (game, faction)
 );
 
