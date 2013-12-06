@@ -6,6 +6,7 @@ use JSON;
 use db;
 use create_game;
 use game;
+use notify;
 use session;
 use user_validate;
 
@@ -99,6 +100,13 @@ eval {
                  {},
                  $description,
                  $gameid);
+    }
+
+    if ($game_type eq 'private') {
+        notify_game_started $dbh, {
+            name => $gameid,
+            players => [ values %{get_game_players($dbh, $gameid)} ],
+        }
     }
 
     print encode_json {

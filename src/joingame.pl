@@ -8,6 +8,7 @@ use JSON;
 use db;
 use game;
 use indexgame;
+use notify;
 use rlimit;
 use save;
 use session;
@@ -60,6 +61,12 @@ for my $player (@{$res->{players}}) {
 if (!@{$res->{error}}) {
     eval {
         save $dbh, $write_id, $content, $res, 0;
+        if ($res->{player_count} == @{$res->{players}}) {
+            notify_game_started $dbh, {
+                name => $read_id,
+                players => $res->{players},
+            }
+        }
     }; if ($@) {
         print STDERR "error: $@\n";
         $res->{error} = [ $@ ]

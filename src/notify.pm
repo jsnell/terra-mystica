@@ -110,6 +110,26 @@ your email settings at $domain/settings/
     ($subject, $body);
 }
 
+sub notification_text_for_game_start {
+    my ($game) = @_;
+
+    my $i = 1;
+    my $order = join("\n",
+                     map { $i++.". ".($_->{display} // $_->{username}) }
+                     @{$game->{players}});
+
+    my $subject = "Terra Mystica PBEM ($game->{name}) - game started";
+    my $body = "
+Game $game->{name} has been start with the following players:
+
+$order
+
+No longer interested in email notifications for your games? Change
+your email settings at $domain/settings/
+";
+    ($subject, $body);
+}
+
 sub fetch_email_settings {
     my ($dbh, $email) = @_;
     my $settings = $dbh->selectrow_hashref(
@@ -190,6 +210,21 @@ sub notify_new_chat {
         if ($settings->{email_notify_chat}) {
             notify_by_email $game, $email, $subject, $body;
         }
+    }
+}
+
+sub notify_game_started {
+    my ($dbh, $game) = @_;
+
+    for my $player (@{$game->{players}}) {
+        my $email = $player->{email};
+        my $settings = fetch_email_settings $dbh, $email;
+        my ($subject, $body) =
+            notification_text_for_game_start $game;
+
+        next if !$settings;
+
+        notify_by_email $game, $email, $subject, $body;
     }
 }
 
