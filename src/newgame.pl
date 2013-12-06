@@ -73,11 +73,15 @@ begin_game_transaction $dbh, $gameid;
 eval {
     @players = map {
         my $player = $_;
+        my $username;
+        my $email;
         if ($player =~ /\@/) {
-            check_email_is_registered $dbh, $player;
+            $username = check_email_is_registered $dbh, $player;
+            $email = $player;
         } else {
-            ($player) = check_username_is_registered $dbh, $player;
+            ($username, $email) = check_username_is_registered $dbh, $player;
         }
+        { email => $email, username => $username }
     } @players;
 }; if ($@) {
     error $@;

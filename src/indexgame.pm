@@ -21,16 +21,8 @@ sub index_game {
         $player_count,
         $game->{player_count},
         $id);
-    if ($res == 0) {
-        $dbh->do(
-            'insert into game (id, write_id, finished, round, player_count, wanted_player_count, needs_indexing) values  (?, ?, ?, ?, ?, ?, false)',
-            {},
-            $id, $write_id, 1*(!!$game->{finished}), $game->{round},
-            $player_count,
-            $game->{player_count});
-    }
 
-    $dbh->do("delete from game_role where game=?",
+    $dbh->do("delete from game_role where game=? and faction != 'admin'",
              {},
              $id);
 
@@ -41,12 +33,7 @@ sub index_game {
     } @{$game->{players}};
     shift @player_roles for 1..(values %{$game->{factions}});
 
-    my @admin_roles = ();
-    if ($game->{admin}) {
-        push @admin_roles, { name => 'admin', email => $game->{admin}}
-    }
-
-    if ($game->{finished}) {
+     if ($game->{finished}) {
         my @by_vp = sort { $b->{VP} <=> $a->{VP} } values %{$game->{factions}};
         my $pos = 0;
         my $prev;
@@ -70,8 +57,7 @@ sub index_game {
     }
 
     for my $faction (values %{$game->{factions}},
-                     @player_roles,
-                     @admin_roles) {
+                     @player_roles) {
         my $action_required = 0;
         my $leech_required = 0;
 

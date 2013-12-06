@@ -933,7 +933,7 @@ sub command {
     } elsif ($command =~ /^score_resources$/i) {
         score_final_resources_for_faction $faction_name;
     } elsif ($command =~ /^admin email (.*)/i) {
-        $admin_email = $1;
+        # backwards-compatibility nop
     } elsif ($command =~ /^option (\S+)$/i) {
         my $opt = lc $1;
         my %valid_options = map { ($_, 1) } qw(

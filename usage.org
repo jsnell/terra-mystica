@@ -277,10 +277,6 @@ faction selection. The following options are available:
 - =shipping-bonus=: Additional bonus tile from Spielbox 6/2013, http://boardgamegeek.com/image/1843355/terra-mystica-navigation-round-bonus-tile
 - =email-notify=: Automatically send email notifications after moves (players can configure exactly which emails they want to see). Can't be used in games with unregistered players.
 
-** =admin email= /email/
-
-Give another user full admin rights to the game.
-
 ** =income=
 
 /Note/: This command is only needed if you absolutely want to take income
