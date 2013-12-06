@@ -1,5 +1,9 @@
 {
     "changes": [
+        { "date": "2013-12-07",
+          "title": "Public games",
+          "description": "There's now a new game type called 'public' game, in which the admin doesn't need to find a private group of people to play with. Instead anyone may join a 'public' game. You can join a public game through the list of <a href='/joingame/'>open games</a>."
+        },
         { "date": "2013-12-05",
           "title": "Primary email address selection",
           "description": "Players with multiple registered email addresses can choose which address is the primary one (receives any notification messages). The selection can be made on the settings page. This change is retroactive -- one of the addresses has already been assigned as the primary for all existing users."

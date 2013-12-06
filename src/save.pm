@@ -82,6 +82,9 @@ sub evaluate_and_save {
                 $dbh->selectrow_array("select extract(epoch from last_update) from game where id=?",
                                       {},
                                       $read_id);
+            if (!defined $timestamp) {
+                $timestamp = time;
+            }
             verify_and_save $dbh, $read_id, $write_id, $new_content, $res, $timestamp;
         }; if ($@) {
             print STDERR "error: $@\n";
