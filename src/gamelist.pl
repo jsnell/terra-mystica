@@ -66,8 +66,8 @@ if ($mode eq 'all') {
         $res{error} = "Not logged in <a href='/login/'>(login)</a>"
     } else {
         my @roles = $dbh->selectall_arrayref(
-            "select game, faction, game.write_id, game.finished, action_required, (extract(epoch from now() - game.last_update)) as time_since_update, vp, rank, (select faction from game_role as gr2 where gr2.game = gr1.game and action_required limit 1) as waiting_for, leech_required, game.round  from game_role as gr1 left join game on game=game.id where email in (select address from email where player = ? and (game.finished = ? or last_update > now() - interval '2 days') and (gr1.faction = 'admin') = ?)",
-            {}, $user, $status{$status}, 1*!!($mode eq 'admin'));
+            "select game, faction, game.write_id, game.finished, action_required, (extract(epoch from now() - game.last_update)) as time_since_update, vp, rank, (select faction from game_role as gr2 where gr2.game = gr1.game and action_required limit 1) as waiting_for, leech_required, game.round, (select count(*) from chat_message where game=game.id and posted_at > (select coalesce((select last_read from chat_read where game=chat_message.game and player=?), '2012-01-01'))) as unread_chat from game_role as gr1 left join game on game=game.id where email in (select address from email where player = ? and (game.finished = ? or last_update > now() - interval '2 days') and (gr1.faction = 'admin') = ?)",
+            {}, $user, $user, $status{$status}, 1*!!($mode eq 'admin'));
         add_sorted map {
             { id => $_->[0],
               role => $_->[1],
@@ -78,7 +78,8 @@ if ($mode eq 'all') {
               vp => $_->[6],
               rank => $_->[7],
               waiting_for => $_->[8],
-              round => $_->[10]
+              round => $_->[10],
+              unread_chat_messages => 1*$_->[11],
             }
         } @{$roles[0]};
     }

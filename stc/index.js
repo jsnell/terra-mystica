@@ -11,6 +11,9 @@ function listGames(games, div, mode, status) {
         if (elem.action_required) {
             elem.status = "game-status-action-required";
             action_required_count++;
+        } else if (elem.unread_chat_messages > 0) {
+            elem.status = "game-status-action-unread-chat";
+            action_required_count++;
         }
         if (elem.seconds_since_update) {
             elem.time_since_update = seconds_to_pretty_time(elem.seconds_since_update) + " ago";
