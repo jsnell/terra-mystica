@@ -189,7 +189,11 @@ function loadOrSavePlan(save) {
         parameters: form_params,
         onSuccess: function(transport){
             var notes = transport.responseText.evalJSON();
-            $("planning_entry_input").value = notes.note;
+            if (notes.error) {
+                $("planning_entry").updateText(notes.error);
+            } else {
+                $("planning_entry_input").value = notes.note;
+            }
             dataEntrySetStatus(false);
         }
     });

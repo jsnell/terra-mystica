@@ -8,6 +8,7 @@ use JSON;
 
 use db;
 use secret;
+use session;
 
 my $q = CGI->new;
 my $dbh = get_db_connection;
@@ -19,6 +20,9 @@ $id =~ s{[^A-Za-z0-9_]}{}g;
 my $faction_name = $q->param('preview-faction');
 my $faction_key = $q->param('faction-key');
 my $set_note = $q->param('set-note');
+
+my $username = username_from_session_token($dbh,
+                                           $q->cookie('session-token') // '');
 
 sub verify_key {
     my ($secret, $iv) = get_secret $dbh;
@@ -46,6 +50,10 @@ my %res = (
 );
 
 eval {
+    if (!$username) {
+        die "Not logged in\n";
+    }
+
     verify_key;
     if (defined $set_note) {
         $res{note} = $set_note;
