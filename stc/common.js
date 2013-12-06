@@ -160,3 +160,35 @@ function seconds_to_pretty_time(seconds) {
     if (amount > 1) { unit += "s" }
     return amount + " " + unit + subamount;
 }
+
+function renderSidebar(id) {
+    var p = new Element("p");
+    var insertLink = function(link, text, accesskey) {
+        if (document.location.pathname == link) {
+            p.insert(new Element("span", { "class": "navi-selected" }).update(text));
+        } else {
+            p.insert(new Element("a", {"class": "navi",
+                                       "href": link,
+                                       "accesskey": accesskey}).update(text));
+        }
+        p.insert(new Element("br"));
+    };
+
+    insertLink("/", "Home", "h");
+    if (!/session-username=([A-Za-z0-9]+)/.match(document.cookie)) {
+        insertLink("/login/", "Login");
+        insertLink("/register/", "Register");
+        p.insert(new Element("br"));
+    } else {
+        insertLink("/joingame/", "Join Game");
+        insertLink("/newgame/", "New Game");
+        insertLink("/settings/", "Settings");
+        insertLink("/logout/", "Logout");
+    }
+    p.insert(new Element("br"));
+    insertLink("/stats/", "Statistics");
+    insertLink("/changes/", "Changes");
+    insertLink("/usage.html", "Help");
+
+    $(id).insert(p);
+}

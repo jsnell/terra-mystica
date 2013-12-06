@@ -145,6 +145,7 @@ sub deploy_stc {
                   org.css
                   settings.js
                   spinner.gif
+                  stats.js
                   style.css)) {
         copy_with_mode 0444, "stc/$f", "$target/stc/$f";
     }

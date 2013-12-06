@@ -18,27 +18,24 @@
     <link id="favicon" rel="shortcut icon" href="/favicon.ico" />
   </head>
   <body style="padding: 5ex">
-    <div id="header"><div><a href="/" accesskey="h">Home</a></div><div><a href="/usage.html" accesskey="u">Help</a></div><div id="user-info"></div><div style="padding-left: 100px" id="header-gamename"></div></div>
+    <table>
+      <tr>
+        <td valign="top" style="padding-right: 2ex; " id="sidebar">
+          <script>renderSidebar($("sidebar"));</script>
+        <td valign="top">
+          <p>
+            This is a list of larger user-visible changes, feature additions, etc.
+            For a tedious list including minor bugfixes and cosmetic changes, see the
+            <a href="https://github.com/jsnell/terra-mystica/commits/master">version control logs</a>.
+          </p>
 
-    <p>
-    This is a list of larger user-visible changes, feature additions, etc.
-    For a tedious list including minor bugfixes and cosmetic changes, see the
-    <a href="https://github.com/jsnell/terra-mystica/commits/master">version control logs</a>.
-    </p>
+          <div id="changes" class="changelog"></div>
 
-    <div id="changes" class="changelog"></div>
-
-    <script language="javascript">
-      fetchChangelog(function(data) {
-          showChangelog(data, $("changes"), "Changes", 365 * 86400)
-      });
-
-      updateTitle = false;
-      fetchGames($("user-info"), "user", "running", showActiveGames);
-      setInterval(function() {
-         fetchGames($("user-info"), "user", "running", showActiveGames);
-      }, 5*60*1000);
-    </script>
-
+          <script language="javascript">
+            fetchChangelog(function(data) {
+                showChangelog(data, $("changes"), "Changes", 365 * 86400)
+            });
+          </script>
+    </table>
   </body>
 </html>

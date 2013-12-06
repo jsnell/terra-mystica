@@ -17,13 +17,19 @@
     <link rel="stylesheet" type="text/css" href="/stc/style.css">
   </head>
   <body style="padding: 5ex">
-    <div id="error"></div>
-    <h3>Open Games</h3>
-    <table class="open-games" id="games">
+    <table>
+      <tr>
+        <td valign="top" style="padding-right: 2ex; " id="sidebar">
+          <script>renderSidebar($("sidebar"));</script>
+        <td valign="top">
+          <div id="error"></div>
+          <h3>Open Games</h3>
+          <table class="open-games" id="games">
+          </table>
+          
+          <script language="javascript">
+            fetchOpenGames();
+          </script>
     </table>
-    
-    <script language="javascript">
-      fetchOpenGames();
-    </script>
   </body>
 </html>

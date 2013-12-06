@@ -19,23 +19,8 @@
   <body style="padding: 5ex">
     <table>
       <tr>
-        <td valign="top" style="padding-right: 2ex; ">
-          <p>
-            <script>
-        if (!/session-username=([A-Za-z0-9]+)/.match(document.cookie)) {
-          document.write('<a href="/login/">Login</a><br>');
-          document.write('<a href="/register/">Register</a><br>');
-        } else {
-          document.write('<a href="/joingame/">Join Game</a><br>');
-          document.write('<a href="/newgame/">New Game</a><br>');
-          document.write('<a href="/settings/">Settings</a><br>');
-          document.write('<a href="/logout/">Logout</a><br>');
-        }
-      </script>
-      <br>
-      <a href="/stats/">Statistics</a><br>
-      <a href="/changes/">Changelog</a><br>
-      <a href="/usage.html">Help</a><br>
+        <td valign="top" style="padding-right: 2ex; " id="sidebar">
+          <script>renderSidebar($("sidebar"));</script>
         <td valign="top">
     <p>
     This is an unofficial automated moderator tool

@@ -12,6 +12,9 @@
     <script type="text/javascript" language="javascript"
             src="/stc/edit.js">
     </script>
+    <script type="text/javascript" language="javascript"
+            src="/stc/common.js">
+    </script>
     <style type="text/css" media="screen">
     #fallback-editor {
         height: 600px;
@@ -21,25 +24,29 @@
     <link rel="stylesheet" type="text/css" href="/stc/style.css">
   </head>
   <body>
+    <table>
+      <tr>
+        <td valign="top" style="padding-right: 2ex; " id="sidebar">
+          <script>renderSidebar($("sidebar"));</script>
+        <td valign="top">
+          <h3 id="header">Game Administration</h3>
 
-    <h3 id="header">Terra Mystica</h3>
+          <div id="error"></div>
 
-    <div id="error"></div>
+          <div id="action_required"></div>
 
-    <div id="action_required"></div>
+          <div>
+            <textarea id="fallback-editor"></textarea>
+          </div>
+          
+          <input type="button" value="Save" onClick="javascript:save()" id="save-button"/>
 
-    <div>
-      <textarea id="fallback-editor"></textarea>
-    </div>
-    
-    <input type="button" value="Save" onClick="javascript:save()" id="save-button"/>
-
-    <div id="links">
-    </div>
-
-    <script>
-      init();
-    </script>
+          <div id="links">
+          </div>
+          <script>
+            init();
+          </script>
+    </table>
   </body>
 </html>
 

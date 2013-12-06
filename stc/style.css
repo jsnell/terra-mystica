@@ -1,3 +1,8 @@
+body {
+    font-family: Verdana;
+    font-size: 90%;
+}
+
 p {
     max-width: 50ex;
 }
@@ -301,4 +306,14 @@ tr.chat-message-hidden {
 
 a.turnlink {
     color: #888;
+}
+
+span.navi-selected {
+    padding-top: 5px;
+    font-weight: bold;
+}
+
+a.navi {
+    color: #00f;
+    line-height: 150%;
 }
