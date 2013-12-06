@@ -163,6 +163,7 @@ sub evaluate_game {
     local $admin_email = '';
     local %options = ();
     local $active_faction = '';
+    local $player_count = undef;
 
     setup_map;
 
@@ -224,6 +225,7 @@ sub evaluate_game {
         finished => $finished,
         cults => \%cults,
         players => \@players,
+        player_count => $player_count,
         options => \%options,
         admin => $data->{delete_email} ? '' : $admin_email,
     }

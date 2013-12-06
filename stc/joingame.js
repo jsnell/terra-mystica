@@ -1,0 +1,84 @@
+var state;
+
+function joinGame(id, status) {
+    disableDescendants($("games"));    
+    new Ajax.Request("/cgi-bin/joingame.pl", {
+        parameters: {
+            "cache-token": new Date(),
+            "csrf-token": getCSRFToken(),
+            "game": id,
+        },
+        method: "post",
+        onSuccess: function(transport){
+            enableDescendants($("games"));
+            try {
+                var resp = transport.responseText.evalJSON();
+                state = resp;
+                if (resp.error.size()) {
+                    status.style.color = "red";
+                    status.update(resp.error.join("<br>"));
+                } else {
+                    status.style.color = "green";
+                    status.update("ok");
+                }
+            } catch (e) {
+                handleException(e);
+            };
+        }
+    });    
+}
+
+function showOpenGames(games) {
+    var table = $("games");
+    table.update("");
+
+    if (games.size() == 0) {
+        table.update("There are currently no open games. Maybe you should create a <a href='/newgame/'>new game</a>?");
+        return;
+    }
+
+    var header = new Element("tr");
+    header.insert(new Element("td", {"style": "width: 8ex"}).update("ID"));
+    header.insert(new Element("td", {"style": "width: 8ex"}).update("Players"));
+    header.insert(new Element("td", {"style": "width: 32ex"}).update("Description"));
+    header.insert(new Element("td", {"style": "width: 8ex"}).update("Action"));
+    header.insert(new Element("td", {"style": "width: 20ex"}).update("Status"));
+    table.insert(header);
+
+    games.each(function (game) {
+        var row = new Element("tr");
+        row.insert(new Element("td").update(game.id));
+        row.insert(new Element("td").update("#{player_count}/#{wanted_player_count}".interpolate(game)));
+        row.insert(new Element("td").update(game.description));
+        var join = new Element("button").update("Join");
+        var status = new Element("span");
+        join.onclick = function() {
+            joinGame(game.id, status);
+        }
+        row.insert(new Element("td").insert(join));
+        row.insert(new Element("td").insert(status));
+
+        table.insert(row);
+    });
+}
+
+function fetchOpenGames() {
+    new Ajax.Request("/cgi-bin/gamelist.pl", {
+        parameters: {
+            "cache-token": new Date(),
+            "mode": "open",
+        },
+        method: "get",
+        onSuccess: function(transport){
+            try {
+                var resp = transport.responseText.evalJSON();
+                if (!resp.error) {
+                    showOpenGames(resp.games);
+                }
+            } catch (e) {
+                handleException(e);
+            };
+        }
+    });
+}
+

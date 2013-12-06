@@ -20,7 +20,7 @@ my $printed_turn = 0;
 my $force_finish = 0;
 my @data_fields = qw(VP C W P P1 P2 P3 PW FIRE WATER EARTH AIR CULT);
 
-use vars qw($admin_email %options $active_faction);
+use vars qw($admin_email %options $active_faction $player_count);
 
 sub handle_row;
 sub handle_row_internal;
@@ -735,7 +735,32 @@ sub mt_shuffle {
     } @data; 
 }
 
+sub valid_player_count {
+    if (!defined $player_count) { return 1 }
+    if (@players == $player_count) { return 1 }
+
+    return 0;
+}
+
+sub check_player_count {
+    return if !defined $player_count;
+
+    if (@players > $player_count) {
+        die "Too many players (wanted $player_count)\n"
+    }
+
+    for my $player (@players) {
+        if (!$player->{username}) {
+            die "The players must be specified by usernames in public games (player $player->{name} isn't)\n"
+        }
+    }
+}
+
 sub command_randomize_v1 {
+    if (!valid_player_count) {
+        return;
+    }
+
     my $seed = shift;
     my $rand = Math::Random::MT->new(unpack "l6", sha1 $seed);
 
@@ -923,6 +948,10 @@ sub command {
         push @ledger, { comment => "option $opt" };
     } elsif ($command =~ /^player (\S+)(?: email (\S*))?(?: username (\S+))?$/i) {
         push @players, { name => $1, email => $2, username => $3 };
+        check_player_count;
+    } elsif ($command =~ /^player-count (\d+)$/i) {
+        $player_count = 1*$1;
+        check_player_count;
     } elsif ($command =~ /^randomize v1 seed (.*)/i) {
         maybe_setup_pool;
         command_randomize_v1 $1;
@@ -1213,7 +1242,11 @@ sub maybe_advance_to_next_player {
 
 sub check_setup_actions {
     if (!$round) {
-        if (@players and @players != @factions) {
+        if (!valid_player_count) {
+            @action_required = ({ type => 'not-started',
+                                  player_count => scalar @players,
+                                  wanted_player_count => $player_count });
+        } elsif (@players and @players != @factions) {
             @action_required = ({
                 type => 'faction',
                 player => $players[@factions]{name},

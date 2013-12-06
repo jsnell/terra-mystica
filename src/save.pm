@@ -44,7 +44,7 @@ sub verify_and_save {
     my ($dbh, $read_id, $write_id, $new_content, $game, $timestamp) = @_;
 
     for my $faction (values %{$game->{factions}}) {
-        if (defined $faction->{email}) {
+        if (defined $faction->{email} and !defined $faction->{username}) {
             $faction->{username} = check_email_is_registered $dbh, $faction->{email};
         } elsif (defined $faction->{username}) {
             ($faction->{username},
@@ -54,7 +54,7 @@ sub verify_and_save {
     }
 
     for my $player (@{$game->{players}}) {
-        if (defined $player->{email}) {
+        if (defined $player->{email} and !defined $player->{username}) {
             $player->{username} = check_email_is_registered $dbh, $player->{email};
         } elsif (defined $player->{username}) {
             ($player->{username}, $player->{email}) =

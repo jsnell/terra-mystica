@@ -11,14 +11,15 @@ sub index_game {
 
     my $player_count = 0;
     eval {
-        $player_count = scalar @{$game->{order}};
+        $player_count = scalar @{$game->{order}} || scalar @{$game->{players}};
     };
 
     my ($res) = $dbh->do(
-        'update game set needs_indexing=?, write_id=?, finished=?, round=?, last_update=?, player_count=? where id = ?',
+        'update game set needs_indexing=?, write_id=?, finished=?, round=?, last_update=?, player_count=?, wanted_player_count=? where id = ?',
         {},
         0, $write_id, 1*(!!$game->{finished}), $game->{round}, $timestamp, 
         $player_count,
+        $game->{player_count},
         $id);
     if ($res == 0) {
         $dbh->do(

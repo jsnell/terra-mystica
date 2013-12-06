@@ -82,6 +82,19 @@ if ($mode eq 'all') {
             }
         } @{$roles[0]};
     }
+} elsif ($mode eq 'open') {
+    my $user = username_from_session_token($dbh,
+                                           $q->cookie('session-token') // '');
+
+    if (!defined $user) {
+        $res{error} = "Not logged in <a href='/login/'>(login)</a>"
+    } else {
+        my $games = $dbh->selectall_arrayref(
+            "select game.id, game.player_count, game.wanted_player_count, game.description from game where game.wanted_player_count is not null and game.player_count != game.wanted_player_count",
+            { Slice => {} },
+            );
+        $res{games} = $games;
+    }
 }
 
 print "Content-type: text/javascript\r\n";

@@ -24,8 +24,10 @@ create table game (
     exclude_from_stats boolean,
     last_update timestamp,
     player_count integer,
+    wanted_player_count integer,
     round integer,
-    commands text
+    commands text,
+    description text
 );
 
 create table game_role (

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Terra Mystica - Create New Game</title>
+    <script type="text/javascript" language="javascript"
+            src="/stc/prototype-1.7.1.js">
+    </script>
+    <script type="text/javascript" language="javascript"
+            src="/stc/debug.js">
+    </script>
+    <script type="text/javascript" language="javascript"
+            src="/stc/common.js">
+    </script>
+    <script type="text/javascript" language="javascript"
+            src="/stc/joingame.js">
+    </script>
+    <link rel="stylesheet" type="text/css" href="/stc/style.css">
+  </head>
+  <body style="padding: 5ex">
+    <div id="error"></div>
+    <h3>Open Games</h3>
+    <table class="open-games" id="games">
+    </table>
+    
+    <script language="javascript">
+      fetchOpenGames();
+    </script>
+  </body>
+</html>

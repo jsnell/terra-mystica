@@ -1192,6 +1192,8 @@ function drawActionRequired() {
             record.pretty += "<table>" + table + "</table>";
         } else if (record.type == 'faction') {
             record.pretty = '#{player} should pick a faction'.interpolate(record);
+        } else if (record.type == 'not-started') {
+            record.pretty = "Game hasn't started yet, #{player_count}/#{wanted_player_count} players have joined.".interpolate(record);
         } else if (record.type == 'planning') {
             record.pretty = 'are planning';
         } else {

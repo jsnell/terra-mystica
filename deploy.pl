@@ -81,6 +81,7 @@ sub deploy_cgi {
                   chat.pl
                   edit.pl
                   gamelist.pl
+                  joingame.pl
                   login.pl
                   logout.pl
                   newgame.pl
@@ -136,6 +137,8 @@ sub deploy_stc {
                   faction.js
                   game.js
                   index.js
+                  joingame.js
+                  newgame.js
                   register.js
                   reset.js
                   prototype-1.7.1.js
@@ -156,6 +159,7 @@ sub deploy_html {
                   faction.html
                   game.html
                   index.html
+                  joingame.html
                   login.html
                   newgame.html
                   player.html

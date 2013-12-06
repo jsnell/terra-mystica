@@ -45,13 +45,27 @@ if ($gameid =~ /([^A-Za-z0-9])/) {
     error "Invalid character in game id '$1'";
 }
 
-my $players = $q->param('players');
-my @players = grep {
-    /\S/
-} map {
-    s/^\s*|\s*$//g;
-    $_;
-} split /[\n\r]+/, $players;
+my $game_type = $q->param("game-type");
+my @players = ();
+my $player_count = undef;
+
+if ($game_type eq 'private') {
+    my $players = $q->param('players');
+    @players = grep {
+        /\S/;
+    } map {
+        s/^\s*|\s*$//g;
+        $_;
+    } split /[\n\r]+/, $players;
+} elsif ($game_type eq 'public') {
+    $player_count = $q->param('player-count');
+    if ($player_count < 2 or $player_count > 5) {
+        error "Invalid player count $player_count";
+    }
+    @players = ($username);
+} else {
+    error "Invalid game type '$game_type'";
+}
 
 begin_game_transaction $dbh, $gameid;
 
@@ -77,7 +91,7 @@ my ($email) = $dbh->selectrow_array("select address from email where player = ? 
 my @options = $q->param('game-options');
 
 eval {
-    my $write_id = create_game $dbh, $gameid, $email, [@players], @options;
+    my $write_id = create_game $dbh, $gameid, $email, [@players], $player_count, @options;
 
     print encode_json {
         error => [],

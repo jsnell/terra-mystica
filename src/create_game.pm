@@ -8,7 +8,7 @@ use indexgame;
 use save;
 
 sub create_game {
-    my ($dbh, $id, $admin, $players, @options) = @_;
+    my ($dbh, $id, $admin, $players, $player_count, @options) = @_;
 
     die "Invalid game id $id\n" if !$id or $id =~ /[^A-Za-z0-9]/;
 
@@ -30,12 +30,15 @@ sub create_game {
         "player $_ username $_\n";
     } @{$players};
 
-    my $content = <<EOF;
-# Game $id
+    if (defined $player_count) {
+        push @players, "player-count $player_count";
+    }
 
-$opt_admin
+    my $content = <<EOF;
 # List players (in any order) with 'player' command
  @players
+
+$opt_admin
 
 # Default game options
  @options
