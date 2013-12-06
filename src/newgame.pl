@@ -109,6 +109,7 @@ eval {
     if ($game_type eq 'private') {
         notify_game_started $dbh, {
             name => $gameid,
+            options => { map { ($_ => 1) } @options },
             players => [ values %{get_game_players($dbh, $gameid)} ],
         }
     }

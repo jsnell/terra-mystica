@@ -216,6 +216,8 @@ sub notify_new_chat {
 sub notify_game_started {
     my ($dbh, $game) = @_;
 
+    return if !$game->{options}{'email-notify'};
+
     for my $player (@{$game->{players}}) {
         my $email = $player->{email};
         my $settings = fetch_email_settings $dbh, $email;
