@@ -1,6 +1,11 @@
 body {
     font-family: Verdana;
     font-size: 90%;
+    padding: 5ex;
+}
+
+body.gameview {
+    padding: 0ex;
 }
 
 p {
