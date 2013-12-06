@@ -19,7 +19,7 @@ function joinGame(id, status) {
                     status.update(resp.error.join("<br>"));
                 } else {
                     status.style.color = "green";
-                    status.update("ok");
+                    status.updateText("ok");
                 }
             } catch (e) {
                 handleException(e);
@@ -38,19 +38,19 @@ function showOpenGames(games) {
     }
 
     var header = new Element("tr");
-    header.insert(new Element("td", {"style": "width: 8ex"}).update("ID"));
-    header.insert(new Element("td", {"style": "width: 8ex"}).update("Players"));
-    header.insert(new Element("td", {"style": "width: 32ex"}).update("Description"));
-    header.insert(new Element("td", {"style": "width: 8ex"}).update("Action"));
-    header.insert(new Element("td", {"style": "width: 20ex"}).update("Status"));
+    header.insert(new Element("td", {"style": "width: 8ex"}).updateText("ID"));
+    header.insert(new Element("td", {"style": "width: 8ex"}).updateText("Players"));
+    header.insert(new Element("td", {"style": "width: 32ex"}).updateText("Description"));
+    header.insert(new Element("td", {"style": "width: 8ex"}).updateText("Action"));
+    header.insert(new Element("td", {"style": "width: 20ex"}).updateText("Status"));
     table.insert(header);
 
     games.each(function (game) {
         var row = new Element("tr");
-        row.insert(new Element("td").update(game.id));
-        row.insert(new Element("td").update("#{player_count}/#{wanted_player_count}".interpolate(game)));
-        row.insert(new Element("td").update(game.description));
-        var join = new Element("button").update("Join");
+        row.insert(new Element("td").updateText(game.id));
+        row.insert(new Element("td").updateText("#{player_count}/#{wanted_player_count}".interpolate(game)));
+        row.insert(new Element("td").updateText(game.description));
+        var join = new Element("button").updateText("Join");
         var status = new Element("span");
         join.onclick = function() {
             joinGame(game.id, status);

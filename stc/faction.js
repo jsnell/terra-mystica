@@ -212,15 +212,6 @@ function initPlanIfNeeded() {
     plan_loaded = 1;
 }
 
-{
-    Element.addMethods({
-        updateText: function(element, text) {
-            $(element).textContent = text;
-            return element;
-        }
-    });
-}                      
-
 function loadOrSendChat(send) {
     dataEntrySetStatus(true);
 

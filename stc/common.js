@@ -192,3 +192,13 @@ function renderSidebar(id) {
 
     $(id).insert(p);
 }
+
+{
+    Element.addMethods({
+        updateText: function(element, text) {
+            $(element).textContent = text;
+            return element;
+        }
+    });
+}                      
+
