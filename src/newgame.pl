@@ -93,6 +93,14 @@ my @options = $q->param('game-options');
 eval {
     my $write_id = create_game $dbh, $gameid, $email, [@players], $player_count, @options;
 
+    my $description = $q->param('description');
+    if ($description) {
+        $dbh->do("update game set description=? where id=?",
+                 {},
+                 $description,
+                 $gameid);
+    }
+
     print encode_json {
         error => [],
         link => "/edit/$write_id"
