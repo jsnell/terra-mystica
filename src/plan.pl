@@ -54,6 +54,16 @@ eval {
         die "Not logged in\n";
     }
 
+    my $faction_player = $dbh->selectrow_array(
+        "select email.player from game_role left join email on game_role.email=email.address where game_role.game=? and faction=?",
+        {},
+        $id,
+        $faction_name);
+
+    if ($username ne $faction_player) {
+        die "Trying to read another player's notes?\n";
+    }
+
     verify_key;
     if (defined $set_note) {
         $res{note} = $set_note;
@@ -74,10 +84,11 @@ eval {
         $dbh->do('commit');
     } else {
         my $rows = $dbh->selectall_arrayref(
-            "select note from game_note where faction = ? and game = ?",
+            "select note from game_note where faction = ? and game = ? and author = ?",
             {},
             $faction_name,
-            $id);
+            $id,
+            $username);
         $res{note} = $rows->[0][0];
     }
 }; if ($@) {
