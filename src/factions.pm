@@ -502,7 +502,6 @@ sub setup {
             die "Expected ".($player_record->{name})." to pick a faction";
         }
         $email ||= $player_record->{email};
-        delete $player_record->{email};
         if (!$player) {
             $player = $player_record->{name};
         }

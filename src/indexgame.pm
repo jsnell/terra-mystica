@@ -2,6 +2,8 @@
 
 use strict;
 
+use user_validate;
+
 use POSIX qw(strftime);
 
 sub index_game {
@@ -88,7 +90,62 @@ sub index_game {
                  $faction->{rank},
                  $faction->{start_order});
     }
+
+    set_game_players($dbh, $id, $game);
 }
 
+my %email_cache = ();
+
+sub set_game_players {
+    my ($dbh, $id, $game) = @_;
+
+    my @players = @{$game->{players}};
+
+    if (!@players) {
+        @players = ();
+        for my $faction_name (@{$game->{order}}) {
+            my $faction = $game->{factions}{$faction_name};
+            push @players, {
+                email => $faction->{email},
+                name => $faction->{player},
+                index => scalar @players,
+            };
+        }
+    }
+
+    for my $player (@players) {
+        next if defined $player->{username};
+
+        my $email = $player->{email};
+        next if !defined $email;
+
+        my $username_from_email;
+        if (exists $email_cache{$email}) {
+            $username_from_email = $email_cache{$email}
+        } else {
+            eval {
+                $username_from_email = check_email_is_registered $dbh, $email;
+            };
+            $email_cache{$email} = $username_from_email;
+        };
+        $player->{username} = $username_from_email;
+    } 
+
+    my @no_username = grep { !defined $_->{username} } @players;
+    if (!@players or @no_username) {
+        return;
+    }
+
+    $dbh->do("delete from game_player where game=?",
+             {},
+             $id);
+
+    for my $player (@players) {
+        $dbh->do("insert into game_player (game, player, sort_key, index) values (?, ?, ?, ?)",
+                 {},
+                 $id, $player->{username}, $player->{name}, $player->{index});
+    }
+}
+    
 1;
 

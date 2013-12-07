@@ -779,7 +779,9 @@ sub command_randomize_v1 {
         handle_row_internal "", "delete ".(shift @bon);
     }
 
-    @players = mt_shuffle $rand, sort { lc $a->{name} cmp lc $b->{name} } @players;
+    @players = mt_shuffle $rand, sort {
+        lc $a->{name} cmp lc $b->{name} or $a->{index} <=> $b->{index}
+    } @players;
     my $i = 1;
     for (@players) {
         push @ledger, {
@@ -947,7 +949,12 @@ sub command {
         $options{$opt} = 1;
         push @ledger, { comment => "option $opt" };
     } elsif ($command =~ /^player (\S+)(?: email (\S*))?(?: username (\S+))?$/i) {
-        push @players, { name => $1, email => $2, username => $3 };
+        push @players, {
+            name => $1,
+            email => $2,
+            username => $3,
+            index => scalar @players,
+        };
         check_player_count;
     } elsif ($command =~ /^player-count (\d+)$/i) {
         $player_count = 1*$1;
@@ -1087,7 +1094,10 @@ sub clean_commands {
         if ($1 ne '') {
             my $comment = $1;
             $comment =~ s/email \S*@\S*/email ***/g;
-            push @comments, ['comment', $comment ];
+            # Interpret ## as a pragma rather than a commit
+            if ($comment !~ /^#/) {
+                push @comments, ['comment', $comment ];
+            }
         }
     }
 

@@ -30,6 +30,14 @@ create table game (
     description text
 );
 
+create table game_player (
+    game text references game (id),
+    player text references player (username),
+    sort_key text,
+    index integer,
+    primary key (game, player, index)
+);
+
 create table game_role (
     game text references game (id),
     email text, -- Conceptually references email (address), but not enforced
