@@ -75,6 +75,8 @@ function fetchOpenGames() {
                 var resp = transport.responseText.evalJSON();
                 if (!resp.error) {
                     showOpenGames(resp.games);
+                } else {
+                    $("error").update(resp.error);
                 }
             } catch (e) {
                 handleException(e);
