@@ -49,7 +49,14 @@ function showOpenGames(games) {
         var row = new Element("tr");
         row.insert(new Element("td").update(
             new Element("a", {"href": "/game/" + game.id}).updateText(game.id)));
-        row.insert(new Element("td").updateText("#{player_count}/#{wanted_player_count}".interpolate(game)));
+        var players = new Element("td").updateText("#{player_count}/#{wanted_player_count}".interpolate(game))
+        game.players.each(function (username) {
+            var player = new Element("div").
+                insert(new Element("a", {"href": "/player/" + username}).
+                       updateText(username));
+            players.insert(player);
+        });
+        row.insert(players);
         row.insert(new Element("td").updateText(game.description));
         var join = new Element("button").updateText("Join");
         var status = new Element("span");

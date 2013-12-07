@@ -91,7 +91,7 @@ if ($mode eq 'all') {
         $res{error} = "Not logged in <a href='/login/'>(login)</a>"
     } else {
         my $games = $dbh->selectall_arrayref(
-            "select game.id, game.player_count, game.wanted_player_count, game.description from game where game.wanted_player_count is not null and game.player_count != game.wanted_player_count and not game.finished",
+            "select game.id, game.player_count, game.wanted_player_count, game.description, array(select player from game_player where game_player.game=game.id) as players from game where game.wanted_player_count is not null and game.player_count != game.wanted_player_count and not game.finished",
             { Slice => {} },
             );
         $res{games} = $games;
