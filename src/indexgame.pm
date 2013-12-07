@@ -4,6 +4,7 @@ use strict;
 
 use user_validate;
 
+use List::Util qw(max);
 use POSIX qw(strftime);
 
 sub index_game {
@@ -13,7 +14,8 @@ sub index_game {
 
     my $player_count = 0;
     eval {
-        $player_count = scalar @{$game->{order}} || scalar @{$game->{players}};
+        $player_count = max(scalar @{$game->{order}},
+                            scalar @{$game->{players}});
     };
 
     my ($res) = $dbh->do(
