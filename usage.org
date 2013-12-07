@@ -1,4 +1,4 @@
-#+TITLE: Usage
+#+TITLE: User's Guide for Online Terra Mystica
 #+AUTHOR: Juho Snellman
 #+EMAIL: jsnell@iki.fi
 #+STYLE: <link rel="stylesheet" type="text/css" href="stc/org.css" />
@@ -11,101 +11,130 @@ thread on BGG. There are a lot people who know how to use the
 moderator, so there's a good chance you'll get an answer faster than
 by contacting me directly.
 
-* New Games
+* Playing the Game
 
-** Creating a Game
+# <<join-game>
+** Joining a Game
 
-To create a new game, you'll need to be logged in. After that, you'll
-be able to create a game from the [[http://terra.snellman.net/newgame/][New Game]] page. You'll be redirected
-to the admin page of the new game, and can use that to finish the
-setup (e.g. listing the players). Any new games will also appear on 
-the front page under "your games", with the "admin" role.
+To join an open public game, go to [[/joingame/][list of open games]], and click the
+"join" button. Please be considerate to the other players: if the
+description section lists any special requirements, only join the game
+if you can fulfill the requirements. If no suitable games are open,
+just create a new one.
 
-After faction selection is done, the admin page of the game will
-also have a link for each faction. These links allow entering moves
-for that single faction, but not editing the game history or making
-moves for other factions. You can distribute these links to the
-players if you want them to do their own move entry.
+** Playing a Game
 
-** Setting up the Game
+The game page consists of several sections, from top to bottom:
 
-During setup, you'll need the following sections in the game file,
-some of which will have been randomly set up when the game was created.
-You can still edit them, if you want.
+- Map: The game map and cult tracks.
+- Status display: Whose turn is it, and what should they be doing?
+- Entry: Enter your moves, future plans, chat messages etc. here
+- Faction information: The individual player boards. Your board will always show up topmost for convenience.
+- Resource pool: Shows the unclaimed shared resources, such as power actions and various kinds of tiles
+- Ledger: A detailed game history
 
-List the players (in any order, it will get randomized):
+Most of these sections should be self-explanatary. The less obvious
+parts are explained in more detail below.
 
-#+BEGIN_EXAMPLE
-  player Alice email alice@example.com
-  player Bob email bob@example.com
-  player Charlie
-#+END_EXAMPLE
+*** Abbreviations
 
-Randomize the player order, scoring tiles, and remove the appropriate
-number of bonus tiles.
+The game uses the following abbreviations for resources, building
+types and iconography. The capitalization doesn't matter, and is
+simply a matter of convention:
 
-#+BEGIN_EXAMPLE
-  randomize v1 seed game1324
-#+END_EXAMPLE
+- =c=: Coin
+- =w=: Worker 
+- =pw=: Power
+- =p=: Priest
+- =vp=: Victory point
 
-Select the factions in play:
+- =D=: Dwelling
+- =TP=: Trading House
+- =TE=: Temple
+- =SH=: Stronghold
+- =SA=: Sanctuary
 
-#+BEGIN_EXAMPLE
-  # Faction selection
-  setup Nomads for Alice
-  setup Auren for Bob
-  setup Swarmlings for Charlie
-#+END_EXAMPLE
+- =pass-vp=: Victory points gained when passing
+- =>>=: Victory points gained during the round
+- =spd=, =spade=: A spade
+- =+=: Gained during the income phase
+- =cult=: A step on any cult track
 
-Place initial dwellings:
+*** Entry
 
-#+BEGIN_EXAMPLE
-  Nomads: Build A5
-  Auren: Build F4
-  Swarmlings: Build H4. Build G6
-  Auren: Build F2
-  Nomads: Build B4. Build G7
-#+END_EXAMPLE
+The entry section contains 4 tabs:
 
-Select initial bonus tiles:
+**** Moves
 
-#+BEGIN_EXAMPLE
-  Swarmlings: Pass Bon8
-  Auren: Pass Bon2
-  Nomads: Pass Bon5
-#+END_EXAMPLE
+For entering your moves. On the left-hand side is a text-box into which you can enter the [[gameplay-commands][commands]] corresponding to your moves. On the right is a UI for entering commands more conveniently than by typing them.
 
-The game will then automatically start.
+After you've entered your moves, click on =Preview= to see the effect of the commands. If the moves were valid and you're happy with then, click =Save= to advance the game to the next player.
 
-* Commands
+Note that you can't =Save= if you still need to enter more moves. If you want to wait for a reaction from some other player, use the =wait= command.
 
-When using the full admin interface, each line should start with the
-name of the faction that's doing stuff, followed by a colon. When
-using the more limited per-faction interface, no such prefix should
-be added -- it'll automatically apply the commands to the current
-faction.
+**** Planning
 
-After this, you can have multiple commands that apply to that faction,
-separated by full stops.
+For leaving notes for yourself, or to plan your coming moves using the
+same input format as for normal play. View the effects of the plan
+with =Show result= or save the plan / notes for later with =Save plan=.
 
-For example:
+**** Recent Moves
 
-#+BEGIN_EXAMPLE
-  Nomads: Dig 1. Build E7
-#+END_EXAMPLE
+Shows a summary of what happened since your last move.
 
-The exact capitalization doesn't matter. 
+**** Chat
 
-The commands that you'd usually use are:
+The in-game chat.
 
-** =pass= /tile/
+*** Faction Information
+
+The faction information section shows the following information for
+each faction. On the left:
+
+- Current resource levels. (For power interpret =7/5/0= as 7 power in bowl I, 5 power in bowl II, and none in bowl III). You can click on the =vp= resource to see a breakdown of where that factions victory points have come from.
+- The current and maximum levels of the digging and shipping tracks (for factions where that's applicable). For Dwarves and Fakirs the current tunneling / carpet flight range is shown instead.
+- The current and maximum amounts of each building type. If you're at the maximum number of dwellings or trading houses, the number will be highlighted in red. Click on the =+= icon to show build / upgrade costs for each building type, as well as the income that the new building generates. (Note, the income lost due to the upgrade is not shown).
+- The expected income of the 4 most important resources in the next income phase. Click on =+= to see a breakdown of where the income comes from.
+- On the final round the income is replaced with a VP projection instead. Click on =+= to see a breakdown of where the additional VPs are coming from.
+
+On the right:
+
+- The terrain wheel of the faction
+- The special actions available for this faction
+- The tiles the faction owns
+
+*** Ledger
+
+The ledger shows a detailed full history of the game. There are two kinds
+of rows in the table. Comments are shown in a bold font. The other rows
+correspond to individual player turns. These rows have the following
+elements in this order:
+
+- The faction who did the action
+- The change in resources (and final value) caused by the move. The change is shown in black, the final value in light gray. The resources are, in order, victory points, coins, workers, priests, power in the 3 bowls, and steps on the 4 cult tracks.
+- The power leeching opportunities given to other players by this move
+- The commands corresponding to the turn
+
+Click on =show history= to switch the game view to what it was during
+that point in the game.
+
+#<<gameplay-commands>>
+** Gameplay Commands
+
+The following commands are available during gameplay. They can be entered
+either one per line, or on the same line separated by dots.
+
+When entering the through the admin interface, prefix the command with
+the name of the faction doing the command.
+
+*** =pass= /tile/
 
 Example: =pass bon2=
 
 Pass, return current bonus tile, and replace it with Bon2. When passing
 on the last turn, leave out the bonus tile name.
 
-** =leech= /amount/ =from= /faction/
+*** =leech= /amount/ =from= /faction/
 
 Example: =Leech 2=.
 
@@ -117,7 +146,7 @@ Trade no vps for 1 power, using the opportunity provided by the Fakirs
 rather than some other faction (in case there are multiple opportunities
 available).
 
-** =decline= /amount/ =from= /faction/
+*** =decline= /amount/ =from= /faction/
 
 Example: =decline=.
 
@@ -127,35 +156,35 @@ Example: =decline 1 from cultists=
 
 Decline just the offer of 1 power from the cultists.
 
-** =action= /label/
+*** =action= /label/
 
 Example: =action act5=
 
 Take the power action 5 (or stronghold, bonus
 tile, or favor special action).
 
-** =dig= /amount/
+*** =dig= /amount/
 
 Example: =dig 1=. 
 
 Trade workers / priests to shovels at the appropriate exchange rate.
 The shovels need to be spent by commands later on the same line.
 
-** =build= /location/
+*** =build= /location/
 
 Example: =build F5=
 
 Terraform the hex F5 into the correct terrain type, and build a
 dwelling there.
 
-** =upgrade= /location/ =to= /building/
+*** =upgrade= /location/ =to= /building/
 
 Example: =upgrade F5 to TP=
 
 Replace the dwelling in F5 with a trading post (TE for temples, SH for
 strongholds, SA for sanctuaries).
 
-** =send P to= /cult/ =for= /amount/
+*** =send P to= /cult/ =for= /amount/
 
 Example: =Send P to Fire=
 
@@ -170,7 +199,7 @@ Example: =Send P to Water for 1=
 Send a priest to the water cult, taking just one level of advancement
 (even if 2 or 3 slots are still remaining).
 
-** =transform= /location/ =to= /color/
+*** =transform= /location/ =to= /color/
 
 Example: =transform F5 to black=
 
@@ -182,19 +211,19 @@ Example: =transform F5=
 In this case the hex is transformed either to your home color, or
 as close to it as possible given the available spades.
 
-** =convert= /amount/ /resource/ =to= /amount/ /resource/
+*** =convert= /amount/ /resource/ =to= /amount/ /resource/
 
 Example: =convert 3pw to 1w=
 
 Convert between resources.
 
-** =burn= /amount/
+*** =burn= /amount/
 
 Example: =burn 2=
 
 Remove 2 power from bowl 2, and move 2 power from bowl 2 to 3.
 
-** + /amount/ /resource/ or - /amount/ /resource/
+*** + /amount/ /resource/ or - /amount/ /resource/
 
 Example: =+FAV11=
 
@@ -205,20 +234,20 @@ Example: =-4w=
 
 Return 4 workers from the treasury to the pool.
 
-** =bridge= /location:location/
+*** =bridge= /location:location/
 
 Example: =Bridge E9:D6=
 
 Build a bridge from E9 to D6.
 
-** =advance= /track/
+*** =advance= /track/
 
 Example: =advance ship=
 
 Advance 1 step on the shipping track. "Advance dig" for improving the
 shovel track.
 
-** =wait=
+*** =wait=
 Example:
 #+BEGIN_EXAMPLE
 Wait
@@ -228,7 +257,7 @@ Wait for other players to react. Useful for example if you're the
 last player who hasn't passed, and want to see whether another player
 accepts power between two of your moves.
 
-** =done=
+*** =done=
 Example:
 #+BEGIN_EXAMPLE
 Done
@@ -240,7 +269,7 @@ when using Dwarves or Fakirs to first tunnel to a space to terraform it,
 and right afterwards tunnel to the same space to build a dwelling.
 
 
-** =setup= /faction/ =for= /player/
+*** =setup= /faction/ =for= /player/
 
 Example:
 #+BEGIN_EXAMPLE
@@ -250,7 +279,7 @@ setup Nomads for Alice
 Add this faction to the game. The player name is optional, you also do just
 =setup Nomads=.
 
-** =#=
+*** =#=
 
 Example:
 #+BEGIN_EXAMPLE
@@ -260,9 +289,47 @@ Example:
 Ignore the remainder of the line. Useful mostly in the planning tool --
 you can use comments to interleave notes to yourself and actual commands.
 
-* Obscure commands
+* Running Games
 
-** =option= /option/
+** Making a New Game
+
+To create a new game, you'll need to be logged in. After that, you'll
+be able to create a game from the [[http://terra.snellman.net/newgame/][New Game]] page. The system supports
+two types of games, public and private. Additionally you can select
+which [[options]] to include in the game.
+
+- In private games all the players are specified up front when
+  creating a game. The preferred method of doing this is by the
+  username of the players. It's good etiquette to not anyone to a
+  private game unless they're expecting it.
+
+- Public games are games that anyone can join. The game starts as soon
+  as enough people have [[join-game][joined]] it. Email notifications must always be
+  turned on for public games.
+
+** Administrating the Game
+
+The creator of the game has administrator rights to the game, and can
+edit the history arbitrarily. You can find the admin section of the
+games you run under the "Games you Administrate" section on the home
+page.
+
+The admin section is useful for example in the following circumstances:
+
+- A player misenters an order and would like to undo it. It's up to the game creator to decide under which circumstances a rollback is reasonable.
+- You wish to stop the game prematurely. This can be done with the [[abort]] command.
+
+Note that the administrator rights only apply to the game itself. Most
+importantly the admin can't read the planning notes of other players.
+
+
+#<<admin-commands>>
+** Administrative commands
+
+The following commands are available for changing the state of the game.
+
+# <<options>>
+*** =option= /option/
 
 Example:
 #+BEGIN_EXAMPLE
@@ -277,41 +344,12 @@ faction selection. The following options are available:
 - =shipping-bonus=: Additional bonus tile from Spielbox 6/2013, http://boardgamegeek.com/image/1843355/terra-mystica-navigation-round-bonus-tile
 - =email-notify=: Automatically send email notifications after moves (players can configure exactly which emails they want to see). Can't be used in games with unregistered players.
 
-** =income=
-
-/Note/: This command is only needed if you absolutely want to take income
-before all open decisions (e.g. power leeching) have been made. You should generally not
-need it.
-
-#+BEGIN_EXAMPLE
-  income
-#+END_EXAMPLE
-#+BEGIN_EXAMPLE
-  Nomads: income
-#+END_EXAMPLE
-
-Take all income (buildings, favors, bonus tiles, last turn's special
-scoring tile) for either all players (if no faction specified), or a
-specific faction. Should be done just before =start=-ing a new round.
-
-** =start=
-
-/Note/: This command is only needed if you want to start a new round
-before all the decisions from the previous round (e.g. using spades
-gained from cult bonuses) are done. You should not need it.
-
-Move to the next round.
-
-** =finish=
-
-Do the final scoring. You can also trigger the final scoring by just
-declining or accepting any remaining offers of power, once all players
-have passed on the final round.
-
-** =abort=
+*** =abort=
 
 Forcibly end the game. Useful for hiding a stalled game from the "your
 games" list.
+
+
 
 * Notes on specific factions
 
@@ -403,6 +441,7 @@ view:
 - =p= (planning): Switch to the planning / notes tab
 - =r= (recent): Switch to the recent moves tab
 - =c= (chat): Switch to the chat tab
+
 
 * Browser and Email Setup
 
