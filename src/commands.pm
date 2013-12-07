@@ -785,7 +785,7 @@ sub command_randomize_v1 {
     my $i = 1;
     for (@players) {
         push @ledger, {
-            comment => "Player $i: ".($_->{name})
+            comment => "Player $i: ".($_->{displayname} // $_->{name})
         };
         ++$i;
     }
