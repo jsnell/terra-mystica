@@ -49,6 +49,7 @@ function showOpenGames(games) {
         var row = new Element("tr");
         row.insert(new Element("td").update(
             new Element("a", {"href": "/game/" + game.id}).updateText(game.id)));
+        game.player_count = game.players.size();
         var players = new Element("td").updateText("#{player_count}/#{wanted_player_count}".interpolate(game))
         game.players.each(function (username) {
             var player = new Element("div").
