@@ -48,7 +48,7 @@ EOF
                  {},
                  $id,
                  $player->{username},
-                 ('A'..'Z')[$i],
+                 $i,
                  $i);
         # Different indexing, sigh
         ++$i;

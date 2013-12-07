@@ -14,6 +14,58 @@ use save;
 use session;
 use tracker;
 
+sub error {
+    print encode_json {
+        error => [ @_ ],
+    };
+    exit;
+};
+
+sub joingame {
+    my ($dbh, $read_id, $username)  = @_;
+    begin_game_transaction $dbh, $read_id;
+
+    my ($wanted_player_count, $current_count, $already_playing) =
+        $dbh->selectrow_array("select wanted_player_count, (select count(*) from game_player where game=game.id), (select count(*) from game_player where game=game.id and player=?) from game where id=?",
+                              {},
+                              $username,
+                              $read_id);
+
+    if (!defined $wanted_player_count) {
+        error "Can't join a private game";
+    }
+    if ($already_playing) {
+        error "You've already joined this game";
+    }
+    if ($wanted_player_count <= $current_count) {
+        error "Game is already full";
+    }
+
+    $dbh->do("insert into game_player (game, player, sort_key, index) values (?, ?, ?, ?)",
+             {},
+             $read_id,
+             $username,
+             $current_count,
+             $current_count);
+
+    if ($wanted_player_count == $current_count + 1) {
+        my $write_id = $dbh->selectrow_array("select write_id from game where id=?",
+                                             {},
+                                             $read_id);
+        my ($prefix_content, $orig_content) =
+            get_game_content $dbh, $read_id, $write_id;
+
+        my $res = evaluate_and_save $dbh, $read_id, $write_id, $prefix_content, $orig_content;
+        notify_game_started $dbh, {
+            name => $read_id,
+            options => $res->{options},
+            players => $res->{players},
+        }
+    }
+
+    finish_game_transaction $dbh;
+}
+
 my $q = CGI->new;
 my $dbh = get_db_connection;
 
@@ -27,58 +79,16 @@ my $username = username_from_session_token($dbh,
                                            $q->cookie('session-token') // '');
 my $read_id = $q->param('game');
 
-begin_game_transaction $dbh, $read_id;
-
-my $write_id = $dbh->selectrow_array("select write_id from game where id=?",
-                                     {},
-                                     $read_id);
-my ($prefix_content, $orig_content) = get_game_content $dbh, $read_id, $write_id;
-
-my  $content ="player $username username $username\n$orig_content";
-
-my $res = terra_mystica::evaluate_game {
-    rows => [ split /\n/, "$prefix_content\n$content\n" ],
-    faction_info => get_game_factions($dbh, $read_id),
-    players => get_game_players($dbh, $read_id),
-    delete_email => 0
-};
-
-if (!defined $res->{player_count}) {
-    $res->{error} = ["Can't join a private game"];
-} elsif ($res->{player_count} < @{$res->{players}}) {
-    $res->{error} = ["Game is already full"];
-} elsif (1 != grep { ($_->{username} // '') eq $username } @{$res->{players}}) {
-    $res->{error} = ["You have already joined this game"];
-} elsif (@{$res->{error}}) {
-    $res->{error} = ["Unknown error when joining game"]
-} 
-
-for my $player (@{$res->{players}}) {
-    next if !defined $player->{username} or $player->{username} ne $username;
-    ($player->{username}, $player->{email}) =
-        check_username_is_registered $dbh, $player->{username};
+if (!$username) {
+    error "not logged in";
 }
 
-if (!@{$res->{error}}) {
-    eval {
-        save $dbh, $write_id, $content, $res, 0;
-        if ($res->{player_count} == @{$res->{players}}) {
-            notify_game_started $dbh, {
-                name => $read_id,
-                players => $res->{players},
-            }
-        }
-    }; if ($@) {
-        print STDERR "error: $@\n";
-        $res->{error} = [ $@ ]
-    }
+eval {
+    joingame $dbh, $read_id, $username;
+}; if ($@) {
+    error $@;
+}
+
+print encode_json {
+    error => []
 };
-
-finish_game_transaction $dbh;
-
-## FIXME: send an email when game starts
-
-my $out = encode_json {
-    error => $res->{error},
-};
-print $out;
