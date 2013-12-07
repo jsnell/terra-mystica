@@ -38,7 +38,7 @@ if (!defined $username) {
     my $players = get_game_players($dbh, $read_id);
 
     my $res = terra_mystica::evaluate_game {
-        rows => [ split /\n/, $data ],
+        rows => [ split /\n/, "$prefix_data\n$data" ],
         faction_info => get_game_factions($dbh, $read_id),
         players => $players,
     };
