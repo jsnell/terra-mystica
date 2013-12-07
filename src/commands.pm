@@ -1259,7 +1259,7 @@ sub check_setup_actions {
         } elsif (@players and @players != @factions) {
             @action_required = ({
                 type => 'faction',
-                player => $players[@factions]{name},
+                player => ($players[@factions]{displayname} // $players[@factions]{name}),
                 player_index => "player".(1+@factions),
              });
         } elsif (@setup_order) {

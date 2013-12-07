@@ -56,6 +56,7 @@ my $out = encode_json {
         map {
             ($_->{name}, { display => $_->{display}, color => $_->{color} })
         } values %{$res->{factions}}
-    }
+    },
+    players => get_game_players($dbh, $read_id)
 };
 print $out;

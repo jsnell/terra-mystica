@@ -46,6 +46,23 @@ function setEditorContent(data) {
     }
 }
 
+function drawPlayers(state) {
+    if (state.players.size() == 0) {
+        return;
+    }
+
+    var table = new Element("ul");
+
+    state.players.each(function (player) {
+        var row = new Element("li");
+        row.insert(new Element("span").updateText("#{displayname} (#{username})".interpolate(player)));
+        table.insert(row);
+    });
+
+    $("players").update(new Element("h4").updateText("Players"));
+    $("players").insert(table);
+}
+
 function save() {
     if ($("save-button").disabled) {
         return;
@@ -78,6 +95,7 @@ function save() {
                     hash = res.hash;
                 }
                 drawActionRequired(res);
+                drawPlayers(res);
                 $("save-button").enable();
             } catch (e) {
                 handleException(e);
@@ -117,6 +135,7 @@ function load() {
                 hash = res.hash;
 
                 drawActionRequired(res);
+                drawPlayers(res);
 
                 $("links").innerHTML = "<h4>Game links</h4>";
                 { 

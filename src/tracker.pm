@@ -141,6 +141,9 @@ sub finalize {
 }
 
 sub evaluate_game {
+    my $data = shift;
+    my $faction_info = $data->{faction_info};
+
     local @setup_order = ();
     local %map = ();
     local %reverse_map = ();
@@ -159,7 +162,7 @@ sub evaluate_game {
     local %factions_by_color = ();
     local @factions = ();
     local @setup_order = ();
-    local @players = ();
+    local @players = @{$data->{players}};
     local $admin_email = '';
     local %options = ();
     local $active_faction = '';
@@ -169,8 +172,6 @@ sub evaluate_game {
 
     setup_cults;
 
-    my $data = shift;
-    my $faction_info = $data->{players};
     my $row = 1;
     my @error = ();
     my $history_view = 0;
@@ -186,6 +187,10 @@ sub evaluate_game {
             last;
         }
         $row++;
+    }
+
+    if (@players) {
+        @command_stream = grep { $_->[1] !~ /^player /i } @command_stream;
     }
 
     @command_stream = rewrite_stream @command_stream;

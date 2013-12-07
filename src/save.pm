@@ -72,6 +72,7 @@ sub evaluate_and_save {
 
     my $res = terra_mystica::evaluate_game {
         rows => [ split /\n/, "$prefix_content\n$new_content" ],
+        faction_info => get_game_factions($dbh, $read_id),
         players => get_game_players($dbh, $read_id),
         delete_email => 0
     };

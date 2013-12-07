@@ -110,7 +110,7 @@ eval {
         notify_game_started $dbh, {
             name => $gameid,
             options => { map { ($_ => 1) } @options },
-            players => [ values %{get_game_players($dbh, $gameid)} ],
+            players => [ values %{get_game_factions($dbh, $gameid)} ],
         }
     }
 

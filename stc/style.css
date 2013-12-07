@@ -165,6 +165,10 @@ table.open-games tr:nth-child(odd) {
     background-color: #dcdcdc;
 }
 
+table.interleave-row-colors tr:nth-child(odd) {
+    background-color: #dcdcdc;
+}
+
 table.vp-breakdown {
     font: 14px Verdana;    
 }

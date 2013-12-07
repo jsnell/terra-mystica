@@ -21,18 +21,8 @@ sub create_game {
     }
 
     @options = map { s/\s+//g; "option $_\n" } @options;
-    my @players = map {
-        "player $_->{username} username $_->{username}\n";
-    } @{$players};
-
-    if (defined $player_count) {
-        push @players, "player-count $player_count";
-    }
 
     my $content = <<EOF;
-# List players (in any order) with 'player' command
- @players
-
 # Default game options
  @options
 
@@ -54,11 +44,19 @@ EOF
 
     my $i = 0;
     for my $player (sort { $a->{username} cmp $b->{username} } @{$players}) {
+        $dbh->do("insert into game_player (game, player, sort_key, index) values (?, ?, ?, ?)",
+                 {},
+                 $id,
+                 $player->{username},
+                 ('A'..'Z')[$i],
+                 $i);
+        # Different indexing, sigh
+        ++$i;
         $dbh->do("insert into game_role (game, email, faction, action_required) values (?, lower(?), ?, false)",
                  {},
                  $id,
                  $player->{email},
-                 "player".(++$i));
+                 "player".($i));
     }
 
     evaluate_and_save $dbh, $id, $write_id, '', $content;

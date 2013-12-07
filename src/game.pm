@@ -43,7 +43,7 @@ sub get_game_commands {
     split /\n/, "$prefix_content\n$content\n";
 }
 
-sub get_game_players {
+sub get_game_factions {
     my ($dbh, $id) = @_;
 
     my ($rows) =
@@ -59,6 +59,17 @@ sub get_game_players {
     }
 
     \%players;
+}
+
+sub get_game_players {
+    my ($dbh, $id) = @_;
+
+    my ($rows) =
+        $dbh->selectall_arrayref("select game_player.player as username, game_player.sort_key as name, game_player.index as index, player.displayname as displayname from game_player left join player on game_player.player=player.username where game=? order by index",
+                                 { Slice => {} },
+                                 $id);
+
+    $rows;
 }
 
 sub begin_game_transaction {

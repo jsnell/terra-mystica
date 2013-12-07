@@ -35,10 +35,12 @@ if (!defined $username) {
 } else {
     my ($read_id) = $write_id =~ /(.*?)_/g;
     my ($prefix_data, $data) = get_game_content $dbh, $read_id, $write_id;
+    my $players = get_game_players($dbh, $read_id);
 
     my $res = terra_mystica::evaluate_game {
         rows => [ split /\n/, $data ],
-        players => get_game_players($dbh, $read_id),
+        faction_info => get_game_factions($dbh, $read_id),
+        players => $players,
     };
 
     # Development hack
@@ -53,6 +55,7 @@ if (!defined $username) {
         error => [],
         hash => sha1_hex($data),
         action_required => $res->{action_required},
+        players => $players,
         factions => $res->{factions},
     };
 

@@ -38,6 +38,7 @@ my  $content ="player $username username $username\n$orig_content";
 
 my $res = terra_mystica::evaluate_game {
     rows => [ split /\n/, "$prefix_content\n$content\n" ],
+    faction_info => get_game_factions($dbh, $read_id),
     players => get_game_players($dbh, $read_id),
     delete_email => 0
 };
