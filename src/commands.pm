@@ -392,6 +392,7 @@ sub cultist_maybe_gain_power {
     my $record = shift;
     my $faction = $factions{$record->{from_faction}};
 
+    return if !$record->{actual};
     return if --$faction->{leech_not_rejected}{$record->{leech_id}} > 0;
     return if $record->{from_faction} ne 'cultists';
     return if !$options{'errata-cultist-power'};
@@ -403,7 +404,7 @@ sub cultist_maybe_gain_power {
 
     push @ledger, {
         faction => $faction->{name},
-        commands => '[+1pw, all opponents declined power]',
+        commands => "[+1pw, all opponents declined power]",
         map { $_, $pretty_delta{$_} } @data_fields
     };
 }
