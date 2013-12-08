@@ -3,6 +3,16 @@
 #+EMAIL: jsnell@iki.fi
 #+STYLE: <link rel="stylesheet" type="text/css" href="stc/org.css" />
 
+* Bug Reports
+
+Is something not working correctly, or in the way you expect? Please
+let me know by [[mailto:jsnell@iki.fi][email at jsnell@iki.fi]]. There is almost no chance of
+bugs getting fixed if I don't hear about them. Please include the
+following information with the report:
+
+- Your username
+- Name of the game (if the bug appears on the game page)
+
 * Questions
 
 Do you have questions that this document doesn't answer? A good place
