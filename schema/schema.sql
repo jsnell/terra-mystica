@@ -21,6 +21,7 @@ create table game (
     write_id text,
     needs_indexing boolean,
     finished boolean,
+    aborted boolean default false,
     exclude_from_stats boolean,
     last_update timestamp,
     player_count integer,

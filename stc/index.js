@@ -2,17 +2,20 @@ var state = null;
 var id = document.location.pathname;
 
 function listGames(games, div, mode, status) {
-    $(div).update("<thead><td>Game<td>Faction<td>Last move<td>Round<td>Waiting for<td>Status</thead>");
+    $(div).update("<thead><td>Game<td>Faction<td>Last move<td>Round<td>Waiting for<td>Status<td>VP</thead>");
     var tbody = new Element("tbody");
     var action_required_count = 0;
     $(div).insert(tbody);
     games.each(function(elem) {
         elem.status = "";
-        if (elem.action_required) {
+        elem.status_msg = "";
+        if (elem.action_required && !elem.aborted) {
             elem.status = "game-status-action-required";
+            elem.status_msg = "your turn";
             action_required_count++;
         } else if (elem.unread_chat_messages > 0) {
             elem.status = "game-status-action-unread-chat";
+            elem.status_msg = "new chat";
             action_required_count++;
         }
         if (elem.seconds_since_update) {
@@ -21,7 +24,14 @@ function listGames(games, div, mode, status) {
         if (elem.vp) { elem.vp += " vp"; }
         if (elem.rank) { elem.vp += " (" + elem.rank + ")"; }
 
-        $(tbody).insert("<tr class='#{status}'><td>#{id}<td><a href='#{link}'> #{role}<td>#{time_since_update}</a><td>#{round}<td>#{waiting_for}<td>#{vp}</tr>"
+        if (elem.aborted) {
+            elem.vp = "";
+            elem.status_msg = "aborted";
+        } else if (elem.finished) {
+            elem.status_msg = "finished";
+        }
+
+        $(tbody).insert("<tr class='#{status}'><td>#{id}<td><a href='#{link}'> #{role}<td>#{time_since_update}</a><td>#{round}<td>#{waiting_for}<td>#{status_msg}<td>#{vp}</tr>"
                         .interpolate(elem));
     });
     if (mode == "user") {

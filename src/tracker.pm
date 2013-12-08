@@ -157,6 +157,7 @@ sub evaluate_game {
     local $round = 0;
     local $turn = 0;
     local $finished = 0;
+    local $aborted = 0;
     local @score_tiles = ();
     local %factions = ();
     local %factions_by_color = ();
@@ -228,6 +229,7 @@ sub evaluate_game {
         round => $round,
         turn => $turn,
         finished => $finished,
+        aborted => $aborted,
         cults => \%cults,
         players => \@players,
         player_count => $player_count,

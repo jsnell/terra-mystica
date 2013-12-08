@@ -20,7 +20,7 @@ my $printed_turn = 0;
 my $force_finish = 0;
 my @data_fields = qw(VP C W P P1 P2 P3 PW FIRE WATER EARTH AIR CULT);
 
-use vars qw($admin_email %options $active_faction $player_count);
+use vars qw($admin_email %options $active_faction $player_count $aborted);
 
 sub handle_row;
 sub handle_row_internal;
@@ -931,6 +931,7 @@ sub command {
         command_finish;
     } elsif ($command =~ /^abort$/i) {
         $finished = 1;
+        $aborted = 1;
         @action_required = ( { type => 'gameover' } );
     } elsif ($command =~ /^score_resources$/i) {
         score_final_resources_for_faction $faction_name;
