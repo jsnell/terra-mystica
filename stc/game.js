@@ -1953,13 +1953,18 @@ function addBuildToMovePicker(picker, faction) {
         }
     } else if (faction.allowed_actions) {
         location.insert(new Element("option").update("-"));
-        var resources = ["W", "P"];
+        var resources = ["C", "W", "P"];
         faction.reachable_build_locations.each(function (elem) {
             var loc = elem.hex;
             var loc_cost = elem.extra_cost;
             var can_afford_build = true;
             resources.each(function (res) {
-                if (faction[res] < dwelling_costs[res] + loc_cost[res]) {
+                var have = faction[res];
+                var need = dwelling_costs[res];
+                if (loc_cost[res]) {
+                    need += loc_cost[res];
+                }
+                if (faction[res] < need) {
                     can_afford_build = false;
                 }
             });
