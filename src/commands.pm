@@ -1015,7 +1015,7 @@ sub detect_incomplete_state {
     }
 
     if ($faction->{FREE_D}) {
-        $warn = "Unused free dwelling post for $prefix\n";
+        $warn = "Unused free dwelling for $prefix\n";
         push @extra_action_required, {
             type => 'dwelling',
             faction => $prefix
