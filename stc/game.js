@@ -1835,6 +1835,7 @@ function tileLabel(record) {
     var pass_vp = record.pass_vp;
     var action = record.action;
     var special = record.special;
+    var gain = record.gain;
 
     if (pass_vp) {
         var vp_strs = [];
@@ -1849,7 +1850,7 @@ function tileLabel(record) {
     if (income) {
         var income_strs = [];
         $H(income).each(function (elem) {
-            income_strs.push("#{value}#{key}".interpolate(elem));
+            income_strs.push("+#{value}#{key}".interpolate(elem));
         });
         if (income_strs) {
             label.push("income " + income_strs.join(" "))
@@ -1867,6 +1868,19 @@ function tileLabel(record) {
             label.push("special " + special_strs.join(" "));
         }
     }
+    if (gain) {
+        var gain_strs = [];
+        $H(gain).each(function (elem) {
+            if (elem.value == 1) {
+                gain_strs.push(elem.key);
+            } else {
+                gain_strs.push("#{value}#{key}".interpolate(elem));
+            }
+        });
+        if (gain_strs) {
+            label.push(" &#8594; " + gain_strs.join(", "));
+        }
+    }    
 
     return label.join(", ");
 }
