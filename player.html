@@ -17,24 +17,28 @@
     <link rel="stylesheet" type="text/css" href="/stc/style.css">
   </head>
   <body style="padding: 5ex">
-    <div id="header"><div><a href="/" accesskey="h">Home</a></div><div><a href="/usage.html" accesskey="u">Help</a></div><div id="user-info"></div></div>
-    <div id="error"></div>
-    <h4 id="heading">Player Information</h4>
+    <table>
+      <tr>
+        <td valign="top" style="padding-right: 2ex; " id="sidebar">
+          <script>renderSidebar($("sidebar"));</script>
+        <td valign="top">
+          <h4 id="heading">Player Information</h4>
 
-    <h4>Active / Recently Finishd Games</h4>
-    <table id="games-active" class="gamelist"></table>
+          <h4>Active / Recently Finishd Games</h4>
+          <table id="games-active" class="gamelist"></table>
 
-    <h4>Finished Games</h4>
-    <table id="games-finished" class="gamelist"></table>
+          <h4>Finished Games</h4>
+          <table id="games-finished" class="gamelist"></table>
 
-    <script language="javascript">
-       var path = document.location.pathname.split("/");
-       var user = path[2];
+          <script language="javascript">
+            var path = document.location.pathname.split("/");
+            var user = path[2];
 
-       $("heading").innerHTML += " - " + user;
-       
-       fetchGames("games-active", "other-user", "running", listGames, user);
-       fetchGames("games-finished", "other-user", "finished", listGames, user);
-    </script>
+            $("heading").innerHTML += " - " + user;
+            
+            fetchGames("games-active", "other-user", "running", listGames, user);
+            fetchGames("games-finished", "other-user", "finished", listGames, user);
+          </script>
+    </table>
   </body>
 </html>
