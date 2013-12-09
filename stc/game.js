@@ -2125,6 +2125,7 @@ function addConvertToMovePicker(picker, faction) {
     if (faction.CONVERT_W_TO_P) {
         faction.exchange_rates["W"]["P"] = 1;
     }
+    var convert_possible = false;
 
     var generate = function () {
         amount.update("");
@@ -2147,31 +2148,38 @@ function addConvertToMovePicker(picker, faction) {
     button.onclick = execute;
     button.disable();
 
-    var type = makeSelectWithOptions(["-"]);
+    var type = makeSelectWithOptions([]);
     type.onchange = function() {
         generate();
         validate();
     };
 
     var rates = $H(faction.exchange_rates);
-    rates.each(function (elem) {
+    rates.sortBy(naturalSortKey).reverse().each(function (elem) {
         var from = elem.key;
         var to = $H(elem.value);
-        to.each(function (to_elem) {
+        var need_label = false;
+        to.sortBy(naturalSortKey).reverse().each(function (to_elem) {
             var to_type = to_elem.key;
             var rate = to_elem.value;
 
             if (faction[from] >= rate) {
                 var label = from + " to " + to_type;
                 if (rate > 1) {
-                    label = rate + label;
+                    label = rate + " " +label;
                 }
-                type.insert(new Element("option",
-                                        { "value": from + "," + to_type }).
-                            update(label));
+                type.insert({"top": new Element("option",
+                                                { "value": from + "," + to_type }).update("&nbsp;&nbsp;" + label)});
+                convert_possible = true;
+                need_label = true;
             }
         });
+        if (need_label) {
+            type.insert({"top": new Element("option", {"value": "-"}).update(from)});
+        }
     });
+
+    type.insert({"top": new Element("option", {"value": "-"}).update("-")});
 
     var amount = makeSelectWithOptions(["-"]);
 
@@ -2180,8 +2188,9 @@ function addConvertToMovePicker(picker, faction) {
     row.insert(amount);
     row.insert(" times");
  
-    if (faction.allowed_actions > 0 ||
-        faction.allowed_sub_actions.burn > 0) {
+    if (convert_possible &&
+        (faction.allowed_actions > 0 ||
+         faction.allowed_sub_actions.burn > 0)) {
         row.show();
     } else {
         row.hide();
