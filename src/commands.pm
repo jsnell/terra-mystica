@@ -181,6 +181,10 @@ sub command_build {
         }
     }
 
+    if ($faction->{SPADE} > 0) {
+        die "Must do all transforms before building ($faction->{SPADE} spades) remaining\n";
+    }
+
     if (!$round) {
         if ($faction_name ne $setup_order[0]) {
             die "Expected $setup_order[0] to place building, not $faction_name\n"
