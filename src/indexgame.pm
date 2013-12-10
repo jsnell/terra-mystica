@@ -25,6 +25,16 @@ sub index_game {
         $player_count,
         $id);
 
+    if (!defined $game->{player_count} or
+        $player_count >= $game->{player_count}) {
+        set_game_roles($dbh, $id, $game);
+    }
+    set_game_players($dbh, $id, $game);
+}
+
+sub set_game_roles {
+    my ($dbh, $id, $game) = @_;
+
     $dbh->do("delete from game_role where game=? and faction != 'admin'",
              {},
              $id);
@@ -92,8 +102,6 @@ sub index_game {
                  $faction->{rank},
                  $faction->{start_order});
     }
-
-    set_game_players($dbh, $id, $game);
 }
 
 my %email_cache = ();

@@ -41,7 +41,7 @@ EOF
              {},
              $id,
              $admin);
-
+ 
     my $i = 0;
     for my $player (sort { $a->{username} cmp $b->{username} } @{$players}) {
         $dbh->do("insert into game_player (game, player, sort_key, index) values (?, ?, ?, ?)",
@@ -59,7 +59,13 @@ EOF
                  "player".($i));
     }
 
-    evaluate_and_save $dbh, $id, $write_id, '', $content;
+    my $prefix_content = "";
+    if (defined $player_count) {
+        die "Invalid player-count '$player_count'\n" if $player_count < 2 or $player_count > 5;
+        $prefix_content = "player-count $player_count\n";
+    }
+
+    evaluate_and_save $dbh, $id, $write_id, $prefix_content, $content;
 
     return $write_id;
 }
