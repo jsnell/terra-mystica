@@ -1984,6 +1984,7 @@ function addBuildToMovePicker(picker, faction) {
     validate();
     
     if (faction.buildings.D.level < faction.buildings.D.max_level &&
+        !faction.SPADE &&
         (faction.allowed_actions ||
          faction.allowed_sub_actions.build) &&
         location_count > 0) {
