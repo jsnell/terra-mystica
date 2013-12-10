@@ -1926,19 +1926,7 @@ function addBuildToMovePicker(picker, faction) {
     };
     var execute = function() {
         var command = "build " + location.value;
-        var rows = $("move_entry_input").value.split(/\n/);
-        while (rows.last() == "") {
-            rows.pop();
-        }
-
-        if (rows.last() == "transform " + location.value) {
-            rows.pop();
-            rows.push(command);
-            $("move_entry_input").value = rows.join("\n");
-            preview();
-        } else {
-            appendAndPreview(command);
-        }
+        appendAndPreview(command);
     };
 
     var dwelling_costs = faction.buildings["D"].advance_cost;
