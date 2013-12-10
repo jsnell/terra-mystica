@@ -1253,7 +1253,7 @@ sub maybe_advance_to_next_player {
 }
 
 sub check_setup_actions {
-    if (!$round) {
+    if (!$round and !$finished) {
         if (!valid_player_count) {
             @action_required = ({ type => 'not-started',
                                   player_count => scalar @players,
