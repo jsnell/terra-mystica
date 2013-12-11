@@ -1172,14 +1172,14 @@ function drawActionRequired() {
             record.pretty = 'may place a bridge'.interpolate(record);
         } else if (record.type == 'favor') {
             if (record.amount == 1) {
-                record.pretty = 'may take a favor tile'.interpolate(record);
+                record.pretty = 'must take a favor tile'.interpolate(record);
             } else {
-                record.pretty = 'may take #{amount} favor tiles'.interpolate(record);
+                record.pretty = 'must take #{amount} favor tiles'.interpolate(record);
             }
         } else if (record.type == 'dwelling') {
             record.pretty = 'should place a dwelling';
         } else if (record.type == 'upgrade') {
-            record.pretty = 'should place a free #{to_building} upgrade'.interpolate(record);
+            record.pretty = 'may place a free #{to_building} upgrade'.interpolate(record);
         } else if (record.type == 'bonus') {
             record.pretty = 'should pick a bonus tile';
         } else if (record.type == 'gameover') {
@@ -1318,6 +1318,7 @@ function dataEntrySelect(select) {
 function addTakeTileButtons(parent, index, prefix, id) {
     var div = new Element("div", { "id": "leech-" + index + "-" + id,
                                    "style": "padding-left: 2em" });
+    var count = 0;
     $H(state.pool).sortBy(naturalSortKey).each(function(tile) {
         if (tile.value < 1 || !tile.key.startsWith(prefix)) {
             return;
@@ -1340,11 +1341,37 @@ function addTakeTileButtons(parent, index, prefix, id) {
                            tile.key, state.pool[tile.key]);
         
         div.insert(container);
+        ++count;
     });
+    if (prefix == "FAV" && count == 0) {
+        var container = new Element("div", {"style": "display: inline-block"});
+        div.insert(container);
+        container.insert(makeDeclineButton("GAIN_FAVOR", 1));
+    }
+    parent.insert(div);
+}
+
+function makeDeclineButton(resource, amount) {
+    var button = new Element("button").update("Decline");
+    button.onclick = function() {
+        if (amount == 1) {
+            appendCommand("-" + resource);
+        } else if (amount > 1) {
+            appendCommand("-" + amount + resource);
+        }
+    };
+    return button;
+}
+
+function addDeclineButton(parent, index, resource, amount) {
+    var div = new Element("div", { "id": "leech-" + index + "-0",
+                                   "style": "padding-left: 2em" });
+    div.insert(makeDeclineButton(resource, amount));
     parent.insert(div);
 }
 
 function addFactionInput(parent, record, index) {
+    var faction = state.factions[currentFaction];
     if (record.type == "leech") {
         parent.insert("<div id='leech-" + index + "' style='padding-left: 2em'><button onclick='javascript:acceptLeech(" + index + ")'>Accept</button> <button onclick='javascript:declineLeech(" + index + ")'>Decline</button></div>")
     }
@@ -1370,7 +1397,15 @@ function addFactionInput(parent, record, index) {
         }
     }
     if (record.type == "bonus") {
-        addTakeTileButtons(parent, index, "BON", i);
+        addTakeTileButtons(parent, index, "BON", 0);
+    }
+    if (record.type == "transform") {
+        if (faction.SPADE > 0) {
+            addDeclineButton(parent, index, "SPADE", faction.SPADE);
+        }
+        if (faction.FREE_TF > 0) {
+            addDeclineButton(parent, index, "FREE_TF", faction.FREE_TF);
+        }
     }
     if (record.type == "faction") {
         var div = new Element("div", { "id": "leech-" + index + "-0",
@@ -1384,15 +1419,15 @@ function addFactionInput(parent, record, index) {
                        "gray": ["dwarves", "engineers"] 
                      };
 
-        $H(state.factions).each(function(faction) {
-            delete boards[faction.value.color];
+        $H(state.factions).each(function(used_faction) {
+            delete boards[used_faction.value.color];
         });
 
         $H(boards).each(function(board) {
-            board.value.sort().each(function(faction) {
-                var button = new Element("button").update(faction);
+            board.value.sort().each(function(free_faction) {
+                var button = new Element("button").update(free_faction);
                 button.onclick = function() {
-                    appendCommand("setup " + faction + "\n");
+                    appendCommand("setup " + free_faction + "\n");
                 };
                 div.insert(button);
             });
@@ -1410,7 +1445,7 @@ function addFactionInput(parent, record, index) {
                 return;
             }
 
-            if (hex.color != state.factions[currentFaction].color) {
+            if (hex.color != faction.color) {
                 return;
             }
 
@@ -1423,8 +1458,13 @@ function addFactionInput(parent, record, index) {
                 $("leech-" + index).style.display = "none";
                 appendCommand("Build #{key}\n".interpolate(elem));
             };
-            div.insert(button);                                               
+            div.insert(button);
         });
+
+        if (faction.FREE_D > 0) {
+            div.insert(makeDeclineButton("FREE_D", faction.FREE_D));
+        }
+
         parent.insert(div);
     }
     if (record.type == "upgrade") {
@@ -1437,7 +1477,7 @@ function addFactionInput(parent, record, index) {
                 return;
             }
 
-            if (hex.color != state.factions[currentFaction].color) {
+            if (hex.color != faction.color) {
                 return;
             }
 
@@ -1452,6 +1492,10 @@ function addFactionInput(parent, record, index) {
             };
             div.insert(button);                                               
         });
+
+        if (faction.FREE_TP > 0) {
+            div.insert(makeDeclineButton("FREE_TP", faction.FREE_TP));
+        }
         parent.insert(div);
     }
     if (record.type == "bridge") {
@@ -1466,7 +1510,7 @@ function addFactionInput(parent, record, index) {
                 return;
             }
 
-            if (hex.color != state.factions[currentFaction].color) {
+            if (hex.color != faction.color) {
                 return;
             }
 
@@ -1488,6 +1532,11 @@ function addFactionInput(parent, record, index) {
                 div.insert(button);
             });
         });
+
+        if (faction.BRIDGE > 0) {
+            div.insert(makeDeclineButton("BRIDGE", faction.BRIDGE));
+        }
+
         parent.insert(div);
     }
 }
