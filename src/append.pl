@@ -147,16 +147,13 @@ if (!@{$res->{error}}) {
     }
 }
 
-my $had_error = scalar @{$res->{error}};
-
 my $out = encode_json {
     error => $res->{error},
     email => (join ",", @email),
     action_required => $res->{action_required},
     round => $res->{round},
     turn => $res->{turn},
-    faction => $faction_name,
-    new_faction_key => ($orig_faction_name eq $faction_name or $had_error ?
+    new_faction_key => ($orig_faction_name eq $faction_name ?
                         undef :
                         edit_link_for_faction $dbh, $write_id, $faction_name),
 };
