@@ -420,6 +420,8 @@ sub command_transform {
     if (!$color) {
         if ($faction->{FREE_TF}) {
             $color = $faction->{color};
+        } elsif ($faction_name eq 'giants') {
+            $color = $faction->{color};
         } else {
             $color = color_at_offset($map{$where}{color}, $faction->{color},
                                      $faction->{SPADE});
