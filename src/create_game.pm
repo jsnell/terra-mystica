@@ -24,6 +24,7 @@ sub create_game {
 
     my $content = <<EOF;
 # Default game options
+ option strict-leech
  @options
 
 # Randomize setup

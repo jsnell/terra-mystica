@@ -295,6 +295,12 @@ sub command_convert {
 
     my %exchange_rates = ();
 
+    # Have to leech before declining power
+    my @records = leech_decisions_required($faction);
+    for (@records) {
+        $_->{leech_tainted} = 'convert';
+    }
+
     for my $from_key (keys %{$faction->{exchange_rates}}) {
         my $from = $faction->{exchange_rates}{$from_key};
         for my $to_key (keys %{$from}) {
@@ -331,9 +337,13 @@ sub command_leech {
     for (@action_required) {
         next if $_->{faction} ne $faction_name;
         next if $_->{type} ne 'leech';
-        next if $_->{amount} ne $pw and $_->{amount} ne $actual_pw;
-
-        next if $from and $from ne $_->{from_faction};
+        
+        if (($_->{amount} ne $pw and $_->{amount} ne $actual_pw) or
+            ($from and $from ne $_->{from_faction})) {
+            $_->{leech_tainted} =
+                "leech $pw from $from";
+            next;
+        }
 
         if ($_->{from_faction} eq 'cultists' and
             !$factions{cultists}{leech_cult_gained}{$_->{leech_id}}++) {
@@ -341,6 +351,15 @@ sub command_leech {
             push @action_required, { type => 'cult',
                                      amount => 1,
                                      faction => 'cultists' };
+        }
+
+        if ($_->{leech_tainted}) {
+            my $err = "'leech $pw from $from' should happen before '$_->{leech_tainted}'";
+            if ($options{'strict-leech'}) {
+                die "$err\n";
+            } else {
+                push @warn, $err;
+            }
         }
 
         $_ = '';
@@ -351,10 +370,10 @@ sub command_leech {
     if ($found_leech_record) {
         @action_required = grep { $_ ne '' } @action_required;
     } else {
-        if (!$from) {
-            push @warn, "invalid leech amount $pw (accepting anyway)";
+        if (!$from and !$options{'strict-leech'}) {
+            push @warn, "invalid leech $pw (accepting anyway)";
         } else {
-            die "invalid leech amount $pw from $from\n";
+            die "invalid leech $pw from $from\n";
         }
     }
 
@@ -810,6 +829,14 @@ sub command_start_planning {
     allow_full_move $faction;
 }
 
+sub leech_decisions_required {
+    my $faction = shift;
+
+    return grep {
+        $_->{type} eq 'leech' and $_->{faction} eq $faction->{name}
+    } @action_required;
+}
+
 sub non_leech_action_required {
     return scalar grep { $_->{type} ne 'leech' } @action_required;
 }
@@ -950,7 +977,8 @@ sub command {
             errata-cultist-power
             mini-expansion-1
             shipping-bonus
-            email-notify);
+            email-notify
+            strict-leech);
         if (!$valid_options{$opt}) {
             die "Unknown option $opt\n";
         }
@@ -1149,9 +1177,12 @@ sub clean_commands {
 sub rewrite_stream {
     my @command_stream = @_;
 
-    for my $i (0..(@command_stream-2)) {
+    for (my $i = 0; $i < @command_stream-1; ++$i) {
         my $this = $command_stream[$i];
         my $next = $command_stream[$i+1];
+
+        # If you have two manipulations of the same resource after one
+        # another, merge. (Needed for Auren SH validation).
         if (($this->[0] eq $next->[0]) and
             ($this->[1] =~ /^\+(\d*)(\w+)/ and
              lc $this->[1] eq lc $next->[1])) {
