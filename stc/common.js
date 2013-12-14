@@ -187,6 +187,7 @@ function renderSidebar(id) {
     }
     p.insert(new Element("br"));
     insertLink("/stats/", "Statistics");
+    insertLink("/ratings/", "Ratings");
     insertLink("/changes/", "Changes");
     insertLink("/usage.html", "Help");
 

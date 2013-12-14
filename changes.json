@@ -1,5 +1,9 @@
 {
     "changes": [
+        { "date": "2013-12-14",
+          "title": "Ratings",
+          "description": "A rating system system has been implemented. Please see the <a href='/ratings/'>ratings page</a> for an explanation on how it works."
+        },
         { "date": "2013-12-07",
           "title": "Public games",
           "description": "There's now a new game type called 'public' game, in which the admin doesn't need to find a private group of people to play with. Instead anyone may join a 'public' game. You can join a public game through the list of <a href='/joingame/'>open games</a>."

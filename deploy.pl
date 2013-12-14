@@ -139,6 +139,7 @@ sub deploy_stc {
                   index.js
                   joingame.js
                   newgame.js
+                  ratings.js
                   register.js
                   reset.js
                   prototype-1.7.1.js
@@ -164,6 +165,7 @@ sub deploy_html {
                   login.html
                   newgame.html
                   player.html
+                  ratings.html
                   register.html
                   reset.html
                   robots.txt

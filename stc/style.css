@@ -12,6 +12,11 @@ p {
     max-width: 50ex;
 }
 
+h5 {
+    font-family: Verdana;
+    font-size: 90%;
+}
+
 div.faction-board {
     font: 14px Verdana;
     background-color: #eee;
@@ -170,6 +175,10 @@ table.open-games tr td {
 }
 
 table.interleave-row-colors tr:nth-child(odd) {
+    background-color: #dcdcdc;
+}
+
+table.ranking-table tr:nth-child(5n+1) {
     background-color: #dcdcdc;
 }
 
