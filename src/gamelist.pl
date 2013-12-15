@@ -41,19 +41,7 @@ sub role_link {
     }
 }
 
-if ($mode eq 'all') {
-    my @ids = $dbh->selectall_arrayref(
-        "select id,finished,round from game");
-    add_sorted map {
-        { id => $_->[0],
-          role => 'view',
-          link => "/game/".$_->[0],
-          finished => $_->[1] ? 1 : 0,
-          action_required => 0,
-          round => $_->[2],
-        }
-    } @{$ids[0]};
-} elsif ($mode eq 'user' or $mode eq 'admin' or $mode eq 'other-user') {
+if ($mode eq 'user' or $mode eq 'admin' or $mode eq 'other-user') {
     my $user = username_from_session_token($dbh,
                                            $q->cookie('session-token') // '');
     if ($mode eq 'other-user') {
