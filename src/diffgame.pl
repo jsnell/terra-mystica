@@ -22,6 +22,9 @@ sub pretty_res {
     if ($time) {
         printf "  %s: %5.3f\n", $_[0], (time - $begin);
     }
+    if (@{$json->{error}}) {
+        print "Error in @_";
+    }
     $json;
 #    my $pretty = to_json($json, { pretty => 1 });
 #    $pretty;
