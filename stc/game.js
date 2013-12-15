@@ -1183,7 +1183,12 @@ function drawActionRequired() {
         } else if (record.type == 'bonus') {
             record.pretty = 'should pick a bonus tile';
         } else if (record.type == 'gameover') {
-            record.pretty = "<span>The game is over\n</span>";
+            if (state.metadata) {
+                var age = seconds_to_pretty_time(state.metadata.time_since_update);
+                record.pretty = "<span>The game is over (finished " + age + " ago)\n</span>";
+            } else {
+                record.pretty = "<span>The game is over</span>";
+            }
             var table = "";
             $H(state.factions).sortBy(function(a) { return -a.value.VP }).each(function(elem) {
                 elem.faction_span = coloredFactionSpan(elem.key);

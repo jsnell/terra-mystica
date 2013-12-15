@@ -59,6 +59,7 @@ if (game_exists $dbh, $id) {
         ($res->{chat_message_count},
          $res->{chat_unread_message_count}) = get_chat_count($dbh, $id, $username);
     };
+    $res->{metadata} = get_game_metadata $dbh, $id;
 
     print_json $res;
 } else {

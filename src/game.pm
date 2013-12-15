@@ -72,6 +72,17 @@ sub get_game_players {
     $rows;
 }
 
+sub get_game_metadata {
+    my ($dbh, $id) = @_;
+
+    my ($rows) =
+        $dbh->selectall_arrayref("select extract(epoch from now() - last_update) as time_since_update, description from game where id=?",
+                                 { Slice => {} },
+                                 $id);
+
+    $rows->[0];
+}
+
 sub begin_game_transaction {
     my ($dbh, $id) = @_;
     
