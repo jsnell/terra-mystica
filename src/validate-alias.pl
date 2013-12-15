@@ -24,7 +24,7 @@ sub add_alias {
 
     if (!$already_done) {
         $dbh->do('begin');
-        $dbh->do('insert into email (address, player, validated) values (lower(?), ?, ?)',
+        $dbh->do('insert into email (address, player, validated, is_primary) values (lower(?), ?, ?, false)',
                  {}, $email, $user, 1);
         $dbh->do('commit');
     }
