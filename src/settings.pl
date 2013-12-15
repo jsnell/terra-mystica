@@ -48,15 +48,12 @@ sub fetch_user_settings {
         $username);
     $res{$_} = $player->{$_} for keys %{$player};
 
-    my $rows = $dbh->selectall_arrayref(
+    my $rows = $dbh->selectall_hashref(
         "select address, validated, is_primary from email where player = ?",
-        {},
+        'address',
+        { Slice => {} },
         $username);
-
-    for (@{$rows}) {
-        $res{email}{$_->[0]}{validated} = !!$_->[1];
-        $res{email}{$_->[0]}{is_primary} = !!$_->[2];
-    }
+    $res{email} = $rows;
 }
 
 sub save_user_settings {

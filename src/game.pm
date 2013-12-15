@@ -47,18 +47,11 @@ sub get_game_factions {
     my ($dbh, $id) = @_;
 
     my ($rows) =
-        $dbh->selectall_arrayref("select game_role.faction, player.username, game_role.email, player.displayname from email inner join game_role on game_role.email=email.address inner join player on player.username=email.player where game_role.game=? and game_role.faction != 'admin'",
-                                 {},
+        $dbh->selectall_hashref("select game_role.faction, player.username, game_role.email, player.displayname from email inner join game_role on game_role.email=email.address inner join player on player.username=email.player where game_role.game=? and game_role.faction != 'admin'",
+                                'faction',
+                                 { Slice => {} },
                                  $id);
-
-    my %players = ();
-    for (@{$rows}) {
-        $players{$_->[0]} = { username => $_->[1],
-                              displayname => $_->[3],
-                              email => $_->[2] };
-    }
-
-    \%players;
+    $rows;
 }
 
 sub get_game_players {
