@@ -516,16 +516,17 @@ function renderAction(canvas, name, key, border_color) {
     }
     ctx.strokeStyle = '#000';
 
+    var edge = 13;
     ctx.translate(0.5, 0.5);
-    ctx.moveTo(0, 10);
-    ctx.lineTo(10, 0);
-    ctx.lineTo(20, 0);
-    ctx.lineTo(30, 10);
-    ctx.lineTo(30, 20);
-    ctx.lineTo(20, 30);
-    ctx.lineTo(10, 30);
-    ctx.lineTo(0, 20);
-    ctx.lineTo(0, 10);
+    ctx.moveTo(0, 1*edge);
+    ctx.lineTo(1*edge, 0);
+    ctx.lineTo(2*edge, 0);
+    ctx.lineTo(3*edge, 1*edge);
+    ctx.lineTo(3*edge, 2*edge);
+    ctx.lineTo(2*edge, 3*edge);
+    ctx.lineTo(1*edge, 3*edge);
+    ctx.lineTo(0, 2*edge);
+    ctx.lineTo(0, 1*edge);
     ctx.closePath();
 
     ctx.fill();
@@ -544,57 +545,61 @@ function renderAction(canvas, name, key, border_color) {
     ctx.restore();
 
     if (!name.startsWith("FAV") && !name.startsWith("BON")) {
-        drawText(ctx, name, 1, 45, "10px Verdana");
+        drawText(ctx, name, 5, 52, "12px Verdana");
     }
 
     ctx.save();
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
+
+    var center = 19;
+    var bottom = 60;
+
     var data = {
         "ACT1": function() {
-            drawText(ctx, "br", 15, 15, "10px Verdana");
-            drawText(ctx, "-3PW", 15, 55, "10px Verdana");
+            drawText(ctx, "br", center, center, "10px Verdana");
+            drawText(ctx, "-3PW", center, 60, "10px Verdana");
         },
         "ACT2": function() {
-            drawText(ctx, "P", 15, 15, "10px Verdana");
-            drawText(ctx, "-3PW", 15, 55, "10px Verdana");
+            drawText(ctx, "P", center, center, "10px Verdana");
+            drawText(ctx, "-3PW", center, 60, "10px Verdana");
         },
         "ACT3": function() {
-            drawText(ctx, "2W", 15, 15, "10px Verdana");
-            drawText(ctx, "-4PW", 15, 55, "10px Verdana");
+            drawText(ctx, "2W", center, center, "10px Verdana");
+            drawText(ctx, "-4PW", center, 60, "10px Verdana");
         },
         "ACT4": function() {
-            drawText(ctx, "7C", 15, 15, "10px Verdana");
-            drawText(ctx, "-4PW", 15, 55, "10px Verdana");
+            drawText(ctx, "7C", center, center, "10px Verdana");
+            drawText(ctx, "-4PW", center, 60, "10px Verdana");
         },
         "ACT5": function() {
-            drawText(ctx, "spd", 15, 15, "10px Verdana");
-            drawText(ctx, "-4PW", 15, 55, "10px Verdana");
+            drawText(ctx, "spd", center, center, "10px Verdana");
+            drawText(ctx, "-4PW", center, 60, "10px Verdana");
         },
         "ACT6": function() {
-            drawText(ctx, "2 spd", 15, 15, "10px Verdana");
-            drawText(ctx, "-6PW", 15, 55, "10px Verdana");
+            drawText(ctx, "2 spd", center, center, "10px Verdana");
+            drawText(ctx, "-6PW", center, 60, "10px Verdana");
         },
         "ACTA": function() {
-            drawText(ctx, "2cult", 15, 15, "10px Verdana");
+            drawText(ctx, "2cult", center, center, "10px Verdana");
         },
         "ACTN": function() {
-            drawText(ctx, "tf", 15, 15, "10px Verdana");
+            drawText(ctx, "tf", center, center, "10px Verdana");
         },
         "ACTS": function() {
-            drawText(ctx, "TP", 15, 15, "10px Verdana");
+            drawText(ctx, "TP", center, center, "10px Verdana");
         },
         "ACTW": function() {
-            drawText(ctx, "D", 15, 15, "10px Verdana");
+            drawText(ctx, "D", center, center, "10px Verdana");
         },
         "BON1": function() {
-            drawText(ctx, "spd", 15, 15, "10px Verdana");
+            drawText(ctx, "spd", center, center, "10px Verdana");
         },
         "BON2": function() {
-            drawText(ctx, "cult", 15, 15, "10px Verdana");
+            drawText(ctx, "cult", center, center, "10px Verdana");
         },
         "FAV6": function() {
-            drawText(ctx, "cult", 15, 15, "10px Verdana");
+            drawText(ctx, "cult", center, center, "10px Verdana");
         }
     };
 
@@ -617,7 +622,7 @@ function cultStyle(name) {
 
 function insertAction(parent, name, key) {
     parent.insert(new Element('canvas', {
-        'id': 'action/' + key, 'class': 'action', 'width': 40, 'height': 80}));
+        'id': 'action/' + key, 'class': 'action', 'width': 50, 'height': 70}));
     var canvas = parent.childElements().last();
     renderAction(canvas, name, key, '#000');
 }
@@ -2660,11 +2665,10 @@ function init(root) {
               Browser not supported. \
             </canvas> \
           </div> \
-        <td> \
-          <div id="scoring"></div> \
       <tr> \
-        <td> \
+        <td colspan=2> \
           <div id="shared-actions"></div> \
+          <div id="scoring"></div> \
     </table> \
     <div id="menu" class="menu" style="display: none"></div> \
     <div id="preview_status"></div> \

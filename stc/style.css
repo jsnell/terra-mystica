@@ -76,6 +76,10 @@ div.favor {
     height: 80px;
 }
 
+div#scoring {
+    float: right;
+}
+
 div.scoring {
     border-style: solid;
     font: 11px Verdana;
@@ -84,6 +88,7 @@ div.scoring {
     width: 90px;
     height: 71px;
     background-color: #fff;
+    float: left;
 }
 
 div.scoring-head {
