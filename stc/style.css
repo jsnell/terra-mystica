@@ -343,3 +343,19 @@ a.navi {
     color: #00f;
     line-height: 150%;
 }
+
+div.menu {
+    position: absolute;
+    padding: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-style: solid;
+    border-width: 2px;
+    background-color: #ddd;
+}
+
+div.menu div.menu-item {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
