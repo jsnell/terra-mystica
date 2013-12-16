@@ -1831,7 +1831,10 @@ function addActionToMovePicker(picker, faction) {
         });
         $H(faction).sortBy(naturalSortKey).each(function (elem) {
             var key = elem.key;
-            var fkey = elem.key + "/" + faction.name;
+            var fkey = elem.key;
+            if (!key.startsWith("ACT")) {
+                key += + "/" + faction.name;
+            }
             if (elem.value > 0 &&
                 state.actions[key] &&
                 !(state.map[fkey] && state.map[fkey].blocked)) {
