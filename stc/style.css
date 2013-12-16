@@ -34,6 +34,11 @@ div.faction-info {
     width: 300px;
 }
 
+div.shared-actions {
+    font: 14px Verdana;
+    float: left;
+}
+
 div.pool {
     font: 14px Verdana;
     background-color: #eee;

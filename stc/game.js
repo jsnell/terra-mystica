@@ -498,7 +498,7 @@ function strokeCultMarkerHex(ctx) {
     ctx.restore();
 }
 
-function renderAction(canvas, name, key) {
+function renderAction(canvas, name, key, border_color) {
     if (!canvas.getContext) {
         return;
     }
@@ -506,6 +506,7 @@ function renderAction(canvas, name, key) {
     var ctx = canvas.getContext("2d");
 
     ctx.save();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.translate(2, 2);
 
     if (state.map[key] && state.map[key].blocked) {
@@ -514,7 +515,6 @@ function renderAction(canvas, name, key) {
         ctx.fillStyle = colors.orange;
     }
     ctx.strokeStyle = '#000';
-    ctx.lineWidth = 2;
 
     ctx.translate(0.5, 0.5);
     ctx.moveTo(0, 10);
@@ -529,7 +529,19 @@ function renderAction(canvas, name, key) {
     ctx.closePath();
 
     ctx.fill();
+
+    if (border_color != '#000') {
+        ctx.save();
+        ctx.lineWidth = 4;
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    ctx.save();
+    ctx.strokeStyle = border_color;
+    ctx.lineWidth = 2;
     ctx.stroke();
+    ctx.restore();
 
     if (!name.startsWith("FAV") && !name.startsWith("BON")) {
         drawText(ctx, name, 1, 45, "10px Verdana");
@@ -605,9 +617,9 @@ function cultStyle(name) {
 
 function insertAction(parent, name, key) {
     parent.insert(new Element('canvas', {
-        'class': 'action', 'width': 40, 'height': 80}));
+        'id': 'action/' + key, 'class': 'action', 'width': 40, 'height': 80}));
     var canvas = parent.childElements().last();
-    renderAction(canvas, name, key);
+    renderAction(canvas, name, key, '#000');
 }
 
 function renderTile(div, name, record, faction, count) {
@@ -737,12 +749,14 @@ function renderTreasuryTile(board, faction, name, count) {
 }
 
 
-function renderTreasury(board, treasury, faction) {
+function renderTreasury(board, treasury, faction, filter) {
     $H(treasury).sortBy(naturalSortKey).each(function(elem, index) {
         var name = elem.key;
         var value = elem.value;
 
-        renderTreasuryTile(board, faction, name, value);
+        if (!filter || filter(name)) {
+            renderTreasuryTile(board, faction, name, value);
+        }
     });
 }
 
@@ -1007,7 +1021,11 @@ function drawFactions() {
     });
     
     var pool = makeBoard("orange", "Pool", 'pool');
-    renderTreasury(pool, state.pool, 'pool');
+    renderTreasury(pool, state.pool, 'pool',
+                   function (tile) { return !tile.match(/^ACT/) } );
+    $("shared-actions").update("");
+    renderTreasury($("shared-actions"), state.pool, '',
+                   function (tile) { return tile.match(/^ACT/) } );
     $("factions").insert(pool);
 }
 
@@ -1171,8 +1189,8 @@ function addMapClickHandler(loc, funs) {
             menu.insert(new Element("div", {"class": "menu-item"}).insert(button));
         });
 
-        menu.style.left = event.clientX + "px";
-        menu.style.top = event.clientY + 5 + "px";
+        menu.style.left = event.pageX + "px";
+        menu.style.top = event.pageY + 5 + "px";
 
         menu.show();
     }
@@ -1204,9 +1222,7 @@ function drawActionRequired() {
     map_click_handlers = {};
     // Default handler, might be overridden 
     $("map").onclick = hexClickHandler(function(hex) {
-        if (map_click_handlers[hex] &&
-            !$("move_entry_input").disabled &&
-            $("move_entry").visible()) {
+        if (map_click_handlers[hex] && moveEntryEnabled()) {
             map_click_handlers[hex](hex, event);
         }
     });
@@ -1675,6 +1691,10 @@ function dataEntrySetStatus(disabled) {
     });
 }
 
+function moveEntryEnabled() {
+    return !$("move_entry_input").disabled && $("move_entry").visible();
+}
+
 function moveEntryAfterPreview() {
     if ($("move_entry_action")) {
         $("move_entry_explanation").innerHTML = "";
@@ -1868,6 +1888,10 @@ function addPassToMovePicker(picker, faction) {
     return row;
 }
 
+function markActionAsPossible(canvas, name, key) {
+    renderAction(canvas, name, key, '#0f0');
+}
+
 function addActionToMovePicker(picker, faction) {
     var validate = function() {
         if (action.value == "-") {
@@ -1891,6 +1915,7 @@ function addActionToMovePicker(picker, faction) {
     button.disable();
     row.insert(button);
 
+    var possible_actions = [];
     var action = makeSelectWithOptions([]);
     var action_count = 0;
 
@@ -1903,11 +1928,17 @@ function addActionToMovePicker(picker, faction) {
         if (burn.checked) { pw += max_pw; }
         $H(state.pool).sortBy(naturalSortKey).each(function (elem) {
             var key = elem.key;
-            if (key.startsWith("ACT") &&
-                !(state.map[key] && state.map[key].blocked) &&
+            if (!key.startsWith("ACT")) { return; }
+            var action_canvas = $("action/" + key);
+            action_canvas.onclick = function() { };
+            if (!(state.map[key] && state.map[key].blocked) &&
                 max_pw >= state.actions[key].cost.PW) {
                 if (pw >= state.actions[key].cost.PW) {
-                    addAnnotatedOptionToSelect(action, key, state.actions[key]);
+                    possible_actions.push({
+                        "key": key,
+                        "name": elem.key,
+                        "canvas": action_canvas,
+                    });
                 }
                 action_count++;
             }
@@ -1916,12 +1947,22 @@ function addActionToMovePicker(picker, faction) {
             var key = elem.key;
             var fkey = elem.key;
             if (!key.startsWith("ACT")) {
-                key += + "/" + faction.name;
+                fkey += "/" + faction.name;
             }
-            if (elem.value > 0 &&
-                state.actions[key] &&
-                !(state.map[fkey] && state.map[fkey].blocked)) {
-                addAnnotatedOptionToSelect(action, key, state.actions[key]);
+            if (!state.actions[key] ||
+                !elem.value) {
+                return;
+            }
+
+            var action_canvas = $("action/" + fkey);
+            action_canvas.onclick = function() {};
+
+            if (!(state.map[fkey] && state.map[fkey].blocked)) {
+                possible_actions.push({
+                    "key": key,
+                    "name": elem.key,
+                    "canvas": action_canvas,
+                });
                 action_count++;
             }
         });
@@ -1939,6 +1980,20 @@ function addActionToMovePicker(picker, faction) {
     row.insert(burn);
     
     if (faction.allowed_actions && action_count > 0) {
+        possible_actions.each(function (possible_action) {
+            var key = possible_action.key;
+            var name = possible_action.name;
+            var canvas = possible_action.canvas;
+
+            addAnnotatedOptionToSelect(action, key, state.actions[key]);
+            canvas.onclick = function() {
+                if (moveEntryEnabled()) {
+                    action.value = key;
+                    execute();
+                }
+            }
+            markActionAsPossible(canvas, name, key);
+        });
         row.show();
     } else {
         row.hide();
@@ -2563,8 +2618,10 @@ function draw() {
     drawMap();
     drawCults();
     drawScoringTiles();
-    drawActionRequired();
     drawFactions();
+    // Draw this after factions, so that we can manipulate the DOM of
+    // the action markers.
+    drawActionRequired();
     drawLedger();
 
     if (state.history_view > 0) {
@@ -2605,6 +2662,9 @@ function init(root) {
           </div> \
         <td> \
           <div id="scoring"></div> \
+      <tr> \
+        <td> \
+          <div id="shared-actions"></div> \
     </table> \
     <div id="menu" class="menu" style="display: none"></div> \
     <div id="preview_status"></div> \
