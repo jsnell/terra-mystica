@@ -25,7 +25,7 @@ div.faction-board {
     border-color: #444;
     margin-bottom: 10px;
     padding: 5px;
-    width: 1024px;
+    width: 1045px;
     float: left;
 }
 
@@ -45,10 +45,10 @@ div.pool {
     border-style: solid;
     border-width: 1px;
     border-color: #444;
-    margin: 2px;
+    margin: 5px;
     margin-bottom: 10px;
     padding: 5px;
-    width: 1024px;
+    width: 1045px;
     min-height: 220px;
     float: left;
 }
@@ -148,7 +148,7 @@ div#action_required {
     padding: 5px;
     border-style: solid;
     border-width: 1px;
-    max-width: 1024px;
+    max-width: 1045px;
 }
 
 table.income-table {
@@ -260,12 +260,11 @@ table#recent_moves {
 
 div#header {
     margin-bottom: 5px;
-    margin-left: 5px;
     background-color: #eee;
     padding: 5px;
     border-style: solid;
     border-width: 1px;
-    max-width: 1040px;    
+    max-width: 1045px;    
 }
 
 div#header div {
