@@ -1226,7 +1226,7 @@ function drawActionRequired() {
 
     map_click_handlers = {};
     // Default handler, might be overridden 
-    $("map").onclick = hexClickHandler(function(hex) {
+    $("map").onclick = hexClickHandler(function(hex, event) {
         if (map_click_handlers[hex] && moveEntryEnabled()) {
             map_click_handlers[hex](hex, event);
         }

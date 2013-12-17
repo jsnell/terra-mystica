@@ -1,5 +1,9 @@
 {
     "changes": [
+        { "date": "2013-12-17",
+          "title": "UI Improvements",
+          "description": "It's now possible to trigger the following operations by clicking on the map instead of through the menus: building, upgrading, forming towns with mermaids, using power actions / special actions. Hexes and action spaces that have an effect when clicked have a bright green border."
+        },
         { "date": "2013-12-14",
           "title": "Ratings",
           "description": "A rating system system has been implemented. Please see the <a href='/ratings/'>ratings page</a> for an explanation on how it works."
