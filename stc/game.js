@@ -18,7 +18,8 @@ var colors = {
     black: '#000000',
     white: '#ffffff',
     gray: '#808080',
-    orange: '#f0c040'
+    orange: '#f0c040',
+    activeUI: '#8f8'
 };
 
 var bgcolors = {
@@ -290,14 +291,14 @@ function drawActiveHexBorder(hex) {
 
         ctx.save();
         ctx.strokeStyle = "#000";
-        ctx.lineWidth = 5;
+        ctx.lineWidth = 4;
         makeMapHexPath(ctx, hex);
         ctx.stroke();
         ctx.restore();
 
         ctx.save();
-        ctx.strokeStyle = "#0f0";
-        ctx.lineWidth = 4;
+        ctx.strokeStyle = colors.activeUI;
+        ctx.lineWidth = 3;
         makeMapHexPath(ctx, hex);
         ctx.stroke();
         ctx.restore();
@@ -1895,7 +1896,7 @@ function addPassToMovePicker(picker, faction) {
 }
 
 function markActionAsPossible(canvas, name, key) {
-    renderAction(canvas, name, key, '#0f0');
+    renderAction(canvas, name, key, colors.activeUI);
 }
 
 function addActionToMovePicker(picker, faction) {
