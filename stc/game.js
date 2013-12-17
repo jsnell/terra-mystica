@@ -1173,42 +1173,52 @@ function factionDisplayName(faction, fg) {
 var allowSaving = false;
 var map_click_handlers = {};
 
-function addMapClickHandler(loc, funs) {
+function menuClickHandler(title, loc, funs) {
     funs = $H(funs);
     var select = function(loc, event) {
         var menu = $("menu");
         menu.hide();
         menu.update("");
+        var head = new Element("div", {"style": "width: 100%"});
+        head.insert(new Element("div", {"style": "white-space: nowrap"}).update(loc + ": " + title));
+        menu.insert(head);
 
-        var close = new Element("a").update("x");
-        close.onclick = function () { menu.hide(); }
-        menu.insert(new Element("div", {"style": "float: right"}).insert(close));
 
         $H(funs).each(function (elem) {
             var type = elem.key;
-            var fun = elem.value;
+            var fun = elem.value.fun;
+            var label = elem.value.label;
 
             var button = new Element("button").update(type);
             button.onclick = function() {
                 menu.hide();
                 fun(loc, type);
             }
-            menu.insert(new Element("div", {"class": "menu-item"}).insert(button));
+            menu.insert(new Element("div", {"class": "menu-item"}).insert(button).insert(" ").insert(label));
         });
 
-        menu.style.left = event.pageX + "px";
-        menu.style.top = event.pageY + 5 + "px";
+
+        var cancel = new Element("button").update("Cancel");
+        menu.insert(new Element("div", {"class": "menu-item"}).insert(cancel));
+        cancel.onclick = function () { menu.hide(); }
+
+        menu.style.left = (event.pageX - 30) + "px";
+        menu.style.top = event.pageY + 15 + "px";
 
         menu.show();
     }
 
-    if (funs.size() == 1) {
+    return select;
+}
+
+function addMapClickHandler(title, loc, funs) {
+    if (false && funs.size() == 1) {
         var elem = funs.entries()[0];
         map_click_handlers[loc] = function(loc, event) {
             elem[1](loc, elem[0]);
         };
     } else {
-        map_click_handlers[loc] = select;
+        map_click_handlers[loc] = menuClickHandler(title, loc, funs);
     }
     drawActiveHexBorder(state.map[loc]);
 }
@@ -1562,9 +1572,14 @@ function addFactionInput(parent, record, index) {
                 $("leech-" + index).style.display = "none";
                 appendCommand("build #{key}\n".interpolate(elem));
             };
-            addMapClickHandler(elem.key, { "D": function (loc) {
-                appendAndPreview("build " + loc);
-            } });
+            addMapClickHandler("Build", elem.key, {
+                "D": {
+                    "fun": function (loc) {
+                        appendAndPreview("build " + loc);
+                    },
+                    "label": "free"
+                }
+            });
             div.insert(button);
         });
 
@@ -1599,9 +1614,14 @@ function addFactionInput(parent, record, index) {
             };
             div.insert(button);                                               
 
-            addMapClickHandler(elem.key, { "TP": function (loc) {
-                appendCommand("Upgrade " + loc + " to #{to_building}\n".interpolate(record));
-            } });
+            addMapClickHandler("Upgrade", elem.key, {
+                "TP": {
+                    "fun": function (loc) {
+                        appendCommand("Upgrade " + loc + " to #{to_building}\n".interpolate(record));
+                    },
+                    "label": "free"
+                }
+            });
         });
 
         if (faction.FREE_TP > 0) {
@@ -1938,12 +1958,18 @@ function addActionToMovePicker(picker, faction) {
             if (!key.startsWith("ACT")) { return; }
             var action_canvas = $("action/" + key);
             action_canvas.onclick = function() { };
+            var pw_cost = state.actions[key].cost.PW;
             if (!(state.map[key] && state.map[key].blocked) &&
-                max_pw >= state.actions[key].cost.PW) {
-                if (pw >= state.actions[key].cost.PW) {
+                max_pw >= pw_cost) {
+                if (pw >= pw_cost) {
+                    var burn = "";
+                    if (pw_cost > faction.P3) {
+                        burn = " (burn " + (pw_cost - faction.P3) + ")";
+                    }
                     possible_actions.push({
                         "key": key,
                         "name": elem.key,
+                        "cost": effectString([state.actions[key].cost], []) + burn,
                         "canvas": action_canvas,
                     });
                 }
@@ -1968,6 +1994,7 @@ function addActionToMovePicker(picker, faction) {
                 possible_actions.push({
                     "key": key,
                     "name": elem.key,
+                    "cost": "free",
                     "canvas": action_canvas,
                 });
                 action_count++;
@@ -1993,12 +2020,25 @@ function addActionToMovePicker(picker, faction) {
             var canvas = possible_action.canvas;
 
             addAnnotatedOptionToSelect(action, key, state.actions[key]);
-            canvas.onclick = function() {
-                if (moveEntryEnabled()) {
-                    action.value = key;
-                    execute();
+            
+            var menu_items = {
+                "Take": {
+                    "fun": function() {
+                        if (moveEntryEnabled()) {
+                            action.value = key;
+                            execute();
+                        }
+                    },
+                    "label": possible_action.cost
                 }
-            }
+            };
+            var menuHandler = 
+                menuClickHandler("Action",
+                                 "",
+                                 menu_items);
+            canvas.onclick = function (event) {
+                menuHandler(name, event);
+            };
             markActionAsPossible(canvas, name, key);
         });
         row.show();
@@ -2118,6 +2158,19 @@ function actionLabel(record) {
     return label;
 }
 
+function effectString(costs, gains) {
+    var non_zero = [];
+    ["C", "W", "P", "PW", "VP"].each(function(type) {
+        var delta = 0;
+        gains.each(function (gain) { if (gain[type]) { delta += gain[type] } });
+        costs.each(function (cost) { if (cost[type]) { delta -= cost[type] } });
+        if (!delta) { return; }
+        non_zero.push(delta + type.toLowerCase());
+    });
+
+    return non_zero.join(", ");
+}
+
 function addBuildToMovePicker(picker, faction) {
     var validate = function() {
         if (location.value == "-") {
@@ -2140,9 +2193,11 @@ function addBuildToMovePicker(picker, faction) {
     var location = makeSelectWithOptions([]);
     location.onchange = validate;
     var possible_builds = [];
+    var gains = computeBuildingVPEffect(faction, 'D');
 
     if (faction.allowed_sub_actions.build) {
         var can_afford_build = true;
+        var cost_str = effectString([dwelling_costs], gains);
         $H(dwelling_costs).each(function (cost_elem) {
             if (faction[cost_elem.key] < cost_elem.value) {
                 can_afford_build = false;
@@ -2151,7 +2206,7 @@ function addBuildToMovePicker(picker, faction) {
         if (can_afford_build) {
             $H(faction.allowed_build_locations).each(function (elem) {
                 var loc = elem.key;
-                possible_builds.push(loc);
+                possible_builds.push([loc, cost_str]);
             });
         }
     } else if (faction.allowed_actions) {
@@ -2161,6 +2216,8 @@ function addBuildToMovePicker(picker, faction) {
             var loc = elem.hex;
             var loc_cost = elem.extra_cost;
             var can_afford_build = true;
+            var cost_str = effectString([dwelling_costs, loc_cost],
+                                        gains);
             resources.each(function (res) {
                 var have = faction[res];
                 var need = dwelling_costs[res];
@@ -2172,7 +2229,7 @@ function addBuildToMovePicker(picker, faction) {
                 }
             });
             if (can_afford_build) {
-                possible_builds.push(loc);
+                possible_builds.push([loc, cost_str]);
             }
         });
     }
@@ -2188,11 +2245,18 @@ function addBuildToMovePicker(picker, faction) {
         (faction.allowed_actions ||
          faction.allowed_sub_actions.build) &&
         possible_builds.size() > 0) {
-        possible_builds.each(function (loc) {
+        possible_builds.each(function (elem) {
+            var loc = elem[0];
+            var cost = elem[1];
             location.insert(new Element("option").update(loc));
-            addMapClickHandler(loc, { "D": function (loc) {
-                appendAndPreview("build " + loc);
-            } });
+            addMapClickHandler("Build", loc, {
+                "D": {
+                    "fun": function (loc) {
+                        appendAndPreview("build " + loc);
+                    },
+                    "label": cost
+                }
+            });
         });
         row.show();
     } else {
@@ -2200,6 +2264,32 @@ function addBuildToMovePicker(picker, faction) {
     }
 
     return row;
+}
+
+function computeBuildingVPEffect(faction, type) {
+    var res = [];
+
+    $H(faction).each(function (elem) {
+        var name = elem.key;
+        if (!elem.value) {
+            return;
+        }
+        if (name.match(/^FAV/)) {
+            var effect = state.favors[name].vp;
+            if (effect && effect[type]) {
+                res.push({ "VP": effect[type] })
+            }
+        }
+    });
+
+    if (state.round > 0) {
+        var score = state.score_tiles[state.round - 1];
+        if (score.vp[type]) {
+            res.push({ "VP": score.vp[type] })            
+        }
+    }
+
+    return res;
 }
 
 function addUpgradeToMovePicker(picker, faction) {
@@ -2230,6 +2320,11 @@ function addUpgradeToMovePicker(picker, faction) {
                              'TE': 'TP',
                              'SA': 'TE',
                              'SH': 'TP' });
+    var upgrade_gains = $H({ 'TP': computeBuildingVPEffect(faction, 'TP'),
+                             'TE': computeBuildingVPEffect(faction, 'TE'),
+                             'SA': computeBuildingVPEffect(faction, 'SA'),
+                             'SH': computeBuildingVPEffect(faction, 'SH') });
+
     $H(state.map).sortBy(naturalSortKey).each(function (elem) {
         var hex = elem.value;
         var id = elem.key;
@@ -2248,19 +2343,25 @@ function addUpgradeToMovePicker(picker, faction) {
                 return;
             }
             var costs = faction.buildings[wanted_new].advance_cost;
+            if (wanted_new == "TP" && !hex.has_neighbors) {
+                // Eww...
+                costs = JSON.parse(JSON.stringify(costs));
+                costs.C *= 2;
+            }
             var can_afford = true;
             $H(costs).each(function (cost_elem) {
                 if (faction[cost_elem.key] < cost_elem.value) {
                     can_afford = false;
                 }
             });
+            var cost_str = effectString([costs], upgrade_gains.get(wanted_new));
             if (can_afford) {
                 upgrade.insert(new Element("option").update(
                     id + " to " + wanted_new));
                 if (!upgrade_locations[id]) {
                     upgrade_locations[id] = [];
                 }
-                upgrade_locations[id].push(wanted_new);
+                upgrade_locations[id].push([wanted_new, cost_str]);
                 upgrade_count++;
             }
         });
@@ -2275,10 +2376,15 @@ function addUpgradeToMovePicker(picker, faction) {
                 appendAndPreview("upgrade " + loc + " to " + type);
             }
             var funs = {};
-            types.each(function (type) {
-                funs[type] = execute;
+            types.each(function (record) {
+                var type = record[0];
+                var cost = record[1];
+                funs[type] = {
+                    "fun": execute,
+                    "label": cost,
+                }
             });
-            addMapClickHandler(loc, funs);
+            addMapClickHandler("Upgrade", loc, funs);
         });
         row.show();
     } else {
@@ -2597,7 +2703,7 @@ function addConnectToMovePicker(picker, faction) {
     var location_count = 0;
 
     faction.possible_towns.each(function (loc) {
-        addMapClickHandler(loc, { "TW": function (loc) {
+        addMapClickHandler("Town", loc, { "TW": function (loc) {
             appendAndPreview("connect " + loc);
         } });
     });

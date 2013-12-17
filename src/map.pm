@@ -345,7 +345,7 @@ sub color_at_offset {
 # care of when the power is received).
 sub compute_leech {
     my ($from_faction, $where) = @_;
-    my $color = $from_faction->{color};
+    my $color = $map{$where}{color};
     my %this_leech = ();
 
     return () if !$round;
@@ -389,6 +389,15 @@ sub update_reachable_build_locations {
             ];
         } else {
             $faction->{reachable_build_locations} = [];
+        }
+    }
+}
+
+sub update_tp_upgrade_costs {
+    for (keys %map) {
+        if ($map{$_}{building} and
+            $map{$_}{building} eq 'D') {
+            $map{$_}{has_neighbors} = scalar compute_leech undef, $_;
         }
     }
 }
