@@ -483,7 +483,9 @@ sub command_transform {
         delete $faction->{allowed_sub_actions}{transform};
     }
 
-    $faction->{allowed_build_locations}{$where} = 1;
+    if ($color eq $faction->{color}) {
+        $faction->{allowed_build_locations}{$where} = 1;
+    }
 
     $map{$where}{color} = $color;
 
