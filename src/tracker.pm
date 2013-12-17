@@ -22,6 +22,8 @@ sub finalize {
     my $spade_seen = 0;
 
     update_reachable_build_locations;
+    update_reachable_tf_locations;
+    update_tp_upgrade_costs;
     update_mermaid_town_connections;
 
     if ($delete_email) {

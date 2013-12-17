@@ -1202,7 +1202,7 @@ function menuClickHandler(title, loc, funs) {
         menu.insert(new Element("div", {"class": "menu-item"}).insert(cancel));
         cancel.onclick = function () { menu.hide(); }
 
-        menu.style.left = (event.pageX - 30) + "px";
+        menu.style.left = (event.pageX + 10) + "px";
         menu.style.top = event.pageY + 15 + "px";
 
         menu.show();
@@ -1261,10 +1261,6 @@ function drawActionRequired() {
             } else {
                 record.pretty = 'may use #{amount} spades (click on map to transform)'.interpolate(record);
             }
-            $("map").onclick = hexClickHandler(function(hex) {
-                $("map").onclick = null;
-                appendAndPreview("transform " + hex);
-            });
         } else if (record.type == 'cult') {
             if (record.amount == 1) {
                 record.pretty = 'may advance 1 step on a cult track'.interpolate(record);
@@ -1520,6 +1516,32 @@ function addFactionInput(parent, record, index) {
         if (faction.FREE_TF > 0) {
             addDeclineButton(parent, index, "FREE_TF", faction.FREE_TF);
         }
+        faction.reachable_tf_locations.each(function (tf) {
+            var cost_str = effectString([tf.cost], [tf.gain])
+            var menu = {};
+            menu["to " + tf.to_color] = {
+                "fun": function (loc) {
+                    appendAndPreview("transform " + loc);
+                },
+                "label": cost_str
+            };
+            if (tf.to_color == faction.color &&
+                !(faction.SPADE - tf.cost.SPADE) &&
+                faction.allowed_sub_actions.build &&
+                faction.buildings.D.level < faction.buildings.D.max_level) {
+                var dwelling_cost = faction.buildings["D"].advance_cost;
+                var dwelling_gain = computeBuildingEffect(faction, 'D');
+                cost_str = effectString([tf.cost, dwelling_cost],
+                                        [tf.gain, dwelling_gain])
+                menu["build"] = {
+                    "fun": function (loc) {
+                        appendAndPreview("build " + loc);
+                    },
+                    "label": cost_str
+                };
+            }
+            addMapClickHandler("Transform", tf.hex, menu);
+        })
     }
     if (record.type == "faction") {
         var div = new Element("div", { "id": "leech-" + index + "-0",
@@ -2193,7 +2215,7 @@ function addBuildToMovePicker(picker, faction) {
     var location = makeSelectWithOptions([]);
     location.onchange = validate;
     var possible_builds = [];
-    var gains = computeBuildingVPEffect(faction, 'D');
+    var gains = computeBuildingEffect(faction, 'D');
 
     if (faction.allowed_sub_actions.build) {
         var can_afford_build = true;
@@ -2266,7 +2288,7 @@ function addBuildToMovePicker(picker, faction) {
     return row;
 }
 
-function computeBuildingVPEffect(faction, type) {
+function computeBuildingEffect(faction, type) {
     var res = [];
 
     $H(faction).each(function (elem) {
@@ -2281,6 +2303,12 @@ function computeBuildingVPEffect(faction, type) {
             }
         }
     });
+
+    var building_record = faction.buildings[type];
+    if (building_record.advance_gain &&
+        building_record.level < building_record.max_level) {
+        res.push(building_record.advance_gain[building_record.level]);
+    }
 
     if (state.round > 0) {
         var score = state.score_tiles[state.round - 1];
@@ -2320,10 +2348,10 @@ function addUpgradeToMovePicker(picker, faction) {
                              'TE': 'TP',
                              'SA': 'TE',
                              'SH': 'TP' });
-    var upgrade_gains = $H({ 'TP': computeBuildingVPEffect(faction, 'TP'),
-                             'TE': computeBuildingVPEffect(faction, 'TE'),
-                             'SA': computeBuildingVPEffect(faction, 'SA'),
-                             'SH': computeBuildingVPEffect(faction, 'SH') });
+    var upgrade_gains = $H({ 'TP': computeBuildingEffect(faction, 'TP'),
+                             'TE': computeBuildingEffect(faction, 'TE'),
+                             'SA': computeBuildingEffect(faction, 'SA'),
+                             'SH': computeBuildingEffect(faction, 'SH') });
 
     $H(state.map).sortBy(naturalSortKey).each(function (elem) {
         var hex = elem.value;

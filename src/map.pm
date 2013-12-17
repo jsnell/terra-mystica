@@ -151,9 +151,9 @@ sub setup_valid_bridges {
 #
 # If the faction needs to teleport, also pay the teleport cost here.
 sub check_reachable {
-    my ($faction, $where, $dryrun) = @_;
+    my ($faction, $where) = @_;
 
-    return {} if $round == 0;
+    return ({}, {}) if $round == 0;
 
     my $range = $faction->{ship}{level};
     if ($faction->{ship}{max_level}) {
@@ -169,7 +169,7 @@ sub check_reachable {
     # if it isn't needed).
     for my $loc (@{$faction->{locations}}) {
         if ($map{$where}{adjacent}{$loc}) {
-            return {};
+            return ({}, {});
         }
     }
 
@@ -178,14 +178,14 @@ sub check_reachable {
         for my $loc (@{$faction->{locations}}) {
             if (exists $map{$where}{range}{1}{$loc} and 
                 $map{$where}{range}{1}{$loc} <= $range) {
-                return {};
+                return ({}, {});
             }
         }
     }
 
     if ($faction->{TELEPORT_TO}) {
         if ($faction->{TELEPORT_TO} eq $where) {
-            return {};
+            return ({}, {});
         } else {
             die "Can't use tunnel / carpet flight multiple times in one round\n"
         }
@@ -201,14 +201,9 @@ sub check_reachable {
         for my $loc (@{$faction->{locations}}) {
             if (exists $map{$where}{range}{0}{$loc} and 
                 $map{$where}{range}{0}{$loc} <= $range) {
-                my $cost = $t->{cost}[$level];
-                my $gain = $t->{gain}[$level];
-                if (!$dryrun) {
-                    $faction->{TELEPORT_TO} = $where;
-                    pay($faction, $cost);
-                    gain($faction, $gain, 'faction');
-                }
-                return $cost;
+                my $cost = clone $t->{cost}[$level];
+                my $gain = clone $t->{gain}[$level];
+                return ($cost || {}, $gain || {}, $faction->{teleport}{type});
             }
         }
     }
@@ -363,6 +358,46 @@ sub compute_leech {
     return %this_leech;
 }
 
+sub transform_cost {
+    my ($faction, $where, $color) = @_;
+
+    if (!$color) {
+        if ($faction->{FREE_TF}) {
+            $color = $faction->{color};
+        } elsif ($faction->{name} eq 'giants') {
+            $color = $faction->{color};
+        } else {
+            $color = color_at_offset($map{$where}{color}, $faction->{color},
+                                     $faction->{SPADE});
+        }
+    }
+
+    my ($cost, $gain, $need_teleport) = check_reachable $faction, $where;
+
+    my $color_difference = color_difference $map{$where}{color}, $color;
+
+    if ($faction->{name} eq 'giants' and $color_difference != 0) {
+        $color_difference = 2;
+    }
+
+    if ($faction->{FREE_TF}) {
+        $cost->{FREE_TF} += 1;
+        my $ok = 0;
+        for my $from (@{$faction->{locations}}) {
+            next if $map{$where}{bridge}{$from};
+            if ($map{$where}{adjacent}{$from}) {
+                $ok = 1;
+                last;
+            }
+        }
+        die "ActN requires direct non-bridge adjacency" if !$ok;
+    } else {
+        $cost->{SPADE} += $color_difference;
+    }
+
+    ($cost, $gain, $need_teleport, $color_difference, $color)
+}
+
 sub update_reachable_build_locations {
     for my $faction (values %factions) {
         if ($faction->{name} eq $active_faction) {
@@ -373,22 +408,54 @@ sub update_reachable_build_locations {
                     my $ret = 0;
                     my $loc = $_;
                     my $cost = {};
+                    my $gain = {};
                     if (exists $map{$loc}{row} and
                         $map{$loc}{color} eq $faction->{color} and
                         !$map{$loc}{building}) {
                         eval {
-                            $cost = check_reachable $faction, $loc, 1 || {};
+                            ($cost, $gain) = check_reachable $faction, $loc;
                             $ret = 1;
                         };
                     }
-                    # [$ret, $cost]
                     if ($ret) {
-                        { hex => $loc, extra_cost => $cost }
+                        { hex => $loc, extra_cost => $cost, extra_gain => $gain }
                     }
                 } keys %map
             ];
         } else {
             $faction->{reachable_build_locations} = [];
+        }
+    }
+}
+
+sub update_reachable_tf_locations {
+    for my $faction (values %factions) {
+        if ($faction->{name} eq $active_faction) {
+            $faction->{reachable_tf_locations} = [
+                grep {
+                    $_
+                } map {
+                    my $ret = 0;
+                    my $loc = $_;
+                    my $cost = {};
+                    my $gain = {};
+                    my $color_diff = 0;
+                    my $teleport = '';
+                    my $color = '';
+                    if (exists $map{$loc}{row} and
+                        $map{$loc}{color} ne $faction->{color} and
+                        !$map{$loc}{building}) {
+                        eval {
+                            ($cost, $gain, $teleport, $color_diff, $color) = transform_cost $faction, $loc, undef;
+                        };
+                    }
+                    if ($color_diff and $color) {
+                        { hex => $loc, cost => $cost, gain => $gain, to_color => $color, teleport => $teleport }
+                    }
+                } keys %map
+            ];
+        } else {
+            $faction->{reachable_tf_locations} = [];
         }
     }
 }

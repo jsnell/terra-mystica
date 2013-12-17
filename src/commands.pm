@@ -177,7 +177,12 @@ sub command_build {
         if ($tf_needed) {
             command $faction_name, "transform $where to $color";
         } else {
-            check_reachable $faction, $where;
+            my ($cost, $gain, $teleport) = check_reachable $faction, $where;
+            if ($teleport) {
+                $faction->{TELEPORT_TO} = $where;
+            }
+            pay $faction, $cost;
+            gain $faction, $gain;
         }
     }
 
@@ -436,33 +441,26 @@ sub command_transform {
     my ($faction, $where, $color) = @_;
     my $faction_name = $faction->{name};
 
+    if (defined $color) {
+        $color = alias_color $color;
+    }
+
+    my ($transform_cost,
+        $transform_gain,
+        $teleport,
+        $color_difference,
+        @valid_colors) = transform_cost $faction, $where, $color;
+
     if (!$color) {
-        if ($faction->{FREE_TF}) {
-            $color = $faction->{color};
-        } elsif ($faction_name eq 'giants') {
-            $color = $faction->{color};
-        } else {
-            $color = color_at_offset($map{$where}{color}, $faction->{color},
-                                     $faction->{SPADE});
-        }
+        $color = $valid_colors[0];
     }
 
     if ($map{$where}{color} eq $color) {
         die "Can't transform $where, it already is $color\n"
     }
 
-    check_reachable $faction, $where;
-
     if ($map{$where}{building}) {
         die "Can't transform $where to $color, already contains a building\n"
-    }
-
-    $color = alias_color $color;
-
-    my $color_difference = color_difference $map{$where}{color}, $color;
-
-    if ($faction_name eq 'giants' and $color_difference != 0) {
-        $color_difference = 2;
     }
 
     if ($color_difference and !$faction->{passed}) {
@@ -472,20 +470,11 @@ sub command_transform {
         };
     }
 
-    if ($faction->{FREE_TF}) {
-        adjust_resource $faction, 'FREE_TF', -1;
-        my $ok = 0;
-        for my $from (@{$faction->{locations}}) {
-            next if $map{$where}{bridge}{$from};
-            if ($map{$where}{adjacent}{$from}) {
-                $ok = 1;
-                last;
-            }
-        }
-        die "ActN requires direct non-bridge adjacency" if !$ok;
-    } else {
-        adjust_resource $faction, 'SPADE', -$color_difference;
+    if ($teleport) {
+        $faction->{TELEPORT_TO} = $where;
     }
+    pay $faction, $transform_cost;
+    gain $faction, $transform_gain;
 
     if (!$faction->{SPADE}) {
         @action_required = grep {
