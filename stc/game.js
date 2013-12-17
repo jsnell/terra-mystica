@@ -543,9 +543,10 @@ function renderAction(canvas, name, key, border_color) {
     ctx.lineWidth = 2;
     ctx.stroke();
     ctx.restore();
-
+ 
+    var font = "12px Verdana";
     if (!name.startsWith("FAV") && !name.startsWith("BON")) {
-        drawText(ctx, name, 5, 52, "12px Verdana");
+        drawText(ctx, name, 5, 52, font);
     }
 
     ctx.save();
@@ -557,49 +558,49 @@ function renderAction(canvas, name, key, border_color) {
 
     var data = {
         "ACT1": function() {
-            drawText(ctx, "br", center, center, "10px Verdana");
-            drawText(ctx, "-3PW", center, 60, "10px Verdana");
+            drawText(ctx, "br", center, center, font);
+            drawText(ctx, "-3PW", center, 60, font);
         },
         "ACT2": function() {
-            drawText(ctx, "P", center, center, "10px Verdana");
-            drawText(ctx, "-3PW", center, 60, "10px Verdana");
+            drawText(ctx, "P", center, center, font);
+            drawText(ctx, "-3PW", center, 60, font);
         },
         "ACT3": function() {
-            drawText(ctx, "2W", center, center, "10px Verdana");
-            drawText(ctx, "-4PW", center, 60, "10px Verdana");
+            drawText(ctx, "2W", center, center, font);
+            drawText(ctx, "-4PW", center, 60, font);
         },
         "ACT4": function() {
-            drawText(ctx, "7C", center, center, "10px Verdana");
-            drawText(ctx, "-4PW", center, 60, "10px Verdana");
+            drawText(ctx, "7C", center, center, font);
+            drawText(ctx, "-4PW", center, 60, font);
         },
         "ACT5": function() {
-            drawText(ctx, "spd", center, center, "10px Verdana");
-            drawText(ctx, "-4PW", center, 60, "10px Verdana");
+            drawText(ctx, "spd", center, center, font);
+            drawText(ctx, "-4PW", center, 60, font);
         },
         "ACT6": function() {
-            drawText(ctx, "2 spd", center, center, "10px Verdana");
-            drawText(ctx, "-6PW", center, 60, "10px Verdana");
+            drawText(ctx, "2 spd", center, center, font);
+            drawText(ctx, "-6PW", center, 60, font);
         },
         "ACTA": function() {
-            drawText(ctx, "2cult", center, center, "10px Verdana");
+            drawText(ctx, "2cult", center, center, font);
         },
         "ACTN": function() {
-            drawText(ctx, "tf", center, center, "10px Verdana");
+            drawText(ctx, "tf", center, center, font);
         },
         "ACTS": function() {
-            drawText(ctx, "TP", center, center, "10px Verdana");
+            drawText(ctx, "TP", center, center, font);
         },
         "ACTW": function() {
-            drawText(ctx, "D", center, center, "10px Verdana");
+            drawText(ctx, "D", center, center, font);
         },
         "BON1": function() {
-            drawText(ctx, "spd", center, center, "10px Verdana");
+            drawText(ctx, "spd", center, center, font);
         },
         "BON2": function() {
-            drawText(ctx, "cult", center, center, "10px Verdana");
+            drawText(ctx, "cult", center, center, font);
         },
         "FAV6": function() {
-            drawText(ctx, "cult", center, center, "10px Verdana");
+            drawText(ctx, "cult", center, center, font);
         }
     };
 
