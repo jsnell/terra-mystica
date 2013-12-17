@@ -783,7 +783,7 @@ var cycle = [ "red", "yellow", "brown", "black", "blue", "green", "gray" ];
 
 function renderColorCycle(parent, startColor) {
     parent.insert(new Element('canvas', {
-        'class': 'colorcycle', 'width': 80, 'height': 80}));
+        'class': 'colorcycle', 'width': 90, 'height': 80}));
     var canvas = parent.childElements().last();
 
     if (!canvas.getContext) {
