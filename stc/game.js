@@ -354,6 +354,7 @@ function hexClickHandler(fun) {
 }
 
 var cults = ["FIRE", "WATER", "EARTH", "AIR"];
+var cult_width = 250 / 4;
 
 function drawCults() {
     var canvas = $("cults");
@@ -363,7 +364,7 @@ function drawCults() {
 
         var x_offset = 0;
 
-        var width = 250 / 4;
+        var width = cult_width;
         var height = 500;
 
         for (var j = 0; j < 4; ++j) {
@@ -413,7 +414,7 @@ function drawCults() {
             }
 
             ctx.save();
-            ctx.translate(5, 470);
+            ctx.translate(8, 470);
             ctx.font = "15px Verdana";
             ctx.lineWidth = 0.2;
 
@@ -462,6 +463,55 @@ function drawCults() {
         ctx.stroke();
         ctx.restore();
     }
+}
+
+function drawActiveCultBorder(cult) {
+    var canvas = $("cults");
+    var cult_index = cults.indexOf(cult);
+
+    if (canvas.getContext) {
+        var ctx = canvas.getContext("2d");
+
+        path = function() {
+            ctx.translate(4 + cult_width * cult_index, 495);
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, -20);
+            ctx.lineTo(cult_width - 4*2, -20);
+            ctx.lineTo(cult_width - 4*2, 0);
+            ctx.lineTo(0, 0);
+        }
+
+        ctx.beginPath();
+
+        ctx.save();
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = 4;
+        path();
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.save();
+        ctx.strokeStyle = colors.activeUI;
+        ctx.lineWidth = 3;
+        path();
+        ctx.stroke();
+        ctx.restore();
+    }
+}
+
+function cultClickHandler(fun) {
+    return function (event) {
+        $("menu").hide();
+        var position = $("cults").getBoundingClientRect();
+        var x = event.clientX - position.left;
+        var y = event.clientY - position.top;
+        if (y < 470) { return }
+        for (var i = 0; i < 4; ++i) {
+            if (x < (i+1) * cult_width) {
+                return fun(cults[i], event);
+            }
+        }
+    };
 }
 
 function drawCultMarker(ctx, color, name, hex) {
@@ -1172,6 +1222,7 @@ function factionDisplayName(faction, fg) {
 
 var allowSaving = false;
 var map_click_handlers = {};
+var cult_click_handlers = {};
 
 function menuClickHandler(title, loc, funs) {
     funs = $H(funs);
@@ -1223,6 +1274,11 @@ function addMapClickHandler(title, loc, funs) {
     drawActiveHexBorder(state.map[loc]);
 }
 
+function addCultClickHandler(title, cult, funs) {
+    cult_click_handlers[cult] = menuClickHandler(title, cult, funs);
+    drawActiveCultBorder(cult);
+}
+
 function drawActionRequired() {
     var parent = $("action_required");
 
@@ -1237,10 +1293,17 @@ function drawActionRequired() {
     allowSaving = true;
 
     map_click_handlers = {};
-    // Default handler, might be overridden 
+    cult_click_handlers = {};
+
     $("map").onclick = hexClickHandler(function(hex, event) {
         if (map_click_handlers[hex] && moveEntryEnabled()) {
             map_click_handlers[hex](hex, event);
+        }
+    });
+
+    $("cults").onclick = cultClickHandler(function(cult, event) {
+        if (cult_click_handlers[cult] && moveEntryEnabled()) {
+            cult_click_handlers[cult](cult, event);
         }
     });
 
@@ -2614,7 +2677,7 @@ function addDigToMovePicker(picker, faction) {
 
 function addSendToMovePicker(picker, faction) {
     var validate = function() {
-        var cult = cults.value.toUpperCase();
+        var cult = cult_selection.value.toUpperCase();
         if (cult == "-") {
             button.disable()
             return;
@@ -2622,7 +2685,7 @@ function addSendToMovePicker(picker, faction) {
         button.enable()
     };
     var execute = function() {
-        var command = "send p to " + cults.value;
+        var command = "send p to " + cult_selection.value;
         if (amount.value != 'max') {
             command += " amount " + amount.value;
         }
@@ -2634,18 +2697,34 @@ function addSendToMovePicker(picker, faction) {
     var button = new Element("button").update("Send");
     button.onclick = execute;
     button.disable();
-    var cults = makeSelectWithOptions(["-", "Fire", "Water", "Earth", "Air"]);
-    cults.onchange = validate;
+    var cult_selection = makeSelectWithOptions(["-", "Fire", "Water", "Earth", "Air"]);
+    cult_selection.onchange = validate;
     var amount = makeSelectWithOptions(["max", "3", "2", "1"]);
     amount.onchange = validate;
 
     row.insert(button);
     row.insert("priest to ");
-    row.insert(cults);
+    row.insert(cult_selection);
     row.insert(" for ");
     row.insert(amount);
 
     if (faction.P > 0 && faction.allowed_actions) {
+        cults.each(function (cult) {
+            addCultClickHandler("Send Priest", cult, {
+                "Max steps": {
+                    "fun": function (cult) {
+                        appendAndPreview("send p to " + cult);
+                    },
+                    "label": ""
+                },
+                "1 step": {
+                    "fun": function (cult) {
+                        appendAndPreview("send p to " + cult + " for 1");
+                    },
+                    "label": ""
+                }
+            });
+        });
         row.show();
     } else {
         row.hide();
