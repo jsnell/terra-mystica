@@ -1517,30 +1517,38 @@ function addFactionInput(parent, record, index) {
             addDeclineButton(parent, index, "FREE_TF", faction.FREE_TF);
         }
         faction.reachable_tf_locations.each(function (tf) {
-            var cost_str = effectString([tf.cost], [tf.gain])
             var menu = {};
-            menu["to " + tf.to_color] = {
-                "fun": function (loc) {
-                    appendAndPreview("transform " + loc);
-                },
-                "label": cost_str
-            };
+            if (canAfford(faction, [tf.cost])) {
+                var cost_str = effectString([tf.cost], [tf.gain])
+                menu["to " + tf.to_color] = {
+                    "fun": function (loc) {
+                        appendAndPreview("transform " + loc);
+                    },
+                    "label": cost_str
+                };
+            }
             if (tf.to_color == faction.color &&
                 !(faction.SPADE - tf.cost.SPADE) &&
                 faction.allowed_sub_actions.build &&
                 faction.buildings.D.level < faction.buildings.D.max_level) {
                 var dwelling_cost = faction.buildings["D"].advance_cost;
                 var dwelling_gain = computeBuildingEffect(faction, 'D');
-                cost_str = effectString([tf.cost, dwelling_cost],
-                                        [tf.gain, dwelling_gain])
-                menu["build"] = {
-                    "fun": function (loc) {
-                        appendAndPreview("build " + loc);
-                    },
-                    "label": cost_str
-                };
+                var can_afford = canAfford(faction, 
+                                           [tf.cost, dwelling_cost]);
+                if (can_afford) {
+                    cost_str = effectString([tf.cost, dwelling_cost],
+                                            [tf.gain].concat(dwelling_gain));
+                    menu["build"] = {
+                        "fun": function (loc) {
+                            appendAndPreview("build " + loc);
+                        },
+                        "label": cost_str
+                    };
+                }
             }
-            addMapClickHandler("Transform", tf.hex, menu);
+            if ($H(menu).size() > 0) {
+                addMapClickHandler("Transform", tf.hex, menu);
+            }
         })
     }
     if (record.type == "faction") {
@@ -2193,6 +2201,24 @@ function effectString(costs, gains) {
     return non_zero.join(", ");
 }
 
+function canAfford(faction, costs) {
+    var can_afford = true;
+    var non_zero = [];
+    ["C", "W", "P", "PW", "VP"].each(function(type) {
+        var total_cost = 0;
+        costs.each(function (cost) {
+            if (cost[type]) {
+                total_cost += cost[type]
+            }
+        });
+        if (faction[type] < total_cost) {
+            return can_afford = false;
+        }
+    });
+
+    return can_afford;
+}
+
 function addBuildToMovePicker(picker, faction) {
     var validate = function() {
         if (location.value == "-") {
@@ -2218,13 +2244,8 @@ function addBuildToMovePicker(picker, faction) {
     var gains = computeBuildingEffect(faction, 'D');
 
     if (faction.allowed_sub_actions.build) {
-        var can_afford_build = true;
+        var can_afford_build = canAfford(faction, [dwelling_costs]);
         var cost_str = effectString([dwelling_costs], gains);
-        $H(dwelling_costs).each(function (cost_elem) {
-            if (faction[cost_elem.key] < cost_elem.value) {
-                can_afford_build = false;
-            }
-        });
         if (can_afford_build) {
             $H(faction.allowed_build_locations).each(function (elem) {
                 var loc = elem.key;
@@ -2237,19 +2258,10 @@ function addBuildToMovePicker(picker, faction) {
         faction.reachable_build_locations.each(function (elem) {
             var loc = elem.hex;
             var loc_cost = elem.extra_cost;
-            var can_afford_build = true;
+            var can_afford_build = canAfford(faction,
+                                             [dwelling_costs, loc_cost]);
             var cost_str = effectString([dwelling_costs, loc_cost],
                                         gains);
-            resources.each(function (res) {
-                var have = faction[res];
-                var need = dwelling_costs[res];
-                if (loc_cost[res]) {
-                    need += loc_cost[res];
-                }
-                if (faction[res] < need) {
-                    can_afford_build = false;
-                }
-            });
             if (can_afford_build) {
                 possible_builds.push([loc, cost_str]);
             }
@@ -2370,19 +2382,14 @@ function addUpgradeToMovePicker(picker, faction) {
                 faction.buildings[wanted_new].max_level) {
                 return;
             }
-            var costs = faction.buildings[wanted_new].advance_cost;
+            var cost = faction.buildings[wanted_new].advance_cost;
+            var lonely_cost = {}
             if (wanted_new == "TP" && !hex.has_neighbors) {
-                // Eww...
-                costs = JSON.parse(JSON.stringify(costs));
-                costs.C *= 2;
+                lonely_cost = { "C": cost.C * 2 };
             }
-            var can_afford = true;
-            $H(costs).each(function (cost_elem) {
-                if (faction[cost_elem.key] < cost_elem.value) {
-                    can_afford = false;
-                }
-            });
-            var cost_str = effectString([costs], upgrade_gains.get(wanted_new));
+            var can_afford = canAfford(faction, [cost, lonely_cost]);
+            var cost_str = effectString([cost, lonely_cost],
+                                        upgrade_gains.get(wanted_new));
             if (can_afford) {
                 upgrade.insert(new Element("option").update(
                     id + " to " + wanted_new));
@@ -2582,14 +2589,9 @@ function addDigToMovePicker(picker, faction) {
     var amount_count = 0;
     amount.onchange = validate;
 
-    var cost = $H(faction.dig.cost[faction.dig.level]);
+    var cost = faction.dig.cost[faction.dig.level];
     for (var i = 1; i <= 7; ++i) {
-        var can_afford = true;
-        cost.each(function (cost_elem) {
-            if (i * cost_elem.value > faction[cost_elem.key]) {
-                can_afford = false;
-            }
-        });
+        var can_afford = canAfford(faction, [cost]);
         if (can_afford) {
             amount_count++;
             amount.insert(new Element("option").update(i));
@@ -2681,12 +2683,8 @@ function addAdvanceToMovePicker(picker, faction) {
             return;
         }
 
-        var can_afford = true;
-        $H(faction[type].advance_cost).each(function (cost_elem) {
-            if (faction[cost_elem.key] < cost_elem.value) {
-                can_afford = false;
-            }
-        });
+        var can_afford = canAfford(faction,
+                                   [faction[type].advance_cost]);
         if (can_afford) {
             track.insert(new Element("option").update(type));
             track_count++;
