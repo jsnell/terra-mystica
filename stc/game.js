@@ -2808,9 +2808,12 @@ function addConnectToMovePicker(picker, faction) {
     var location_count = 0;
 
     faction.possible_towns.each(function (loc) {
-        addMapClickHandler("Town", loc, { "TW": function (loc) {
-            appendAndPreview("connect " + loc);
-        } });
+        addMapClickHandler("Connect", loc, { "Form town": {
+            "fun": function (loc) {
+                appendAndPreview("connect " + loc);
+            },
+            "label": ""
+        }});
     });
 
     row.insert(button);
