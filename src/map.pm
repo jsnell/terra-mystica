@@ -430,7 +430,8 @@ sub update_reachable_build_locations {
 
 sub update_reachable_tf_locations {
     for my $faction (values %factions) {
-        if ($faction->{name} eq $active_faction) {
+        if ($faction->{name} eq $active_faction or
+            ($faction->{passed} and $faction->{SPADE} > 0)) {
             $faction->{reachable_tf_locations} = [
                 grep {
                     $_
