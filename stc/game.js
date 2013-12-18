@@ -1337,12 +1337,16 @@ function drawActionRequired() {
     state.action_required.each(function(record, index) {
         if (record.type == 'full') {
             record.pretty = 'should take an action';
+            if (state.factions[record.faction].can_leech) {
+                record.pretty += ' after power leeching decision';
+            }
         } else if (record.type == 'leech') {
             record.from_faction_span = coloredFactionSpan(record.from_faction);
             record.pretty = 'may gain #{amount} power from #{from_faction_span}'.interpolate(record);
             if (record.actual != record.amount) {
                 record.pretty += " (actually #{actual} power)".interpolate(record);
             }
+            state.factions[record.faction].can_leech = true;
         } else if (record.type == 'transform') {
             if (record.amount == 1) {
                 record.pretty = 'may use a spade (click on map to transform)'.interpolate(record);
@@ -1491,8 +1495,6 @@ function drawActionRequired() {
         row.insert(picker_cell);
         $(picker_cell).insert(new Element("div", { 'id': 'move_picker' }));
     }
-
-    updateMovePicker();
 }
 
 function dataEntrySelect(select) {
@@ -1879,16 +1881,18 @@ function updateMovePicker() {
     }
 
     var undo = addUndoToMovePicker(picker, faction);
-    var pass = addPassToMovePicker(picker, faction);
-    var action = addActionToMovePicker(picker, faction);
-    var build = addBuildToMovePicker(picker, faction);
-    var upgrade = addUpgradeToMovePicker(picker, faction);
-    var burn = addBurnToMovePicker(picker, faction);
-    var convert = addConvertToMovePicker(picker, faction);
-    var dig = addDigToMovePicker(picker, faction);
-    var send = addSendToMovePicker(picker, faction);
-    var advance = addAdvanceToMovePicker(picker, faction);
-    var connect = addConnectToMovePicker(picker, faction);
+    if (!faction.can_leech) {
+        var pass = addPassToMovePicker(picker, faction);
+        var action = addActionToMovePicker(picker, faction);
+        var build = addBuildToMovePicker(picker, faction);
+        var upgrade = addUpgradeToMovePicker(picker, faction);
+        var burn = addBurnToMovePicker(picker, faction);
+        var convert = addConvertToMovePicker(picker, faction);
+        var dig = addDigToMovePicker(picker, faction);
+        var send = addSendToMovePicker(picker, faction);
+        var advance = addAdvanceToMovePicker(picker, faction);
+        var connect = addConnectToMovePicker(picker, faction);
+    }
 }
 
 function makeSelectWithOptions(options) {
