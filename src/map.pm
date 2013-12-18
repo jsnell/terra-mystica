@@ -464,7 +464,8 @@ sub update_tp_upgrade_costs {
     for (keys %map) {
         if ($map{$_}{building} and
             $map{$_}{building} eq 'D') {
-            $map{$_}{has_neighbors} = scalar compute_leech undef, $_;
+            my %neighbors = compute_leech undef, $_;
+            $map{$_}{has_neighbors} = scalar keys %neighbors;
         }
     }
 }
