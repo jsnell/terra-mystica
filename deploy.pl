@@ -194,3 +194,5 @@ deploy_stc;
 deploy_cgi;
 deploy_html;
 deploy_data;
+
+system qq{(echo -n "$target: "; git rev-parse HEAD) >> deploy.log};
