@@ -19,6 +19,7 @@ var colors = {
     white: '#ffffff',
     gray: '#808080',
     orange: '#f0c040',
+    player: '#c0c0c0',
     activeUI: '#8f8'
 };
 
@@ -30,7 +31,8 @@ var bgcolors = {
     black: '#404040',
     white: '#ffffff',
     gray: '#c0c0c0',
-    brown: '#b08040'
+    brown: '#b08040',
+    player: '#404040'
 };
 
 var cult_bgcolor = {
@@ -904,7 +906,21 @@ function commentAnchor(string) {
 function drawFactions() {
     $("factions").innerHTML = "";
 
-    var order = state.order;
+    var order = state.order.concat([]);
+    for (var i = order.size(); i < state.players.size(); ++i) {
+        var pseudo_faction = "player" + (i+1);
+        order.push(pseudo_faction);
+        state.factions[pseudo_faction] = {
+            display: "Player " + (i+1),
+            username: state.players[i].username,
+            player: state.players[i].displayname,
+            color: 'player',
+            placeholder: true,
+            start_player: i == 0,
+            registered: state.players[i].username != null
+        };
+    }
+
     if (currentFaction && order.indexOf(currentFaction) >= 0) {
         while (order[0] != currentFaction) {
             order.push(order.shift());
@@ -912,171 +928,10 @@ function drawFactions() {
     }
 
     order.each(function(name) {
-        name = name;
-        var faction = state.factions[name];
-        var color = faction.color;
-        var title = factionDisplayName(faction);
-
-        var style ='float: left; margin-right: 20px; ';
-        if (faction.passed) {
-            style += 'opacity: 0.5';
-            title += ", passed";
-        }
-
-        if (faction.start_player) {
-            title += ", start player";
-        }
-
-        var container = new Element('div', { 'class': 'faction-board' });
-        var board = makeBoard(color, title, '', style);
-        container.insert(board);
-        var info = new Element('div', {'class': 'faction-info' });
-        board.insert(info);
-
-        if (faction.vp_source) {
-            var vp_id = faction.name + "/vp";
-            var vp_breakdown = new Element('table', {'id': vp_id,
-                                                     'style': 'display: none',
-                                                     'class': 'vp-breakdown'});
-            board.insert(vp_breakdown);
-            vp_breakdown.insert("<tr><td colspan=2><b>VP breakdown</b></td></tr>")
-            $H(faction.vp_source).sortBy(function(a) { return -a.value}).each(function(record) {
-                vp_breakdown.insert("<tr><td>#{key}<td>#{value}</tr>".interpolate(record));
-            });
-        }
-
-        faction.vp_id = vp_id;
-        info.insert(new Element('div').update(
-            "#{C} c, #{W} w, #{P}<span style='color:#888'>/#{MAX_P}</span> p, <a href='javascript:toggleVP(\"#{name}/vp\")'>#{VP} vp</a>, #{P1}/#{P2}/#{P3} pw".interpolate(faction)));
-        if (faction.BON4 > 0) {
-            faction.ship_bonus = " (+1)";
-        }
-
-        var levels = [];
-
-        if (faction.dig.max_level > 0) {
-            var dig = "dig level #{dig.level}<span style='color:#888'>/#{dig.max_level}</span>".interpolate(faction);
-            levels.push(dig);
-        }
-
-        if (faction.teleport) {
-            levels.push("range " + faction[faction.teleport.type + "_range"] + "/" + faction[faction.teleport.type + "_max_range"]);
-        }
-
-        if (faction.ship.max_level > 0) {
-            var ship = "ship level #{ship.level}<span style='color:#888'>/#{ship.max_level}</span>".interpolate(faction);
-            if (faction.BON4 > 0) {
-                ship += " (+1)";
-            }
-            levels.push(ship);
-        }
-
-        info.insert(new Element('div').update(levels.join(", ")));
-
-        info.insert("<div></div>");
-
-        var buildings_id = "buildings-" + name;
-        var buildings = new Element('table', {'class': 'building-table', 'id': buildings_id});
-        info.insert(buildings);
-
-        var b = ['D', 'TP', 'TE', 'SH', 'SA'];
-        var count = [];
-        var cost = [];
-        var income = [];
-
-        b.each(function(key) {
-            record = faction.buildings[key];
-            record.key = key;
-            var text = "#{level}/#{max_level}".interpolate(record);
-            if (record.level == record.max_level && record.max_level > 3) {
-                text = "<span style='color: red'>" + text + "</span>";
-            }
-            count.push(text);
-            cost.push("#{advance_cost.C}c,&#160;#{advance_cost.W}w".interpolate(record));
-            if (record.level == record.max_level) {
-                income.push("");
-            } else {
-                var income_delta = [];
-                ["C", "W", "P", "PW"].each(function(type) {
-                    var type_income = record.income[type];
-                    if (!type_income) { return; }
-                    var delta = type_income[record.level + 1] - type_income[record.level];
-                    if (delta > 0) {
-                        income_delta.push(delta + type.toLowerCase());
-                    }
-                });
-                if (income_delta.size() > 0) {
-                    income.push("+" + income_delta.join(",&#160;"));
-                } else {
-                    income.push("");
-                }
-            }
-        });
-
-        buildings.insert(rowFromArray(b, '').insert("<td><a href='javascript:toggleBuildings(\"" + buildings_id + "\")'>+</a>"));
-        buildings.insert(rowFromArray(count, ''));
-        buildings.insert(rowFromArray(cost, 'display: none'));
-        buildings.insert(rowFromArray(income, 'display: none'));
-
-        var income_id = "income-" + name;
-        var income = new Element('table', {'class': 'income-table', 'id': income_id});
-        info.insert(income);
-
-        if (faction.income) {
-	    var row = new Element('tr');
-            if (faction.income.P > faction.MAX_P - faction.P) {
-                faction.income.P_style = "style='color: #f00'";
-            }
-            if (faction.income.PW > faction.P1 * 2 + faction.P2) {
-                faction.income.PW_style = "style='color: #f00'";
-            }
-
-	    row.update("<td>Income:<td>total<td>#{C}c<td>#{W}w<td #{P_style}>#{P}p<td #{PW_style}>#{PW}pw".interpolate(faction.income));
-	    row.insert(new Element('td').update("<a href='javascript:toggleIncome(\"" + income_id + "\")'>+</a>"));
-            income.insert(row);
-        }
-
-        if (faction.income_breakdown) {
-            income.insert(Element('tr', {'style': 'display: none'}).update("<td colspan=6><hr>"));
-            $H(faction.income_breakdown).each(function(elem, ind) {
-                if (!elem.value) {
-                    return;
-                }
-
-                elem.value.key = elem.key;
-                var row = new Element('tr', {'style': 'display: none'});
-                income.insert(row.update("<td><td>#{key}<td>#{C}<td>#{W}<td>#{P}<td>#{PW}".interpolate(elem.value)));
-            });
-        }
-
-        if (faction.vp_projection) {
-            var vp_proj_id = "vp-projection-" + name;
-            var vp_proj = new Element('table', {'class': 'income-table', 'id': vp_proj_id});
-            info.insert(vp_proj);
-            {
-	        var row = new Element('tr');
-	        row.update("<td>VP projection:<td>total<td>#{total}".interpolate(faction.vp_projection));
-	        row.insert(new Element('td').update("<a href='javascript:toggleIncome(\"" + vp_proj_id + "\")'>+</a>"));
-                vp_proj.insert(row);
-            }
-
-            vp_proj.insert(Element('tr', {'style': 'display: none'}).update("<td colspan=3><hr>"));
-            $H(faction.vp_projection).each(function(elem, ind) {
-                if (!elem.value || elem.key == "total") {
-                    return;
-                }
-
-                var row = new Element('tr', {'style': 'display: none'});
-                vp_proj.insert(row.update("<td><td>#{key}<td style='white-space: nowrap'>#{value}</nobr>".interpolate(elem)));
-            });            
-        }
-
-        renderColorCycle(container, faction.color);
-        renderTreasury(container, faction, name);
-        
-        $("factions").insert(container);
+        drawFaction(name);
     });
-    
+
+   
     var pool = makeBoard("orange", "Pool", 'pool');
     renderTreasury(pool, state.pool, 'pool',
                    function (tile) { return !tile.match(/^ACT/) } );
@@ -1084,6 +939,178 @@ function drawFactions() {
     renderTreasury($("shared-actions"), state.pool, '',
                    function (tile) { return tile.match(/^ACT/) } );
     $("factions").insert(pool);
+}
+
+function drawFaction(name) {
+    var faction = state.factions[name];
+    var color = faction.color;
+    var title = factionDisplayName(faction);
+
+    var style ='float: left; margin-right: 20px; ';
+    if (faction.passed) {
+        style += 'opacity: 0.5';
+        title += ", passed";
+    }
+
+    if (faction.start_player) {
+        title += ", start player";
+    }
+
+    var container = new Element('div', { 'class': 'faction-board' });
+    var board = makeBoard(color, title, '', style);
+    container.insert(board);
+
+    if (!faction.placeholder) {
+        drawRealFaction(faction, board);
+    }
+
+    renderColorCycle(container, faction.color);
+    renderTreasury(container, faction, name);
+    
+    $("factions").insert(container);
+}
+
+function drawRealFaction(faction, board) {
+    var info = new Element('div', {'class': 'faction-info' });
+    board.insert(info);
+
+    if (faction.vp_source) {
+        var vp_id = faction.name + "/vp";
+        var vp_breakdown = new Element('table', {'id': vp_id,
+                                                 'style': 'display: none',
+                                                 'class': 'vp-breakdown'});
+        board.insert(vp_breakdown);
+        vp_breakdown.insert("<tr><td colspan=2><b>VP breakdown</b></td></tr>")
+        $H(faction.vp_source).sortBy(function(a) { return -a.value}).each(function(record) {
+            vp_breakdown.insert("<tr><td>#{key}<td>#{value}</tr>".interpolate(record));
+        });
+    }
+
+    faction.vp_id = vp_id;
+    info.insert(new Element('div').update(
+        "#{C} c, #{W} w, #{P}<span style='color:#888'>/#{MAX_P}</span> p, <a href='javascript:toggleVP(\"#{name}/vp\")'>#{VP} vp</a>, #{P1}/#{P2}/#{P3} pw".interpolate(faction)));
+    if (faction.BON4 > 0) {
+        faction.ship_bonus = " (+1)";
+    }
+
+    var levels = [];
+
+    if (faction.dig.max_level > 0) {
+        var dig = "dig level #{dig.level}<span style='color:#888'>/#{dig.max_level}</span>".interpolate(faction);
+        levels.push(dig);
+    }
+
+    if (faction.teleport) {
+        levels.push("range " + faction[faction.teleport.type + "_range"] + "/" + faction[faction.teleport.type + "_max_range"]);
+    }
+
+    if (faction.ship.max_level > 0) {
+        var ship = "ship level #{ship.level}<span style='color:#888'>/#{ship.max_level}</span>".interpolate(faction);
+        if (faction.BON4 > 0) {
+            ship += " (+1)";
+        }
+        levels.push(ship);
+    }
+
+    info.insert(new Element('div').update(levels.join(", ")));
+
+    info.insert("<div></div>");
+
+    var buildings_id = "buildings-" + name;
+    var buildings = new Element('table', {'class': 'building-table', 'id': buildings_id});
+    info.insert(buildings);
+
+    var b = ['D', 'TP', 'TE', 'SH', 'SA'];
+    var count = [];
+    var cost = [];
+    var income = [];
+
+    b.each(function(key) {
+        record = faction.buildings[key];
+        record.key = key;
+        var text = "#{level}/#{max_level}".interpolate(record);
+        if (record.level == record.max_level && record.max_level > 3) {
+            text = "<span style='color: red'>" + text + "</span>";
+        }
+        count.push(text);
+        cost.push("#{advance_cost.C}c,&#160;#{advance_cost.W}w".interpolate(record));
+        if (record.level == record.max_level) {
+            income.push("");
+        } else {
+            var income_delta = [];
+            ["C", "W", "P", "PW"].each(function(type) {
+                var type_income = record.income[type];
+                if (!type_income) { return; }
+                var delta = type_income[record.level + 1] - type_income[record.level];
+                if (delta > 0) {
+                    income_delta.push(delta + type.toLowerCase());
+                }
+            });
+            if (income_delta.size() > 0) {
+                income.push("+" + income_delta.join(",&#160;"));
+            } else {
+                income.push("");
+            }
+        }
+    });
+
+    buildings.insert(rowFromArray(b, '').insert("<td><a href='javascript:toggleBuildings(\"" + buildings_id + "\")'>+</a>"));
+    buildings.insert(rowFromArray(count, ''));
+    buildings.insert(rowFromArray(cost, 'display: none'));
+    buildings.insert(rowFromArray(income, 'display: none'));
+
+    var income_id = "income-" + name;
+    var income = new Element('table', {'class': 'income-table', 'id': income_id});
+    info.insert(income);
+
+    if (faction.income) {
+	var row = new Element('tr');
+        if (faction.income.P > faction.MAX_P - faction.P) {
+            faction.income.P_style = "style='color: #f00'";
+        }
+        if (faction.income.PW > faction.P1 * 2 + faction.P2) {
+            faction.income.PW_style = "style='color: #f00'";
+        }
+
+	row.update("<td>Income:<td>total<td>#{C}c<td>#{W}w<td #{P_style}>#{P}p<td #{PW_style}>#{PW}pw".interpolate(faction.income));
+	row.insert(new Element('td').update("<a href='javascript:toggleIncome(\"" + income_id + "\")'>+</a>"));
+        income.insert(row);
+    }
+
+    if (faction.income_breakdown) {
+        income.insert(Element('tr', {'style': 'display: none'}).update("<td colspan=6><hr>"));
+        $H(faction.income_breakdown).each(function(elem, ind) {
+            if (!elem.value) {
+                return;
+            }
+
+            elem.value.key = elem.key;
+            var row = new Element('tr', {'style': 'display: none'});
+            income.insert(row.update("<td><td>#{key}<td>#{C}<td>#{W}<td>#{P}<td>#{PW}".interpolate(elem.value)));
+        });
+    }
+
+    if (faction.vp_projection) {
+        var vp_proj_id = "vp-projection-" + name;
+        var vp_proj = new Element('table', {'class': 'income-table', 'id': vp_proj_id});
+        info.insert(vp_proj);
+        {
+	    var row = new Element('tr');
+	    row.update("<td>VP projection:<td>total<td>#{total}".interpolate(faction.vp_projection));
+	    row.insert(new Element('td').update("<a href='javascript:toggleIncome(\"" + vp_proj_id + "\")'>+</a>"));
+            vp_proj.insert(row);
+        }
+
+        vp_proj.insert(Element('tr', {'style': 'display: none'}).update("<td colspan=3><hr>"));
+        $H(faction.vp_projection).each(function(elem, ind) {
+            if (!elem.value || elem.key == "total") {
+                return;
+            }
+
+            var row = new Element('tr', {'style': 'display: none'});
+            vp_proj.insert(row.update("<td><td>#{key}<td style='white-space: nowrap'>#{value}</nobr>".interpolate(elem)));
+        });            
+    }
 }
 
 function drawLedger() {
@@ -1847,7 +1874,7 @@ function moveEntryAfterPreview() {
 function updateMovePicker() {
     var picker = $('move_picker');
     var faction = state.factions[currentFaction];
-    if (!picker || !faction) {
+    if (!picker || !faction || faction.placeholder) {
         return;
     }
 
