@@ -6,6 +6,7 @@ use strict;
 
 use factions;
 
+use vars qw(%state);
 use vars qw(%map %reverse_map @bridges $active_faction);
 
 my @map = qw(brown gray green blue yellow red brown black red green blue red black E
@@ -153,7 +154,7 @@ sub setup_valid_bridges {
 sub check_reachable {
     my ($faction, $where) = @_;
 
-    return ({}, {}) if $round == 0;
+    return ({}, {}) if $state{round} == 0;
 
     my $range = $faction->{ship}{level};
     if ($faction->{ship}{max_level}) {
@@ -343,7 +344,7 @@ sub compute_leech {
     my $color = $map{$where}{color};
     my %this_leech = ();
 
-    return () if !$round;
+    return () if !$state{round};
 
     for my $adjacent (keys %{$map{$where}{adjacent}}) {
         my $map_color = $map{$adjacent}{color};

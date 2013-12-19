@@ -17,7 +17,7 @@ use tiles;
 use towns;
 
 use vars qw(%state);
-use vars qw($admin_email %options $active_faction $player_count $aborted);
+use vars qw($admin_email %options $active_faction $player_count);
 
 sub handle_row;
 sub handle_row_internal;
@@ -108,7 +108,7 @@ sub command_adjust_resources {
         }
     }
 
-    if ($type eq 'VP' and $finished) {
+    if ($type eq 'VP' and $state{finished}) {
         $checked = 1;
     }
 
@@ -142,7 +142,7 @@ sub command_build {
     my ($faction, $where) = @_;
     my $faction_name = $faction->{name};
 
-    my $free = ($round == 0);
+    my $free = ($state{round} == 0);
     my $type = 'D';
     my $color = $faction->{color};
 
@@ -189,7 +189,7 @@ sub command_build {
         die "Must do all transforms before building ($faction->{SPADE} spades) remaining\n";
     }
 
-    if (!$round) {
+    if (!$state{round}) {
         if ($faction_name ne $setup_order[0]) {
             die "Expected $setup_order[0] to place building, not $faction_name\n"
         }
@@ -585,7 +585,7 @@ sub command_pass {
     my $passed_count = grep { $_->{passed} } values %factions;
     my $first_to_pass = $passed_count == 0;
 
-    if ($round and $first_to_pass) {
+    if ($state{round} and $first_to_pass) {
         $_->{start_player} = 0 for values %factions;
         $faction->{start_player} = 1;
     }
@@ -604,19 +604,19 @@ sub command_pass {
     };
 
     if ($bon) {
-        if (!$round) {
+        if (!$state{round}) {
             if ($faction_name ne $setup_order[0]) {
                 die "Expected $setup_order[0] to pick bonus, not $faction_name\n"
             }
             shift @setup_order;
         }
 
-        if ($round == 6) {
+        if ($state{round} == 6) {
             $ledger->warn("Can't take a bonus tile when passing on last round\n");
         } else {
             adjust_resource $faction, $bon, 1;
         }
-    } elsif ($round != 6) {
+    } elsif ($state{round} != 6) {
         die "Must take a bonus tile when passing (except on last round)\n"
     }
 
@@ -661,15 +661,13 @@ sub command_action {
 
 sub command_start {
     my $ledger_state = $state{ledger};
-    $round++;
-    # FIXME: remove. Just here to remove some diffgame noise
-    do { no warnings; "$round" };
-    $turn = 1;
+    $state{round}++;
+    $state{turn} = 1;
     $ledger_state->{printed_turn} = 0;
 
     for my $faction_name (@factions) {
         my $faction = $factions{$faction_name};
-        die "Round $round income not taken for $faction_name\n" if
+        die "Round $state{round} income not taken for $faction_name\n" if
             !$faction->{income_taken};
         $faction->{income_taken} = 0;
         $faction->{passed} = 0 for keys %factions;
@@ -682,7 +680,7 @@ sub command_start {
         $bonus_coins{$_}{C}++;
     }
 
-    $state{ledger}->turn($round, $turn);
+    $state{ledger}->turn($state{round}, $state{turn});
 
     my @order = factions_in_turn_order;
     my $i = 0;
@@ -747,7 +745,7 @@ sub command_advance {
 }
 
 sub command_finish {
-    $finished = 1;
+    $state{finished} = 1;
     score_final_cults;
     score_final_networks;
     score_final_resources;
@@ -764,7 +762,7 @@ sub command_income {
     } else {
         my @order = factions_in_turn_order;
         if (!$state{ledger}->trailing_comment()) {
-            $state{ledger}->add_comment(sprintf "Round %d income", $round + 1);
+            $state{ledger}->add_comment(sprintf "Round %d income", $state{round} + 1);
         }
         for (@order) {
             handle_row_internal $_, "income_for_faction";
@@ -881,8 +879,8 @@ sub command {
         $assert_faction->();
         die "Command invalid when not active player\n" if
             $faction_name ne $active_faction and
-            $round > 0 and
-            !$finished;
+            $state{round} > 0 and
+            !$state{finished};
         $faction;
     };
 
@@ -896,7 +894,7 @@ sub command {
         my $delta = $sign * $count;
         my $type = uc $3;
 
-        if (!$round and $type =~ /BON/) {
+        if (!$state{round} and $type =~ /BON/) {
             handle_row_internal $faction_name, "pass $type";
             return 0;
         }
@@ -905,7 +903,7 @@ sub command {
     } elsif ($command =~ /^build (\w+)$/i) {
         command_build $assert_active_faction->(), uc $1;
     } elsif ($command =~ /^upgrade (\w+) to ([\w ]+)$/i) {
-        die "Can't upgrade in setup phase\n" if !$round;
+        die "Can't upgrade in setup phase\n" if !$state{round};
         command_upgrade $assert_active_faction->(), uc $1, alias_building uc $2;
     } elsif ($command =~ /^send (p|priest) to (\w+)(?: for (\d+))?$/i) {
         command_send $assert_active_faction->(), uc $2, $3;
@@ -987,8 +985,8 @@ sub command {
         return 0 if non_leech_action_required;
         command_finish;
     } elsif ($command =~ /^abort$/i) {
-        $finished = 1;
-        $aborted = 1;
+        $state{finished} = 1;
+        $state{aborted} = 1;
         @action_required = ( { type => 'gameover' } );
     } elsif ($command =~ /^score_resources$/i) {
         score_final_resources_for_faction $faction_name;
@@ -1220,7 +1218,7 @@ sub rewrite_stream {
 sub maybe_advance_turn {
     my ($faction_name) = @_;
 
-    $state{ledger}->turn($round, $turn);
+    $state{ledger}->turn($state{round}, $state{turn});
 
     my $all_passed = 1;
     my $max_order = max map {
@@ -1235,7 +1233,7 @@ sub maybe_advance_turn {
     }
 
     if (!$all_passed) {
-        $turn++;
+        $state{turn}++;
     }
 }
 
@@ -1246,7 +1244,7 @@ sub maybe_advance_to_next_player {
     # needs to react.
     my (@extra_action_required) = detect_incomplete_state $faction_name;
 
-    if (!$round) {
+    if (!$state{round}) {
         return "";
     }
 
@@ -1279,7 +1277,7 @@ sub maybe_advance_to_next_player {
 }
 
 sub check_setup_actions {
-    if (!$round and !$finished) {
+    if (!$state{round} and !$state{finished}) {
         if (!valid_player_count) {
             @action_required = ({ type => 'not-started',
                                   player_count => scalar @players,
@@ -1364,7 +1362,7 @@ sub maybe_do_maintenance {
             $income_taken ||= $faction->{income_taken};
         }
 
-        if ($round == 6) {
+        if ($state{round} == 6) {
             command_finish;
             return;
         } 
