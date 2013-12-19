@@ -6,7 +6,7 @@ use strict;
 use List::Util qw(sum max min);
 
 use vars qw($state);
-use vars qw($round $turn $finished @action_required %leech);
+use vars qw(@action_required %leech);
 
 use commands;
 use cults;
@@ -89,7 +89,7 @@ sub finalize {
         if ($delete_email) {
             delete $faction->{email};
         }
-        if ($round == 6 and !$finished) {
+        if ($state{round} == 6 and !$state{finished}) {
             $faction->{vp_projection} = { faction_vps $faction };
         }
         # delete $faction->{allowed_actions};
@@ -99,7 +99,7 @@ sub finalize {
         delete $faction->{BRIDGE_COUNT};
         delete $faction->{leech_not_rejected};
         delete $faction->{leech_rejected};
-        if ($round == 6) {
+        if ($state{round} == 6) {
             delete $faction->{income};
             delete $faction->{income_breakdown};
         }
@@ -113,8 +113,8 @@ sub finalize {
         }
     }
         
-    if ($round > 0) {
-        for (0..($round-2)) {
+    if ($state{round} > 0) {
+        for (0..($state{round}-2)) {
             $tiles{$score_tiles[$_]}->{old} = 1;
         }
         
@@ -151,6 +151,10 @@ sub evaluate_game {
 
     local %state = (
         ledger => terra_mystica::Ledger->new(),
+        round => 0,
+        turn => 0,
+        aborted => 0,
+        finished => 0,
     );
 
     local @setup_order = ();
@@ -162,10 +166,6 @@ sub evaluate_game {
     local %leech = ();
     local $leech_id = 0;
     local @action_required = ();
-    local $round = 0;
-    local $turn = 0;
-    local $finished = 0;
-    local $aborted = 0;
     local @score_tiles = ();
     local %factions = ();
     local %factions_by_color = ();
@@ -234,10 +234,10 @@ sub evaluate_game {
         action_required => \@action_required,
         active_faction => $active_faction,
         history_view => $history_view,
-        round => $round,
-        turn => $turn,
-        finished => $finished,
-        aborted => $aborted,
+        round => $state{round},
+        turn => $state{turn},
+        finished => $state{finished},
+        aborted => $state{aborted},
         cults => \%cults,
         players => \@players,
         player_count => $player_count,

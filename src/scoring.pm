@@ -12,8 +12,8 @@ sub command;
 sub compute_network_size;
 
 sub current_score_tile {
-    if ($round > 0) {
-        return $tiles{$score_tiles[$round - 1]};
+    if ($state{round} > 0) {
+        return $tiles{$score_tiles[$state{round} - 1]};
     }
 }
 
