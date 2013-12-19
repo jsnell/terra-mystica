@@ -96,6 +96,7 @@ sub finalize {
         delete $faction->{locations};
         delete $faction->{BRIDGE_COUNT};
         delete $faction->{leech_not_rejected};
+        delete $faction->{leech_rejected};
         if ($round == 6) {
             delete $faction->{income};
             delete $faction->{income_breakdown};

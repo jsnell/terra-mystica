@@ -305,6 +305,7 @@ sub note_leech {
                                  faction => $faction->{name} };
         if ($actual) {
             $from_faction->{leech_not_rejected}{$leech_id}++;
+            $from_faction->{leech_rejected}{$leech_id} = 0;
         }
     }
 

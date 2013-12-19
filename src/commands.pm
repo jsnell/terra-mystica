@@ -351,6 +351,7 @@ sub command_leech {
         }
 
         if ($_->{from_faction} eq 'cultists' and
+            $_->{actual} > 0 and
             !$factions{cultists}{leech_cult_gained}{$_->{leech_id}}++) {
             $factions{cultists}{CULT}++;
             push @action_required, { type => 'cult',
@@ -385,6 +386,19 @@ sub command_leech {
     if ($actual_pw > 0) {
 	adjust_resource $faction, 'VP', -$vp, 'leech';
     }
+
+    my $can_gain = min $faction->{P1} * 2 + $faction->{P2};
+    for my $record (@action_required) {
+        if ($record->{type} eq 'leech' and
+            $record->{faction} eq $faction_name) {
+            if (!$can_gain and $record->{actual}) {
+                my $from_faction = $factions{$record->{from_faction}};
+                my $leech_id = $record->{leech_id};
+                cultist_maybe_gain_power($record);
+            }
+            $record->{actual} = min $record->{actual}, $can_gain;
+        }
+    }
 }
 
 sub command_decline {
@@ -405,6 +419,9 @@ sub command_decline {
                 $_->{type} eq 'leech' and
                 $_->{amount} eq $amount and
                 $_->{from_faction} eq $from) {
+                my $from_faction = $factions{$_->{from_faction}};
+                my $leech_id = $_->{leech_id};
+                $from_faction->{leech_rejected}{$leech_id}++;
                 cultist_maybe_gain_power($_);
                 $_ = '';
                 $declined = 1;
@@ -420,9 +437,20 @@ sub cultist_maybe_gain_power {
     my $record = shift;
     my $faction = $factions{$record->{from_faction}};
 
+    # A decline of a 0 power gain has no effect. (Note that leech_not_rejected
+    # has been setup with this assumption in mind).
     return if !$record->{actual};
+    # Somebody still hasn't made a decision on leeching from this event
     return if --$faction->{leech_not_rejected}{$record->{leech_id}} > 0;
+    # Nobody has yet rejected any power from this leech event. How could this
+    # happen, you might ask, since we're only calling this function due to
+    # somebody just rejecting power. It could happen because a leeching
+    # opportunity was retroactively converted to have an actual value of 0,
+    # due another leech getting resolved.
+    return if $faction->{leech_rejected}{$record->{leech_id}} == 0;
+    # Of course all of this only matters for the cultists.
     return if $record->{from_faction} ne 'cultists';
+    # And when playing with the new rule.
     return if !$options{'errata-cultist-power'};
 
     my %old_data = map { $_, $faction->{$_} } @data_fields;
