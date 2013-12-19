@@ -5,11 +5,13 @@ package terra_mystica;
 use strict;
 use List::Util qw(sum max min);
 
-use vars qw($round $turn $finished @ledger @action_required %leech);
+use vars qw($state);
+use vars qw($round $turn $finished @action_required %leech);
 
 use commands;
 use cults;
 use factions;
+use ledger;
 use map;
 use resources;
 use scoring;
@@ -147,6 +149,10 @@ sub evaluate_game {
     my $data = shift;
     my $faction_info = $data->{faction_info};
 
+    local %state = (
+        ledger => terra_mystica::Ledger->new(),
+    );
+
     local @setup_order = ();
     local %map = ();
     local %reverse_map = ();
@@ -156,7 +162,6 @@ sub evaluate_game {
     local %leech = ();
     local $leech_id = 0;
     local @action_required = ();
-    local @ledger = ();
     local $round = 0;
     local $turn = 0;
     local $finished = 0;
@@ -220,7 +225,7 @@ sub evaluate_game {
         factions => \%factions,
         pool => \%pool,
         bridges => \@bridges,
-        ledger => \@ledger,
+        ledger => $state{ledger}->rows(),
         error => \@error,
         towns => { map({$_, $tiles{$_}} grep { /^TW/ } keys %tiles ) },
         score_tiles => [ map({$tiles{$_}} @score_tiles ) ],

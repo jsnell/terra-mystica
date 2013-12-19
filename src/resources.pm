@@ -316,4 +316,24 @@ sub note_leech {
     return %this_leech;
 }
 
+sub pretty_resource_delta {
+    for my $x (@_) {
+        $x->{PW} = $x->{P2} + 2 * $x->{P3};
+        $x->{CULT} += $x->{$_} for @cults;
+    }
+
+    my (%old_data) = %{+shift};
+    my (%new_data) = %{+shift};
+
+    my @fields = keys %old_data;
+    my %delta = map { $_, $new_data{$_} - $old_data{$_} } @fields;
+
+    my %pretty_delta = map { $_, { delta => $delta{$_},
+                                   value => $new_data{$_} } } @fields;
+    $pretty_delta{PW}{value} = sprintf "%d/%d/%d", @new_data{'P1','P2','P3'};
+    $pretty_delta{CULT}{value} = sprintf "%d/%d/%d/%d", @new_data{@cults};
+
+    %pretty_delta;
+}
+
 1;

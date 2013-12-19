@@ -2,7 +2,7 @@ package terra_mystica;
 
 use strict;
 
-use vars qw(@score_tiles);
+use vars qw(%state @score_tiles);
 
 use cults;
 use tiles;
@@ -77,14 +77,14 @@ sub score_type_rankings {
 
 sub score_final_cults {
     for my $cult (@cults) {
-        push @ledger, { comment => "Scoring $cult cult" };
+        $state{ledger}->add_comment("Scoring $cult cult");
         score_type_rankings $cult, \&score_with_ledger_entry, 8, 4, 2;
     }
 }
 
 sub score_final_networks {
     compute_network_size $factions{$_} for @factions;
-    push @ledger, { comment => "Scoring largest network" };
+    $state{ledger}->add_comment("Scoring largest network");
     score_type_rankings 'network', \&score_with_ledger_entry, 18, 12, 6;
 }
 
@@ -118,7 +118,7 @@ sub score_final_resources_for_faction {
 }
 
 sub score_final_resources {
-    push @ledger, { comment => "Converting resources to VPs" };
+    $state{ledger}->add_comment("Converting resources to VPs");
 
     for (@factions) {
         handle_row_internal($_, "score_resources");
