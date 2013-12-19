@@ -13,13 +13,16 @@ BEGIN { push @INC, dirname $0 };
 use db;
 
 my $dir = dirname $0;
-my $time = 0;
+my $time = 'total';
+my %time = ();
 
 sub pretty_res {
     my $begin = time;
     my $res = qx(perl $dir/tracker.pl @_);
     my $json = decode_json $res;
     if ($time) {
+        $time{$_[0]} += (time - $begin);
+    } elsif ($time eq 'single') {
         printf "  %s: %5.3f\n", $_[0], (time - $begin);
     }
     if (@{$json->{error}}) {
@@ -46,17 +49,28 @@ my $games = $dbh->selectall_arrayref("select id, write_id, extract(epoch from la
                                      {},
                                      shift || '%');
 
+my $count = 0;
 for (@{$games}) {
     my $id = $_->[0];
-
-    my $a = pretty_res $dir1, $id;
-    my $b = pretty_res $dir2, $id;
-    my $header_printed = 0;
+    ++$count;
 
     {
         local $| = 1; 
         printf "."; 
     }
+
+    if ($count % 10 == 0) {
+        print "\n";
+        if ($time eq 'total') {
+            for my $dir ($dir1, $dir2) {
+                printf "%s: %5.2f\n", $dir, $time{$dir};
+            }
+        }
+    }
+
+    my $a = pretty_res $dir1, $id;
+    my $b = pretty_res $dir2, $id;
+    my $header_printed = 0;
 
     for my $key (keys %{$a}) {
         my $aa = $a->{$key};
