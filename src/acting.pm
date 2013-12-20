@@ -31,6 +31,54 @@ sub start_full_move {
     delete $faction->{TELEPORT_TO};
 }
 
+# Signal an intent by a faction to take a sub-action. Either it needs to
+# be something they can do as part of or as a consequence of another action
+# (e.g. building after transforming), or they must have an available
+# full action (either it just became their turn, they got extra actions
+# from the CM SH, or they're the only player who hasn't passed).
+sub require_subaction {
+    my ($self, $faction, $type, $followup) = @_;
+    my $ledger = $self->game()->{ledger};
+
+    if (($faction->{allowed_sub_actions}{$type} // 0) > 0) {        
+        $faction->{allowed_sub_actions}{$type}--;
+        $faction->{allowed_sub_actions} = $followup if $followup;
+    } elsif ($faction->{allowed_actions}) {
+        $faction->{allowed_actions}--;
+        $faction->{allowed_sub_actions} = $followup if $followup;
+        # Taking an action is an implicit "decline"
+        terra_mystica::command_decline($faction, undef, undef);
+    } else {
+        my @unpassed = grep { !$_->{passed} } values %terra_mystica::factions;
+        if (@unpassed == 1 or $faction->{planning}) {
+            terra_mystica::finish_row($faction);
+            $ledger->start_new_row($faction);
+
+            $self->start_full_move($faction);
+            $self->require_subaction($faction, $type, $followup);
+            return;
+        } else {
+            die "'$type' command not allowed (trying to take multiple actions in one turn?)\n"
+        }
+    }
+}
+
+# The player is allowed to pass without using up a full action.
+sub allow_pass {
+    my ($self, $faction) = @_;
+    $faction->{allowed_sub_actions} = {
+        pass => 1,
+    };    
+}
+
+# The player is allowed to build a dwelling without using up a full action.
+sub allow_build {
+    my ($self, $faction) = @_;
+    $faction->{allowed_sub_actions} = {
+        build => 1,
+    };
+}
+
 # Is the faction currently the active one?
 sub is_active {
     my ($self, $faction) = @_;
@@ -188,7 +236,7 @@ sub in_initial_dwellings {
                 type => 'dwelling',
                 faction => $terra_mystica::setup_order[0],
             });
-        terra_mystica::allow_build($terra_mystica::factions{$terra_mystica::setup_order[0]});
+        $self->allow_build($terra_mystica::factions{$terra_mystica::setup_order[0]});
     }
 }
 
@@ -196,7 +244,7 @@ sub in_initial_bonus {
     my ($self) = @_;
 
     if (@terra_mystica::setup_order) {
-        terra_mystica::allow_pass($terra_mystica::factions{$terra_mystica::setup_order[0]});
+        $self->allow_pass($terra_mystica::factions{$terra_mystica::setup_order[0]});
         @terra_mystica::action_required = (
             {
                 type => 'bonus',
