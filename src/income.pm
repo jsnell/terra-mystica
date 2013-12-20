@@ -7,7 +7,7 @@ use tiles;
 use resources;
 use scoring;
 
-use vars qw(%state);
+use vars qw(%game);
 
 sub faction_income {
     my $faction_name = shift;
@@ -52,7 +52,7 @@ sub faction_income {
     }
 
     my $scoring = current_score_tile;
-    if ($scoring and $state{round} != 6) {
+    if ($scoring and $game{round} != 6) {
         my %scoring_income = %{$scoring->{income}};
 
         my $mul = int($faction->{$scoring->{cult}} / $scoring->{req});
@@ -92,7 +92,7 @@ sub take_income_for_faction {
     die "Taking income twice for $faction_name\n" if
         $faction->{income_taken};
 
-    if ($state{round} == 0) {
+    if ($game{round} == 0) {
         $faction->{passed} = 1;
     }
 

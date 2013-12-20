@@ -5,7 +5,7 @@ package terra_mystica;
 use strict;
 use List::Util qw(sum max min);
 
-use vars qw($state @action_required);
+use vars qw(%game @action_required);
 
 use acting;
 use commands;
@@ -29,12 +29,12 @@ sub finalize {
     update_mermaid_town_connections;
 
     if ($delete_email) {
-        for (@players) {
+        for (@{$game{acting}->players()}) {
             delete $_->{email};
         }
     } else {
         my $pi = 0;
-        for (@players) {
+        for (@{$game{acting}->players()}) {
             if (!defined $_->{email}) {
                 $_->{email} = $faction_info->{"player".++$pi}{email};
             }
@@ -89,7 +89,7 @@ sub finalize {
         if ($delete_email) {
             delete $faction->{email};
         }
-        if ($state{round} == 6 and !$state{finished}) {
+        if ($game{round} == 6 and !$game{finished}) {
             $faction->{vp_projection} = { faction_vps $faction };
         }
         # delete $faction->{allowed_actions};
@@ -99,7 +99,7 @@ sub finalize {
         delete $faction->{BRIDGE_COUNT};
         delete $faction->{leech_not_rejected};
         delete $faction->{leech_rejected};
-        if ($state{round} == 6) {
+        if ($game{round} == 6) {
             delete $faction->{income};
             delete $faction->{income_breakdown};
         }
@@ -113,8 +113,8 @@ sub finalize {
         }
     }
         
-    if ($state{round} > 0) {
-        for (0..($state{round}-2)) {
+    if ($game{round} > 0) {
+        for (0..($game{round}-2)) {
             $tiles{$score_tiles[$_]}->{old} = 1;
         }
         
@@ -149,14 +149,19 @@ sub evaluate_game {
     my $data = shift;
     my $faction_info = $data->{faction_info};
 
-    local %state = (
-        ledger => terra_mystica::Ledger->new(),
-        acting => terra_mystica::Acting->new(),
+    local %game = (
+        player_count => undef,
         round => 0,
         turn => 0,
         aborted => 0,
         finished => 0,
     );
+    $game{ledger} = terra_mystica::Ledger->new({game => \%game});
+    $game{acting} = terra_mystica::Acting->new(
+        {
+            game => \%game,
+            players => $data->{players},
+        });
 
     local @setup_order = ();
     local %map = ();
@@ -171,10 +176,8 @@ sub evaluate_game {
     local %factions_by_color = ();
     local @factions = ();
     local @setup_order = ();
-    local @players = @{$data->{players}};
     local $admin_email = '';
     local %options = ();
-    local $player_count = undef;
 
     setup_map;
 
@@ -197,7 +200,7 @@ sub evaluate_game {
         $row++;
     }
 
-    if (@players) {
+    if ($game{acting}->player_count()) {
         @command_stream = grep { $_->[1] !~ /^player /i } @command_stream;
     }
 
@@ -224,22 +227,22 @@ sub evaluate_game {
         factions => \%factions,
         pool => \%pool,
         bridges => \@bridges,
-        ledger => $state{ledger}->flush(),
+        ledger => $game{ledger}->flush(),
         error => \@error,
         towns => { map({$_, $tiles{$_}} grep { /^TW/ } keys %tiles ) },
         score_tiles => [ map({$tiles{$_}} @score_tiles ) ],
         bonus_tiles => { map({$_, $tiles{$_}} grep { /^BON/ } keys %tiles ) },
         favors => { map({$_, $tiles{$_}} grep { /^FAV/ } keys %tiles ) },
         action_required => [@action_required],
-        active_faction => $state{acting}->active_faction_name(),
+        active_faction => $game{acting}->active_faction_name(),
         history_view => $history_view,
-        round => $state{round},
-        turn => $state{turn},
-        finished => $state{finished},
-        aborted => $state{aborted},
+        round => $game{round},
+        turn => $game{turn},
+        finished => $game{finished},
+        aborted => $game{aborted},
         cults => \%cults,
-        players => \@players,
-        player_count => $player_count,
+        players => $game{acting}->players(),
+        player_count => $game{player_count},
         options => \%options,
         admin => $data->{delete_email} ? '' : $admin_email,
     }

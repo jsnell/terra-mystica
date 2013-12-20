@@ -913,7 +913,7 @@ function drawFactions() {
         state.factions[pseudo_faction] = {
             display: "Player " + (i+1),
             username: state.players[i].username,
-            player: state.players[i].displayname,
+            player: state.players[i].displayname || state.players[i].name,
             color: 'player',
             placeholder: true,
             start_player: i == 0,

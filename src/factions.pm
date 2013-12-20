@@ -5,7 +5,7 @@ package terra_mystica;
 use strict;
 use Clone qw(clone);
 
-use vars qw(%setups %factions %factions_by_color @factions @setup_order @players @action_required);
+use vars qw(%setups %factions %factions_by_color @factions @setup_order @action_required);
 
 %setups = (
     alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
@@ -496,8 +496,9 @@ sub setup {
 
     my $faction = $factions{$faction_name} = clone($setups{$faction_name});
     my $player_record = {};
-    if (@players) {
-        $player_record = $players[@factions];
+    my $players = $game{acting}->players();
+    if (@{$players}) {
+        $player_record = $players->[@factions];
         if ($player and $player ne $player_record->{name}) {
             die "Expected ".($player_record->{name})." to pick a faction";
         }

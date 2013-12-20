@@ -3,6 +3,8 @@ use Mouse;
 
 use resources;
 
+has 'game' => (is => 'rw', required => 1);
+
 # The data we're collecting
 has 'rows' => (is => 'rw',
                default => sub { [] });
