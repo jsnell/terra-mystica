@@ -5,7 +5,7 @@ package terra_mystica;
 use strict;
 use Clone qw(clone);
 
-use vars qw(%setups %factions %factions_by_color @factions @setup_order @action_required);
+use vars qw(%setups %factions %factions_by_color @factions @setup_order);
 
 %setups = (
     alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
@@ -592,7 +592,7 @@ sub setup {
     }
     $faction->{exchange_rates} = \%base_exchange_rates;
 
-    @action_required = ({ type => 'dwelling', faction => $setup_order[0] });
+#    @action_required = ({ type => 'dwelling', faction => $setup_order[0] });
 }
 
 sub factions_in_order_from {

@@ -5,7 +5,7 @@ package terra_mystica;
 use strict;
 use List::Util qw(sum max min);
 
-use vars qw(%game @action_required);
+use vars qw(%game);
 
 use acting;
 use commands;
@@ -20,8 +20,6 @@ use towns;
 
 sub finalize {
     my ($delete_email, $faction_info) = @_;
-
-    my $spade_seen = 0;
 
     update_reachable_build_locations;
     update_reachable_tf_locations;
@@ -41,12 +39,15 @@ sub finalize {
         }
     }
 
-    for (@action_required) {
+    # Delete all "transform" records except the first one (to get the
+    # sequencing right during income phase).
+    my $spade_seen = 0;
+    for (@{$game{acting}->action_required()}) {
         if ($_->{type} eq 'transform') {
             $_ = '' if $spade_seen++;
         }
     }
-    @action_required = grep { $_ } @action_required;
+    $game{acting}->clear_empty_actions();
 
     for my $action (values %actions) {
         if ($action->{subaction}) {
@@ -56,14 +57,17 @@ sub finalize {
 
     for my $faction (values %factions) {
         if ($faction->{waiting}) {
-            my $action = $action_required[0];
+            my $action = $game{acting}->action_required()->[0];
             if ($action->{faction} eq $faction->{name}) {
                 $faction->{waiting} = 0;
             }
         }
         if ($faction->{planning}) {
-            @action_required = ({ type => 'planning',
-                                  faction => $faction->{name}});
+            $game{acting}->replace_all_actions(
+                {
+                    type => 'planning',
+                    faction => $faction->{name}
+                });
         }
         my $faction_count = scalar keys %factions;
         my $info;
@@ -107,9 +111,7 @@ sub finalize {
             delete $_->{subactions};
         }
         if ($faction->{waiting}) {
-            @action_required = grep {
-                $_->{faction} ne $faction_name;
-            } @action_required;
+            $game{acting}->dismiss_action($faction, undef);
         }
     }
         
@@ -170,7 +172,6 @@ sub evaluate_game {
     local %pool = ();
     local %bonus_coins = ();
     local $leech_id = 0;
-    local @action_required = ();
     local @score_tiles = ();
     local %factions = ();
     local %factions_by_color = ();
@@ -233,7 +234,7 @@ sub evaluate_game {
         score_tiles => [ map({$tiles{$_}} @score_tiles ) ],
         bonus_tiles => { map({$_, $tiles{$_}} grep { /^BON/ } keys %tiles ) },
         favors => { map({$_, $tiles{$_}} grep { /^FAV/ } keys %tiles ) },
-        action_required => [@action_required],
+        action_required => $game{acting}->action_required(),
         active_faction => $game{acting}->active_faction_name(),
         history_view => $history_view,
         round => $game{round},
