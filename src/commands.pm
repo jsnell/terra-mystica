@@ -22,47 +22,6 @@ use vars qw($admin_email %options);
 sub handle_row;
 sub handle_row_internal;
 
-sub require_subaction {
-    my ($faction, $type, $followup) = @_;
-    my $ledger = $game{ledger};
-
-    if (($faction->{allowed_sub_actions}{$type} // 0) > 0) {        
-        $faction->{allowed_sub_actions}{$type}--;
-        $faction->{allowed_sub_actions} = $followup if $followup;
-    } elsif ($faction->{allowed_actions}) {
-        $faction->{allowed_actions}--;
-        $faction->{allowed_sub_actions} = $followup if $followup;
-        # Taking an action is an implicit "decline"
-        command_decline($faction, undef, undef);
-    } else {
-        my @unpassed = grep { !$_->{passed} } values %factions;
-        if (@unpassed == 1 or $faction->{planning}) {
-            finish_row($faction);
-            $ledger->start_new_row($faction);
-
-            $game{acting}->start_full_move($faction);
-            require_subaction($faction, $type, $followup);
-            return;
-        } else {
-            die "'$type' command not allowed (trying to take multiple actions in one turn?)\n"
-        }
-    }
-}
-
-sub allow_pass {
-    my $faction = shift;
-    $faction->{allowed_sub_actions} = {
-        pass => 1,
-    };    
-}
-
-sub allow_build {
-    my $faction = shift;
-    $faction->{allowed_sub_actions} = {
-        build => 1,
-    };
-}
-
 sub command_adjust_resources {
     my ($faction, $delta, $type, $source) = @_;
     my $faction_name = $faction->{name};
@@ -155,9 +114,9 @@ sub command_build {
         delete $faction->{allowed_sub_actions}{build};
     }
 
-    require_subaction $faction, 'build', {
+    $game{acting}->require_subaction($faction, 'build', {
         transform => $tf_needed
-    };
+    });
 
     if ($faction->{TELEPORT_NO_TF}) {
         $faction->{TELEPORT_NO_TF}--;
@@ -203,7 +162,7 @@ sub command_build {
 sub command_upgrade {
     my ($faction, $where, $type) = @_;
 
-    require_subaction $faction, 'upgrade', {};
+    $game{acting}->require_subaction($faction, 'upgrade', {});
 
     die "Unknown location '$where'\n" if !$map{$where};
 
@@ -252,7 +211,7 @@ sub command_upgrade {
 sub command_send {
     my ($faction, $cult, $amount) = @_;
 
-    require_subaction $faction, 'send', {};
+    $game{acting}->require_subaction($faction, 'send', {});
 
     die "Unknown cult track $cult\n" if !grep { $_ eq $cult } @cults;
 
@@ -484,10 +443,10 @@ sub command_transform {
     }
 
     if ($color_difference and !$faction->{passed}) {
-        require_subaction $faction, 'transform', {
+        $game{acting}->require_subaction($faction, 'transform', {
             transform => ($faction->{allowed_sub_actions}{transform} // 1) - 1,
             build => $faction->{allowed_sub_actions}{build} // 0,
-        };
+        });
     }
 
     if ($teleport) {
@@ -519,10 +478,10 @@ sub command_dig {
     my $gain = $faction->{dig}{gain}[$faction->{dig}{level}];
 
     if (!$faction->{allowed_sub_actions}{transform}) {
-        require_subaction $faction, 'dig', {
+        $game{acting}->require_subaction($faction, 'dig', {
             transform => 1,
             build => 1
-        };
+        });
     };
 
     adjust_resource $faction, 'SPADE', $amount;
@@ -533,7 +492,7 @@ sub command_dig {
 sub command_bridge {        
     my ($faction, $from, $to, $allow_illegal) = @_;
 
-    require_subaction $faction, 'bridge', {};
+    $game{acting}->require_subaction($faction, 'bridge', {});
 
     if (!$allow_illegal) {
         if ($faction->{BRIDGE_COUNT} == 0) {
@@ -570,7 +529,7 @@ sub command_pass {
 
     my $discard;
 
-    require_subaction $faction, 'pass', {};
+    $game{acting}->require_subaction($faction, 'pass', {});
 
     my $passed_count = grep { $_->{passed} } values %factions;
     my $first_to_pass = $passed_count == 0;
@@ -625,7 +584,7 @@ sub command_action {
     my ($faction, $action) = @_;
     my $faction_name = $faction->{name};
 
-    require_subaction $faction, 'action', clone $actions{$action}{subaction};
+    $game{acting}->require_subaction($faction, 'action', clone $actions{$action}{subaction});
 
     if ($action !~ /^ACT[1-6]/ and !$faction->{$action}) {
         die "No $action space available\n"
@@ -728,7 +687,7 @@ sub command_connect {
 sub command_advance {
     my ($faction, $type) = @_;
 
-    require_subaction $faction, 'advance', {};
+    $game{acting}->require_subaction($faction, 'advance', {});
 
     my $track = $faction->{$type};
     advance_track $faction, $type, $track, 0;
@@ -973,6 +932,7 @@ sub command {
         return 0 if non_leech_action_required;
         command_finish;
     } elsif ($command =~ /^abort$/i) {
+        die "Game can only be aborted from admin view\n" if $faction_name;
         $game{finished} = 1;
         $game{aborted} = 1;
         # $game{ledger}->add_comment("Game aborted by admin");
