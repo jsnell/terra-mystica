@@ -71,6 +71,8 @@ sub report_leech {
 
 sub finish_row {
     my ($ledger) = @_;
+    return if !$ledger->collecting_row();
+
     my $faction = $ledger->current_faction();
 
     # Compute the delta
@@ -115,6 +117,13 @@ sub turn {
     return if $ledger->{trailing_comment};
 
     $ledger->add_comment("Round $round, turn $turn");
+}
+
+sub flush {
+    my ($ledger) = @_;
+
+    $ledger->finish_row();
+    $ledger->rows();
 }
 
 1;

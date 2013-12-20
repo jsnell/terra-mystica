@@ -1,8 +1,6 @@
 package terra_mystica::Acting;
 use Mouse;
 
-use resources;
-
 has 'active_faction' => (is => 'rw');
 
 sub is_active {
