@@ -8,7 +8,10 @@ use Mouse;
 # Who is playing in this game?
 has 'players' => (is => 'rw');
 
-# What actions / decisions need to be taken by the players at the moment?
+# What's to be done during the setup
+has 'setup_order' => (is => 'rw', default => sub { [] });
+
+# What actions / decisions need to be taken by the factions at the moment?
 has 'action_required' => (is => 'rw', default => sub { [] });
 
 # Which faction is currently acting (a full action, not just a
@@ -54,6 +57,34 @@ sub replace_all_actions {
 sub clear_empty_actions {
     my ($self) = @_;
     $self->action_required([grep { $_ ne '' } @{$self->action_required()}]);
+}
+
+## Dealing with the setup phase
+
+sub setup_order_count {
+    my ($self) = @_;
+    return scalar @{$self->setup_order()};
+}
+
+sub setup_action {
+    my ($self, $faction, $kind) = @_;
+    shift @{$self->setup_order()};
+}
+
+sub register_faction {
+    my ($self, $faction) = @_;
+
+    my @setup_order = @terra_mystica::factions;
+    push @setup_order, reverse @terra_mystica::factions;
+    push @setup_order, 'nomads' if $terra_mystica::factions{nomads};
+
+    if ($terra_mystica::factions{chaosmagicians}) {
+        @setup_order = grep { $_ ne 'chaosmagicians' } @setup_order;
+        push @setup_order, 'chaosmagicians';
+    }
+    push @setup_order, reverse @terra_mystica::factions;
+
+    $self->setup_order([@setup_order]);
 }
 
 ## Dealing with the active player.
@@ -263,28 +294,30 @@ sub in_select_factions {
 sub in_initial_dwellings {
     my ($self) = @_;
 
-    if (@terra_mystica::setup_order <= @terra_mystica::factions) {
+    if ($self->setup_order_count() <= @terra_mystica::factions) {
         $self->state('initial-bonus');
     } else {
+        my $faction_name = $self->setup_order()->[0];
         $self->replace_all_actions(
             {
                 type => 'dwelling',
-                faction => $terra_mystica::setup_order[0],
+                faction => $faction_name,
             });
-        $self->allow_build($terra_mystica::factions{$terra_mystica::setup_order[0]});
+        $self->allow_build($terra_mystica::factions{$faction_name});
     }
 }
 
 sub in_initial_bonus {
     my ($self) = @_;
 
-    if (@terra_mystica::setup_order) {
-        $self->allow_pass($terra_mystica::factions{$terra_mystica::setup_order[0]});
+    if ($self->setup_order_count()) {
+        my $faction_name = $self->setup_order()->[0];
         $self->replace_all_actions(
             {
                 type => 'bonus',
-                faction => $terra_mystica::setup_order[0],
+                faction => $faction_name,
             });
+        $self->allow_pass($terra_mystica::factions{$faction_name});
     } else {
         $self->replace_all_actions();
         $self->game()->{ledger}->finish_row();
