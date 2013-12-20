@@ -224,7 +224,7 @@ sub evaluate_game {
         factions => \%factions,
         pool => \%pool,
         bridges => \@bridges,
-        ledger => $state{ledger}->rows(),
+        ledger => $state{ledger}->flush(),
         error => \@error,
         towns => { map({$_, $tiles{$_}} grep { /^TW/ } keys %tiles ) },
         score_tiles => [ map({$tiles{$_}} @score_tiles ) ],

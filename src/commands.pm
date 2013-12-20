@@ -1392,7 +1392,6 @@ sub play {
         eval {
             do_command $this->[0], $this->[1];
         }; if ($@) {
-            finish_row undef;
             die "Error in command '".($this->[1])."': $@";
         }
         my $active_faction = $state{acting}->active_faction();
