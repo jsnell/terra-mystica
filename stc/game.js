@@ -1384,11 +1384,12 @@ function drawActionRequired() {
         } else if (record.type == 'bonus') {
             record.pretty = 'should pick a bonus tile';
         } else if (record.type == 'gameover') {
+            record.reason = record.aborted ? "aborted" : "over";
             if (state.metadata) {
-                var age = seconds_to_pretty_time(state.metadata.time_since_update);
-                record.pretty = "<span>The game is over (finished " + age + " ago)\n</span>";
+                record.age = seconds_to_pretty_time(state.metadata.time_since_update);
+                record.pretty = "<span>The game is #{reason} (finished #{age} ago)\n</span>".interpolate(record);
             } else {
-                record.pretty = "<span>The game is over</span>";
+                record.pretty = "<span>The game is #{reason}</span>".interpolate(record);
             }
             var table = "";
             $H(state.factions).sortBy(function(a) { return -a.value.VP }).each(function(elem) {

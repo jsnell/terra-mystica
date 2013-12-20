@@ -297,12 +297,14 @@ sub note_leech {
         my $amount = $this_leech{$color};
         my $actual = min $this_leech{$color}, $faction->{P1} * 2 + $faction->{P2};
 
-        push @action_required, { type => 'leech',
-                                 from_faction => $from_faction->{name},
-                                 amount => $amount,
-                                 actual => $actual,
-                                 leech_id => $leech_id,
-                                 faction => $faction->{name} };
+        $game{acting}->require_action($faction,
+                                      {
+                                          type => 'leech',
+                                          from_faction => $from_faction->{name},
+                                          amount => $amount,
+                                          actual => $actual,
+                                          leech_id => $leech_id
+                                      });
         if ($actual) {
             $from_faction->{leech_not_rejected}{$leech_id}++;
             $from_faction->{leech_rejected}{$leech_id} = 0;

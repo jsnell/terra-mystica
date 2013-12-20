@@ -102,9 +102,9 @@ sub take_income_for_faction {
     $faction->{income_taken} = 1;
 
     if ($faction->{SPADE}) {
-        push @action_required, { type => 'transform',
-                                 amount => $faction->{SPADE}, 
-                                 faction => $faction->{name} };
+        $game{acting}->require_action($faction,
+                                      { type => 'transform',
+                                        amount => $faction->{SPADE} });
     }
 }
 

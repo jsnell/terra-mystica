@@ -2,10 +2,14 @@
 # Whose turn is it now, what can they do, what can other people do, etc.
 
 package terra_mystica::Acting;
+use JSON;
 use Mouse;
 
 # Who is playing in this game?
 has 'players' => (is => 'rw');
+
+# What actions / decisions need to be taken by the players at the moment?
+has 'action_required' => (is => 'rw', default => sub { [] });
 
 # Which faction is currently acting (a full action, not just a
 # async decision on resources).
@@ -17,6 +21,40 @@ has 'state' => (is => 'rw',
 
 # Main game data structure
 has 'game' => (is => 'rw');
+
+## Tracking what each player needs to do
+
+sub action_required_count {
+    my ($self) = @_;
+    return scalar @{$self->action_required()};
+}
+
+sub require_action {
+    my ($self, $faction, $action) = @_;
+    die if !$action or !$faction;
+    $action->{faction} = $faction->{name};
+    push @{$self->action_required()}, $action;
+}
+
+sub dismiss_action {
+    my ($self, $faction, $type) = @_;
+    $self->action_required([
+        grep {
+            !((!defined $faction or $_->{faction} eq $faction->{name}) and
+              (!defined $type or $_->{type} eq $type))
+        } @{$self->action_required}
+    ]);
+}
+
+sub replace_all_actions {
+    my ($self, @actions) = @_;
+    $self->action_required([@actions]);
+}
+
+sub clear_empty_actions {
+    my ($self) = @_;
+    $self->action_required([grep { $_ ne '' } @{$self->action_required()}]);
+}
 
 ## Dealing with the active player.
 
@@ -195,14 +233,12 @@ sub in_wait_for_players {
             $self->state('select-factions');
             return;
         } else {
-            @terra_mystica::action_required = (
-                { type => 'not-started',
-                  player_count => $player_count,
-                  wanted_player_count => $wanted_count }
-                );
+            $self->replace_all_actions({ type => 'not-started',
+                                         player_count => $player_count,
+                                         wanted_player_count => $wanted_count });
         }
     } else {
-        @terra_mystica::action_required = ();
+        $self->replace_all_actions();
     }
 }
 
@@ -215,11 +251,10 @@ sub in_select_factions {
 
     if ($self->player_count() != @terra_mystica::factions) {
         my $player = $self->players->[@terra_mystica::factions];
-        @terra_mystica::action_required = ({
+        $self->replace_all_actions({
             type => 'faction',
             player => ($player->{displayname} // $player->{name}),
-            player_index => "player".(1+@terra_mystica::factions),
-                            });
+            player_index => "player".(1+@terra_mystica::factions)});
     } else {
         $self->state('initial-dwellings');
     }
@@ -231,7 +266,7 @@ sub in_initial_dwellings {
     if (@terra_mystica::setup_order <= @terra_mystica::factions) {
         $self->state('initial-bonus');
     } else {
-        @terra_mystica::action_required = (
+        $self->replace_all_actions(
             {
                 type => 'dwelling',
                 faction => $terra_mystica::setup_order[0],
@@ -245,13 +280,13 @@ sub in_initial_bonus {
 
     if (@terra_mystica::setup_order) {
         $self->allow_pass($terra_mystica::factions{$terra_mystica::setup_order[0]});
-        @terra_mystica::action_required = (
+        $self->replace_all_actions(
             {
                 type => 'bonus',
                 faction => $terra_mystica::setup_order[0],
             });
     } else {
-        @terra_mystica::action_required = ();
+        $self->replace_all_actions();
         $self->game()->{ledger}->finish_row();
         $self->state('income');
     }
@@ -260,7 +295,7 @@ sub in_initial_bonus {
 sub in_income {
     my ($self) = @_;
 
-    if (@terra_mystica::action_required) {
+    if ($self->action_required_count()) {
         return;
     }
 
@@ -279,7 +314,7 @@ sub in_income {
 sub in_use_income_spades {
     my ($self) = @_;
 
-    if (@terra_mystica::action_required) {
+    if ($self->action_required_count()) {
         return;
     }
 
@@ -291,7 +326,7 @@ sub in_use_income_spades {
 sub in_play {
     my ($self) = @_;
 
-    if (@terra_mystica::action_required) {
+    if ($self->action_required_count()) {
         return;
     }
 
@@ -315,7 +350,7 @@ sub in_play {
 sub in_abort {
     my ($self) = @_;
 
-    @terra_mystica::action_required = ( { type => 'gameover' } );
+    $self->replace_all_actions({ type => 'gameover', aborted => 1 });
 }
 
 1;

@@ -75,16 +75,12 @@ sub command_adjust_resources {
     # Small hack: always remove the notifier for a cultist special cult
     # increase. Needs to be done like this, since we don't want + / - to
     # count as full actions.
-    @action_required = grep {
-        $_->{faction} ne $faction->{name} or $_->{type} ne 'cult'
-    } @action_required;       
+    $game{acting}->dismiss_action($faction, 'cult');
 
     # Handle throwing away spades with "-SPADE", e.g. if you are playing
     # Giants.
     if ($type eq 'SPADE' and $faction->{SPADE} < 1) {
-        @action_required = grep {
-            $_->{faction} ne $faction->{name} or $_->{type} ne 'transform'
-        } @action_required;
+        $game{acting}->dismiss_action($faction, 'transform');
     }
 }
 
@@ -288,7 +284,7 @@ sub command_leech {
     my $vp = $actual_pw - 1;
 
     my $found_leech_record = 0;
-    for (@action_required) {
+    for (@{$game{acting}->action_required()}) {
         next if $_->{faction} ne $faction_name;
         next if $_->{type} ne 'leech';
         
@@ -303,9 +299,9 @@ sub command_leech {
             $_->{actual} > 0 and
             !$factions{cultists}{leech_cult_gained}{$_->{leech_id}}++) {
             $factions{cultists}{CULT}++;
-            push @action_required, { type => 'cult',
-                                     amount => 1,
-                                     faction => 'cultists' };
+            $game{acting}->require_action($factions{$_->{from_faction}},
+                                            { type => 'cult',
+                                              amount => 1 });
         }
 
         if ($_->{leech_tainted}) {
@@ -323,7 +319,7 @@ sub command_leech {
     }
 
     if ($found_leech_record) {
-        @action_required = grep { $_ ne '' } @action_required;
+        $game{acting}->clear_empty_actions();
     } else {
         if (!$from and !$options{'strict-leech'}) {
             $ledger->warn("invalid leech $pw (accepting anyway)");
@@ -337,7 +333,7 @@ sub command_leech {
     }
 
     my $can_gain = min $faction->{P1} * 2 + $faction->{P2};
-    for my $record (@action_required) {
+    for my $record (@{$game{acting}->action_required()}) {
         if ($record->{type} eq 'leech' and
             $record->{faction} eq $faction_name) {
             if (!$can_gain and $record->{actual}) {
@@ -357,13 +353,13 @@ sub command_decline {
         # Decline all
         my @declines = grep {
             $_->{faction} eq $faction->{name} and $_->{type} eq 'leech';
-        } @action_required;
+        } @{$game{acting}->action_required()};
         for (@declines) {
             command_decline($faction, $_->{amount}, $_->{from_faction});
         }
     } else {
         my $declined = 0;
-        for (@action_required) {
+        for (@{$game{acting}->action_required()}) {
             if ($_->{faction} eq $faction->{name} and
                 $_->{type} eq 'leech' and
                 $_->{amount} eq $amount and
@@ -377,7 +373,7 @@ sub command_decline {
                 last;
             }
         }
-        @action_required = grep { $_ ne '' } @action_required;
+        $game{acting}->clear_empty_actions();
         die "Invalid decline ($amount from $from)\n" if !$declined;
     }
 }
@@ -456,9 +452,7 @@ sub command_transform {
     gain $faction, $transform_gain, 'faction';
 
     if (!$faction->{SPADE}) {
-        @action_required = grep {
-            $_->{faction} ne $faction->{name} or $_->{type} ne 'transform'
-        } @action_required;       
+        $game{acting}->dismiss_action($faction, 'transform');
         delete $faction->{allowed_sub_actions}{transform};
     }
 
@@ -638,8 +632,8 @@ sub command_start {
     }
 
     my $start_player = $order[0];
-    push @action_required, { type => 'full',
-                             faction => $start_player };
+    $game{acting}->require_action($factions{$start_player},
+                                  { type => 'full' });
     $game{acting}->start_full_move($factions{$start_player});
 }
 
@@ -701,7 +695,7 @@ sub command_finish {
     for (@factions) {
         $factions{$_}{passed} = 0;
     }
-    @action_required = ( { type => 'gameover' } );
+    $game{acting}->replace_all_actions({ type => 'gameover' });
 }
 
 sub command_income {
@@ -799,15 +793,15 @@ sub leech_decisions_required {
 
     return grep {
         $_->{type} eq 'leech' and $_->{faction} eq $faction->{name}
-    } @action_required;
+    } @{$game{acting}->action_required()};
 }
 
 sub non_leech_action_required {
-    return scalar grep { $_->{type} ne 'leech' } @action_required;
+    return scalar grep { $_->{type} ne 'leech' } @{$game{acting}->action_required()};
 }
 
 sub full_action_required {
-    return scalar grep { $_->{type} eq 'full' } @action_required;
+    return scalar grep { $_->{type} eq 'full' } @{$game{acting}->action_required()};
 }
 
 sub command {
@@ -1044,9 +1038,7 @@ sub detect_incomplete_state {
             faction => $prefix
         };
     } else {
-        @action_required = grep {
-            ($_->{faction} // '') ne $faction->{name} or $_->{type} ne 'favor'
-        } @action_required;       
+        $game{acting}->dismiss_action($faction, 'favor');
     }
 
     if ($faction->{GAIN_TW}) {
@@ -1057,9 +1049,7 @@ sub detect_incomplete_state {
             faction => $prefix
         };
     } else {
-        @action_required = grep {
-            ($_->{faction} // '') ne $faction->{name} or $_->{type} ne 'town'
-        } @action_required;       
+        $game{acting}->dismiss_action($faction, 'town');
     }
 
     if ($faction->{BRIDGE}) {
@@ -1069,9 +1059,7 @@ sub detect_incomplete_state {
             faction => $prefix
         };
     } else {
-        @action_required = grep {
-            ($_->{faction} // '') ne $faction->{name} or $_->{type} ne 'bridge'
-        } @action_required;       
+        $game{acting}->dismiss_action($faction, 'bridge');
     }
 
     @extra_action_required;
@@ -1204,24 +1192,21 @@ sub maybe_advance_to_next_player {
         return "";
     }
 
-    push @action_required, @extra_action_required;
+    push @{$game{acting}->action_required()}, @extra_action_required;
 
     if (@extra_action_required) {
         return "";
     } elsif ($game{acting}->is_active($faction) and
              !$faction->{allowed_actions}) {
-        @action_required = grep {
-            $_->{faction} ne $faction_name or
-                $_->{type} ne 'full'
-        } @action_required;
+        $game{acting}->dismiss_action($faction, 'full');
 
         $faction->{recent_moves} = [];
 
         # Advance to the next player, unless everyone has passed
         my $next = next_faction_in_turn $faction_name;
         if (defined $next) {
-            push @action_required, { type => 'full',
-                                     faction => $next };
+            $game{acting}->require_action($factions{$next},
+                                          { type => 'full' });
             $game{acting}->start_full_move($factions{$next});
             maybe_advance_turn $faction_name;
         }
@@ -1306,7 +1291,7 @@ sub play {
         }
 
         if ($game{finished}) {
-            return 0;
+           return 0;
         }
     }
 
