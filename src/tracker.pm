@@ -6,7 +6,7 @@ use strict;
 use List::Util qw(sum max min);
 
 use vars qw($state);
-use vars qw(@action_required %leech);
+use vars qw(@action_required);
 
 use commands;
 use cults;
@@ -163,7 +163,6 @@ sub evaluate_game {
     local @bridges = ();
     local %pool = ();
     local %bonus_coins = ();
-    local %leech = ();
     local $leech_id = 0;
     local @action_required = ();
     local @score_tiles = ();
