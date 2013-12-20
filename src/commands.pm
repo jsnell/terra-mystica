@@ -180,8 +180,8 @@ sub command_build {
             if ($teleport) {
                 $faction->{TELEPORT_TO} = $where;
             }
-            pay $faction, $cost;
-            gain $faction, $gain;
+            pay $faction, $cost, 'faction';
+            gain $faction, $gain, 'faction';
         }
     }
 
@@ -503,8 +503,8 @@ sub command_transform {
     if ($teleport) {
         $faction->{TELEPORT_TO} = $where;
     }
-    pay $faction, $transform_cost;
-    gain $faction, $transform_gain;
+    pay $faction, $transform_cost, 'faction';
+    gain $faction, $transform_gain, 'faction';
 
     if (!$faction->{SPADE}) {
         @action_required = grep {
