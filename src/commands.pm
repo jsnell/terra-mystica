@@ -16,26 +16,17 @@ use scoring;
 use tiles;
 use towns;
 
-use vars qw(%state);
-use vars qw($admin_email %options $player_count);
+use vars qw(%game);
+use vars qw($admin_email %options);
 
 sub handle_row;
 sub handle_row_internal;
 
-sub allow_full_move {
-    my $faction = shift;
-    $state{acting}->active_faction($faction);
-    $faction->{allowed_actions} = 1;
-    $faction->{allowed_sub_actions} = {};
-    $faction->{allowed_build_locations} = {};
-    delete $faction->{TELEPORT_TO};
-}
-
 sub require_subaction {
     my ($faction, $type, $followup) = @_;
-    my $ledger = $state{ledger};
+    my $ledger = $game{ledger};
 
-    if (($faction->{allowed_sub_actions}{$type} // 0) > 0) {
+    if (($faction->{allowed_sub_actions}{$type} // 0) > 0) {        
         $faction->{allowed_sub_actions}{$type}--;
         $faction->{allowed_sub_actions} = $followup if $followup;
     } elsif ($faction->{allowed_actions}) {
@@ -49,7 +40,7 @@ sub require_subaction {
             finish_row($faction);
             $ledger->start_new_row($faction);
 
-            allow_full_move $faction;
+            $game{acting}->start_full_move($faction);
             require_subaction($faction, $type, $followup);
             return;
         } else {
@@ -75,7 +66,7 @@ sub allow_build {
 sub command_adjust_resources {
     my ($faction, $delta, $type, $source) = @_;
     my $faction_name = $faction->{name};
-    my $ledger = $state{ledger};
+    my $ledger = $game{ledger};
     my $checked = 0;
 
     if (grep { $_ eq $type } @cults) {
@@ -108,7 +99,7 @@ sub command_adjust_resources {
         }
     }
 
-    if ($type eq 'VP' and $state{finished}) {
+    if ($type eq 'VP' and $game{finished}) {
         $checked = 1;
     }
 
@@ -142,7 +133,7 @@ sub command_build {
     my ($faction, $where) = @_;
     my $faction_name = $faction->{name};
 
-    my $free = ($state{round} == 0);
+    my $free = ($game{round} == 0);
     my $type = 'D';
     my $color = $faction->{color};
 
@@ -189,12 +180,11 @@ sub command_build {
         die "Must do all transforms before building ($faction->{SPADE} spades) remaining\n";
     }
 
-    if (!$state{round}) {
+    if (!$game{round}) {
         if ($faction_name ne $setup_order[0]) {
             die "Expected $setup_order[0] to place building, not $faction_name\n"
         }
         shift @setup_order;
-        check_setup_actions();
     }
 
     note_leech $faction, $where;
@@ -333,7 +323,7 @@ sub command_convert {
 sub command_leech {
     my ($faction, $pw, $from) = @_;
     my $faction_name = $faction->{name};
-    my $ledger = $state{ledger};
+    my $ledger = $game{ledger};
 
     my $actual_pw = gain_power $faction, $pw;
     my $vp = $actual_pw - 1;
@@ -460,7 +450,7 @@ sub cultist_maybe_gain_power {
     my %new_data = map { $_, $faction->{$_} } @data_fields;
     my %pretty_delta = pretty_resource_delta(\%old_data, \%new_data);
 
-    $state{ledger}->add_row({
+    $game{ledger}->add_row({
         faction => $faction->{name},
         commands => "[+1pw, all opponents declined power]",
         map { $_, $pretty_delta{$_} } @data_fields
@@ -576,7 +566,7 @@ sub command_bridge {
 sub command_pass {
     my ($faction, $bon) = @_;
     my $faction_name = $faction->{name};
-    my $ledger = $state{ledger};
+    my $ledger = $game{ledger};
 
     my $discard;
 
@@ -585,7 +575,7 @@ sub command_pass {
     my $passed_count = grep { $_->{passed} } values %factions;
     my $first_to_pass = $passed_count == 0;
 
-    if ($state{round} and $first_to_pass) {
+    if ($game{round} and $first_to_pass) {
         $_->{start_player} = 0 for values %factions;
         $faction->{start_player} = 1;
     }
@@ -604,19 +594,19 @@ sub command_pass {
     };
 
     if ($bon) {
-        if (!$state{round}) {
+        if (!$game{round}) {
             if ($faction_name ne $setup_order[0]) {
                 die "Expected $setup_order[0] to pick bonus, not $faction_name\n"
             }
             shift @setup_order;
         }
 
-        if ($state{round} == 6) {
+        if ($game{round} == 6) {
             $ledger->warn("Can't take a bonus tile when passing on last round\n");
         } else {
             adjust_resource $faction, $bon, 1;
         }
-    } elsif ($state{round} != 6) {
+    } elsif ($game{round} != 6) {
         die "Must take a bonus tile when passing (except on last round)\n"
     }
 
@@ -660,14 +650,14 @@ sub command_action {
 }
 
 sub command_start {
-    my $ledger_state = $state{ledger};
-    $state{round}++;
-    $state{turn} = 1;
+    my $ledger_state = $game{ledger};
+    $game{round}++;
+    $game{turn} = 1;
     $ledger_state->{printed_turn} = 0;
 
     for my $faction_name (@factions) {
         my $faction = $factions{$faction_name};
-        die "Round $state{round} income not taken for $faction_name\n" if
+        die "Round $game{round} income not taken for $faction_name\n" if
             !$faction->{income_taken};
         $faction->{income_taken} = 0;
         $faction->{passed} = 0 for keys %factions;
@@ -680,7 +670,7 @@ sub command_start {
         $bonus_coins{$_}{C}++;
     }
 
-    $state{ledger}->turn($state{round}, $state{turn});
+    $game{ledger}->turn($game{round}, $game{turn});
 
     my @order = factions_in_turn_order;
     my $i = 0;
@@ -691,7 +681,7 @@ sub command_start {
     my $start_player = $order[0];
     push @action_required, { type => 'full',
                              faction => $start_player };
-    allow_full_move $factions{$start_player};
+    $game{acting}->start_full_move($factions{$start_player});
 }
 
 sub command_connect {
@@ -745,7 +735,7 @@ sub command_advance {
 }
 
 sub command_finish {
-    $state{finished} = 1;
+    $game{finished} = 1;
     score_final_cults;
     score_final_networks;
     score_final_resources;
@@ -761,8 +751,8 @@ sub command_income {
         take_income_for_faction $faction_name;
     } else {
         my @order = factions_in_turn_order;
-        if (!$state{ledger}->trailing_comment()) {
-            $state{ledger}->add_comment(sprintf "Round %d income", $state{round} + 1);
+        if (!$game{ledger}->trailing_comment()) {
+            $game{ledger}->add_comment(sprintf "Round %d income", $game{round} + 1);
         }
         for (@order) {
             handle_row_internal $_, "income_for_faction";
@@ -782,21 +772,14 @@ sub mt_shuffle {
     } @data; 
 }
 
-sub valid_player_count {
-    if (!defined $player_count) { return 1 }
-    if (@players == $player_count) { return 1 }
-
-    return 0;
-}
-
 sub check_player_count {
-    return if !defined $player_count;
+    return if !defined $game{player_count};
 
-    if (@players > $player_count) {
-        die "Too many players (wanted $player_count)\n"
+    if ($game{acting}->player_count() > $game{player_count}) {
+        die "Too many players (wanted $game{player_count})\n"
     }
 
-    for my $player (@players) {
+    for my $player (@{$game{acting}->players()}) {
         if (!$player->{username}) {
             die "The players must be specified by usernames in public games (player $player->{name} isn't)\n"
         }
@@ -804,7 +787,7 @@ sub check_player_count {
 }
 
 sub command_randomize_v1 {
-    if (!valid_player_count) {
+    if (!$game{acting}->correct_player_count()) {
         return;
     }
 
@@ -822,19 +805,22 @@ sub command_randomize_v1 {
     } keys %tiles;
 
     
-    while (@bon != @players + 3) {
+    while (@bon != $game{acting}->player_count() + 3) {
         handle_row_internal "", "delete ".(shift @bon);
     }
 
-    @players = mt_shuffle $rand, sort {
+    my @players = mt_shuffle $rand, sort {
         lc $a->{name} cmp lc $b->{name} or $a->{index} <=> $b->{index}
-    } @players;
+    } @{$game{acting}->players()};
+
     my $i = 1;
     for (@players) {
-        $state{ledger}->add_comment(
+        $game{ledger}->add_comment(
             "Player $i: ".($_->{displayname} // $_->{name}));
         ++$i;
     }
+
+    $game{acting}->players([@players]);
 }
 
 sub command_start_planning {
@@ -846,7 +832,7 @@ sub command_start_planning {
         command_start;
     }
 
-    allow_full_move $faction;
+    $game{acting}->start_full_move($faction);
 }
 
 sub leech_decisions_required {
@@ -868,7 +854,7 @@ sub full_action_required {
 sub command {
     my ($faction_name, $command) = @_;
     my $faction = $faction_name ? $factions{$faction_name} : undef;
-    my $ledger = $state{ledger};
+    my $ledger = $game{ledger};
 
     my $assert_faction = sub {
         die "Need faction for command $command\n" if !$faction;
@@ -878,9 +864,9 @@ sub command {
     my $assert_active_faction = sub {
         $assert_faction->();
         die "Command invalid when not active player\n" if
-            !$state{acting}->is_active($faction) and
-            $state{round} > 0 and
-            !$state{finished};
+            !$game{acting}->is_active($faction) and
+            $game{round} > 0 and
+            !$game{finished};
         $faction;
     };
 
@@ -894,16 +880,17 @@ sub command {
         my $delta = $sign * $count;
         my $type = uc $3;
 
-        if (!$state{round} and $type =~ /BON/) {
+        if (!$game{round} and $type =~ /BON/) {
             handle_row_internal $faction_name, "pass $type";
             return 0;
         }
 
         command_adjust_resources $assert_faction->(), $delta, $type, lc $4;
     } elsif ($command =~ /^build (\w+)$/i) {
+        $game{acting}->advance_state('initial-dwellings');
         command_build $assert_active_faction->(), uc $1;
     } elsif ($command =~ /^upgrade (\w+) to ([\w ]+)$/i) {
-        die "Can't upgrade in setup phase\n" if !$state{round};
+        die "Can't upgrade in setup phase\n" if !$game{round};
         command_upgrade $assert_active_faction->(), uc $1, alias_building uc $2;
     } elsif ($command =~ /^send (p|priest) to (\w+)(?: for (\d+))?$/i) {
         command_send $assert_active_faction->(), uc $2, $3;
@@ -948,6 +935,7 @@ sub command {
         command_start;
     } elsif ($command =~ /^setup (\w+)(?: for (\S+?))?(?: email (\S+))?$/i) {
         maybe_setup_pool;
+        $game{acting}->advance_state('select-factions');
         setup lc $1, $2, $3;
     } elsif ($command =~ /delete (\w+)$/i) {
         my $name = uc $1;
@@ -955,7 +943,7 @@ sub command {
         maybe_setup_pool;
         my $x = ($faction ? $faction : \%pool);
 
-        $state{ledger}->add_comment("Removing tile $name");
+        $game{ledger}->add_comment("Removing tile $name");
         if (!defined $x->{$name} or
             $name eq 'TELEPORT_TO' or
             $x->{$name} <= 1) {
@@ -979,15 +967,16 @@ sub command {
         for my $i (0..$#score_tiles) {
             my $r = $i + 1;
             my $desc = $tiles{$score_tiles[$i]}{vp_display};
-            $state{ledger}->add_comment("Round $r scoring: $score_tiles[$i], $desc");
+            $game{ledger}->add_comment("Round $r scoring: $score_tiles[$i], $desc");
         }
     } elsif ($command =~ /^finish$/i) {
         return 0 if non_leech_action_required;
         command_finish;
     } elsif ($command =~ /^abort$/i) {
-        $state{finished} = 1;
-        $state{aborted} = 1;
-        @action_required = ( { type => 'gameover' } );
+        $game{finished} = 1;
+        $game{aborted} = 1;
+        # $game{ledger}->add_comment("Game aborted by admin");
+        $game{acting}->advance_state('abort');
     } elsif ($command =~ /^score_resources$/i) {
         score_final_resources_for_faction $faction_name;
     } elsif ($command =~ /^admin email (.*)/i) {
@@ -1004,20 +993,20 @@ sub command {
             die "Unknown option $opt\n";
         }
         $options{$opt} = 1;
-        $state{ledger}->add_comment("option $opt");
+        $game{ledger}->add_comment("option $opt");
     } elsif ($command =~ /^player (\S+)(?: email (\S*))?(?: username (\S+))?$/i) {
-        push @players, {
+        $game{acting}->add_player({
             name => $1,
             email => $2,
             username => $3,
-            index => scalar @players,
-        };
+        });
         check_player_count;
     } elsif ($command =~ /^player-count (\d+)$/i) {
-        $player_count = 1*$1;
+        $game{player_count} = 1*$1;
         check_player_count;
     } elsif ($command =~ /^randomize v1 seed (.*)/i) {
         maybe_setup_pool;
+        $game{acting}->advance_state('select-factions');
         command_randomize_v1 $1;
     } elsif ($command =~ /^wait$/i) {
         ($assert_faction->())->{waiting} = 1;
@@ -1036,7 +1025,7 @@ sub command {
 sub detect_incomplete_state {
     my ($prefix) = @_;
     my $faction = $factions{$prefix};
-    my $ledger = $state{ledger};
+    my $ledger = $game{ledger};
 
     my @extra_action_required = ();
 
@@ -1132,7 +1121,7 @@ sub next_faction_in_turn {
     my $faction_name = shift;
     my @f = factions_in_order_from $faction_name;
 
-    if (!$state{finished}) {
+    if (!$game{finished}) {
         for (@f) {
             if (!$factions{$_}{passed}) {
                 return $_;
@@ -1220,7 +1209,7 @@ sub rewrite_stream {
 sub maybe_advance_turn {
     my ($faction_name) = @_;
 
-    $state{ledger}->turn($state{round}, $state{turn});
+    $game{ledger}->turn($game{round}, $game{turn});
 
     my $all_passed = 1;
     my $max_order = max map {
@@ -1235,7 +1224,7 @@ sub maybe_advance_turn {
     }
 
     if (!$all_passed) {
-        $state{turn}++;
+        $game{turn}++;
     }
 }
 
@@ -1247,7 +1236,7 @@ sub maybe_advance_to_next_player {
     # needs to react.
     my (@extra_action_required) = detect_incomplete_state $faction_name;
 
-    if (!$state{round}) {
+    if (!$game{round}) {
         return "";
     }
 
@@ -1259,7 +1248,7 @@ sub maybe_advance_to_next_player {
 
     if (@extra_action_required) {
         return "";
-    } elsif ($state{acting}->is_active($faction) and
+    } elsif ($game{acting}->is_active($faction) and
              !$faction->{allowed_actions}) {
         @action_required = grep {
             $_->{faction} ne $faction_name or
@@ -1273,34 +1262,8 @@ sub maybe_advance_to_next_player {
         if (defined $next) {
             push @action_required, { type => 'full',
                                      faction => $next };
-            allow_full_move $factions{$next};
+            $game{acting}->start_full_move($factions{$next});
             maybe_advance_turn $faction_name;
-        }
-    }
-}
-
-sub check_setup_actions {
-    if (!$state{round} and !$state{finished}) {
-        if (!valid_player_count) {
-            @action_required = ({ type => 'not-started',
-                                  player_count => scalar @players,
-                                  wanted_player_count => $player_count });
-        } elsif (@players and @players != @factions) {
-            @action_required = ({
-                type => 'faction',
-                player => ($players[@factions]{displayname} // $players[@factions]{name}),
-                player_index => "player".(1+@factions),
-             });
-        } elsif (@setup_order) {
-            my $type = (@setup_order <= @factions ? 'bonus' : 'dwelling');
-            @action_required = ({ type => $type, faction => $setup_order[0] });
-            if ($type eq 'bonus') {
-                allow_pass $factions{$setup_order[0]};
-            } else {
-                allow_build $factions{$setup_order[0]};
-            }
-        } else {
-            @action_required = ();
         }
     }
 }
@@ -1312,20 +1275,18 @@ sub finish_row {
         maybe_advance_to_next_player $faction;
     }
     
-    if ($state{ledger}->collecting_row()) {
-        $state{ledger}->finish_row();
-    }
+    $game{ledger}->finish_row();
 }
 
 sub do_command {
-    my $ledger = $state{ledger};
+    my $ledger = $game{ledger};
     my ($faction_name, @commands) = @_;
     
     return if !@commands;
     die if @commands > 1;
 
     if ($faction_name eq 'comment') {
-        $state{ledger}->add_comment("@commands");
+        $game{ledger}->add_comment("@commands");
         return;
     }
 
@@ -1341,44 +1302,16 @@ sub do_command {
     }
 
     command $faction_name, $commands[0];
-    $state{ledger}->add_command($commands[0]);
-    if ($state{ledger}->force_finish_row()) {
+    $game{ledger}->add_command($commands[0]);
+    if ($game{ledger}->force_finish_row()) {
         finish_row $factions{$faction_name};
     }
-
-    check_setup_actions;
 }
 
 sub handle_row_internal {
     do_command @_;
     if ($_[0]) {
         finish_row $factions{$_[0]};
-    }
-}
-
-sub maybe_do_maintenance {
-    if (@factions and !@action_required) {
-        my $all_passed = 1;
-        my $income_taken = 0;
-        for my $faction (values %factions) {
-            $all_passed &&= $faction->{passed};
-            $income_taken ||= $faction->{income_taken};
-        }
-
-        if ($state{round} == 6) {
-            command_finish;
-            return;
-        } 
-
-        if (!$income_taken) {
-            finish_row undef;
-            command_income '';
-        }
-
-        if (!@action_required) {
-            finish_row undef;
-            command_start;
-        }
     }
 }
 
@@ -1394,7 +1327,7 @@ sub play {
         }; if ($@) {
             die "Error in command '".($this->[1])."': $@";
         }
-        my $active_faction = $state{acting}->active_faction();
+        my $active_faction = $game{acting}->active_faction();
         if (!defined $next and $active_faction) {
             $active_faction->{allowed_sub_actions}{burn} = 1;
             $active_faction->{allowed_sub_actions}{convert} = 1;
@@ -1403,13 +1336,17 @@ sub play {
             finish_row $factions{$this->[0]};
         }
         $i++;
-        maybe_do_maintenance;
+        $game{acting}->what_next();
 
         if ($max_row) {
-            my $size = $state{ledger}->size();
+            my $size = $game{ledger}->size();
             if ($size >= ($max_row-1)) {
                 return $size;
             }
+        }
+
+        if ($game{finished}) {
+            return 0;
         }
     }
 

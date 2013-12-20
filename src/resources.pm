@@ -242,7 +242,7 @@ sub adjust_resource {
                 die "Can't take two copies of $type\n";
             }
             
-            $faction->{stats}{$type}{round} = "$state{round}";
+            $faction->{stats}{$type}{round} = "$game{round}";
             $faction->{stats}{$type}{order} = scalar grep {/^FAV/} keys %{$faction};
 
             gain $faction, $tiles{$type}{gain}, $type;
@@ -310,7 +310,7 @@ sub note_leech {
     }
 
     for (keys %this_leech) {
-	$state{ledger}->report_leech($_, $this_leech{$_});
+	$game{ledger}->report_leech($_, $this_leech{$_});
     }
 
     return %this_leech;
