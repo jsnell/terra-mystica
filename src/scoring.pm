@@ -2,7 +2,7 @@ package terra_mystica;
 
 use strict;
 
-use vars qw(%state @score_tiles);
+use vars qw(%state @score_tiles %factions @factions %map @bridges);
 
 use cults;
 use tiles;

@@ -5,9 +5,9 @@ package terra_mystica;
 use strict;
 use List::Util qw(sum max min);
 
-use vars qw($state);
-use vars qw(@action_required);
+use vars qw($state @action_required);
 
+use acting;
 use commands;
 use cults;
 use factions;
@@ -151,6 +151,7 @@ sub evaluate_game {
 
     local %state = (
         ledger => terra_mystica::Ledger->new(),
+        acting => terra_mystica::Acting->new(),
         round => 0,
         turn => 0,
         aborted => 0,
@@ -173,7 +174,6 @@ sub evaluate_game {
     local @players = @{$data->{players}};
     local $admin_email = '';
     local %options = ();
-    local $active_faction = '';
     local $player_count = undef;
 
     setup_map;
@@ -230,8 +230,8 @@ sub evaluate_game {
         score_tiles => [ map({$tiles{$_}} @score_tiles ) ],
         bonus_tiles => { map({$_, $tiles{$_}} grep { /^BON/ } keys %tiles ) },
         favors => { map({$_, $tiles{$_}} grep { /^FAV/ } keys %tiles ) },
-        action_required => \@action_required,
-        active_faction => $active_faction,
+        action_required => [@action_required],
+        active_faction => $state{acting}->active_faction_name(),
         history_view => $history_view,
         round => $state{round},
         turn => $state{turn},
