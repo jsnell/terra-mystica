@@ -20,6 +20,7 @@ has 'commands' => (is => 'rw');
 has 'force_finish_row' => (is => 'rw', default => 0);
 has 'start_resources' => (is => 'rw');
 has 'warnings' => (is => 'rw', default => sub { [] });
+has 'leech' => (is => 'rw', default => sub { {} });
 
 my @data_fields = qw(VP C W P P1 P2 P3 PW FIRE WATER EARTH AIR CULT);
 
@@ -44,6 +45,7 @@ sub start_new_row {
     $ledger->force_finish_row(0);
     $ledger->commands([]);
     $ledger->warnings([]);
+    $ledger->leech({});
     $ledger->start_resources(
         { map { ( $_, $faction->{$_}) } @data_fields });
 }
@@ -61,7 +63,11 @@ sub warn {
     push @{$ledger->warnings()}, $warning;
 }
 
-use vars qw(%leech);
+sub report_leech {
+    my ($ledger, $faction_name, $amount) = @_;
+    
+    $ledger->leech()->{$faction_name} += $amount;
+}
 
 sub finish_row {
     my ($ledger) = @_;
@@ -73,8 +79,8 @@ sub finish_row {
                                                             \%end_resources);
 
     my $info = { faction => $faction->{name},
-                 leech => { %leech },
-                 warning => (join "\n", @{$ledger->warnings()}),
+                 leech => $ledger->leech(),
+                 warning => $ledger->warnings()->[0] // "",
                  commands => (join ". ", @{$ledger->commands()}),
                  map { $_, $pretty_delta{$_} } @data_fields};
 

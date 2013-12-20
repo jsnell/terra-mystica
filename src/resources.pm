@@ -310,7 +310,7 @@ sub note_leech {
     }
 
     for (keys %this_leech) {
-	$leech{$_} += $this_leech{$_};
+	$state{ledger}->report_leech($_, $this_leech{$_});
     }
 
     return %this_leech;

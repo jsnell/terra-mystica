@@ -1132,9 +1132,11 @@ sub next_faction_in_turn {
     my $faction_name = shift;
     my @f = factions_in_order_from $faction_name;
 
-    for (@f) {
-        if (!$factions{$_}{passed}) {
-            return $_;
+    if (!$state{finished}) {
+        for (@f) {
+            if (!$factions{$_}{passed}) {
+                return $_;
+            }
         }
     }
 
