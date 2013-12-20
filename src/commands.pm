@@ -17,14 +17,14 @@ use tiles;
 use towns;
 
 use vars qw(%state);
-use vars qw($admin_email %options $active_faction $player_count);
+use vars qw($admin_email %options $player_count);
 
 sub handle_row;
 sub handle_row_internal;
 
 sub allow_full_move {
     my $faction = shift;
-    $active_faction = $faction->{name};
+    $state{acting}->active_faction($faction);
     $faction->{allowed_actions} = 1;
     $faction->{allowed_sub_actions} = {};
     $faction->{allowed_build_locations} = {};
@@ -878,7 +878,7 @@ sub command {
     my $assert_active_faction = sub {
         $assert_faction->();
         die "Command invalid when not active player\n" if
-            $faction_name ne $active_faction and
+            !$state{acting}->is_active($faction) and
             $state{round} > 0 and
             !$state{finished};
         $faction;
@@ -1240,7 +1240,8 @@ sub maybe_advance_turn {
 }
 
 sub maybe_advance_to_next_player {
-    my $faction_name = shift;
+    my $faction = shift;
+    my $faction_name = $faction->{name};
 
     # Check whether the action is incomplete in some way, or if somebody
     # needs to react.
@@ -1250,7 +1251,7 @@ sub maybe_advance_to_next_player {
         return "";
     }
 
-    if ($factions{$faction_name}{planning}) {
+    if ($faction->{planning}) {
         return "";
     }
 
@@ -1258,14 +1259,14 @@ sub maybe_advance_to_next_player {
 
     if (@extra_action_required) {
         return "";
-    } elsif ($faction_name eq $active_faction and
-             !$factions{$faction_name}{allowed_actions}) {
+    } elsif ($state{acting}->is_active($faction) and
+             !$faction->{allowed_actions}) {
         @action_required = grep {
             $_->{faction} ne $faction_name or
                 $_->{type} ne 'full'
         } @action_required;
 
-        $factions{$faction_name}{recent_moves} = [];
+        $faction->{recent_moves} = [];
 
         # Advance to the next player, unless everyone has passed
         my $next = next_faction_in_turn $faction_name;
@@ -1308,7 +1309,7 @@ sub finish_row {
     my $faction = shift;
 
     if ($faction) {
-        maybe_advance_to_next_player $faction->{name};
+        maybe_advance_to_next_player $faction;
     }
     
     if ($state{ledger}->collecting_row()) {
@@ -1384,7 +1385,6 @@ sub maybe_do_maintenance {
 sub play {
     my ($commands, $max_row) = @_;
     my $i = 0;
-    $active_faction = '';
 
     while ($i < @{$commands}) {
         my $this = $commands->[$i];
@@ -1395,9 +1395,10 @@ sub play {
             finish_row undef;
             die "Error in command '".($this->[1])."': $@";
         }
+        my $active_faction = $state{acting}->active_faction();
         if (!defined $next and $active_faction) {
-            $factions{$active_faction}{allowed_sub_actions}{burn} = 1;
-            $factions{$active_faction}{allowed_sub_actions}{convert} = 1;
+            $active_faction->{allowed_sub_actions}{burn} = 1;
+            $active_faction->{allowed_sub_actions}{convert} = 1;
         }
         if (($next->[0] // '') ne ($this->[0] // '')) {
             finish_row $factions{$this->[0]};

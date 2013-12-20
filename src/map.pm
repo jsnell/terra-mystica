@@ -7,7 +7,7 @@ use strict;
 use factions;
 
 use vars qw(%state);
-use vars qw(%map %reverse_map @bridges $active_faction);
+use vars qw(%map %reverse_map @bridges %building_strength);
 
 my @map = qw(brown gray green blue yellow red brown black red green blue red black E
              yellow x x brown black x x yellow black x x yellow E
@@ -401,7 +401,7 @@ sub transform_cost {
 
 sub update_reachable_build_locations {
     for my $faction (values %factions) {
-        if ($faction->{name} eq $active_faction) {
+        if ($state{acting}->is_active($faction)) {
             $faction->{reachable_build_locations} = [
                 grep {
                     $_
@@ -431,7 +431,7 @@ sub update_reachable_build_locations {
 
 sub update_reachable_tf_locations {
     for my $faction (values %factions) {
-        if ($faction->{name} eq $active_faction or
+        if ($state{acting}->is_active($faction) or
             ($faction->{passed} and $faction->{SPADE} > 0)) {
             $faction->{reachable_tf_locations} = [
                 grep {

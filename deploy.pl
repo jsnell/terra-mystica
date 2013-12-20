@@ -98,7 +98,8 @@ sub deploy_cgi {
         copy_with_mode 0555, "src/$f", "$target/cgi-bin/$f";
     }
 
-    for my $f (qw(buildings.pm
+    for my $f (qw(acting.pm
+                  buildings.pm
                   commands.pm
                   create_game.pm
                   cryptutil.pm
