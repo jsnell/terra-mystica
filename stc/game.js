@@ -971,6 +971,8 @@ function drawFaction(name) {
 }
 
 function drawRealFaction(faction, board) {
+    var name = faction.name;
+
     var info = new Element('div', {'class': 'faction-info' });
     board.insert(info);
 
