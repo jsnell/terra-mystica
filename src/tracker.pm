@@ -165,7 +165,6 @@ sub evaluate_game {
             players => $data->{players},
         });
 
-    local @setup_order = ();
     local %map = ();
     local %reverse_map = ();
     local @bridges = ();
@@ -176,7 +175,6 @@ sub evaluate_game {
     local %factions = ();
     local %factions_by_color = ();
     local @factions = ();
-    local @setup_order = ();
     local $admin_email = '';
     local %options = ();
 

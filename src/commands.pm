@@ -136,10 +136,7 @@ sub command_build {
     }
 
     if (!$game{round}) {
-        if ($faction_name ne $setup_order[0]) {
-            die "Expected $setup_order[0] to place building, not $faction_name\n"
-        }
-        shift @setup_order;
+        $game{acting}->setup_action($faction_name, 'build');
     }
 
     note_leech $faction, $where;
@@ -548,10 +545,7 @@ sub command_pass {
 
     if ($bon) {
         if (!$game{round}) {
-            if ($faction_name ne $setup_order[0]) {
-                die "Expected $setup_order[0] to pick bonus, not $faction_name\n"
-            }
-            shift @setup_order;
+            $game{acting}->setup_action($faction_name, 'pass');
         }
 
         if ($game{round} == 6) {

@@ -5,7 +5,7 @@ package terra_mystica;
 use strict;
 use Clone qw(clone);
 
-use vars qw(%setups %factions %factions_by_color @factions @setup_order);
+use vars qw(%setups %factions %factions_by_color @factions);
 
 %setups = (
     alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
@@ -563,16 +563,7 @@ sub setup {
     $faction->{BRIDGE_COUNT} = 3;
 
     push @factions, $faction_name;
-
-    @setup_order = @factions;
-    push @setup_order, reverse @factions;
-    push @setup_order, 'nomads' if $factions{nomads};
-
-    if ($factions{chaosmagicians}) {
-        @setup_order = grep { $_ ne 'chaosmagicians' } @setup_order;
-        push @setup_order, 'chaosmagicians';
-    }
-    push @setup_order, reverse @factions;
+    $game{acting}->register_faction($faction);
 
     $faction->{planning} = 0;
 
