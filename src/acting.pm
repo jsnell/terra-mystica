@@ -2,8 +2,10 @@
 # Whose turn is it now, what can they do, what can other people do, etc.
 
 package terra_mystica::Acting;
-use JSON;
+
+use List::Util qw(max);
 use Mouse;
+use JSON;
 
 # Who is playing in this game?
 has 'players' => (is => 'rw');
@@ -25,6 +27,8 @@ has 'state' => (is => 'rw',
 # Main game data structure
 has 'game' => (is => 'rw');
 
+has 'full_turn_played' => (is => 'rw', default => 0);
+
 ## Tracking what each player needs to do
 
 sub action_required_count {
@@ -43,8 +47,8 @@ sub dismiss_action {
     my ($self, $faction, $type) = @_;
     $self->action_required([
         grep {
-            !((!defined $faction or $_->{faction} eq $faction->{name}) and
-              (!defined $type or $_->{type} eq $type))
+            !(($faction->{name} // '') eq ($_->{faction} // '') and
+              ($type // '') eq ($_->{type} // ''))
         } @{$self->action_required}
     ]);
 }
@@ -120,9 +124,9 @@ sub require_subaction {
     } else {
         my @unpassed = grep { !$_->{passed} } values %terra_mystica::factions;
         if (@unpassed == 1 or $faction->{planning}) {
-            terra_mystica::finish_row($faction);
-            $ledger->start_new_row($faction);
+            $self->maybe_advance_to_next_player($faction);
 
+            $ledger->start_new_row($faction);
             $self->start_full_move($faction);
             $self->require_subaction($faction, $type, $followup);
             return;
@@ -384,6 +388,166 @@ sub in_abort {
     my ($self) = @_;
 
     $self->replace_all_actions({ type => 'gameover', aborted => 1 });
+}
+
+## Switching the turn from one player to the next
+
+sub detect_incomplete_turn {
+    my ($self, $faction) = @_;
+    my $faction_name = $faction->{name};
+    my $ledger = $self->game()->{ledger};
+    my $incomplete = 0;
+
+    if ($faction->{SPADE}) {
+        $incomplete = 1;
+        $self->require_action($faction, {
+            type => 'transform',
+            amount => $faction->{SPADE}, 
+        });
+    }
+
+    # Hm, this doesn't feel right. 
+    if ($faction->{FORBID_TF}) {
+        delete $faction->{FORBID_TF};
+    }
+
+    if ($faction->{FREE_TF}) {
+        $incomplete = 1;
+        $ledger->warn("Unused free terraform for $faction_name");
+        $self->require_action($faction, {
+            type => 'transform',
+        });
+    }
+
+    if ($faction->{FREE_TP}) {
+        $incomplete = 1;
+        $ledger->warn("Unused free trading post for $faction_name\n");
+        $self->require_action($faction, {
+            type => 'upgrade',
+            from_building => 'D',
+            to_building => 'TP',
+        });
+    }
+
+    if ($faction->{FREE_D}) {
+        $incomplete = 1;
+        $ledger->warn("Unused free dwelling for $faction_name\n");
+        $self->require_action($faction, {
+            type => 'dwelling',
+            faction => $faction_name
+        });
+    }
+
+    if ($faction->{CULT}) {
+        $incomplete = 1;
+        $ledger->warn("Unused cult advance for $faction_name\n");
+        $self->require_action($faction, {
+            type => 'cult',
+            amount => $faction->{CULT}, 
+        });
+    }
+
+    if ($faction->{GAIN_FAVOR}) {
+        $incomplete = 1;
+        $ledger->warn("favor not taken by $faction_name\n");
+        $self->require_action($faction, {
+            type => 'favor',
+            amount => $faction->{GAIN_FAVOR}, 
+        });
+    } else {
+        $self->dismiss_action($faction, 'favor');
+    }
+
+    if ($faction->{GAIN_TW}) {
+        $incomplete = 1;
+        $ledger->warn("town tile not taken by $faction_name\n");
+        $self->require_action($faction, {
+            type => 'town',
+            amount => $faction->{GAIN_TW}, 
+        });
+    } else {
+        $self->dismiss_action($faction, 'town');
+    }
+
+    if ($faction->{BRIDGE}) {
+        $incomplete = 1;
+        $ledger->warn("bridge paid for but not placed\n");
+        $self->require_action($faction, {
+            type => 'bridge',
+        });
+    } else {
+        $self->dismiss_action($faction, 'bridge');
+    }
+    
+    $incomplete;
+}
+
+sub next_faction_in_turn {
+    my ($self, $faction_name) = @_;
+    my @f = terra_mystica::factions_in_order_from($faction_name);
+
+    if (!$self->game()->{finished}) {
+        for (@f) {
+            if (!$terra_mystica::factions{$_}{passed}) {
+                return $_;
+            }
+        }
+    }
+
+    undef;
+}
+
+sub maybe_advance_turn {
+    my ($self, $faction, $next) = @_;
+    my $game = $self->game();
+
+    if ($self->full_turn_played()) {
+        $self->full_turn_played(0);
+        $game->{turn}++;
+    }
+
+    if ($faction->{order} >= $next->{order}) {
+        $self->full_turn_played(1);
+    }
+
+    $game->{ledger}->turn($game->{round},
+                          $game->{turn});
+}
+
+sub maybe_advance_to_next_player {
+    my ($self, $faction) = @_;
+    my $faction_name = $faction->{name};
+
+    # Check whether the action is incomplete in some way.
+    my ($incomplete) = $self->detect_incomplete_turn($faction);
+
+    if (!$self->game()->{round}) {
+        return;
+    }
+
+    if ($faction->{planning}) {
+        return;
+    }
+
+    if (!$incomplete and
+        $self->is_active($faction) and
+        !$faction->{allowed_actions}) {
+        $self->dismiss_action($faction, 'full');
+
+        # Advance to the next player, unless everyone has passed
+        my $next = $self->next_faction_in_turn($faction_name);
+        if (defined $next) {
+            die if $terra_mystica::factions{$next}->{passed};
+            $self->require_action($terra_mystica::factions{$next}, { type => 'full' });
+            $self->start_full_move($terra_mystica::factions{$next});
+            $self->maybe_advance_turn($faction,
+                                      $terra_mystica::factions{$next});
+        }
+
+        $faction->{recent_moves} = [];
+    }
+
+    $self->game()->{ledger}->finish_row();
 }
 
 1;

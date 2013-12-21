@@ -18,7 +18,7 @@ has 'trailing_comment' => (is => 'rw', isa => 'Bool');
 # Data collected about the current row so far
 has 'collecting_row' => (is => 'rw', default => 0);
 has 'current_faction' => (is => 'rw');
-has 'commands' => (is => 'rw');
+has 'commands' => (is => 'rw', default => sub { [] });
 has 'force_finish_row' => (is => 'rw', default => 0);
 has 'start_resources' => (is => 'rw');
 has 'warnings' => (is => 'rw', default => sub { [] });
@@ -54,7 +54,7 @@ sub start_new_row {
 
 sub add_command {
     my ($ledger, $command) = @_;
-    return if !$ledger->collecting_row();
+    die if !$ledger->collecting_row();
 
     push @{$ledger->commands()}, $command;
 }
@@ -90,8 +90,10 @@ sub finish_row {
 
     my $row_summary = "$faction->{name}: $info->{commands}";
 
-    for my $f (values %terra_mystica::factions) {
-        push @{$f->{recent_moves}}, $row_summary;
+    if (!$terra_mystica::game{finished}) {
+        for my $f (values %terra_mystica::factions) {
+            push @{$f->{recent_moves}}, $row_summary;
+        }
     }
 
     $ledger->add_row($info);
