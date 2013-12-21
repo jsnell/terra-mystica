@@ -400,7 +400,7 @@ sub transform_cost {
 }
 
 sub update_reachable_build_locations {
-    for my $faction (values %factions) {
+    for my $faction ($game{acting}->factions_in_order()) {
         if ($game{acting}->is_active($faction)) {
             $faction->{reachable_build_locations} = [
                 grep {
@@ -430,7 +430,7 @@ sub update_reachable_build_locations {
 }
 
 sub update_reachable_tf_locations {
-    for my $faction (values %factions) {
+    for my $faction ($game{acting}->factions_in_order()) {
         if ($game{acting}->is_active($faction) or
             ($faction->{passed} and $faction->{SPADE} > 0)) {
             $faction->{reachable_tf_locations} = [

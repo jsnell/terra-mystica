@@ -242,7 +242,7 @@ sub command_convert {
 
     my %exchange_rates = ();
 
-    # Have to leech before declining power
+    # Have to leech before converting resources
     my @records = leech_decisions_required($faction);
     for (@records) {
         $_->{leech_tainted} = 'convert';
@@ -293,13 +293,14 @@ sub command_leech {
             next;
         }
 
+        my $from_faction = $game{acting}->get_faction($_->{from_faction});
         if ($_->{from_faction} eq 'cultists' and
             $_->{actual} > 0 and
-            !$factions{cultists}{leech_cult_gained}{$_->{leech_id}}++) {
-            $factions{cultists}{CULT}++;
-            $game{acting}->require_action($factions{$_->{from_faction}},
-                                            { type => 'cult',
-                                              amount => 1 });
+            !$from_faction->{leech_cult_gained}{$_->{leech_id}}++) {
+            $from_faction->{CULT}++;
+            $game{acting}->require_action($from_faction,
+                                          { type => 'cult',
+                                            amount => 1 });
         }
 
         if ($_->{leech_tainted}) {
@@ -335,7 +336,7 @@ sub command_leech {
         if ($record->{type} eq 'leech' and
             $record->{faction} eq $faction_name) {
             if (!$can_gain and $record->{actual}) {
-                my $from_faction = $factions{$record->{from_faction}};
+                my $from_faction = $game{acting}->get_faction($record->{from_faction});
                 my $leech_id = $record->{leech_id};
                 cultist_maybe_gain_power($record);
             }
@@ -362,7 +363,7 @@ sub command_decline {
                 $_->{type} eq 'leech' and
                 $_->{amount} eq $amount and
                 $_->{from_faction} eq $from) {
-                my $from_faction = $factions{$_->{from_faction}};
+                my $from_faction = $game{acting}->get_faction($_->{from_faction});
                 my $leech_id = $_->{leech_id};
                 $from_faction->{leech_rejected}{$leech_id}++;
                 cultist_maybe_gain_power($_);
@@ -378,7 +379,7 @@ sub command_decline {
 
 sub cultist_maybe_gain_power {
     my $record = shift;
-    my $faction = $factions{$record->{from_faction}};
+    my $faction = $game{acting}->get_faction($record->{from_faction});
 
     # A decline of a 0 power gain has no effect. (Note that leech_not_rejected
     # has been setup with this assumption in mind).
@@ -523,11 +524,12 @@ sub command_pass {
 
     $game{acting}->require_subaction($faction, 'pass', {});
 
-    my $passed_count = grep { $_->{passed} } values %factions;
+    my $passed_count = grep { $_->{passed} } $game{acting}->factions_in_order();
+
     my $first_to_pass = $passed_count == 0;
 
     if ($game{round} and $first_to_pass) {
-        $_->{start_player} = 0 for values %factions;
+        $_->{start_player} = 0 for $game{acting}->factions_in_order();
         $faction->{start_player} = 1;
     }
 
@@ -546,7 +548,7 @@ sub command_pass {
 
     if ($bon) {
         if (!$game{round}) {
-            $game{acting}->setup_action($faction_name, 'pass');
+            $game{acting}->setup_action($faction, 'pass');
         }
 
         if ($game{round} == 6) {
@@ -603,12 +605,11 @@ sub command_start {
     $game{turn} = 1;
     $ledger_state->{printed_turn} = 0;
 
-    for my $faction_name (@factions) {
-        my $faction = $factions{$faction_name};
-        die "Round $game{round} income not taken for $faction_name\n" if
+    for my $faction ($game{acting}->factions_in_order()) {
+        die "Round $game{round} income not taken for $faction->{name}\n" if
             !$faction->{income_taken};
         $faction->{income_taken} = 0;
-        $faction->{passed} = 0 for keys %factions;
+        $faction->{passed} = 0;
     }
 
     $map{$_}{blocked} = 0 for keys %map;
@@ -620,16 +621,16 @@ sub command_start {
 
     $game{ledger}->turn($game{round}, $game{turn});
 
-    my @order = factions_in_turn_order;
+    my @order = $game{acting}->factions_in_turn_order();
     my $i = 0;
-    for (@order) {
-        $factions{$_}{order} = $i++;
+    for my $faction (@order) {
+        $faction->{order} = $i++;
     }
 
     my $start_player = $order[0];
-    $game{acting}->require_action($factions{$start_player},
+    $game{acting}->require_action($start_player,
                                   { type => 'full' });
-    $game{acting}->start_full_move($factions{$start_player});
+    $game{acting}->start_full_move($start_player);
     $game{acting}->full_turn_played(0);
 }
 
@@ -688,23 +689,23 @@ sub command_finish {
     score_final_cults;
     score_final_networks;
     score_final_resources;
-    for (@factions) {
-        $factions{$_}{passed} = 0;
+    for my $faction ($game{acting}->factions_in_order()) {
+        $faction->{passed} = 0;
     }
     $game{acting}->replace_all_actions({ type => 'gameover' });
 }
 
 sub command_income {
-    my $faction_name = shift;
-    if ($faction_name) {
-        take_income_for_faction $faction_name;
+    my $faction = shift;
+    if ($faction) {
+        take_income_for_faction $faction;
     } else {
-        my @order = factions_in_turn_order;
+        my @order = $game{acting}->factions_in_turn_order();
         if (!$game{ledger}->trailing_comment()) {
             $game{ledger}->add_comment(sprintf "Round %d income", $game{round} + 1);
         }
         for (@order) {
-            handle_row_internal $_, "income_for_faction";
+            handle_row_internal $_->{name}, "income_for_faction";
         }
     }
 }
@@ -789,20 +790,20 @@ sub leech_decisions_required {
 
     return grep {
         $_->{type} eq 'leech' and $_->{faction} eq $faction->{name}
-    } @{$game{acting}->action_required()};
+    } $game{acting}->action_required_elements();
 }
 
 sub non_leech_action_required {
-    return scalar grep { $_->{type} ne 'leech' } @{$game{acting}->action_required()};
+    return scalar grep { $_->{type} ne 'leech' } $game{acting}->action_required_elements();
 }
 
 sub full_action_required {
-    return scalar grep { $_->{type} eq 'full' } @{$game{acting}->action_required()};
+    return scalar grep { $_->{type} eq 'full' } $game{acting}->action_required_elements()
 }
 
 sub command {
     my ($faction_name, $command) = @_;
-    my $faction = $faction_name ? $factions{$faction_name} : undef;
+    my $faction = $faction_name ? $game{acting}->get_faction($faction_name) : undef;
     my $ledger = $game{ledger};
 
     my $assert_faction = sub {
@@ -902,11 +903,11 @@ sub command {
         }
     } elsif ($command =~ /^income$/i) {
         return 0 if non_leech_action_required;
-        for (@factions) {
-            command_income $_ if !$factions{$_}{income_taken};
+        for my $faction ($game{acting}->factions_in_order()) {
+            command_income $faction if !$faction->{income_taken};
         }
     } elsif ($command =~ /^income_for_faction$/i) {
-        command_income $faction_name;
+        command_income $assert_faction->();
     } elsif ($command =~ /^advance (ship|dig)/i) {
         command_advance $assert_faction->(), lc $1;
     } elsif ($command =~ /^score (.*)/i) {
@@ -929,7 +930,7 @@ sub command {
         # $game{ledger}->add_comment("Game aborted by admin");
         $game{acting}->advance_state('abort');
     } elsif ($command =~ /^score_resources$/i) {
-        score_final_resources_for_faction $faction_name;
+        score_final_resources_for_faction $faction;
     } elsif ($command =~ /^admin email (.*)/i) {
         # backwards-compatibility nop
     } elsif ($command =~ /^option (\S+)$/i) {
@@ -985,24 +986,29 @@ sub do_command {
         return;
     }
 
-    if (!($factions{$faction_name} or $faction_name eq '')) {
-        my $faction_list = join ", ", @factions;
-        die "Unknown faction: '$faction_name' (expected one of $faction_list)\n";
+    my $faction;
+    
+    if ($faction_name ne '') {
+        $faction = $game{acting}->get_faction($faction_name);
+        if (!$faction) {
+            my $faction_list = join ", ", map { $_->{name} } $game{acting}->factions_in_order();
+            die "Unknown faction: '$faction->{name}' (expected one of $faction_list)\n";
+        }
     }
 
-    if ($faction_name and
+    if ($faction and
         (!$ledger->collecting_row() or
          $faction_name ne $ledger->current_faction()->{name})) {
-        $ledger->start_new_row($factions{$faction_name});
+        $ledger->start_new_row($faction);
     }
 
     command $faction_name, $commands[0];
-    if ($faction_name) {
+    if ($faction) {
         $game{ledger}->add_command($commands[0]);
     }
 
     if ($game{ledger}->force_finish_row()) {
-        $game{acting}->maybe_advance_to_next_player($factions{$faction_name});
+        $game{acting}->maybe_advance_to_next_player($faction);
         $game{ledger}->finish_row();
     }
 }
@@ -1105,9 +1111,9 @@ sub play {
         }
 
         if (($next->[0] // '') ne ($this->[0] // '')) {
-            if ($this->[0] and $factions{$this->[0]}) {
-                $game{acting}->maybe_advance_to_next_player(
-                    $factions{$this->[0]});
+            my $faction = $game{acting}->get_faction($this->[0]);
+            if ($this->[0] and $faction) {
+                $game{acting}->maybe_advance_to_next_player($faction);
             }
         }
         $game{acting}->what_next();

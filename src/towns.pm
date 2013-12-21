@@ -126,19 +126,20 @@ sub check_mermaid_river_connection_town {
 }
 
 sub update_mermaid_town_connections {
-    return if !exists $factions{mermaids};
+    my $mermaids = $game{acting}->factions()->{mermaids};
+    return if !$mermaids;
 
     my @valid_spaces = ();
 
     for my $river (keys %map) {
         next if $river !~ /^r/;
-        if (check_mermaid_river_connection_town $factions{mermaids}, $river) {
+        if (check_mermaid_river_connection_town $mermaids, $river) {
             push @valid_spaces, $river;
             $map{$river}{possible_town} = 1;
         }
     }
 
-    $factions{mermaids}{possible_towns} = [
+    $mermaids->{possible_towns} = [
         sort { natural_cmp $a, $b } @valid_spaces
     ];
 }

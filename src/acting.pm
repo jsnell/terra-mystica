@@ -18,7 +18,12 @@ has 'players' => (is => 'rw',
                   });
 
 # The factions in the game
-has 'factions' => (is => 'rw', default => sub { {} });
+has 'factions' => (is => 'rw',
+                   traits => ['Hash'],
+                   default => sub { {} },
+                   handles => {
+                       get_faction => 'get',
+                   });
 has 'factions_in_order' => (is => '',
                             traits => ['Array'],
                             default => sub { [] },
@@ -65,7 +70,7 @@ has 'full_turn_played' => (is => 'rw', default => 0);
 ## Tracking what each player needs to do
 
 method require_action($faction, $action) {
-    die if !$action or !$faction;
+    die "Invalid faction" if !$action or !$faction;
     $action->{faction} = $faction->{name};
     $self->push_action_required($action);
 }
@@ -87,7 +92,7 @@ method clear_empty_actions() {
     $self->action_required([grep { $_ ne '' } $self->action_required_elements()]);
 }
 
-## Dealing with the setup phase
+## Dealing with factions and the setup phase
 
 method setup_action($faction, $kind) {
     $self->shift_setup_order();
@@ -108,6 +113,25 @@ method register_faction($faction) {
     push @setup_order, reverse @order;
 
     $self->setup_order([@setup_order]);
+}
+
+method factions_in_turn_order() {
+    my ($start_player) = grep { $_->{start_player} } $self->factions_in_order();
+    my @order = $self->factions_in_order_from($start_player);
+    my $a = pop @order;
+    unshift @order, $a;
+
+    return @order;
+}
+
+
+method factions_in_order_from($faction) {
+    my @f = $self->factions_in_order();
+    while ($f[-1] != $faction) {
+        push @f, shift @f;
+    }
+    
+    @f;
 }
 
 ## Dealing with the active player.
@@ -467,13 +491,10 @@ method detect_incomplete_turn($faction) {
     $incomplete;
 }
 
-method next_faction_in_turn($faction_name) {
+method next_faction_in_turn($faction) {
     return if $self->game()->{finished};
 
-    my @f = terra_mystica::factions_in_order_from($faction_name);
-
-    for (@f) {
-        my $f = $self->factions()->{$_};
+    for my $f ($self->factions_in_order_from($faction)) {
         return $f if !$f->{passed};
     }
 
@@ -516,7 +537,7 @@ method maybe_advance_to_next_player($faction) {
         $self->dismiss_action($faction, 'full');
 
         # Advance to the next player, unless everyone has passed
-        my $next = $self->next_faction_in_turn($faction_name);
+        my $next = $self->next_faction_in_turn($faction);
         if (defined $next) {
             $self->require_action($next, { type => 'full' });
             $self->start_full_move($next);

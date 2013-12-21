@@ -10,7 +10,6 @@ use vars qw(%game);
 use acting;
 use commands;
 use cults;
-use factions;
 use ledger;
 use map;
 use resources;
@@ -55,7 +54,7 @@ sub finalize {
         }
     }
 
-    for my $faction (values %factions) {
+    for my $faction ($game{acting}->factions_in_order()) {
         if ($faction->{waiting}) {
             my $action = $game{acting}->action_required()->[0];
             if ($action->{faction} eq $faction->{name}) {
@@ -69,7 +68,7 @@ sub finalize {
                     faction => $faction->{name}
                 });
         }
-        my $faction_count = scalar keys %factions;
+        my $faction_count = $game{acting}->faction_count();
         my $info;
         if (exists $faction_info->{$faction->{name}}) {
             $info = $faction_info->{$faction->{name}};
@@ -86,10 +85,8 @@ sub finalize {
         }
     }
 
-    for my $faction_name (@factions) {
-        my $faction = $factions{$faction_name};
-        next if !$faction;
-        $faction->{income} = { faction_income $faction->{name} };        
+    for my $faction ($game{acting}->factions_in_order()) {
+        $faction->{income} = { faction_income $faction };        
         if ($delete_email) {
             delete $faction->{email};
         }
@@ -175,9 +172,6 @@ sub evaluate_game {
     local %bonus_coins = ();
     local $leech_id = 0;
     local @score_tiles = ();
-    local %factions = ();
-    local %factions_by_color = ();
-    local @factions = ();
     local $admin_email = '';
     local %options = ();
 
@@ -223,10 +217,10 @@ sub evaluate_game {
     finalize $data->{delete_email} // 1, $faction_info // {};
 
     return {
-        order => \@factions,
+        order => [ map { $_->{name} } $game{acting}->factions_in_order() ],
         map => \%map,
         actions => \%actions,
-        factions => \%factions,
+        factions => $game{acting}->factions(),
         pool => \%pool,
         bridges => \@bridges,
         ledger => $game{ledger}->flush(),

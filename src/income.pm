@@ -10,8 +10,7 @@ use scoring;
 use vars qw(%game);
 
 sub faction_income {
-    my $faction_name = shift;
-    my $faction = $factions{$faction_name};
+    my $faction = shift;
 
     my %total_income = map { $_, 0 } qw(C W P PW);
 
@@ -87,16 +86,15 @@ sub faction_income {
 }
 
 sub take_income_for_faction {
-    my $faction_name = shift;
-    my $faction = $factions{$faction_name};
-    die "Taking income twice for $faction_name\n" if
+    my $faction = shift;
+    die "Taking income twice for $faction->{name}\n" if
         $faction->{income_taken};
 
     if ($game{round} == 0) {
         $faction->{passed} = 1;
     }
 
-    my %income = faction_income $faction_name;
+    my %income = faction_income $faction;
     gain $faction, \%income;
         
     $faction->{income_taken} = 1;

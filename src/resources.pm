@@ -159,9 +159,9 @@ sub maybe_gain_power_from_cult {
         adjust_resource $faction, 'KEY', -1;
         adjust_resource $faction, 'PW', 3;
         # Block others from this space
-        for (@factions) {
-            if ($_ ne $faction->{name}) {
-                $factions{$_}{"MAX_$cult"} = 9;
+        for my $other_faction ($game{acting}->factions_in_order()) {
+            if ($other_faction != $faction) {
+                $other_faction->{"MAX_$cult"} = 9;
             }
         }
     }
@@ -290,8 +290,7 @@ sub note_leech {
     $leech_id++;
 
     # Note -- the exact turn order matters when the cultists are in play.
-    for my $faction_name (factions_in_order_from $from_faction->{name}) {
-        my $faction = $factions{$faction_name};
+    for my $faction ($game{acting}->factions_in_order_from($from_faction)) {
         my $color = $faction->{color}; 
         next if !$this_leech{$color};
         my $amount = $this_leech{$color};

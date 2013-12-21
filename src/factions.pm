@@ -5,9 +5,7 @@ package terra_mystica;
 use strict;
 use Clone qw(clone);
 
-use vars qw(%setups %factions %factions_by_color @factions);
-
-%setups = (
+my %setups = (
     alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
                     WATER => 1, FIRE => 1, color => 'black',
                     display => "Alchemists",
@@ -491,14 +489,15 @@ use vars qw(%setups %factions %factions_by_color @factions);
 
 sub setup {
     my ($faction_name, $player, $email) = @_;
+    my $acting = $game{acting};
 
     die "Unknown faction: $faction_name\n" if !$setups{$faction_name};
 
-    my $faction = $factions{$faction_name} = clone($setups{$faction_name});
+    my $faction = clone($setups{$faction_name});
     my $player_record = {};
-    my $players = $game{acting}->players();
+    my $players = $acting->players();
     if (@{$players}) {
-        $player_record = $players->[@factions];
+        $player_record = $players->[$acting->faction_count()];
         if ($player and $player ne $player_record->{name}) {
             die "Expected ".($player_record->{name})." to pick a faction";
         }
@@ -514,16 +513,16 @@ sub setup {
     }
 
     $faction->{name} = $faction_name;
-    $faction->{start_player} = 1 if !@factions;
+    $faction->{start_player} = 1 if !$acting->faction_count();
     $faction->{email} = $email;
 
     $faction->{allowed_actions} = 0;
 
-    if ($factions_by_color{$faction->{color}}) {
-        my $other_name = $factions_by_color{$faction->{color}}->{name};
-        die "Can't add $faction_name, $other_name already in use\n";
+    for my $other_faction ($acting->factions_in_order()) {
+        if ($other_faction->{color} eq $faction->{color}) {
+            die "Can't add $faction_name, $other_faction->{name} already in use\n";
+        }
     }
-    $factions_by_color{$faction->{color}} = $faction;
 
     $faction->{P} ||= 0;
     $faction->{P1} ||= 0;
@@ -561,10 +560,6 @@ sub setup {
     $faction->{SPADE} = 0;
     $faction->{TOWN_SIZE} = 7;
     $faction->{BRIDGE_COUNT} = 3;
-
-    push @factions, $faction_name;
-    $game{acting}->register_faction($faction);
-
     $faction->{planning} = 0;
 
     my %base_exchange_rates = (
@@ -583,28 +578,7 @@ sub setup {
     }
     $faction->{exchange_rates} = \%base_exchange_rates;
 
-#    @action_required = ({ type => 'dwelling', faction => $setup_order[0] });
-}
-
-sub factions_in_order_from {
-    my $faction = shift;
-    die "Internal error" if !$factions{$faction};
-
-    my @f = @factions;
-    while ($f[-1] ne $faction) {
-        push @f, shift @f;
-    }
-    
-    @f;
-}
-
-sub factions_in_turn_order {
-    my ($start_player) = grep { $_->{start_player} } values %factions;
-    my @order = factions_in_order_from $start_player->{name};
-    my $a = pop @order;
-    unshift @order, $a;
-
-    return @order;
+    $game{acting}->register_faction($faction);
 }
 
 1;

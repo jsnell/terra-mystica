@@ -2,7 +2,7 @@ package terra_mystica;
 
 use strict;
 
-use vars qw(%game @score_tiles %factions @factions %map @bridges);
+use vars qw(%game @score_tiles %map @bridges);
 
 use cults;
 use tiles;
@@ -47,14 +47,14 @@ sub maybe_score_favor_tile {
 }
 
 sub score_with_ledger_entry {
-    my ($faction_name, $vp, $type) = @_;
-    handle_row_internal($faction_name, "+${vp}vp for $type");
+    my ($faction, $vp, $type) = @_;
+    handle_row_internal($faction->{name}, "+${vp}vp for $type");
 }
 
 sub score_type_rankings {
     my ($type, $fun, @scores) = @_;
 
-    my @levels = sort { $a <=> $b } map { $factions{$_}{$type} // 0} keys %factions;
+    my @levels = sort { $a <=> $b } map { $_->{$type} // 0} $game{acting}->factions_in_order();
     my %scores = ();
     my %count = ();
     $count{$_}++ for @levels;
@@ -65,12 +65,12 @@ sub score_type_rankings {
         }
     }
 
-    for my $faction_name (@factions) {
-        my $level = $factions{$faction_name}{$type};
+    for my $faction ($game{acting}->factions_in_order()) {
+        my $level = $faction->{$type};
         next if !$level or !defined $scores{$level};
         my $vp = int($scores{$level} / $count{$level});
         if ($vp) {
-            $fun->($faction_name, $vp, $type);
+            $fun->($faction, $vp, $type);
         }
     }
 }
@@ -83,14 +83,14 @@ sub score_final_cults {
 }
 
 sub score_final_networks {
-    compute_network_size $factions{$_} for @factions;
+    compute_network_size $_ for $game{acting}->factions_in_order();
     $game{ledger}->add_comment("Scoring largest network");
     score_type_rankings 'network', \&score_with_ledger_entry, 18, 12, 6;
 }
 
 sub score_final_resources_for_faction {
-    my $faction_name = shift;
-    my $faction = $factions{$faction_name};
+    my $faction = shift;
+    my $faction_name = $faction->{name};
 
     my $b = int($faction->{P2} / 2);
     if ($b) {
@@ -120,8 +120,8 @@ sub score_final_resources_for_faction {
 sub score_final_resources {
     $game{ledger}->add_comment("Converting resources to VPs");
 
-    for (@factions) {
-        handle_row_internal($_, "score_resources");
+    for ($game{acting}->factions_in_order()) {
+        handle_row_internal($_->{name}, "score_resources");
     }
 }
 
@@ -171,15 +171,15 @@ sub faction_vps {
     }
     
     my $score_to_projection = sub {
-        my ($faction_name, $vp, $type) = @_;
-        if ($faction->{name} eq $faction_name) {
+        my ($score_faction, $vp, $type) = @_;
+        if ($faction == $score_faction) {
             $projection{$type} += $vp;
         }
     };
 
-    for (@factions) {
-        if (!$factions{$_}{network}) {
-            compute_network_size $factions{$_}
+    for my $faction ($game{acting}->factions_in_order()) {
+        if (!$faction->{network}) {
+            compute_network_size $faction
         }
     }
     score_type_rankings 'network', $score_to_projection, 18, 12, 6;
