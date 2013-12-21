@@ -6,7 +6,7 @@ use scoring;
 use towns;
 use tiles;
 
-use vars qw(%pool %bonus_coins $leech_id);
+use vars qw(%pool);
 
 sub maybe_setup_pool() {
     return if keys %pool;
@@ -14,8 +14,6 @@ sub maybe_setup_pool() {
 }
 
 sub setup_pool {
-    %bonus_coins = ();
-
     %pool = (
         # Resources
         C => 1000,
@@ -56,13 +54,12 @@ sub setup_pool {
 
     for (keys %tiles) {
         my $option = $tiles{$_}{option};
-        if (defined $option and not defined $options{$option}) {
-            delete $tiles{$_};
+        if (defined $option and not defined $game{options}{$option}) {
             next;
         }
         if (/^BON/) {
             $pool{$_}++;
-            $bonus_coins{$_}{C} = 0;
+            $game{bonus_coins}{$_}{C} = 0;
         } elsif (/^FAV/) {
             $pool{$_} += $tiles{$_}{count} || 3;
         } elsif (/^TW/) {
@@ -273,8 +270,8 @@ sub adjust_resource {
     }
 
     if ($type =~ /^BON/) {
-        $faction->{C} += $bonus_coins{$type}{C};
-        $bonus_coins{$type}{C} = 0;
+        $faction->{C} += $game{bonus_coins}{$type}{C};
+        $game{bonus_coins}{$type}{C} = 0;
     }
 
     if ($type and $faction->{$type} < 0) {
@@ -287,7 +284,7 @@ sub adjust_resource {
 sub note_leech {
     my ($from_faction, $where) = @_;
     my %this_leech = compute_leech @_;
-    $leech_id++;
+    my $leech_id = ++$game{leech_id};
 
     # Note -- the exact turn order matters when the cultists are in play.
     for my $faction ($game{acting}->factions_in_order_from($from_faction)) {

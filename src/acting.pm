@@ -3,6 +3,7 @@
 
 package terra_mystica::Acting;
 
+use Clone qw(clone);
 use List::Util qw(max);
 use Method::Signatures::Simple;
 use Moose;
@@ -156,10 +157,10 @@ method require_subaction($faction, $type, $followup) {
 
     if (($faction->{allowed_sub_actions}{$type} // 0) > 0) {        
         $faction->{allowed_sub_actions}{$type}--;
-        $faction->{allowed_sub_actions} = $followup if $followup;
+        $faction->{allowed_sub_actions} = {%{$followup}} if $followup;
     } elsif ($faction->{allowed_actions}) {
         $faction->{allowed_actions}--;
-        $faction->{allowed_sub_actions} = $followup if $followup;
+        $faction->{allowed_sub_actions} = {%{$followup}} if $followup;
         # Taking an action is an implicit "decline"
         terra_mystica::command_decline($faction, undef, undef);
     } else {

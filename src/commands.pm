@@ -17,7 +17,6 @@ use tiles;
 use towns;
 
 use vars qw(%game);
-use vars qw($admin_email %options);
 
 sub handle_row;
 sub handle_row_internal;
@@ -305,7 +304,7 @@ sub command_leech {
 
         if ($_->{leech_tainted}) {
             my $err = "'leech $pw from $from' should happen before '$_->{leech_tainted}'";
-            if ($options{'strict-leech'}) {
+            if ($game{options}{'strict-leech'}) {
                 die "$err\n";
             } else {
                 $ledger->warn($err);
@@ -320,7 +319,7 @@ sub command_leech {
     if ($found_leech_record) {
         $game{acting}->clear_empty_actions();
     } else {
-        if (!$from and !$options{'strict-leech'}) {
+        if (!$from and !$game{options}{'strict-leech'}) {
             $ledger->warn("invalid leech $pw (accepting anyway)");
         } else {
             die "invalid leech $pw from $from\n";
@@ -395,7 +394,7 @@ sub cultist_maybe_gain_power {
     # Of course all of this only matters for the cultists.
     return if $record->{from_faction} ne 'cultists';
     # And when playing with the new rule.
-    return if !$options{'errata-cultist-power'};
+    return if !$game{options}{'errata-cultist-power'};
 
     my @data_fields = qw(VP C W P P1 P2 P3 PW FIRE WATER EARTH AIR CULT);
 
@@ -616,7 +615,7 @@ sub command_start {
     for (keys %pool) {
         next if !/^BON/;
         next if !$pool{$_};
-        $bonus_coins{$_}{C}++;
+        $game{bonus_coins}{$_}{C}++;
     }
 
     $game{ledger}->turn($game{round}, $game{turn});
@@ -752,8 +751,7 @@ sub command_randomize_v1 {
 
     my @bon = mt_shuffle $rand, sort grep {
         /^BON/
-    } keys %tiles;
-
+    } keys %pool;
     
     while (@bon != $game{acting}->player_count() + 3) {
         handle_row_internal "", "delete ".(shift @bon);
@@ -944,7 +942,7 @@ sub command {
         if (!$valid_options{$opt}) {
             die "Unknown option $opt\n";
         }
-        $options{$opt} = 1;
+        $game{options}{$opt} = 1;
         $game{ledger}->add_comment("option $opt");
     } elsif ($command =~ /^player (\S+)(?: email (\S*))?(?: username (\S+))?$/i) {
         $game{acting}->add_player({

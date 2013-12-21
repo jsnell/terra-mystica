@@ -130,9 +130,12 @@ sub do_pass_vp {
 
     for (keys %{$faction}) {
         next if !$faction->{$_};
+        my $tile = $tiles{$_};
 
-        my $pass_vp = $tiles{$_}{pass_vp};
-        if ($pass_vp) {
+        next if !$tile;
+
+        if ($tile->{pass_vp}) {
+            my $pass_vp = $tiles{$_}{pass_vp};
             for my $type (keys %{$pass_vp}) {
                 my $level = $faction->{buildings}{$type}{level} //
                     $faction->{$type}{level};

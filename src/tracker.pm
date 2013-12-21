@@ -48,11 +48,13 @@ sub finalize {
     }
     $game{acting}->clear_empty_actions();
 
-    for my $action (values %actions) {
-        if ($action->{subaction}) {
-            delete $action->{subaction}{dig};
-        }
-    }
+    # Don't see a point in this. Most likely it was just a diff-reduction
+    # attempt. (And now fails due to Readonly-protecting the static data).
+    # for my $action (values %actions) {
+    #     if ($action->{subaction}) {
+    #         delete $action->{subaction}{dig};
+    #     }
+    # }
 
     for my $faction ($game{acting}->factions_in_order()) {
         if ($faction->{waiting}) {
@@ -111,18 +113,6 @@ sub finalize {
             $game{acting}->dismiss_action($faction, undef);
         }
     }
-        
-    if ($game{round} > 0) {
-        for (0..($game{round}-2)) {
-            $tiles{$score_tiles[$_]}->{old} = 1;
-        }
-        
-        current_score_tile->{active} = 1;
-    }
-
-    if (@score_tiles) {
-        $tiles{$score_tiles[-1]}->{income_display} = '';
-    }
 
     for my $hex (values %map) {
         delete $hex->{adjacent};
@@ -134,9 +124,8 @@ sub finalize {
         $map{$key} = $cults{$key};
     }
 
-    for my $key (keys %bonus_coins) {
-        $map{$key} = $bonus_coins{$key};
-        $tiles{$key}{bonus_coins} = $bonus_coins{$key};
+    for my $key (keys %{$game{bonus_coins}}) {
+        $map{$key} = $game{bonus_coins}{$key};
     }
 
     for (qw(BRIDGE TOWN_SIZE GAIN_ACTION carpet_range)) {
@@ -157,6 +146,10 @@ sub evaluate_game {
         turn => 0,
         aborted => 0,
         finished => 0,
+        admin_email => undef,
+        options => {},
+        leech_id => 0,
+        bonus_coins => {},
     );
     $game{ledger} = terra_mystica::Ledger->new({game => \%game});
     $game{acting} = terra_mystica::Acting->new(
@@ -169,11 +162,7 @@ sub evaluate_game {
     local %reverse_map = ();
     local @bridges = ();
     local %pool = ();
-    local %bonus_coins = ();
-    local $leech_id = 0;
     local @score_tiles = ();
-    local $admin_email = '';
-    local %options = ();
 
     setup_map;
 
@@ -228,6 +217,7 @@ sub evaluate_game {
         towns => { map({$_, $tiles{$_}} grep { /^TW/ } keys %tiles ) },
         score_tiles => [ map({$tiles{$_}} @score_tiles ) ],
         bonus_tiles => { map({$_, $tiles{$_}} grep { /^BON/ } keys %tiles ) },
+        bonus_coins => $game{bonus_coins},
         favors => { map({$_, $tiles{$_}} grep { /^FAV/ } keys %tiles ) },
         action_required => $game{acting}->action_required(),
         active_faction => $game{acting}->active_faction_name(),
@@ -239,8 +229,8 @@ sub evaluate_game {
         cults => \%cults,
         players => $game{acting}->players(),
         player_count => $game{player_count},
-        options => \%options,
-        admin => $data->{delete_email} ? '' : $admin_email,
+        options => $game{options},
+        admin => $data->{delete_email} ? '' : $game{admin_email},
     }
 
 }

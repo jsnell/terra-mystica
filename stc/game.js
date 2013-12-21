@@ -683,8 +683,8 @@ function insertAction(parent, name, key) {
 
 function renderTile(div, name, record, faction, count) {
     div.insert(name);
-    if (state.map[name] && state.map[name].C) {
-        div.insert(" [#{C}c]".interpolate(state.map[name]));
+    if (state.bonus_coins[name] && state.bonus_coins[name].C) {
+        div.insert(" [#{C}c]".interpolate(state.bonus_coins[name]));
     }
     if (count > 1) {
         div.insert("(x" + count + ")");
@@ -1201,9 +1201,9 @@ function drawScoringTiles() {
 
     state.score_tiles.each(function(record, index) {
         var style = '';
-        if (record.active) {
+        if (index == (state.round - 1)) {
             style = 'background-color: #d0ffd0';
-        } else if (record.old) {
+        } else if (index < state.round) {
             style = 'opacity: 0.5';
         }
         var tile = new Element('div', {'class': 'scoring', 'style': style});
@@ -2189,8 +2189,8 @@ function addAnnotatedOptionToSelect(select, name, record) {
         label = ": " + label;
     }
     var bonus_coins = ""
-    if (record.bonus_coins && record.bonus_coins.C > 0) {
-        bonus_coins = " [" + record.bonus_coins.C + "c]";
+    if (state.bonus_coins[name] && state.bonus_coins[name].C) {
+        bonus_coins = (" [#{C}c]".interpolate(state.bonus_coins[name]));
     }
     label = name + bonus_coins + label;
 

@@ -1,7 +1,8 @@
 use strict;
-use vars qw(%actions %tiles %options);
+use vars qw(%actions %tiles);
+use Readonly;
 
-our %actions = (
+Readonly our %actions => (
     ACT1 => { cost => { PW => 3 }, gain => { BRIDGE => 1 },
               subaction => { 'bridge' => 1 }},
     ACT2 => { cost => { PW => 3 }, gain => { P => 1 } },
@@ -27,7 +28,26 @@ our %actions = (
     FAV6 => { cost => {}, gain => { CULT => 1 } },
 );
        
-our %tiles = (
+sub init_tiles {
+    my %tiles = @_;
+
+    for my $tile_name (keys %tiles) {
+        my $tile = $tiles{$tile_name};
+        if ($tile_name =~ /^SCORE/) {
+            my $currency = (keys %{$tile->{income}})[0];
+            $tile->{income_display} =
+                sprintf("%d %s -> %d %s", $tile->{req}, $tile->{cult},
+                        $tile->{income}{$currency}, $currency);
+        }
+        if (exists $actions{$tile_name}) {
+            $tile->{action} = $actions{$tile_name};
+        }
+    }
+
+    %tiles;
+}
+
+Readonly our %tiles => init_tiles (
     BON1 => { income => { C => 2 } },
     BON2 => { income => { C => 4 } },
     BON3 => { income => { C => 6 } },
@@ -111,18 +131,5 @@ our %tiles = (
              option => 'mini-expansion-1' },
     TW8 => { gain => { KEY => 1, VP => 11 }, count => 1, option => 'mini-expansion-1' },
 );
-
-for (keys %tiles) {
-    if (/^SCORE/) {
-        my $tile = $tiles{$_};
-        my $currency = (keys %{$tile->{income}})[0];
-        $tile->{income_display} =
-            sprintf("%d %s -> %d %s", $tile->{req}, $tile->{cult},
-                    $tile->{income}{$currency}, $currency);
-    }
-    if ($actions{$_}) {
-        $tiles{$_}{action} = $actions{$_};
-    }
-}
 
 1;

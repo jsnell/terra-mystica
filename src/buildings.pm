@@ -1,9 +1,10 @@
 package terra_mystica;
 
 use strict;
+use Readonly;
 
 use vars qw(%building_strength);
-our %building_strength = (
+Readonly our %building_strength => (
     D => 1,
     TP => 2,
     TE => 2,
@@ -11,13 +12,13 @@ our %building_strength = (
     SA => 3,
 );
 
-my %building_aliases = (
+Readonly my %building_aliases => (
     DWELLING => 'D',
     'TRADING POST' => 'TP',
     TEMPLE => 'TE',
     STRONGHOLD => 'SH',
     SANCTUARY => 'SA',
-    );
+);
 
 sub alias_building {
     my $type = shift;
