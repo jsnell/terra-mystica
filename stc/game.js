@@ -1210,7 +1210,7 @@ function drawScoringTiles() {
         tile.insert(new Element('div', {'style': 'float: right; border-style: solid; border-width: 1px; '}).update("r" + (index + 1)));
         tile.insert(new Element('div').update(
             "<div class='scoring-head'>vp:</div><div>#{vp_display}</div>".interpolate(record)));
-	if (record.income_display) {
+	if (index < 5) {
             record.style = cultStyle(record.cult);
             tile.insert(new Element('div').update(
                 "<div class='scoring-head'>income:</div><div><span #{style}>#{income_display}</span></div>".interpolate(record)));

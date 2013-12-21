@@ -4,7 +4,6 @@ use strict;
 
 use map;
 use natural_cmp;
-use vars qw(%pool);
 
 # Add a hex with a building owned by faction to the town denoted by tid.
 # Also add all transitively directly adjacent buildings to the town.
@@ -72,7 +71,7 @@ sub detect_towns_from {
     $handle->($where);
 
     if ($power >= $faction->{TOWN_SIZE} and $count >= 4 and
-        grep { /^TW/ and $pool{$_} > 0 } keys %pool) {
+        grep { /^TW/ and $game{pool}{$_} > 0 } keys %{$game{pool}}) {
         # Use the same town id for all towns for now.
         $map{$_}{town} = 1 for keys %reachable;
         adjust_resource($faction, "GAIN_TW", 1);
@@ -118,7 +117,7 @@ sub check_mermaid_river_connection_town {
     $handle->($river);
 
     if ($power >= $faction->{TOWN_SIZE} and $count >= 4 and
-        grep { /^TW/ and $pool{$_} > 0 } keys %pool) {
+        grep { /^TW/ and $game{pool}{$_} > 0 } keys %{$game{pool}}) {
         return 1;
     }
 

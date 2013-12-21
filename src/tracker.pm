@@ -120,8 +120,8 @@ sub finalize {
         delete $hex->{bridge};
     }
     
-    for my $key (keys %cults) {
-        $map{$key} = $cults{$key};
+    for my $key (keys %{$game{cults}}) {
+        $map{$key} = $game{cults}{$key};
     }
 
     for my $key (keys %{$game{bonus_coins}}) {
@@ -129,7 +129,7 @@ sub finalize {
     }
 
     for (qw(BRIDGE TOWN_SIZE GAIN_ACTION carpet_range)) {
-        delete $pool{$_};
+        delete $game{pool}{$_};
     }
 }
 
@@ -150,6 +150,8 @@ sub evaluate_game {
         options => {},
         leech_id => 0,
         bonus_coins => {},
+        pool => undef,
+        cults => setup_cults,
     );
     $game{ledger} = terra_mystica::Ledger->new({game => \%game});
     $game{acting} = terra_mystica::Acting->new(
@@ -161,12 +163,9 @@ sub evaluate_game {
     local %map = ();
     local %reverse_map = ();
     local @bridges = ();
-    local %pool = ();
     local @score_tiles = ();
 
     setup_map;
-
-    setup_cults;
 
     my $row = 1;
     my @error = ();
@@ -210,7 +209,7 @@ sub evaluate_game {
         map => \%map,
         actions => \%actions,
         factions => $game{acting}->factions(),
-        pool => \%pool,
+        pool => $game{pool},
         bridges => \@bridges,
         ledger => $game{ledger}->flush(),
         error => \@error,
@@ -226,7 +225,7 @@ sub evaluate_game {
         turn => $game{turn},
         finished => $game{finished},
         aborted => $game{aborted},
-        cults => \%cults,
+        cults => $game{cults},
         players => $game{acting}->players(),
         player_count => $game{player_count},
         options => $game{options},

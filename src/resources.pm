@@ -1,20 +1,19 @@
 package terra_mystica;
 
 use strict;
+use Readonly;
 
 use scoring;
 use towns;
 use tiles;
 
-use vars qw(%pool);
-
 sub maybe_setup_pool() {
-    return if keys %pool;
+    return if $game{pool};
     setup_pool();
 }
 
 sub setup_pool {
-    %pool = (
+    $game{pool} = {
         # Resources
         C => 1000,
         W => 1000,
@@ -48,9 +47,9 @@ sub setup_pool {
         CONVERT_W_TO_P => 3,
         TOWN_SIZE => 10000,
         carpet_range => 3,
-        );
+    };
 
-    $pool{"ACT$_"}++ for 1..6;
+    $game{pool}{"ACT$_"}++ for 1..6;
 
     for (keys %tiles) {
         my $option = $tiles{$_}{option};
@@ -58,19 +57,19 @@ sub setup_pool {
             next;
         }
         if (/^BON/) {
-            $pool{$_}++;
+            $game{pool}{$_}++;
             $game{bonus_coins}{$_}{C} = 0;
         } elsif (/^FAV/) {
-            $pool{$_} += $tiles{$_}{count} || 3;
+            $game{pool}{$_} += $tiles{$_}{count} || 3;
         } elsif (/^TW/) {
-            $pool{$_} += $tiles{$_}{count} || 2;
+            $game{pool}{$_} += $tiles{$_}{count} || 2;
         }
     }
 }
 
 sub adjust_resource;
 
-my %resource_aliases = (
+Readonly my %resource_aliases => (
     PRIEST => 'P',
     PRIESTS => 'P',
     POWER => 'PW',
@@ -219,10 +218,10 @@ sub adjust_resource {
         # Pseudo-resources not in the pool, but revealed by removing
         # buildings.
         if ($type !~ /^ACT.$/) {
-            if (!defined $pool{$type} or $pool{$type} < $delta) {
+            if (!defined $game{pool}{$type} or $game{pool}{$type} < $delta) {
                 die "Not enough '$type' in pool\n";
             }
-            $pool{$type} -= $delta;
+            $game{pool}{$type} -= $delta;
         }
 
         $faction->{$type} += $delta;

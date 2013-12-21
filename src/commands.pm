@@ -211,15 +211,16 @@ sub command_send {
     my $gain = { $cult => 1 };
     for (1..4) {
         my $where = "$cult$_";
-        if (!$cults{$where}{building}) {
+        my $spot = $game{cults}{$where};
+        if (!$spot->{building}) {
             if ($amount) {
-                next if $cults{$where}{gain}{$cult} != $amount;
+                next if $spot->{gain}{$cult} != $amount;
             }
 
-            $gain = $cults{$where}{gain};
-            delete $cults{$where}{gain};
-            $cults{$where}{building} = 'P';
-            $cults{$where}{color} = $faction->{color};
+            $gain = $spot->{gain};
+            delete $spot->{gain};
+            $spot->{building} = 'P';
+            $spot->{color} = $faction->{color};
             $faction->{MAX_P}--;
             last;
         }
@@ -574,27 +575,31 @@ sub command_action {
     my ($faction, $action) = @_;
     my $faction_name = $faction->{name};
 
-    $game{acting}->require_subaction($faction, 'action', clone $actions{$action}{subaction});
-
     if ($action !~ /^ACT[1-6]/ and !$faction->{$action}) {
         die "No $action space available\n"
-    }
-    
+    }    
     my $name = $action;
-    if ($action !~ /^ACT/) {
-        $action .= "/$faction_name";
+    if (!exists $actions{$name}) {
+        die "Unknown action $name\n";
     }
 
-    if ($actions{$name}) {
-        pay $faction, $actions{$name}{cost};
-        gain $faction, $actions{$name}{gain};
-    } else {
-        die "Unknown action $name\n";
+    if ($action !~ /^ACT/) {
+        $action .= "/$faction_name";
     }
 
     if ($map{$action}{blocked}) {
         die "Action space $action is blocked\n"
     }
+
+    my %subaction = exists $actions{$name}{subaction} ?
+        %{$actions{$name}{subaction}} :
+        ();
+
+    $game{acting}->require_subaction($faction, 'action', \%subaction);
+
+    pay $faction, $actions{$name}{cost};
+    gain $faction, $actions{$name}{gain};
+
     $map{$action}{blocked} = 1;
 }
 
@@ -612,9 +617,9 @@ sub command_start {
     }
 
     $map{$_}{blocked} = 0 for keys %map;
-    for (keys %pool) {
+    for (keys %{$game{pool}}) {
         next if !/^BON/;
-        next if !$pool{$_};
+        next if !$game{pool}{$_};
         $game{bonus_coins}{$_}{C}++;
     }
 
@@ -751,7 +756,7 @@ sub command_randomize_v1 {
 
     my @bon = mt_shuffle $rand, sort grep {
         /^BON/
-    } keys %pool;
+    } keys %{$game{pool}};
     
     while (@bon != $game{acting}->player_count() + 3) {
         handle_row_internal "", "delete ".(shift @bon);
@@ -889,7 +894,7 @@ sub command {
         my $name = uc $1;
 
         maybe_setup_pool;
-        my $x = ($faction ? $faction : \%pool);
+        my $x = ($faction ? $faction : $game{pool});
 
         $game{ledger}->add_comment("Removing tile $name");
         if (!defined $x->{$name} or

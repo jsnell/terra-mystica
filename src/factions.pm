@@ -534,7 +534,6 @@ sub setup {
 
     $faction->{MAX_P} = 7;
 
-    my @cults = qw(EARTH FIRE WATER AIR);
     for (@cults) {
         $faction->{$_} ||= 0;
         $faction->{"MAX_$_"} = 10;
