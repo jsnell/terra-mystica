@@ -152,6 +152,9 @@ sub evaluate_game {
     my $faction_info = $data->{faction_info};
 
     local %game = (
+        # How many players the game should have. Note that this can be
+        # different from how many it has, which you get from
+        # acting->player_count()
         player_count => undef,
         round => 0,
         turn => 0,

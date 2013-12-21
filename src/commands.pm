@@ -137,6 +137,7 @@ sub command_build {
 
     if (!$game{round}) {
         $game{acting}->setup_action($faction_name, 'build');
+        $game{ledger}->force_finish_row(1);
     }
 
     note_leech $faction, $where;
@@ -562,7 +563,7 @@ sub command_pass {
     }
 
     if ($faction->{planning}) {
-        finish_row($faction);
+        $ledger->finish_row();
         $ledger->start_new_row($faction);
         command_start_planning($faction);
     }
@@ -629,6 +630,7 @@ sub command_start {
     $game{acting}->require_action($factions{$start_player},
                                   { type => 'full' });
     $game{acting}->start_full_move($factions{$start_player});
+    $game{acting}->full_turn_played(0);
 }
 
 sub command_connect {
@@ -917,6 +919,7 @@ sub command {
             $game{ledger}->add_comment("Round $r scoring: $score_tiles[$i], $desc");
         }
     } elsif ($command =~ /^finish$/i) {
+        die "Game can only be finished from admin view\n" if $faction_name;
         return 0 if non_leech_action_required;
         command_finish;
     } elsif ($command =~ /^abort$/i) {
@@ -970,108 +973,38 @@ sub command {
     1;
 }
 
-sub detect_incomplete_state {
-    my ($prefix) = @_;
-    my $faction = $factions{$prefix};
+sub do_command {
     my $ledger = $game{ledger};
+    my ($faction_name, @commands) = @_;
+    
+    return if !@commands;
+    die if @commands > 1;
 
-    my @extra_action_required = ();
-
-    if ($faction->{SPADE}) {
-        push @extra_action_required, {
-            type => 'transform',
-            amount => $faction->{SPADE}, 
-            faction => $prefix
-        };
+    if ($faction_name eq 'comment') {
+        $game{ledger}->add_comment("@commands");
+        return;
     }
 
-    if ($faction->{FORBID_TF}) {
-        delete $faction->{FORBID_TF};
+    if (!($factions{$faction_name} or $faction_name eq '')) {
+        my $faction_list = join ", ", @factions;
+        die "Unknown faction: '$faction_name' (expected one of $faction_list)\n";
     }
 
-    if ($faction->{FREE_TF}) {
-        $ledger->warn("Unused free terraform for $prefix");
-        push @extra_action_required, {
-            type => 'transform',
-            faction => $prefix
-        };
+    if ($faction_name and
+        (!$ledger->collecting_row() or
+         $faction_name ne $ledger->current_faction()->{name})) {
+        $ledger->start_new_row($factions{$faction_name});
     }
 
-    if ($faction->{FREE_TP}) {
-        $ledger->warn("Unused free trading post for $prefix\n");
-        push @extra_action_required, {
-            type => 'upgrade',
-            from_building => 'D',
-            to_building => 'TP',
-            faction => $prefix
-        };
+    command $faction_name, $commands[0];
+    if ($faction_name) {
+        $game{ledger}->add_command($commands[0]);
     }
 
-    if ($faction->{FREE_D}) {
-        $ledger->warn("Unused free dwelling for $prefix\n");
-        push @extra_action_required, {
-            type => 'dwelling',
-            faction => $prefix
-        };
+    if ($game{ledger}->force_finish_row()) {
+        $game{acting}->maybe_advance_to_next_player($factions{$faction_name});
+        $game{ledger}->finish_row();
     }
-
-    if ($faction->{CULT}) {
-        $ledger->warn("Unused cult advance for $prefix\n");
-        push @extra_action_required, {
-            type => 'cult',
-            amount => $faction->{CULT}, 
-            faction => $prefix
-        };
-    }
-
-    if ($faction->{GAIN_FAVOR}) {
-        $ledger->warn("favor not taken by $prefix\n");
-        push @extra_action_required, {
-            type => 'favor',
-            amount => $faction->{GAIN_FAVOR}, 
-            faction => $prefix
-        };
-    } else {
-        $game{acting}->dismiss_action($faction, 'favor');
-    }
-
-    if ($faction->{GAIN_TW}) {
-        $ledger->warn("town tile not taken by $prefix\n");
-        push @extra_action_required, {
-            type => 'town',
-            amount => $faction->{GAIN_TW}, 
-            faction => $prefix
-        };
-    } else {
-        $game{acting}->dismiss_action($faction, 'town');
-    }
-
-    if ($faction->{BRIDGE}) {
-        $ledger->warn("bridge paid for but not placed\n");
-        push @extra_action_required, {
-            type => 'bridge',
-            faction => $prefix
-        };
-    } else {
-        $game{acting}->dismiss_action($faction, 'bridge');
-    }
-
-    @extra_action_required;
-}
-
-sub next_faction_in_turn {
-    my $faction_name = shift;
-    my @f = factions_in_order_from $faction_name;
-
-    if (!$game{finished}) {
-        for (@f) {
-            if (!$factions{$_}{passed}) {
-                return $_;
-            }
-        }
-    }
-
-    undef;
 }
 
 sub clean_commands {
@@ -1104,6 +1037,7 @@ sub clean_commands {
         s/-2w\.\s*bridge/convert 2w to bridge. bridge/i;
     }
     s/\s*pass\.\s*\+bon/pass bon/i;
+    s/^\s*\+bon/pass BON/i;
     s/(build \w+)\. (transform \w+(?: to \w+)?)/$2. $1/i;
     s/\s*(pass \w+)\. (convert (\d+ *)?\w+ to (\d+ *)?\w+)/$2. $1/i;
     s/(dig \w). (action \w+)/$2. $1/i;
@@ -1148,117 +1082,15 @@ sub rewrite_stream {
     grep { $_->[1] } @command_stream;
 }
 
-sub maybe_advance_turn {
-    my ($faction_name) = @_;
-
-    $game{ledger}->turn($game{round}, $game{turn});
-
-    my $all_passed = 1;
-    my $max_order = max map {
-        $_->{order}
-    } grep {
-        $all_passed &&= $_->{passed};
-        (!$_->{passed}) or ($_->{name} eq $faction_name)
-    } values %factions;
-
-    if ($factions{$faction_name}{order} != $max_order) {
-        return;
-    }
-
-    if (!$all_passed) {
-        $game{turn}++;
-    }
-}
-
-sub maybe_advance_to_next_player {
-    my $faction = shift;
-    my $faction_name = $faction->{name};
-
-    # Check whether the action is incomplete in some way, or if somebody
-    # needs to react.
-    my (@extra_action_required) = detect_incomplete_state $faction_name;
-
-    if (!$game{round}) {
-        return "";
-    }
-
-    if ($faction->{planning}) {
-        return "";
-    }
-
-    push @{$game{acting}->action_required()}, @extra_action_required;
-
-    if (@extra_action_required) {
-        return "";
-    } elsif ($game{acting}->is_active($faction) and
-             !$faction->{allowed_actions}) {
-        $game{acting}->dismiss_action($faction, 'full');
-
-        $faction->{recent_moves} = [];
-
-        # Advance to the next player, unless everyone has passed
-        my $next = next_faction_in_turn $faction_name;
-        if (defined $next) {
-            $game{acting}->require_action($factions{$next},
-                                          { type => 'full' });
-            $game{acting}->start_full_move($factions{$next});
-            maybe_advance_turn $faction_name;
-        }
-    }
-}
-
-sub finish_row {
-    my $faction = shift;
-
-    if ($faction) {
-        maybe_advance_to_next_player $faction;
-    }
-    
-    $game{ledger}->finish_row();
-}
-
-sub do_command {
-    my $ledger = $game{ledger};
-    my ($faction_name, @commands) = @_;
-    
-    return if !@commands;
-    die if @commands > 1;
-
-    if ($faction_name eq 'comment') {
-        $game{ledger}->add_comment("@commands");
-        return;
-    }
-
-    if (!($factions{$faction_name} or $faction_name eq '')) {
-        my $faction_list = join ", ", @factions;
-        die "Unknown faction: '$faction_name' (expected one of $faction_list)\n";
-    }
-
-    if ($faction_name and
-        (!$ledger->collecting_row() or
-         $faction_name ne $ledger->current_faction()->{name})) {
-        $ledger->start_new_row($factions{$faction_name});
-    }
-
-    command $faction_name, $commands[0];
-    $game{ledger}->add_command($commands[0]);
-    if ($game{ledger}->force_finish_row()) {
-        finish_row $factions{$faction_name};
-    }
-}
-
 sub handle_row_internal {
     do_command @_;
-    if ($_[0]) {
-        finish_row $factions{$_[0]};
-    }
+    $game{ledger}->finish_row();
 }
 
 sub play {
     my ($commands, $max_row) = @_;
-    my $i = 0;
 
-    while ($i < @{$commands}) {
+    for (my $i = 0; $i < @{$commands}; ++$i) {
         my $this = $commands->[$i];
         my $next = $commands->[$i+1];
         eval {
@@ -1271,11 +1103,14 @@ sub play {
             $active_faction->{allowed_sub_actions}{burn} = 1;
             $active_faction->{allowed_sub_actions}{convert} = 1;
         }
-        if (($next->[0] // '') ne ($this->[0] // '')) {
-            finish_row $factions{$this->[0]};
-        }
-        $i++;
         $game{acting}->what_next();
+
+        if (($next->[0] // '') ne ($this->[0] // '')) {
+            if ($this->[0] and $factions{$this->[0]}) {
+                $game{acting}->maybe_advance_to_next_player(
+                    $factions{$this->[0]});
+            }
+        }
 
         if ($max_row) {
             my $size = $game{ledger}->size();

@@ -28,6 +28,11 @@ sub pretty_res {
     if (@{$json->{error}}) {
         print "Error in @_";
     }
+
+    for my $faction (values %{$json->{factions}}) {
+        delete $faction->{recent_moves};
+    }
+
     $json;
 #    my $pretty = to_json($json, { pretty => 1 });
 #    $pretty;
