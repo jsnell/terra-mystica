@@ -111,7 +111,14 @@ sub deploy_cgi {
                   cryptutil.pm
                   cults.pm
                   db.pm
-                  editlink.pm
+                  DB/Connection.pm
+                  DB/EditLink.pm
+                  DB/Game.pm
+                  DB/IndexGame.pm
+                  DB/SaveGame.pm
+                  DB/Secret.pm
+                  DB/UserValidate.pm
+                  Email/Notify.pm
                   exec_timer.pm
                   factions.pm
                   game.pm
@@ -127,7 +134,9 @@ sub deploy_cgi {
                   save.pm
                   scoring.pm
                   secret.pm
+                  Server/AppendGame.pm 
                   Server/Server.pm
+                  Server/Session.pm
                   Server/ViewGame.pm 
                   session.pm
                   tiles.pm

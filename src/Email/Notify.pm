@@ -2,7 +2,12 @@
 
 use strict;
 
-use editlink;
+package Email::Notify;
+use Exporter::Easy (EXPORT => [ 'notify_after_move',
+                                'notify_game_started',
+                                'notify_new_chat' ]);
+
+use DB::EditLink;
 use factions;
 use Net::SMTP;
 

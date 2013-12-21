@@ -1,7 +1,10 @@
 use strict;
 
+package DB::EditLink;
+use Exporter::Easy (EXPORT => [ 'edit_link_for_faction' ]);
+
 use Crypt::CBC;
-use secret;
+use DB::Secret;
 
 sub edit_link_for_faction {
     my ($dbh, $id, $faction_name) = @_;

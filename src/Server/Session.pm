@@ -1,7 +1,12 @@
+package Server::Session;
+use Exporter::Easy (EXPORT => [ 'username_from_session_token',
+                                'ensure_csrf_cookie',
+                                'verify_csrf_cookie_or_die']);
+
 use Digest::SHA1 qw(sha1_hex);
 use Crypt::Eksblowfish::Bcrypt qw(en_base64);
 
-use secret;
+use DB::Secret;
 
 sub session_token {
     my ($dbh, $username, $seed) = @_;
@@ -41,16 +46,18 @@ sub read_urandom_string_base64 {
 }
 
 sub ensure_csrf_cookie {
-    my $q = shift;
+    my ($q, $server) = @_;
+
     if (!$q->cookie("csrf-token")) {
         my $y = 86400*365;
         my $r = read_urandom_string_base64 8;
-        print "Set-Cookie: csrf-token=$r; Path=/; Max-Age=$y\r\n";
+        $server->set_header("Set-Cookie",
+                            "csrf-token=$r; Path=/; Max-Age=$y");
     }
 }
 
 sub verify_csrf_cookie_or_die {
-    my $q = shift;
+    my ($q, $server) = shift;
     my $cookie_token = $q->cookie("csrf-token");
     my $param_token = $q->param("csrf-token");
     
@@ -63,12 +70,11 @@ sub verify_csrf_cookie_or_die {
         print STDERR ("  User: ", $q->cookie('session-username'),
                       "\n    UA: ", $q->user_agent(),
                       "\n  Path: $0\n");
-        print "Status: 403\r\n";
+        $server->status(403);
         if ($cookie_token eq 'undefined') {
-            ensure_csrf_cookie $q;
+            ensure_csrf_cookie $q, $server;
         }
-        print "\r\n";
-        exit 1;
+        die "Error";
     }
 }
 

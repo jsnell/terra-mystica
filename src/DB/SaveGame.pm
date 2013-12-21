@@ -1,13 +1,18 @@
 #!/usr/bin/perl -w
 
 use strict;
+no indirect 'fatal';
 
-use File::Temp qw(tempfile);
+package DB::SaveGame;
+use Exporter::Easy (EXPORT => [ 'save',
+                                'verify_and_save',
+                                'evaluate_and_save' ]);
 
-use game;
-use indexgame;
+use DB::Game;
+use DB::IndexGame;
+use DB::UserValidate;
+
 use tracker;
-use user_validate;
 
 sub save {
     my ($dbh, $id, $new_content, $game, $timestamp) = @_;

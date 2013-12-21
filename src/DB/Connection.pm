@@ -1,3 +1,11 @@
+use strict;
+
+package DB::Connection;
+use Exporter::Easy (
+    EXPORT => [ qw(get_db_connection) ],
+    OK => [ qw(get_db_connection) ],
+);
+
 use DBI;
 
 sub get_db_connection {

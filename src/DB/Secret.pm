@@ -2,7 +2,10 @@
 
 use strict;
 
-use db;
+package DB::Secret;
+use Exporter::Easy (EXPORT => [ 'get_secret' ]);
+
+use DB::Connection;
 
 sub get_secret {
     my $dbh = shift || get_db_connection;

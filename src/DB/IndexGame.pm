@@ -2,7 +2,10 @@
 
 use strict;
 
-use user_validate;
+package DB::IndexGame;
+use Exporter::Easy (EXPORT => [ 'index_game' ]);
+
+use DB::UserValidate;
 
 use List::Util qw(max);
 use POSIX qw(strftime);

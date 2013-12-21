@@ -5,7 +5,10 @@ package terra_mystica;
 use strict;
 use Clone qw(clone);
 
-my %setups = (
+use cults;
+use vars qw(%game);
+
+our %setups = (
     alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
                     WATER => 1, FIRE => 1, color => 'black',
                     display => "Alchemists",

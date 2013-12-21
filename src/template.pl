@@ -4,7 +4,7 @@ use CGI qw(:cgi);
 
 use File::Slurp;
 
-use session;
+use Server::Session;
 
 my $q = CGI->new;
 

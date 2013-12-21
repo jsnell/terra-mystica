@@ -2,8 +2,20 @@
 
 use strict;
 
-use indexgame;
-use save;
+package DB::Game;
+
+use DBI;
+use Exporter::Easy (
+    EXPORT => [qw(game_exists
+                  get_game_content
+                  get_game_commands
+                  get_game_factions
+                  get_game_players
+                  get_game_metadata
+                  begin_game_transaction
+                  finish_game_transaction
+                  get_chat_count)]
+    );
 
 sub game_exists {
     my ($dbh, $id) = @_;

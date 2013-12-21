@@ -1,5 +1,9 @@
 use strict;
 
+package DB::UserValidate;
+use Exporter::Easy (EXPORT => [ 'check_email_is_registered',
+                                'check_username_is_registered' ]);
+
 sub check_email_is_registered {
     my ($dbh, $address) = @_;
 

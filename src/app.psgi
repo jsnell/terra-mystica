@@ -8,11 +8,15 @@ BEGIN {
 
 use CGI::PSGI;
 
+use Server::AppendGame;
 use Server::ViewGame;
 
 my %paths = (
    '/view-game/' => sub {
-       terra_mystica::Server::ViewGame->new()
+       Server::ViewGame->new()
+    },
+   '/append-game/' => sub {
+       Server::AppendGame->new()
     },
 );
 

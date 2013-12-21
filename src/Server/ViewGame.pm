@@ -1,20 +1,19 @@
 use strict;
 
-package terra_mystica::Server::ViewGame;
+package Server::ViewGame;
 
 use Moose;
 use MooseX::Method::Signatures;
-use Server::Server;
 
-extends 'terra_mystica::Server::Server';
+extends 'Server::Server';
 
-use db;
-use game;
-use session;
+use DB::Connection qw(get_db_connection);
+use DB::Game;
+use Server::Session;
 use tracker;
 
 method handle($q) {
-    $self->set_header("Cache-Control", "no-cache");
+    $self->no_cache();
 
     my $id = $q->param('game');
     $id =~ s{.*/}{};
@@ -28,13 +27,13 @@ method handle($q) {
         $dbh,
         $q->cookie('session-token') // '');
 
-    if (!game_exists $dbh, $id) {
+    if (!game_exists($dbh, $id)) {
         $self->status(404);
         $self->output_json({ error => [ "Unknown game: $id" ] });
         return;
     }
 
-    my @rows = get_game_commands($dbh, $id);
+    my @rows = get_game_commands $dbh, $id;
 
     if (defined $preview) {
         if ($preview_faction =~ /^player/) {
