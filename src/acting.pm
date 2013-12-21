@@ -12,7 +12,7 @@ use JSON;
 # Who is playing in this game?
 has 'players' => (is => 'rw',
                   traits => ['Array'],
-                  default => sub { {} },
+                  default => sub { [] },
                   handles => {
                       player_count => 'count',
                       add_player => 'push',

@@ -53,7 +53,7 @@ function previewOrSave(save, preview_data, prefix_data) {
         $("preview_commands").innerHTML = preview_data;
     }
 
-    var target = save ? "/cgi-bin/append.pl" : "/cgi-bin/bridge.pl";
+    var target = save ? "/cgi-bin/append.pl" : "/app/view-game/";
     target = "http://" + backendDomain + target;
     if (!save) {
         spin();

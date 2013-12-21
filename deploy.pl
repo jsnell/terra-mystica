@@ -1,6 +1,8 @@
 #!/usr/bin/perl -w
 
+use File::Basename qw(dirname);
 use File::Copy;
+use File::Path qw(make_path);
 use File::Slurp qw(slurp);
 use File::Temp qw(tempfile);
 use Fatal qw(open chmod rename symlink);
@@ -31,6 +33,8 @@ if (!$devel) {
 sub copy_with_mode {
     my ($mode, $from, $to) = @_;
     die if -d $to;
+
+    make_path dirname $to;
 
     if ($devel) {
         if (!-l $to) {
@@ -77,8 +81,9 @@ sub deploy_cgi {
     mkdir "$target/cgi-bin";
     for my $f (qw(alias.pl
                   append.pl
-                  bridge.pl
                   chat.pl
+                  app.fcgi
+                  app.psgi
                   edit.pl
                   gamelist.pl
                   joingame.pl
@@ -90,6 +95,7 @@ sub deploy_cgi {
                   reset.pl
                   results.pl
                   settings.pl
+                  startup-modperl2.pl
                   template.pl 
                   validate.pl
                   validate-alias.pl
@@ -121,6 +127,8 @@ sub deploy_cgi {
                   save.pm
                   scoring.pm
                   secret.pm
+                  Server/Server.pm
+                  Server/ViewGame.pm 
                   session.pm
                   tiles.pm
                   towns.pm
