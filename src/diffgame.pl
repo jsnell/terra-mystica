@@ -16,6 +16,7 @@ my $dir = dirname $0;
 my $time = 'total';
 my %time = ();
 
+
 sub pretty_res {
     my $begin = time;
     my $res = qx(perl $dir/tracker.pl @_);

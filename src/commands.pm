@@ -1103,7 +1103,6 @@ sub play {
             $active_faction->{allowed_sub_actions}{burn} = 1;
             $active_faction->{allowed_sub_actions}{convert} = 1;
         }
-        $game{acting}->what_next();
 
         if (($next->[0] // '') ne ($this->[0] // '')) {
             if ($this->[0] and $factions{$this->[0]}) {
@@ -1111,6 +1110,7 @@ sub play {
                     $factions{$this->[0]});
             }
         }
+        $game{acting}->what_next();
 
         if ($max_row) {
             my $size = $game{ledger}->size();

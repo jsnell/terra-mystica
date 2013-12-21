@@ -4,17 +4,48 @@
 package terra_mystica::Acting;
 
 use List::Util qw(max);
-use Mouse;
+use Method::Signatures::Simple;
+use Moose;
 use JSON;
 
 # Who is playing in this game?
-has 'players' => (is => 'rw');
+has 'players' => (is => 'rw',
+                  traits => ['Array'],
+                  default => sub { {} },
+                  handles => {
+                      player_count => 'count',
+                      add_player => 'push',
+                  });
+
+# The factions in the game
+has 'factions' => (is => 'rw', default => sub { {} });
+has 'factions_in_order' => (is => '',
+                            traits => ['Array'],
+                            default => sub { [] },
+                            handles => {
+                                faction_count => 'count',
+                                push_faction => 'push',
+                                factions_in_order => 'elements',
+                            });
 
 # What's to be done during the setup
-has 'setup_order' => (is => 'rw', default => sub { [] });
+has 'setup_order' => (is => 'rw',
+                      traits => ['Array'],
+                      default => sub { [] },
+                      handles => {
+                          setup_order_count => 'count',
+                          shift_setup_order => 'shift',
+                      });
 
 # What actions / decisions need to be taken by the factions at the moment?
-has 'action_required' => (is => 'rw', default => sub { [] });
+has 'action_required' => (is => 'rw',
+                          traits => ['Array'],
+                          default => sub { [] },
+                          handles => {
+                              action_required_count => 'count',
+                              action_required_elements => 'elements',
+                              push_action_required => 'push',
+                          });
 
 # Which faction is currently acting (a full action, not just a
 # async decision on resources).
@@ -27,66 +58,54 @@ has 'state' => (is => 'rw',
 # Main game data structure
 has 'game' => (is => 'rw');
 
+# True if the last player in turn order who hasn't passed has just finished
+# their move.
 has 'full_turn_played' => (is => 'rw', default => 0);
 
 ## Tracking what each player needs to do
 
-sub action_required_count {
-    my ($self) = @_;
-    return scalar @{$self->action_required()};
-}
-
-sub require_action {
-    my ($self, $faction, $action) = @_;
+method require_action($faction, $action) {
     die if !$action or !$faction;
     $action->{faction} = $faction->{name};
-    push @{$self->action_required()}, $action;
+    $self->push_action_required($action);
 }
 
-sub dismiss_action {
-    my ($self, $faction, $type) = @_;
+method dismiss_action($faction, $type) {
     $self->action_required([
         grep {
             !(($faction->{name} // '') eq ($_->{faction} // '') and
               ($type // '') eq ($_->{type} // ''))
-        } @{$self->action_required}
+        } $self->action_required_elements()
     ]);
 }
 
-sub replace_all_actions {
-    my ($self, @actions) = @_;
+method replace_all_actions(@actions) {
     $self->action_required([@actions]);
 }
 
-sub clear_empty_actions {
-    my ($self) = @_;
-    $self->action_required([grep { $_ ne '' } @{$self->action_required()}]);
+method clear_empty_actions() {
+    $self->action_required([grep { $_ ne '' } $self->action_required_elements()]);
 }
 
 ## Dealing with the setup phase
 
-sub setup_order_count {
-    my ($self) = @_;
-    return scalar @{$self->setup_order()};
+method setup_action($faction, $kind) {
+    $self->shift_setup_order();
 }
 
-sub setup_action {
-    my ($self, $faction, $kind) = @_;
-    shift @{$self->setup_order()};
-}
+method register_faction($faction) {
+    $self->factions()->{$faction->{name}} = $faction;
+    $self->push_faction($faction);
 
-sub register_faction {
-    my ($self, $faction) = @_;
+    my @order = map { $_->{name} } $self->factions_in_order();
+    my @setup_order = grep { $_ ne 'chaosmagicians' } @order;
+    push @setup_order, reverse @setup_order;
+    push @setup_order, 'nomads' if $self->factions()->{nomads};
 
-    my @setup_order = @terra_mystica::factions;
-    push @setup_order, reverse @terra_mystica::factions;
-    push @setup_order, 'nomads' if $terra_mystica::factions{nomads};
-
-    if ($terra_mystica::factions{chaosmagicians}) {
-        @setup_order = grep { $_ ne 'chaosmagicians' } @setup_order;
+    if ($self->factions()->{chaosmagicians}) {
         push @setup_order, 'chaosmagicians';
     }
-    push @setup_order, reverse @terra_mystica::factions;
+    push @setup_order, reverse @order;
 
     $self->setup_order([@setup_order]);
 }
@@ -94,8 +113,7 @@ sub register_faction {
 ## Dealing with the active player.
 
 # Make a faction become the active one
-sub start_full_move {
-    my ($self, $faction) = @_;
+method start_full_move($faction) {
     $self->active_faction($faction);
     
     $faction->{allowed_actions} = 1;
@@ -109,8 +127,7 @@ sub start_full_move {
 # (e.g. building after transforming), or they must have an available
 # full action (either it just became their turn, they got extra actions
 # from the CM SH, or they're the only player who hasn't passed).
-sub require_subaction {
-    my ($self, $faction, $type, $followup) = @_;
+method require_subaction($faction, $type, $followup) {
     my $ledger = $self->game()->{ledger};
 
     if (($faction->{allowed_sub_actions}{$type} // 0) > 0) {        
@@ -122,7 +139,7 @@ sub require_subaction {
         # Taking an action is an implicit "decline"
         terra_mystica::command_decline($faction, undef, undef);
     } else {
-        my @unpassed = grep { !$_->{passed} } values %terra_mystica::factions;
+        my @unpassed = grep { !$_->{passed} } $self->factions_in_order();
         if (@unpassed == 1 or $faction->{planning}) {
             $self->maybe_advance_to_next_player($faction);
 
@@ -137,51 +154,38 @@ sub require_subaction {
 }
 
 # The player is allowed to pass without using up a full action.
-sub allow_pass {
-    my ($self, $faction) = @_;
+method allow_pass($faction) {
     $faction->{allowed_sub_actions} = {
         pass => 1,
     };    
 }
 
 # The player is allowed to build a dwelling without using up a full action.
-sub allow_build {
-    my ($self, $faction) = @_;
+method allow_build($faction) {
     $faction->{allowed_sub_actions} = {
         build => 1,
     };
 }
 
 # Is the faction currently the active one?
-sub is_active {
-    my ($self, $faction) = @_;
-
+method is_active($faction) {
     defined $self->active_faction() and $faction == $self->active_faction();
 }
 
 # Name of action currently active, or undef
-sub active_faction_name {
-    my $self = shift;
+method active_faction_name() {
     my $faction = $self->active_faction();
     $faction and $faction->{name};
 }
 
 ## Tracking the set of players
 
-sub add_player {
+before add_player => sub {
     my ($self, $player) = @_;
     $player->{index} = $self->player_count();
-    push @{$self->players()}, $player;
-}
+};
 
-sub player_count {
-    my ($self) = @_;
-    scalar @{$self->players()};
-}
-
-sub correct_player_count {
-    my ($self) = @_;
-
+method correct_player_count() {
     my $wanted_count = $self->game()->{player_count};
     if (!defined $wanted_count) { return 1 }
     if ($self->player_count() == $wanted_count) { return 1 }
@@ -193,9 +197,7 @@ sub correct_player_count {
 
 # What should be done next in the game? Mostly movement between major
 # phases of the game.
-sub what_next {
-    my ($self) = @_;
-
+method what_next() {
     if ($self->state() eq 'wait-for-players') {
         $self->in_wait_for_players();
     }
@@ -231,8 +233,7 @@ sub what_next {
 
 # Request that the game move forward to a new state (but only specific
 # transitions are possible).
-sub advance_state {
-    my ($self, $new_state) = @_;
+method advance_state($new_state) {
     # Old-style games had no players, so we must move to faction selection
     # if there's a 'setup' before there any 'player' commands.
     if ($new_state eq 'select-factions') {
@@ -257,9 +258,7 @@ sub advance_state {
     }
 }
 
-sub in_wait_for_players {
-    my ($self) = @_;
-
+method in_wait_for_players() {
     if (defined $self->game()->{player_count}) {
         my $player_count = $self->player_count();       
         my $wanted_count = $self->game()->{player_count};
@@ -277,28 +276,24 @@ sub in_wait_for_players {
     }
 }
 
-sub in_select_factions {
-    my ($self) = @_;
-
+method in_select_factions() {
     if (!$self->player_count()) {
         return;
     }
 
-    if ($self->player_count() != @terra_mystica::factions) {
-        my $player = $self->players->[@terra_mystica::factions];
+    if ($self->player_count() != $self->faction_count()) {
+        my $player = $self->players->[$self->faction_count()];
         $self->replace_all_actions({
             type => 'faction',
             player => ($player->{displayname} // $player->{name}),
-            player_index => "player".(1+@terra_mystica::factions)});
+            player_index => "player".(1+$self->faction_count())});
     } else {
         $self->state('initial-dwellings');
     }
 }
 
-sub in_initial_dwellings {
-    my ($self) = @_;
-
-    if ($self->setup_order_count() <= @terra_mystica::factions) {
+method in_initial_dwellings() {
+    if ($self->setup_order_count() <= $self->faction_count()) {
         $self->state('initial-bonus');
     } else {
         my $faction_name = $self->setup_order()->[0];
@@ -307,13 +302,11 @@ sub in_initial_dwellings {
                 type => 'dwelling',
                 faction => $faction_name,
             });
-        $self->allow_build($terra_mystica::factions{$faction_name});
+        $self->allow_build($self->factions()->{$faction_name});
     }
 }
 
-sub in_initial_bonus {
-    my ($self) = @_;
-
+method in_initial_bonus() {
     if ($self->setup_order_count()) {
         my $faction_name = $self->setup_order()->[0];
         $self->replace_all_actions(
@@ -321,7 +314,7 @@ sub in_initial_bonus {
                 type => 'bonus',
                 faction => $faction_name,
             });
-        $self->allow_pass($terra_mystica::factions{$faction_name});
+        $self->allow_pass($self->factions()->{$faction_name});
     } else {
         $self->replace_all_actions();
         $self->game()->{ledger}->finish_row();
@@ -329,15 +322,13 @@ sub in_initial_bonus {
     }
 }
 
-sub in_income {
-    my ($self) = @_;
-
+method in_income() {
     if ($self->action_required_count()) {
         return;
     }
 
     my $income_taken = 0;
-    for my $faction (values %terra_mystica::factions) {
+    for my $faction ($self->factions_in_order()) {
         $income_taken ||= $faction->{income_taken};
     }
 
@@ -348,9 +339,7 @@ sub in_income {
     $self->state('use-income-spades');
 }
 
-sub in_use_income_spades {
-    my ($self) = @_;
-
+method in_use_income_spades() {
     if ($self->action_required_count()) {
         return;
     }
@@ -360,15 +349,13 @@ sub in_use_income_spades {
     terra_mystica::command_start();
 }
 
-sub in_play {
-    my ($self) = @_;
-
+method in_play() {
     if ($self->action_required_count()) {
         return;
     }
 
     my $all_passed = 1;
-    for my $faction (values %terra_mystica::factions) {
+    for my $faction ($self->factions_in_order()) {
         $all_passed &&= $faction->{passed};
     }
 
@@ -384,16 +371,14 @@ sub in_play {
     }
 }
 
-sub in_abort {
-    my ($self) = @_;
-
+method in_abort() {
     $self->replace_all_actions({ type => 'gameover', aborted => 1 });
 }
 
 ## Switching the turn from one player to the next
 
-sub detect_incomplete_turn {
-    my ($self, $faction) = @_;
+
+method detect_incomplete_turn($faction) {
     my $faction_name = $faction->{name};
     my $ledger = $self->game()->{ledger};
     my $incomplete = 0;
@@ -482,23 +467,20 @@ sub detect_incomplete_turn {
     $incomplete;
 }
 
-sub next_faction_in_turn {
-    my ($self, $faction_name) = @_;
+method next_faction_in_turn($faction_name) {
+    return if $self->game()->{finished};
+
     my @f = terra_mystica::factions_in_order_from($faction_name);
 
-    if (!$self->game()->{finished}) {
-        for (@f) {
-            if (!$terra_mystica::factions{$_}{passed}) {
-                return $_;
-            }
-        }
+    for (@f) {
+        my $f = $self->factions()->{$_};
+        return $f if !$f->{passed};
     }
 
     undef;
 }
 
-sub maybe_advance_turn {
-    my ($self, $faction, $next) = @_;
+method maybe_advance_turn($faction, $next) {
     my $game = $self->game();
 
     if ($self->full_turn_played()) {
@@ -514,8 +496,7 @@ sub maybe_advance_turn {
                           $game->{turn});
 }
 
-sub maybe_advance_to_next_player {
-    my ($self, $faction) = @_;
+method maybe_advance_to_next_player($faction) {
     my $faction_name = $faction->{name};
 
     # Check whether the action is incomplete in some way.
@@ -537,11 +518,9 @@ sub maybe_advance_to_next_player {
         # Advance to the next player, unless everyone has passed
         my $next = $self->next_faction_in_turn($faction_name);
         if (defined $next) {
-            die if $terra_mystica::factions{$next}->{passed};
-            $self->require_action($terra_mystica::factions{$next}, { type => 'full' });
-            $self->start_full_move($terra_mystica::factions{$next});
-            $self->maybe_advance_turn($faction,
-                                      $terra_mystica::factions{$next});
+            $self->require_action($next, { type => 'full' });
+            $self->start_full_move($next);
+            $self->maybe_advance_turn($faction, $next);
         }
 
         $faction->{recent_moves} = [];

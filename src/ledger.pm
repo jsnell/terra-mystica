@@ -1,5 +1,6 @@
 package terra_mystica::Ledger;
-use Mouse;
+use Moose;
+use Method::Signatures::Simple;
 
 use resources;
 
@@ -7,7 +8,12 @@ has 'game' => (is => 'rw', required => 1);
 
 # The data we're collecting
 has 'rows' => (is => 'rw',
-               default => sub { [] });
+               traits => ['Array'],
+               default => sub { [] },
+               handles => {
+                   size => 'count',
+                   add_row => 'push',
+               });
 
 # Information related to adding turn / round comments at the right place
 has ['last_printed_round',
@@ -18,74 +24,71 @@ has 'trailing_comment' => (is => 'rw', isa => 'Bool');
 # Data collected about the current row so far
 has 'collecting_row' => (is => 'rw', default => 0);
 has 'current_faction' => (is => 'rw');
-has 'commands' => (is => 'rw', default => sub { [] });
+has 'commands' => (is => '',
+                   traits => ['Array'],
+                   default => sub { [] },
+                   handles => {
+                       commands => 'elements',
+                       add_command => 'push',
+                       clear_commands => 'clear',
+                       join_commands => 'join',
+                   });
 has 'force_finish_row' => (is => 'rw', default => 0);
 has 'start_resources' => (is => 'rw');
-has 'warnings' => (is => 'rw', default => sub { [] });
+has 'warnings' => (is => '',
+                   traits => ['Array'],
+                   default => sub { [] },
+                   handles => {
+                       warn => 'push',
+                       clear_warnings => 'clear',
+                       warnings => 'elements',
+                       first_warning => [ get => 0 ],
+                   });
 has 'leech' => (is => 'rw', default => sub { {} });
 
 my @data_fields = qw(VP C W P P1 P2 P3 PW FIRE WATER EARTH AIR CULT);
 
-sub size {
-    my ($ledger) = @_;
-    return scalar @{$ledger->rows()};
-}
+after add_row => sub {
+    my ($self, $row) = @_;
+    $self->trailing_comment(0);
+};
 
-sub add_row {
-    my ($ledger, $row) = @_;
+method start_new_row($faction) {
+    return if $self->collecting_row();
 
-    push @{$ledger->rows()}, $row;
-    $ledger->trailing_comment(0);
-}
-
-sub start_new_row {
-    my ($ledger, $faction) = @_;
-    return if $ledger->collecting_row();
-
-    $ledger->collecting_row(1);
-    $ledger->current_faction($faction);
-    $ledger->force_finish_row(0);
-    $ledger->commands([]);
-    $ledger->warnings([]);
-    $ledger->leech({});
-    $ledger->start_resources(
+    $self->collecting_row(1);
+    $self->current_faction($faction);
+    $self->force_finish_row(0);
+    $self->clear_commands();
+    $self->clear_warnings();
+    $self->leech({});
+    $self->start_resources(
         { map { ( $_, $faction->{$_}) } @data_fields });
 }
 
-sub add_command {
-    my ($ledger, $command) = @_;
-    die if !$ledger->collecting_row();
+before add_command => sub {
+    my ($self, $command) = @_;
+    die if !$self->collecting_row();
+};
 
-    push @{$ledger->commands()}, $command;
+method report_leech($faction_name, $amount) {    
+    $self->leech()->{$faction_name} += $amount;
 }
 
-sub warn {
-    my ($ledger, $warning) = @_;
+method finish_row {
+    return if !$self->collecting_row();
 
-    push @{$ledger->warnings()}, $warning;
-}
-
-sub report_leech {
-    my ($ledger, $faction_name, $amount) = @_;
-    
-    $ledger->leech()->{$faction_name} += $amount;
-}
-
-sub finish_row {
-    my ($ledger) = @_;
-    return if !$ledger->collecting_row();
-
-    my $faction = $ledger->current_faction();
+    my $faction = $self->current_faction();
 
     # Compute the delta
     my %end_resources = map { $_, $faction->{$_} } @data_fields;
-    my %pretty_delta = terra_mystica::pretty_resource_delta($ledger->start_resources(),
+    my %pretty_delta = terra_mystica::pretty_resource_delta($self->start_resources(),
                                                             \%end_resources);
 
     my $info = { faction => $faction->{name},
-                 leech => $ledger->leech(),
-                 warning => $ledger->warnings()->[0] // "",
-                 commands => (join ". ", @{$ledger->commands()}),
+                 leech => $self->leech(),
+                 warning => $self->first_warning() // "",
+                 commands => $self->join_commands(". "),
                  map { $_, $pretty_delta{$_} } @data_fields};
 
     my $row_summary = "$faction->{name}: $info->{commands}";
@@ -96,38 +99,32 @@ sub finish_row {
         }
     }
 
-    $ledger->add_row($info);
-    $ledger->collecting_row(0);
+    $self->add_row($info);
+    $self->collecting_row(0);
 }
 
-sub add_comment {
-    my ($ledger, $comment) = @_;
-
-    $ledger->add_row({ comment => $comment });
-    $ledger->trailing_comment(1);
+method add_comment($comment) {
+    $self->add_row({ comment => $comment });
+    $self->trailing_comment(1);
 }
 
-sub turn {
-    my ($ledger, $round, $turn) = @_;
-
-    if ($round == $ledger->last_printed_round() and
-        $turn == $ledger->last_printed_turn()) {
+method turn($round, $turn) {
+    if ($round == $self->last_printed_round() and
+        $turn == $self->last_printed_turn()) {
         return;
     }
 
-    $ledger->last_printed_turn($turn);
-    $ledger->last_printed_round($round);
+    $self->last_printed_turn($turn);
+    $self->last_printed_round($round);
 
-    return if $ledger->{trailing_comment};
+    return if $self->{trailing_comment};
 
-    $ledger->add_comment("Round $round, turn $turn");
+    $self->add_comment("Round $round, turn $turn");
 }
 
-sub flush {
-    my ($ledger) = @_;
-
-    $ledger->finish_row();
-    $ledger->rows();
+method flush {
+    $self->finish_row();
+    $self->rows();
 }
 
 1;
