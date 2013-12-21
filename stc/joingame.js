@@ -72,7 +72,7 @@ function showOpenGames(games) {
 }
 
 function fetchOpenGames() {
-    new Ajax.Request("/cgi-bin/gamelist.pl", {
+    new Ajax.Request("/app/list-games/", {
         parameters: {
             "cache-token": new Date(),
             "mode": "open",

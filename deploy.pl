@@ -36,6 +36,8 @@ sub copy_with_mode {
 
     make_path dirname $to;
 
+    die "$from doesn't exist" if (!-f $from);
+
     if ($devel) {
         if (!-l $to) {
             symlink "$ENV{PWD}/$from", $to;
@@ -80,12 +82,9 @@ sub deploy_docs {
 sub deploy_cgi {
     mkdir "$target/cgi-bin";
     for my $f (qw(alias.pl
-                  append.pl
-                  chat.pl
-                  app.fcgi
                   app.psgi
+                  chat.pl
                   edit.pl
-                  gamelist.pl
                   joingame.pl
                   login.pl
                   logout.pl
@@ -110,7 +109,6 @@ sub deploy_cgi {
                   create_game.pm
                   cryptutil.pm
                   cults.pm
-                  db.pm
                   DB/Connection.pm
                   DB/EditLink.pm
                   DB/Game.pm
@@ -121,28 +119,23 @@ sub deploy_cgi {
                   Email/Notify.pm
                   exec_timer.pm
                   factions.pm
-                  game.pm
                   income.pm
-                  indexgame.pm
                   ledger.pm
                   map.pm
-                  natural_cmp.pm
-                  notify.pm
                   results.pm
                   resources.pm
                   rlimit.pm
-                  save.pm
                   scoring.pm
-                  secret.pm
                   Server/AppendGame.pm 
+                  Server/ListGames.pm
+                  Server/Router.pm
                   Server/Server.pm
                   Server/Session.pm
                   Server/ViewGame.pm 
-                  session.pm
+                  Util/NaturalCmp.pm
                   tiles.pm
                   towns.pm
-                  tracker.pm
-                  user_validate.pm)) {
+                  tracker.pm)) {
         copy_with_mode 0444, "src/$f", "$target/cgi-bin/$f";
     }
 }

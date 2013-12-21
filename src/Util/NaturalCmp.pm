@@ -1,3 +1,6 @@
+package Util::NaturalCmp;
+use Exporter::Easy (EXPORT => [ 'natural_cmp' ]);
+
 sub split_nums {
     local $_ = shift;
     /(\d+|\D+)/g;

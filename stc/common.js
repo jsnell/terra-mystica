@@ -61,7 +61,7 @@ function getCSRFToken() {
 
 function fetchGames(div, mode, status, handler, args) {
     $(div).update("... loading");
-    new Ajax.Request("/cgi-bin/gamelist.pl", {
+    new Ajax.Request("/app/list-games/", {
         parameters: {
             "mode": mode,
             "status": status,

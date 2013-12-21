@@ -8,7 +8,7 @@ use Server::Session;
 
 my $q = CGI->new;
 
-ensure_csrf_cookie $q;
+# ensure_csrf_cookie $q;
 
 print "Content-type: text/html\r\n";
 print "Cache-Control: no-cache\r\n";

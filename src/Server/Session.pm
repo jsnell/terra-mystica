@@ -48,6 +48,8 @@ sub read_urandom_string_base64 {
 sub ensure_csrf_cookie {
     my ($q, $server) = @_;
 
+    die "Invalid call to ensure_csrf_cookie" if !$server;
+
     if (!$q->cookie("csrf-token")) {
         my $y = 86400*365;
         my $r = read_urandom_string_base64 8;
@@ -57,10 +59,12 @@ sub ensure_csrf_cookie {
 }
 
 sub verify_csrf_cookie_or_die {
-    my ($q, $server) = shift;
+    my ($q, $server) = @_;
     my $cookie_token = $q->cookie("csrf-token");
     my $param_token = $q->param("csrf-token");
-    
+
+    die "Invalid call to verify_csrf_cookie_or_die" if !$server;
+
     if (!defined $cookie_token or
         !defined $param_token or
         $cookie_token ne $param_token) {
