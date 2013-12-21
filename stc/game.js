@@ -2481,7 +2481,7 @@ function addUpgradeToMovePicker(picker, faction) {
             var cost = faction.buildings[wanted_new].advance_cost;
             var lonely_cost = {}
             if (wanted_new == "TP" && !hex.has_neighbors) {
-                lonely_cost = { "C": cost.C * 2 };
+                lonely_cost = { "C": cost.C };
             }
             var can_afford = canAfford(faction, [cost, lonely_cost]);
             var cost_str = effectString([cost, lonely_cost],
