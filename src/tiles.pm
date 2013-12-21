@@ -1,3 +1,5 @@
+package terra_mystica;
+
 use strict;
 use vars qw(%actions %tiles);
 use Readonly;

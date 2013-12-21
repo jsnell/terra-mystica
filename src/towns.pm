@@ -3,7 +3,7 @@ package terra_mystica;
 use strict;
 
 use map;
-use natural_cmp;
+use Util::NaturalCmp;
 
 # Add a hex with a building owned by faction to the town denoted by tid.
 # Also add all transitively directly adjacent buildings to the town.

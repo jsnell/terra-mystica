@@ -2,9 +2,11 @@ package Server::Router;
 
 use Server::AppendGame;
 use Server::ListGames;
+use Server::Plan;
 use Server::ViewGame;
 
 use CGI::PSGI;
+use JSON;
 
 my %paths = (
    '/view-game/' => sub {
@@ -15,6 +17,9 @@ my %paths = (
     },
    '/list-games/' => sub {
        Server::ListGames->new()
+    },
+   '/plan/' => sub {
+       Server::Plan->new()
     },
 );
 

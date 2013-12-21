@@ -128,6 +128,7 @@ sub deploy_cgi {
                   scoring.pm
                   Server/AppendGame.pm 
                   Server/ListGames.pm
+                  Server/Plan.pm
                   Server/Router.pm
                   Server/Server.pm
                   Server/Session.pm

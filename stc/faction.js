@@ -171,7 +171,7 @@ function nextGame(games, div, mode, status) {
 function loadOrSavePlan(save) {
     dataEntrySetStatus(true);
 
-    var target = "/cgi-bin/plan.pl";
+    var target = "/app/plan/";
     target = "http://" + backendDomain + target;
 
     var form_params = {
