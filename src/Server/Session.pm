@@ -1,5 +1,6 @@
 package Server::Session;
-use Exporter::Easy (EXPORT => [ 'username_from_session_token',
+use Exporter::Easy (EXPORT => [ 'session_token',
+                                'username_from_session_token',
                                 'ensure_csrf_cookie',
                                 'verify_csrf_cookie_or_die']);
 
@@ -7,6 +8,7 @@ use Digest::SHA1 qw(sha1_hex);
 use Crypt::Eksblowfish::Bcrypt qw(en_base64);
 
 use DB::Secret;
+use Util::CryptUtil;
 
 sub session_token {
     my ($dbh, $username, $seed) = @_;
@@ -30,19 +32,6 @@ sub username_from_session_token {
     } else {
         undef;
     }
-}
-
-sub read_urandom_string_base64 {
-    my $chars = shift;
-
-    open my $f, "</dev/urandom";
-    my $data = '';
-
-    read $f, $data, $chars;
-
-    close $f;
-
-    substr en_base64($data), 0, $chars;
 }
 
 sub ensure_csrf_cookie {

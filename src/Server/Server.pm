@@ -29,6 +29,11 @@ method output_psgi {
      [ $self->output() ]];
 };
 
+method redirect($where) {
+    $self->status(303);
+    $self->set_header("Location", $where);
+}
+
 method no_cache() {
     $self->set_header("Cache-Control", "no-cache");
 }
@@ -36,6 +41,11 @@ method no_cache() {
 method output_json($data) {
     $self->set_header("Content-type", "application/json");
     $self->output(encode_json($data));
+}
+
+method output_html($data) {
+    $self->set_header("Content-type", "text/html");
+    $self->output($data);
 }
 
 method handle($q) {

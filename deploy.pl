@@ -85,15 +85,12 @@ sub deploy_cgi {
                   app.fcgi
                   app.psgi
                   edit.pl
-                  login.pl
-                  logout.pl
                   newgame.pl
                   register.pl
                   reset.pl
                   results.pl
                   settings.pl
                   startup-modperl2.pl
-                  template.pl 
                   validate.pl
                   validate-alias.pl
                   validate-reset.pl
@@ -105,7 +102,6 @@ sub deploy_cgi {
                   buildings.pm
                   commands.pm
                   create_game.pm
-                  cryptutil.pm
                   cults.pm
                   DB/Connection.pm
                   DB/EditLink.pm
@@ -115,25 +111,27 @@ sub deploy_cgi {
                   DB/Secret.pm
                   DB/UserValidate.pm
                   Email/Notify.pm
-                  exec_timer.pm
                   factions.pm
                   income.pm
                   ledger.pm
                   map.pm
                   results.pm
                   resources.pm
-                  rlimit.pm
                   scoring.pm
                   Server/AppendGame.pm 
                   Server/Chat.pm
                   Server/JoinGame.pm
                   Server/ListGames.pm
+                  Server/Login.pm
+                  Server/Logout.pm
                   Server/Plan.pm
                   Server/Router.pm
                   Server/Server.pm
                   Server/Session.pm
+                  Server/Template.pm
                   Server/ViewGame.pm 
                   Util/NaturalCmp.pm
+                  Util/CryptUtil.pm
                   tiles.pm
                   towns.pm
                   tracker.pm)) {

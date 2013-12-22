@@ -3,9 +3,11 @@ package Server::Router;
 use Server::AppendGame;
 use Server::Chat;
 use Server::JoinGame;
-
 use Server::ListGames;
+use Server::Login;
+use Server::Logout;
 use Server::Plan;
+use Server::Template;
 use Server::ViewGame;
 
 use CGI::PSGI;
@@ -24,6 +26,12 @@ my %paths = (
    '/list-games/' => sub {
        Server::ListGames->new()
     },
+   '/login/' => sub {
+       Server::Login->new()
+    },
+   '/logout/' => sub {
+       Server::Logout->new()
+    },
    '/plan/' => sub {
        Server::Plan->new()
     },
@@ -32,15 +40,19 @@ my %paths = (
     },
 );
 
+my @prefix_paths = (
+   [qr{^/template/} => sub { Server::Template->new() }],
+);
+
 sub route {
     my $env = shift;
     my $q = CGI::PSGI->new($env);
 
     my $path_info = $q->path_info();
-    my $handler = $paths{$path_info};
     my $ret;
 
     eval {
+        my ($handler) = $paths{$path_info} // (map { $_->[1] } grep { $path_info =~ $_->[0] } @prefix_paths);
         if ($handler) {
             my $app = $handler->();
             $app->handle($q);

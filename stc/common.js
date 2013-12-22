@@ -183,7 +183,7 @@ function renderSidebar(id) {
         insertLink("/joingame/", "Join Game");
         insertLink("/newgame/", "New Game");
         insertLink("/settings/", "Settings");
-        insertLink("/logout/", "Logout");
+        insertLink("/app/logout/", "Logout");
     }
     p.insert(new Element("br"));
     insertLink("/stats/", "Statistics");

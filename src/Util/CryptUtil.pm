@@ -1,6 +1,9 @@
-#!/usr/bin/perl -w
-
 use strict;
+
+package Util::CryptUtil;
+use Exporter::Easy (EXPORT => [ 'encrypt_validation_token',
+                                'read_urandom_string_base64',
+                                'decrypt_validation_token' ]);
 
 use Crypt::CBC;
 use Crypt::Eksblowfish::Bcrypt qw(en_base64 de_base64);
@@ -49,6 +52,19 @@ sub decrypt_validation_token {
     }
 
     (@data, $token_csum);
+}
+
+sub read_urandom_string_base64 {
+    my $chars = shift;
+
+    open my $f, "</dev/urandom";
+    my $data = '';
+
+    read $f, $data, $chars;
+
+    close $f;
+
+    substr en_base64($data), 0, $chars;
 }
 
 1;
