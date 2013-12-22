@@ -219,7 +219,7 @@ function initPlanIfNeeded() {
 function loadOrSendChat(send) {
     dataEntrySetStatus(true);
 
-    var target = "/cgi-bin/chat.pl";
+    var target = "/app/chat/";
     target = "http://" + backendDomain + target;
 
     var form_params = {
@@ -246,6 +246,12 @@ function loadOrSendChat(send) {
 
             if (state.chat_hide_message_count > 0) {
                 $("chat_messages").insert("<tr id='chat_messages_show_old'><td><td><span style='text-decoration: underline' onclick='showOldMessages()'>Show #{chat_hide_message_count} older messages</span></tr>".interpolate(state));                
+            }
+
+            if (messages.error) {
+                $("error").updateText(messages.error);
+                dataEntrySetStatus(false);
+                return;
             }
 
             messages.messages.each(function (entry, index) {

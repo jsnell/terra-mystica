@@ -83,13 +83,11 @@ sub deploy_cgi {
     mkdir "$target/cgi-bin";
     for my $f (qw(alias.pl
                   app.psgi
-                  chat.pl
                   edit.pl
                   joingame.pl
                   login.pl
                   logout.pl
                   newgame.pl
-                  plan.pl
                   register.pl
                   reset.pl
                   results.pl
@@ -127,6 +125,7 @@ sub deploy_cgi {
                   rlimit.pm
                   scoring.pm
                   Server/AppendGame.pm 
+                  Server/Chat.pm
                   Server/ListGames.pm
                   Server/Plan.pm
                   Server/Router.pm
