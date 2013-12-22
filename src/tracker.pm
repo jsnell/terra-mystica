@@ -7,6 +7,8 @@ use List::Util qw(sum max min);
 
 use vars qw(%game);
 
+use Game::Constants;
+
 use acting;
 use commands;
 use cults;
@@ -14,7 +16,6 @@ use ledger;
 use map;
 use resources;
 use scoring;
-use tiles;
 use towns;
 
 sub finalize {
@@ -47,14 +48,6 @@ sub finalize {
         }
     }
     $game{acting}->clear_empty_actions();
-
-    # Don't see a point in this. Most likely it was just a diff-reduction
-    # attempt. (And now fails due to Readonly-protecting the static data).
-    # for my $action (values %actions) {
-    #     if ($action->{subaction}) {
-    #         delete $action->{subaction}{dig};
-    #     }
-    # }
 
     for my $faction ($game{acting}->factions_in_order()) {
         if ($faction->{waiting}) {
@@ -120,10 +113,12 @@ sub finalize {
         delete $hex->{bridge};
     }
     
+    # Gross, but still needed
     for my $key (keys %{$game{cults}}) {
         $map{$key} = $game{cults}{$key};
     }
 
+    # Obsolete in .js, just retained for diffs
     for my $key (keys %{$game{bonus_coins}}) {
         $map{$key} = $game{bonus_coins}{$key};
     }

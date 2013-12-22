@@ -3,8 +3,7 @@ package terra_mystica;
 use strict;
 use Readonly;
 
-use vars qw(@cults);
-Readonly our @cults => qw(FIRE WATER EARTH AIR);
+use Game::Constants;
 
 sub setup_cults {
     my %cults = ();

@@ -3,9 +3,10 @@ package terra_mystica;
 use strict;
 use Readonly;
 
+use Game::Constants;
+
 use scoring;
 use towns;
-use tiles;
 
 sub maybe_setup_pool() {
     return if $game{pool};

@@ -5,15 +5,15 @@ use strict;
 use Digest::SHA1 qw(sha1);
 use Math::Random::MT;
 
+use Game::Constants;
+use Game::Factions;
+
 use buildings;
-use cults;
-use factions;
 use map;
 use income;
 use ledger;
 use resources;
 use scoring;
-use tiles;
 use towns;
 
 use vars qw(%game);
@@ -165,6 +165,10 @@ sub command_upgrade {
 
     my %wanted_oldtype = (TP => 'D', TE => 'TP', SH => 'TP', SA => 'TE');
     my $oldtype = $map{$where}{building};
+
+    if (!$wanted_oldtype{$type}) {
+        die "unknown building type $type\n";
+    }
 
     if ($oldtype ne $wanted_oldtype{$type}) {
         die "$where contains $oldtype, wanted $wanted_oldtype{$type}\n"
@@ -889,7 +893,7 @@ sub command {
     } elsif ($command =~ /^setup (\w+)(?: for (\S+?))?(?: email (\S+))?$/i) {
         maybe_setup_pool;
         $game{acting}->advance_state('select-factions');
-        setup lc $1, $2, $3;
+        setup_faction \%game, lc $1, $2, $3;
     } elsif ($command =~ /delete (\w+)$/i) {
         my $name = uc $1;
 

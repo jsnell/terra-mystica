@@ -4,8 +4,7 @@ use strict;
 
 use vars qw(%game @score_tiles %map @bridges);
 
-use cults;
-use tiles;
+use Game::Constants;
 
 sub adjust_resource;
 sub command;

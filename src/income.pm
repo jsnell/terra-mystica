@@ -2,8 +2,8 @@ package terra_mystica;
 
 use strict;
 
-use factions;
-use tiles;
+use Game::Constants;
+
 use resources;
 use scoring;
 

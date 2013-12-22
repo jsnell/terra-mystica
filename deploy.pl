@@ -93,7 +93,6 @@ sub deploy_cgi {
     for my $f (qw(acting.pm
                   buildings.pm
                   commands.pm
-                  create_game.pm
                   cults.pm
                   DB/Connection.pm
                   DB/EditLink.pm
@@ -104,7 +103,8 @@ sub deploy_cgi {
                   DB/Settings.pm
                   DB/UserValidate.pm
                   Email/Notify.pm
-                  factions.pm
+                  Game/Constants.pm
+                  Game/Factions.pm
                   income.pm
                   ledger.pm
                   map.pm
@@ -131,7 +131,6 @@ sub deploy_cgi {
                   Server/ViewGame.pm 
                   Util/NaturalCmp.pm
                   Util/CryptUtil.pm
-                  tiles.pm
                   towns.pm
                   tracker.pm)) {
         copy_with_mode 0444, "src/$f", "$target/cgi-bin/$f";

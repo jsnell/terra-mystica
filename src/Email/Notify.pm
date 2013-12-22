@@ -8,7 +8,7 @@ use Exporter::Easy (EXPORT => [ 'notify_after_move',
                                 'notify_new_chat' ]);
 
 use DB::EditLink;
-use factions;
+use Game::Constants;
 use Net::SMTP;
 
 my $domain = "http://terra.snellman.net";
@@ -147,7 +147,7 @@ sub fetch_email_settings {
 
 sub pretty_faction_name {
     my ($game, $faction) = @_;
-    my $faction_pretty = ($terra_mystica::setups{$faction}{display} or $faction);
+    my $faction_pretty = ($faction_setups{$faction}{display} or $faction);
     my $displayname = $game->{factions}{$faction}{displayname};
     if (defined $displayname) {
         $faction_pretty .= " ($displayname)";
