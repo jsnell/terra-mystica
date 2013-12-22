@@ -82,9 +82,9 @@ sub deploy_docs {
 sub deploy_cgi {
     mkdir "$target/cgi-bin";
     for my $f (qw(alias.pl
+                  app.fcgi
                   app.psgi
                   edit.pl
-                  joingame.pl
                   login.pl
                   logout.pl
                   newgame.pl
@@ -126,6 +126,7 @@ sub deploy_cgi {
                   scoring.pm
                   Server/AppendGame.pm 
                   Server/Chat.pm
+                  Server/JoinGame.pm
                   Server/ListGames.pm
                   Server/Plan.pm
                   Server/Router.pm

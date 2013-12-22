@@ -48,7 +48,7 @@ sub handle {
     my $username = username_from_session_token($dbh,
                                                $q->cookie('session-token') // '');
 
-    my %res = ( error => "" );
+    my %res = ( error => [] );
 
     eval {
         verify_key $dbh, $id, $faction_key, $faction_name;
@@ -97,7 +97,7 @@ sub handle {
 
         $res{messages} = $rows;
     }; if ($@) {
-        $res{error} = "$@";
+        $res{error} = ["$@"];
     }
 
     $self->output_json(\%res);

@@ -46,7 +46,7 @@ sub handle {
 
     my $username = username_from_session_token($dbh,
                                                $q->cookie('session-token') // '');
-    my %res = ();
+    my %res = (error => []);
 
     eval {
         if (!$username) {
@@ -91,7 +91,7 @@ sub handle {
             $res{note} = $rows->[0][0];
         }
     }; if ($@) {
-        $res{error} = "$@";
+        $res{error} = [ "$@" ];
     }
 
     $self->output_json(\%res);

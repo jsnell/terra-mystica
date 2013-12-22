@@ -2,6 +2,8 @@ package Server::Router;
 
 use Server::AppendGame;
 use Server::Chat;
+use Server::JoinGame;
+
 use Server::ListGames;
 use Server::Plan;
 use Server::ViewGame;
@@ -15,6 +17,9 @@ my %paths = (
     },
    '/chat/' => sub {
        Server::Chat->new()
+    },
+   '/join-game/' => sub {
+       Server::JoinGame->new()
     },
    '/list-games/' => sub {
        Server::ListGames->new()
