@@ -2,7 +2,7 @@ package terra_mystica;
 
 use strict;
 
-use vars qw(%game @score_tiles %map @bridges);
+use vars qw(%game @score_tiles %map);
 
 use Game::Constants;
 
@@ -147,7 +147,7 @@ sub do_pass_vp {
     if ($faction->{name} eq 'engineers' and
         $faction->{buildings}{SH}{level}) {
         my $color = 'gray';
-        for my $bridge (@bridges) {
+        for my $bridge (@{$game{bridges}}) {
             if ($bridge->{color} eq $color and
                 $map{$bridge->{from}}{building} and
                 $map{$bridge->{from}}{color} eq $color and

@@ -7,10 +7,12 @@ use strict;
 use Clone qw(clone);
 
 use vars qw(%game);
-use vars qw(%map %reverse_map @bridges);
+use vars qw(%map);
 
 # Initialize %map, with the correct coordinates, from the above raw data.
 sub setup_base_map {
+    my ($reverse_map) = @_;
+
     my $i = 0;
     my $ri = 0;
     my $river = 0;
@@ -23,14 +25,14 @@ sub setup_base_map {
                 $map{"$row$col"}{color} = $color;
                 $map{"$row$col"}{row} = $ri;
                 $map{"$row$col"}{col} = $ci;
-                $reverse_map{$ri}{$ci} = "$row$col";
+                $reverse_map->{$ri}{$ci} = "$row$col";
                 $col++;
             } else {
                 my $key = "r$river";
                 $map{"$key"}{color} = 'white';
                 $map{"$key"}{row} = $ri;
                 $map{"$key"}{col} = $ci;
-                $reverse_map{$ri}{$ci} = "$key";
+                $reverse_map->{$ri}{$ci} = "$key";
                 $river++;
             }
         }
@@ -41,6 +43,8 @@ sub setup_base_map {
 # Set up the a list of directly adjacent hexes. Store it under the
 # 'adjacent' hash key.
 sub setup_direct_adjacencies {
+    my ($reverse_map) = @_;
+
     sub record_adjacent {
         my ($this, $other) = @_;
         if ($other) {
@@ -53,8 +57,8 @@ sub setup_direct_adjacencies {
         my $col = $map{$coord}{col};
 
         # Same row
-        record_adjacent $coord, $reverse_map{$row}{$col+1};
-        record_adjacent $coord, $reverse_map{$row}{$col-1};
+        record_adjacent $coord, $reverse_map->{$row}{$col+1};
+        record_adjacent $coord, $reverse_map->{$row}{$col-1};
 
         # Adjacent rows. Need to offset the column by one for every other
         # row.
@@ -62,10 +66,10 @@ sub setup_direct_adjacencies {
             $col--;
         }
 
-        record_adjacent $coord, $reverse_map{$row - 1}{$col};
-        record_adjacent $coord, $reverse_map{$row - 1}{$col + 1};
-        record_adjacent $coord, $reverse_map{$row + 1}{$col};
-        record_adjacent $coord, $reverse_map{$row + 1}{$col + 1};
+        record_adjacent $coord, $reverse_map->{$row - 1}{$col};
+        record_adjacent $coord, $reverse_map->{$row - 1}{$col + 1};
+        record_adjacent $coord, $reverse_map->{$row + 1}{$col};
+        record_adjacent $coord, $reverse_map->{$row + 1}{$col + 1};
     }
 }
 
@@ -73,7 +77,7 @@ sub setup_direct_adjacencies {
 # the distance from that hex to other-hex, when traveling via mode.
 # 1 for river, 0 for like the crow flies.
 sub setup_hex_ranges {
-    my ($from, $river_only) = @_;
+    my ($reverse_map, $from, $river_only) = @_;
     my %aux = ();
     my $max = ($river_only ? 6 : 4);
 
@@ -96,11 +100,13 @@ sub setup_hex_ranges {
 }
 
 sub setup_ranges {
-    setup_hex_ranges $_, 0 for keys %map;
-    setup_hex_ranges $_, 1 for keys %map;
+    my ($reverse_map) = @_;
+    setup_hex_ranges $reverse_map, $_, 0 for keys %map;
+    setup_hex_ranges $reverse_map, $_, 1 for keys %map;
 }
 
 sub setup_valid_bridges {
+    my ($reverse_map) = @_;
     sub record_bridgable {
         my ($this, $other) = @_;
         if ($other and
@@ -120,19 +126,19 @@ sub setup_valid_bridges {
         next if $coord =~ /^r/;
 
         # Same column, 2 rows off
-        if (($reverse_map{$row+1}{$offset_col} // '') =~ /^r/ and
-            ($reverse_map{$row+1}{$offset_col+1} // '') =~ /^r/) {
-            record_bridgable $coord, $reverse_map{$row+2}{$col};
+        if (($reverse_map->{$row+1}{$offset_col} // '') =~ /^r/ and
+            ($reverse_map->{$row+1}{$offset_col+1} // '') =~ /^r/) {
+            record_bridgable $coord, $reverse_map->{$row+2}{$col};
         }
 
         # Adjacent row
-        if (($reverse_map{$row}{$col-1} // '') =~ /^r/ and
-            ($reverse_map{$row+1}{$offset_col} // '') =~ /^r/) {
-            record_bridgable $coord, $reverse_map{$row+1}{$offset_col-1};
+        if (($reverse_map->{$row}{$col-1} // '') =~ /^r/ and
+            ($reverse_map->{$row+1}{$offset_col} // '') =~ /^r/) {
+            record_bridgable $coord, $reverse_map->{$row+1}{$offset_col-1};
         }
-        if (($reverse_map{$row}{$col+1} // '') =~ /^r/ and
-            ($reverse_map{$row+1}{$offset_col+1} // '') =~ /^r/) {
-            record_bridgable $coord, $reverse_map{$row+1}{$offset_col+2};
+        if (($reverse_map->{$row}{$col+1} // '') =~ /^r/ and
+            ($reverse_map->{$row+1}{$offset_col+1} // '') =~ /^r/) {
+            record_bridgable $coord, $reverse_map->{$row+1}{$offset_col+2};
         }
     }    
 }
@@ -463,10 +469,11 @@ sub update_tp_upgrade_costs {
 }
 
 sub setup_map {
-    setup_base_map;
-    setup_direct_adjacencies;
-    setup_ranges;
-    setup_valid_bridges;
+    my $reverse_map = {};
+    setup_base_map $reverse_map;
+    setup_direct_adjacencies $reverse_map;
+    setup_ranges $reverse_map;
+    setup_valid_bridges $reverse_map;
 }
 
 1;

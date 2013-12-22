@@ -147,6 +147,7 @@ sub evaluate_game {
         bonus_coins => {},
         pool => undef,
         cults => setup_cults,
+        bridges => [],
     );
     $game{ledger} = terra_mystica::Ledger->new({game => \%game});
     $game{acting} = terra_mystica::Acting->new(
@@ -156,8 +157,6 @@ sub evaluate_game {
         });
 
     local %map = ();
-    local %reverse_map = ();
-    local @bridges = ();
     local @score_tiles = ();
 
     setup_map;
@@ -205,7 +204,7 @@ sub evaluate_game {
         actions => \%actions,
         factions => $game{acting}->factions(),
         pool => $game{pool},
-        bridges => \@bridges,
+        bridges => $game{bridges},
         ledger => $game{ledger}->flush(),
         error => \@error,
         towns => { map({$_, $tiles{$_}} grep { /^TW/ } keys %tiles ) },

@@ -513,7 +513,7 @@ sub command_bridge {
     }
     delete $faction->{BRIDGE};
 
-    push @bridges, {from => $from, to => $to, color => $faction->{color}};
+    push @{$game{bridges}}, {from => $from, to => $to, color => $faction->{color}};
 
     detect_towns_from $faction, $from;
     detect_towns_from $faction, $to;
