@@ -8,10 +8,12 @@ use Method::Signatures::Simple;
 
 extends 'Server::Server';
 
-use Util::CryptUtil;
+use Net::SMTP;
+
 use DB::Connection;
 use DB::Secret;
 use Server::Session;
+use Util::CryptUtil;
 
 has 'mode' => (is => 'ro', required => 1);
 

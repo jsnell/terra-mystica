@@ -10,6 +10,7 @@ use Server::ListGames;
 use Server::Login;
 use Server::Logout;
 use Server::Plan;
+use Server::Register;
 use Server::SaveGame;
 use Server::Settings;
 use Server::Template;
@@ -20,7 +21,7 @@ use JSON;
 
 my %paths = (
    '/alias/' => sub {
-       Server::Alias->new({ mode => 'request'})
+       Server::Alias->new({ mode => 'request' })
     },
    '/append-game/' => sub {
        Server::AppendGame->new()
@@ -46,6 +47,9 @@ my %paths = (
    '/plan/' => sub {
        Server::Plan->new()
     },
+   '/register/' => sub {
+       Server::Register->new({ mode => 'request' })
+    },
    '/save-game/' => sub {
        Server::SaveGame->new()
     },
@@ -53,7 +57,10 @@ my %paths = (
        Server::Settings->new()
     },
    '/validate-alias/' => sub {
-       Server::Alias->new({ mode => 'validate'})
+       Server::Alias->new({ mode => 'validate' })
+    },
+   '/validate-registration/' => sub {
+       Server::Register->new({ mode => 'validate' })
     },
    '/view-game/' => sub {
        Server::ViewGame->new()

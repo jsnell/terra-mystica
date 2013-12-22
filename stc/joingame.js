@@ -2,7 +2,7 @@ var state;
 
 function joinGame(id, status) {
     disableDescendants($("games"));    
-    new Ajax.Request("/cgi-bin/joingame.pl", {
+    new Ajax.Request("/app/join-game/", {
         parameters: {
             "cache-token": new Date(),
             "csrf-token": getCSRFToken(),

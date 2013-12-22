@@ -27,6 +27,9 @@ function register() {
 
         $("userinfo").request({
             method:"post",
+            onFailure: function() {
+                    $("error").innerHTML = "An unknown error occured";
+            },
             onSuccess: function(transport) {
                 state = transport.responseText.evalJSON();
                 if (state.error.length) {

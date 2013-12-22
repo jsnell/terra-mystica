@@ -84,11 +84,9 @@ sub deploy_cgi {
     for my $f (qw(app.fcgi
                   app.psgi
                   newgame.pl
-                  register.pl
                   reset.pl
                   results.pl
                   startup-modperl2.pl
-                  validate.pl
                   validate-reset.pl)) {
         copy_with_mode 0555, "src/$f", "$target/cgi-bin/$f";
     }
@@ -124,6 +122,7 @@ sub deploy_cgi {
                   Server/Logout.pm
                   Server/Plan.pm
                   Server/Router.pm
+                  Server/Register.pm
                   Server/SaveGame.pm
                   Server/Server.pm
                   Server/Session.pm
