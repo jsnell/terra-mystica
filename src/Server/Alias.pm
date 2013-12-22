@@ -38,6 +38,12 @@ method request_alias($q, $dbh) {
     my $username = username_from_session_token($dbh,
                                                $q->cookie('session-token') // '');
 
+    if (!$username) {
+        push @error, "not logged in";
+    } else {
+        verify_csrf_cookie_or_die $q, $self;
+    }
+
     if (!@error) {
         my ($email_in_use) = $dbh->selectrow_array("select count(*) from email where lower(address) = lower(?)", {}, $email);
 

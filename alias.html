@@ -9,6 +9,9 @@
             src="/stc/debug.js">
     </script>
     <script type="text/javascript" language="javascript"
+            src="/stc/common.js">
+    </script>
+    <script type="text/javascript" language="javascript"
             src="/stc/alias.js">
     </script>
     <link rel="stylesheet" type="text/css" href="/stc/style.css">
@@ -21,6 +24,7 @@
         <tr><td>Email Address<td><input name="email" id="email"></input>
         <tr><td><td><input type="button" value="Register" onclick="javascript:register()"></input>
       </table>
+      <input type="hidden" id="csrf-token" name="csrf-token" value="">
     </form>
     <div id="usage" style="display: block">
     <p>
