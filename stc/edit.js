@@ -70,7 +70,7 @@ function save() {
 
     $("error").update("");
     $("save-button").disable();
-    new Ajax.Request("/cgi-bin/save.pl", {
+    new Ajax.Request("/app/save-game/", {
         method: "post",
         parameters: {
             "game": id,
@@ -105,7 +105,7 @@ function save() {
 }
 
 function load() {
-    new Ajax.Request("/cgi-bin/edit.pl", {
+    new Ajax.Request("/app/edit-game/", {
         parameters: {
             "game": id,
             "cache-token": new Date() - Math.random()

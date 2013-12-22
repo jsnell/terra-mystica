@@ -2,11 +2,14 @@ package Server::Router;
 
 use Server::AppendGame;
 use Server::Chat;
+use Server::EditGame;
+use Server::EditGame;
 use Server::JoinGame;
 use Server::ListGames;
 use Server::Login;
 use Server::Logout;
 use Server::Plan;
+use Server::SaveGame;
 use Server::Template;
 use Server::ViewGame;
 
@@ -19,6 +22,9 @@ my %paths = (
     },
    '/chat/' => sub {
        Server::Chat->new()
+    },
+   '/edit-game/' => sub {
+       Server::EditGame->new()
     },
    '/join-game/' => sub {
        Server::JoinGame->new()
@@ -34,6 +40,9 @@ my %paths = (
     },
    '/plan/' => sub {
        Server::Plan->new()
+    },
+   '/save-game/' => sub {
+       Server::SaveGame->new()
     },
    '/view-game/' => sub {
        Server::ViewGame->new()
@@ -61,6 +70,7 @@ sub route {
             die "Unknown module '$path_info'";
         }
     }; if ($@) {
+        print STDERR "ERROR: $@\n", '-'x60, "\n";
         $ret = [500,
                 ["Content-Type", "application/json"],
                 [encode_json { error => $@ }]];

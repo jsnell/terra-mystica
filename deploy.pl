@@ -84,7 +84,6 @@ sub deploy_cgi {
     for my $f (qw(alias.pl
                   app.fcgi
                   app.psgi
-                  edit.pl
                   newgame.pl
                   register.pl
                   reset.pl
@@ -93,8 +92,7 @@ sub deploy_cgi {
                   startup-modperl2.pl
                   validate.pl
                   validate-alias.pl
-                  validate-reset.pl
-                  save.pl)) {
+                  validate-reset.pl)) {
         copy_with_mode 0555, "src/$f", "$target/cgi-bin/$f";
     }
 
@@ -120,12 +118,14 @@ sub deploy_cgi {
                   scoring.pm
                   Server/AppendGame.pm 
                   Server/Chat.pm
+                  Server/EditGame.pm
                   Server/JoinGame.pm
                   Server/ListGames.pm
                   Server/Login.pm
                   Server/Logout.pm
                   Server/Plan.pm
                   Server/Router.pm
+                  Server/SaveGame.pm
                   Server/Server.pm
                   Server/Session.pm
                   Server/Template.pm
@@ -208,5 +208,5 @@ deploy_data;
 
 $target =~ s/www-//;
 system qq{(echo -n "$target: "; git rev-parse HEAD) >> deploy.log};
-system qq{git tag $target};
+system qq{git tag -f $target};
 
