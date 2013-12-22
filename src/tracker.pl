@@ -11,9 +11,19 @@ BEGIN {
     unshift @INC, "$target/cgi-bin/";
 }
 
-use db;
-use game;
 use tracker;
+
+BEGIN {
+    eval {
+        require 'db.pm';
+        require 'game.pm';
+    }; if ($@) {
+        require 'DB/Connection.pm';
+        DB::Connection->import();
+        require 'DB/Game.pm';    
+        DB::Game->import();
+    }
+}
 
 sub print_json {
     my $data = shift;
