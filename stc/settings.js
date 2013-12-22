@@ -1,7 +1,7 @@
 var state = null;
 
 function loadOrSaveSettings(save) {
-    var target = "/cgi-bin/settings.pl";
+    var target = "/app/settings/";
 
     var form_params = {
         "cache-token": new Date() - Math.random(),

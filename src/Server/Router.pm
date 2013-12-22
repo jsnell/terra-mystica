@@ -1,5 +1,6 @@
 package Server::Router;
 
+use Server::Alias;
 use Server::AppendGame;
 use Server::Chat;
 use Server::EditGame;
@@ -10,6 +11,7 @@ use Server::Login;
 use Server::Logout;
 use Server::Plan;
 use Server::SaveGame;
+use Server::Settings;
 use Server::Template;
 use Server::ViewGame;
 
@@ -17,6 +19,9 @@ use CGI::PSGI;
 use JSON;
 
 my %paths = (
+   '/alias/' => sub {
+       Server::Alias->new({ mode => 'request'})
+    },
    '/append-game/' => sub {
        Server::AppendGame->new()
     },
@@ -43,6 +48,12 @@ my %paths = (
     },
    '/save-game/' => sub {
        Server::SaveGame->new()
+    },
+   '/settings/' => sub {
+       Server::Settings->new()
+    },
+   '/validate-alias/' => sub {
+       Server::Alias->new({ mode => 'validate'})
     },
    '/view-game/' => sub {
        Server::ViewGame->new()

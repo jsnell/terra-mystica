@@ -81,17 +81,14 @@ sub deploy_docs {
 
 sub deploy_cgi {
     mkdir "$target/cgi-bin";
-    for my $f (qw(alias.pl
-                  app.fcgi
+    for my $f (qw(app.fcgi
                   app.psgi
                   newgame.pl
                   register.pl
                   reset.pl
                   results.pl
-                  settings.pl
                   startup-modperl2.pl
                   validate.pl
-                  validate-alias.pl
                   validate-reset.pl)) {
         copy_with_mode 0555, "src/$f", "$target/cgi-bin/$f";
     }
@@ -107,6 +104,7 @@ sub deploy_cgi {
                   DB/IndexGame.pm
                   DB/SaveGame.pm
                   DB/Secret.pm
+                  DB/Settings.pm
                   DB/UserValidate.pm
                   Email/Notify.pm
                   factions.pm
@@ -116,6 +114,7 @@ sub deploy_cgi {
                   results.pm
                   resources.pm
                   scoring.pm
+                  Server/Alias.pm
                   Server/AppendGame.pm 
                   Server/Chat.pm
                   Server/EditGame.pm
@@ -128,6 +127,7 @@ sub deploy_cgi {
                   Server/SaveGame.pm
                   Server/Server.pm
                   Server/Session.pm
+                  Server/Settings.pm
                   Server/Template.pm
                   Server/ViewGame.pm 
                   Util/NaturalCmp.pm

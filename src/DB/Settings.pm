@@ -1,47 +1,14 @@
-#!/usr/bin/perl -w
-
 use strict;
 
-use CGI qw(:cgi -utf8);
-use JSON;
-use utf8 qw(decode);
-
-use db;
-use secret;
-use session;
-
-my $q = CGI->new;
-my $dbh = get_db_connection;
-
-verify_csrf_cookie_or_die $q;
-
-print "Content-type: application/json\r\n";
-print "Cache-Control: no-cache\r\n";
-print "\r\n";
-
-my $username = username_from_session_token($dbh,
-                                           $q->cookie('session-token') // '');
-
-sub error {
-    print encode_json {
-        error => [ @_ ],
-    };
-    exit;
-};
-
-if (!$username) {
-    print encode_json {
-        error => ["Login required"],
-        link => "/login/#required",
-    };
-    exit;
-}
-
-my %res = (
-    error => []
-);
+package DB::Settings;
+use Exporter::Easy (EXPORT => [ 'fetch_user_settings',
+                                'save_user_settings']);
 
 sub fetch_user_settings {
+    my ($dbh, $username) = @_;
+    
+    my %res = ();
+
     my $player = $dbh->selectrow_hashref(
         "select username, displayname, email_notify_turn, email_notify_all_moves, email_notify_chat from player where username = ?",
         {},
@@ -54,14 +21,18 @@ sub fetch_user_settings {
         { Slice => {} },
         $username);
     $res{email} = $rows;
+
+    \%res;
 }
 
 sub save_user_settings {
+    my ($dbh, $username, $q) = @_;
+
     my $displayname = $q->param('displayname');
     my $primary_email = $q->param('primary_email');
 
     if (length $displayname > 30) {
-        error "Display Name too long";
+        die "Display Name too long";
     }
 
     $dbh->do("begin");
@@ -87,16 +58,4 @@ sub save_user_settings {
     $dbh->do("commit");
 }
 
-eval {
-    if ($q->param('save')) {
-        save_user_settings;
-    }
-
-    fetch_user_settings;
-}; if ($@) {
-    $res{error} = [ $@ ];
-}
-
-my $out = encode_json \%res;
-print $out;
-
+1;
