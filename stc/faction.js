@@ -189,7 +189,7 @@ function loadOrSavePlan(save) {
         parameters: form_params,
         onSuccess: function(transport){
             var notes = transport.responseText.evalJSON();
-            if (notes.error) {
+            if (notes.error.size() > 0) {
                 $("planning_entry").updateText(notes.error);
             } else {
                 $("planning_entry_input").value = notes.note;
@@ -248,7 +248,7 @@ function loadOrSendChat(send) {
                 $("chat_messages").insert("<tr id='chat_messages_show_old'><td><td><span style='text-decoration: underline' onclick='showOldMessages()'>Show #{chat_hide_message_count} older messages</span></tr>".interpolate(state));                
             }
 
-            if (messages.error) {
+            if (messages.error.size() > 0) {
                 $("error").updateText(messages.error);
                 dataEntrySetStatus(false);
                 return;
