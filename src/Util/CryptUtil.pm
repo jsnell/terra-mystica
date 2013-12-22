@@ -47,8 +47,7 @@ sub decrypt_validation_token {
     my $expect_csum = sha1_base64 join "\t", @data;
 
     if ($token_csum ne $expect_csum) {
-        # TODO: die() here once old tokens no longer exist
-        print STDERR "Checksum mismatch: $expect_csum $token_csum\n";
+        die "Checksum mismatch: $expect_csum $token_csum\n";
     }
 
     (@data, $token_csum);
