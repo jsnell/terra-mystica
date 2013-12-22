@@ -10,7 +10,7 @@ use Time::HiRes qw(time);
 
 BEGIN { push @INC, dirname $0 };
 
-use db;
+use DB::Connection;
 
 my $dir = dirname $0;
 my $time = 'total';
@@ -33,6 +33,10 @@ sub pretty_res {
     for my $faction (values %{$json->{factions}}) {
         delete $faction->{recent_moves};
     }
+    delete $json->{actions};
+    delete $json->{towns};
+    delete $json->{score_tiles};
+    delete $json->{bonus_tiles};
 
     $json;
 #    my $pretty = to_json($json, { pretty => 1 });
