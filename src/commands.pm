@@ -956,12 +956,11 @@ sub command {
             username => $3,
         });
         check_player_count;
-    } elsif ($command =~ /^player-count (\d+)$/i) {
-        $game{player_count} = 1*$1;
-        check_player_count;
     } elsif ($command =~ /^randomize v1 seed (.*)/i) {
         maybe_setup_pool;
-        $game{acting}->advance_state('select-factions');
+        if (!defined $game{player_count}) {
+            $game{acting}->advance_state('select-factions');
+        }
         command_randomize_v1 $1;
     } elsif ($command =~ /^wait$/i) {
         ($assert_faction->())->{waiting} = 1;
@@ -1086,6 +1085,11 @@ sub rewrite_stream {
             $this->[1] = "+".(($1 || 1) * 2)."$2";
             $next->[1] = '';
         }
+
+        if (!$this->[0] and $this->[1] =~ /^player-count (\d+)$/i) {
+            $game{player_count} = 1*$1;
+            $this->[1] = '';
+        }        
     }
 
     grep { $_->[1] } @command_stream;
