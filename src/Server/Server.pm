@@ -4,7 +4,7 @@ package Server::Server;
 
 use JSON;
 use Moose;
-use MooseX::Method::Signatures;
+use Method::Signatures::Simple;
 
 has 'headers' => (is => '',
                   traits => ['Array'],

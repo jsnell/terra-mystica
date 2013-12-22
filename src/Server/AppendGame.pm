@@ -3,7 +3,7 @@ use strict;
 package Server::AppendGame;
 
 use Moose;
-use MooseX::Method::Signatures;
+use Method::Signatures::Simple;
 use Server::Server;
 
 extends 'Server::Server';

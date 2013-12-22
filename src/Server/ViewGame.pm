@@ -3,7 +3,7 @@ use strict;
 package Server::ViewGame;
 
 use Moose;
-use MooseX::Method::Signatures;
+use Method::Signatures::Simple;
 
 extends 'Server::Server';
 
