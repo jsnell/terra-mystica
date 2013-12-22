@@ -206,4 +206,7 @@ deploy_cgi;
 deploy_html;
 deploy_data;
 
+$target =~ s/www-//;
 system qq{(echo -n "$target: "; git rev-parse HEAD) >> deploy.log};
+system qq{git tag $target};
+
