@@ -11,6 +11,7 @@ use Server::Login;
 use Server::Logout;
 use Server::Plan;
 use Server::Register;
+use Server::NewGame;
 use Server::SaveGame;
 use Server::Settings;
 use Server::Template;
@@ -43,6 +44,9 @@ my %paths = (
     },
    '/logout/' => sub {
        Server::Logout->new()
+    },
+   '/new-game/' => sub {
+       Server::NewGame->new()
     },
    '/plan/' => sub {
        Server::Plan->new()

@@ -83,7 +83,6 @@ sub deploy_cgi {
     mkdir "$target/cgi-bin";
     for my $f (qw(app.fcgi
                   app.psgi
-                  newgame.pl
                   reset.pl
                   results.pl
                   startup-modperl2.pl
@@ -120,6 +119,7 @@ sub deploy_cgi {
                   Server/ListGames.pm
                   Server/Login.pm
                   Server/Logout.pm
+                  Server/NewGame.pm
                   Server/Plan.pm
                   Server/Router.pm
                   Server/Register.pm

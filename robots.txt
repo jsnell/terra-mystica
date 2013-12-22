@@ -1,4 +1,5 @@
 User-agent: *
+Disallow: /app/
 Disallow: /game/
 Disallow: /faction/
 Disallow: /cgi-bin/
