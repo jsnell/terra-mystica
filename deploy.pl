@@ -83,10 +83,7 @@ sub deploy_cgi {
     mkdir "$target/cgi-bin";
     for my $f (qw(app.fcgi
                   app.psgi
-                  reset.pl
-                  results.pl
-                  startup-modperl2.pl
-                  validate-reset.pl)) {
+                  results.pl)) {
         copy_with_mode 0555, "src/$f", "$target/cgi-bin/$f";
     }
 
@@ -120,6 +117,7 @@ sub deploy_cgi {
                   Server/Login.pm
                   Server/Logout.pm
                   Server/NewGame.pm
+                  Server/PasswordReset.pm
                   Server/Plan.pm
                   Server/Router.pm
                   Server/Register.pm

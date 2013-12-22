@@ -9,6 +9,7 @@ use Server::JoinGame;
 use Server::ListGames;
 use Server::Login;
 use Server::Logout;
+use Server::PasswordReset;
 use Server::Plan;
 use Server::Register;
 use Server::NewGame;
@@ -54,6 +55,9 @@ my %paths = (
    '/register/' => sub {
        Server::Register->new({ mode => 'request' })
     },
+   '/reset/' => sub {
+       Server::PasswordReset->new({ mode => 'request' })
+    },
    '/save-game/' => sub {
        Server::SaveGame->new()
     },
@@ -65,6 +69,9 @@ my %paths = (
     },
    '/validate-registration/' => sub {
        Server::Register->new({ mode => 'validate' })
+    },
+   '/validate-reset/' => sub {
+       Server::PasswordReset->new({ mode => 'validate' })
     },
    '/view-game/' => sub {
        Server::ViewGame->new()
