@@ -1,7 +1,12 @@
 #!/usr/bin/perl -wl
 
+package Analyze::ELO;
+use Exporter::Easy (EXPORT => ['compute_elo', 'pprint_elo_results']);
+
 use strict;
+
 use List::Util qw(shuffle sum);
+use Method::Signatures::Simple;
 use JSON;
 
 ### Tunable parameters
@@ -81,8 +86,7 @@ sub iterate_results {
 }
 
 sub compute_elo {
-    my $rating_data = shift;
-
+    my ($rating_data) = @_;
     my %players = %{$rating_data->{players}};
     my %factions = %{$rating_data->{factions}};
     my @matches = @{$rating_data->{results}};
@@ -108,7 +112,7 @@ sub compute_elo {
     };
 }
 
-sub pprint_elo_results {
+sub pprint {
     my $elo = shift;
     my %factions = %{$elo->{factions}};
     my %players = %{$elo->{players}};

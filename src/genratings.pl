@@ -7,10 +7,13 @@ use POSIX;
 
 BEGIN { push @INC, "$ENV{PWD}/src/"; }
 
-use elo;
-use rating_data;
+use DB::Connection;
 
-my $rating_data = read_rating_data;
+use Analyze::ELO;
+use Analyze::RatingData;
+
+my $dbh = get_db_connection;
+my $rating_data = read_rating_data $dbh;
 my $elo = compute_elo $rating_data;
 
 # pprint_elo_results $elo;

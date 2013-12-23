@@ -9,7 +9,8 @@ use File::Basename qw(dirname);
 
 BEGIN { push @INC, "$ENV{PWD}/src/"; }
 
-use results;
+use DB::Connection;
+use DB::Game;
 
 sub print_json {
     my $data = shift;
@@ -140,7 +141,8 @@ sub handle_game {
     }
 }
 
-my %results = get_finished_game_results '';
+my $dbh = get_db_connection;
+my %results = get_finished_game_results $dbh, '';
 my %games = ();
 
 for (@{$results{results}}) {

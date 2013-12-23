@@ -1,8 +1,11 @@
 #!/usr/bin/perl -wl
 
+package Analyze::RatingData;
+use Exporter::Easy (EXPORT => ['read_rating_data']);
+
 use strict;
 
-use results;
+use DB::Game;
 
 sub handle_game {
     my ($res, $output, $players, $factions) = @_;
@@ -96,11 +99,12 @@ sub handle_game {
 }
 
 sub read_rating_data {
+    my ($dbh) = @_;
     my @output = ();
     my %players = ();
     my %factions = ();
 
-    my %results = get_finished_game_results '';
+    my %results = get_finished_game_results $dbh, '';
     my %games = ();
 
     for (@{$results{results}}) {
