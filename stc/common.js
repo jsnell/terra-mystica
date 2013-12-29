@@ -60,6 +60,11 @@ function getCSRFToken() {
 }
 
 function fetchGames(div, mode, status, handler, args) {
+    if (!loggedIn()) {
+        $(div).update("Not logged in (<a href='/login/'>login</a>)");
+        return;
+    }
+
     $(div).update("... loading");
     new Ajax.Request("/app/list-games/", {
         parameters: {
@@ -161,6 +166,10 @@ function seconds_to_pretty_time(seconds) {
     return amount + " " + unit + subamount;
 }
 
+function loggedIn() {
+    return /session-username=([A-Za-z0-9]+)/.match(document.cookie)
+}
+
 function renderSidebar(id) {
     var p = new Element("p");
     var insertLink = function(link, text, accesskey) {
@@ -175,7 +184,7 @@ function renderSidebar(id) {
     };
 
     insertLink("/", "Home", "h");
-    if (!/session-username=([A-Za-z0-9]+)/.match(document.cookie)) {
+    if (!loggedIn()) {
         insertLink("/login/", "Login");
         insertLink("/register/request/", "Register");
         p.insert(new Element("br"));

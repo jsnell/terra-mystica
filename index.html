@@ -50,11 +50,11 @@
       fetchGames("yourgames-admin", "admin", "running", listGames);
 
       setInterval(function() {
-         fetchGames("yourgames-active", "user", "running", listGames);
+      fetchGames("yourgames-active", "user", "running", listGames);
       }, 5*60*1000);
 
       fetchChangelog(function(data) {
-          showChangelog(data, $("changes"), "Recent Changes", 10 * 86400)
+      showChangelog(data, $("changes"), "Recent Changes", 10 * 86400)
       } );
     </script>
     </table>
