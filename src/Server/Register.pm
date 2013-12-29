@@ -18,13 +18,13 @@ use Util::CryptUtil;
 
 has 'mode' => (is => 'ro', required => 1);
 
-method handle($q) {
+method handle($q, $suffix) {
     $self->no_cache();
     my $dbh = get_db_connection;
     my $mode = $self->mode();
 
     if ($mode eq 'validate') {
-        $self->validate_registration($q, $dbh);
+        $self->validate_registration($q, $dbh, $suffix);
     } elsif ($mode eq 'request') {
         $self->request_registration($q, $dbh);
     } else {
@@ -63,7 +63,7 @@ method request_registration($q, $dbh) {
         my $hashed_password = bcrypt($password, 
                                      '$2a$08$'.$salt);
         my $token = encrypt_validation_token $secret, $username, $email, $hashed_password;
-        my $url = sprintf "http://terra.snellman.net/validate-registration/%s", $token;
+        my $url = sprintf "http://terra.snellman.net/register/validate/%s", $token;
 
         my $smtp = Net::SMTP->new('localhost', ( Debug => 0 ));
 
@@ -87,8 +87,8 @@ method request_registration($q, $dbh) {
     $self->output_json({ error => [@error] });
 }
 
-method validate_registration($q, $dbh) {
-    my $token = $q->param('token');
+method validate_registration($q, $dbh, $suffix) {
+    my $token = $suffix // $q->param('token');
 
     my ($secret, $iv) = get_secret;
     eval {

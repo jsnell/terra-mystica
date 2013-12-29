@@ -80,11 +80,10 @@ sub deploy_docs {
 }
 
 sub deploy_cgi {
-    mkdir "$target/cgi-bin";
+    mkdir "$target/lib";
     for my $f (qw(app.fcgi
-                  app.psgi
-                  results.pl)) {
-        copy_with_mode 0555, "src/$f", "$target/cgi-bin/$f";
+                  app.psgi)) {
+        copy_with_mode 0555, "src/$f", "$target/lib/$f";
     }
 
     for my $f (qw(acting.pm
@@ -105,7 +104,6 @@ sub deploy_cgi {
                   income.pm
                   ledger.pm
                   map.pm
-                  results.pm
                   resources.pm
                   scoring.pm
                   Server/Alias.pm
@@ -131,7 +129,7 @@ sub deploy_cgi {
                   Util/CryptUtil.pm
                   towns.pm
                   tracker.pm)) {
-        copy_with_mode 0444, "src/$f", "$target/cgi-bin/$f";
+        copy_with_mode 0444, "src/$f", "$target/lib/$f";
     }
 }
 

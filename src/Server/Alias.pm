@@ -17,13 +17,13 @@ use Util::CryptUtil;
 
 has 'mode' => (is => 'ro', required => 1);
 
-method handle($q) {
+method handle($q, $suffix) {
     $self->no_cache();
     my $dbh = get_db_connection;
     my $mode = $self->mode();
 
     if ($mode eq 'validate') {
-        $self->validate_alias($q, $dbh);
+        $self->validate_alias($q, $dbh, $suffix);
     } elsif ($mode eq 'request') {
         $self->request_alias($q, $dbh);
     } else {
@@ -56,7 +56,7 @@ method request_alias($q, $dbh) {
         my $secret = get_secret $dbh;
 
         my $token = encrypt_validation_token $secret, ($username, $email);
-        my $url = sprintf "http://terra.snellman.net/validate-alias/%s", $token;
+        my $url = sprintf "http://terra.snellman.net/alias/validate/%s", $token;
 
         my $smtp = Net::SMTP->new('localhost', ( Debug => 0 ));
 
@@ -80,8 +80,8 @@ method request_alias($q, $dbh) {
     $self->output_json({ error => [@error] });
 }
 
-method validate_alias($q, $dbh) {
-    my $token = $q->param('token');
+method validate_alias($q, $dbh, $suffix) {
+    my $token = $suffix // $q->param('token');
 
     my ($secret, $iv) = get_secret;
     eval {

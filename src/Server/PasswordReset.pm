@@ -18,13 +18,13 @@ extends 'Server::Server';
 
 has 'mode' => (is => 'ro', required => 1);
 
-method handle($q) {
+method handle($q, $suffix) {
     $self->no_cache();
     my $dbh = get_db_connection;
     my $mode = $self->mode();
 
     if ($mode eq 'validate') {
-        $self->validate_reset($q, $dbh);
+        $self->validate_reset($q, $dbh, $suffix);
     } elsif ($mode eq 'request') {
         $self->request_reset($q, $dbh);
     } else {
@@ -54,7 +54,7 @@ method request_reset($q, $dbh) {
         my $hashed_password = bcrypt($password, 
                                      '$2a$08$'.$salt);
         my $token = encrypt_validation_token $secret, $username, $email, $hashed_password;
-        my $url = sprintf "http://terra.snellman.net/validate-reset/%s", $token;
+        my $url = sprintf "http://terra.snellman.net/reset/validate/%s", $token;
 
         my $smtp = Net::SMTP->new('localhost', ( Debug => 0 ));
 
@@ -80,8 +80,8 @@ method request_reset($q, $dbh) {
     $self->output_json({ error => [@error] });
 }
 
-method validate_reset($q, $dbh) {
-    my $token = $q->param('token');
+method validate_reset($q, $dbh, $suffix) {
+    my $token = $suffix // $q->param('token');
 
     my ($secret, $iv) = get_secret;
     eval {

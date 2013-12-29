@@ -177,7 +177,7 @@ function renderSidebar(id) {
     insertLink("/", "Home", "h");
     if (!/session-username=([A-Za-z0-9]+)/.match(document.cookie)) {
         insertLink("/login/", "Login");
-        insertLink("/register/", "Register");
+        insertLink("/register/request/", "Register");
         p.insert(new Element("br"));
     } else {
         insertLink("/joingame/", "Join Game");

@@ -22,64 +22,63 @@ use CGI::PSGI;
 use JSON;
 
 my %paths = (
-   '/alias/' => sub {
-       Server::Alias->new({ mode => 'request' })
+    '/alias/request/' => sub {
+        Server::Alias->new({ mode => 'request' })
     },
-   '/append-game/' => sub {
-       Server::AppendGame->new()
+    '/alias/validate/' => sub {
+        Server::Alias->new({ mode => 'validate' })
     },
-   '/chat/' => sub {
-       Server::Chat->new()
+    '/append-game/' => sub {
+        Server::AppendGame->new()
     },
-   '/edit-game/' => sub {
-       Server::EditGame->new()
+    '/chat/' => sub {
+        Server::Chat->new()
     },
-   '/join-game/' => sub {
-       Server::JoinGame->new()
+    '/edit-game/' => sub {
+        Server::EditGame->new()
     },
-   '/list-games/' => sub {
-       Server::ListGames->new()
+    '/join-game/' => sub {
+        Server::JoinGame->new()
     },
-   '/login/' => sub {
-       Server::Login->new()
+    '/list-games/' => sub {
+        Server::ListGames->new()
     },
-   '/logout/' => sub {
-       Server::Logout->new()
+    '/login/' => sub {
+        Server::Login->new()
     },
-   '/new-game/' => sub {
-       Server::NewGame->new()
+    '/logout/' => sub {
+        Server::Logout->new()
     },
-   '/plan/' => sub {
-       Server::Plan->new()
+    '/new-game/' => sub {
+        Server::NewGame->new()
     },
-   '/register/' => sub {
-       Server::Register->new({ mode => 'request' })
+    '/plan/' => sub {
+        Server::Plan->new()
     },
-   '/reset/' => sub {
-       Server::PasswordReset->new({ mode => 'request' })
+    '/register/request/' => sub {
+        Server::Register->new({ mode => 'request' })
     },
-   '/save-game/' => sub {
-       Server::SaveGame->new()
+    '/register/validate/' => sub {
+        Server::Register->new({ mode => 'validate' })
     },
-   '/settings/' => sub {
-       Server::Settings->new()
+    '/reset/request/' => sub {
+        Server::PasswordReset->new({ mode => 'request' })
     },
-   '/validate-alias/' => sub {
-       Server::Alias->new({ mode => 'validate' })
+    '/reset/validate/' => sub {
+        Server::PasswordReset->new({ mode => 'validate' })
     },
-   '/validate-registration/' => sub {
-       Server::Register->new({ mode => 'validate' })
+    '/template/' => sub {
+        Server::Template->new()
     },
-   '/validate-reset/' => sub {
-       Server::PasswordReset->new({ mode => 'validate' })
+    '/save-game/' => sub {
+        Server::SaveGame->new()
     },
-   '/view-game/' => sub {
-       Server::ViewGame->new()
+    '/settings/' => sub {
+        Server::Settings->new()
     },
-);
-
-my @prefix_paths = (
-   [qr{^/template/} => sub { Server::Template->new() }],
+    '/view-game/' => sub {
+        Server::ViewGame->new()
+    },
 );
 
 sub route {
@@ -90,10 +89,21 @@ sub route {
     my $ret;
 
     eval {
-        my ($handler) = $paths{$path_info} // (map { $_->[1] } grep { $path_info =~ $_->[0] } @prefix_paths);
+        my $handler = undef;
+        my $suffix = '';
+        my @components = split m{/}, $path_info;
+        for my $i (reverse 0..$#components) {
+            my $prefix = join '/', @components[0..$i];
+            $prefix .= '/';
+            $handler = $paths{$prefix};
+            if ($handler) {
+                $suffix = substr $path_info, length $prefix;
+                last;
+            }
+        }
         if ($handler) {
             my $app = $handler->();
-            $app->handle($q);
+            $app->handle($q, $suffix);
             $ret = $app->output_psgi();
         } else {
             die "Unknown module '$path_info'";

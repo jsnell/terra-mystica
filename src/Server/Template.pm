@@ -11,18 +11,15 @@ extends 'Server::Server';
 use File::Slurp;
 use Server::Session;
 
-method handle($q) {
+method handle($q, $suffix) {
     ensure_csrf_cookie $q, $self;
 
-    my $path_info = $q->path_info();
     my $file;
 
-    $path_info =~ s{/template/}{/};
-
-    if ($path_info eq '/') {
+    if ($suffix eq '') {
         $file = 'index.html';
     } else {
-        ($file) = ($path_info =~ m{^/([a-z]+)/}g);
+        ($file) = ($suffix =~ m{^([a-z]+)/}g);
         $file .= ".html";
     }
 

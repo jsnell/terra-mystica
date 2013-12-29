@@ -66,7 +66,7 @@ function renderSettings(state) {
         first = false;
     });
     newEmailList.insert(new Element("div").update(
-        new Element("a", { "href": "/alias/"}).update(
+        new Element("a", { "href": "/alias/request/"}).update(
             "Add new address")));
 
     $("email_notify_turn").checked = state.email_notify_turn;
