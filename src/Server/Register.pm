@@ -117,6 +117,8 @@ method register($dbh, $user, $email, $hashed_password) {
                  {}, $email, $user, 1);
         $dbh->do('commit');
     }
+
+    return $already_done;
 }
 
 1;

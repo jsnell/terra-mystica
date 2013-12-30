@@ -103,6 +103,8 @@ method add_alias($dbh, $user, $email) {
                  {}, $email, $user, 1);
         $dbh->do('commit');
     }
+
+    return $already_done;
 }
 
 1;
