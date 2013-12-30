@@ -63,7 +63,7 @@ method request_registration($q, $dbh) {
         my $hashed_password = bcrypt($password, 
                                      '$2a$08$'.$salt);
         my $token = encrypt_validation_token $secret, $username, $email, $hashed_password;
-        my $url = sprintf "http://terra.snellman.net/register/validate/%s", $token;
+        my $url = sprintf "http://terra.snellman.net/app/register/validate/%s", $token;
 
         my $smtp = Net::SMTP->new('localhost', ( Debug => 0 ));
 

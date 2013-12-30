@@ -56,7 +56,7 @@ method request_alias($q, $dbh) {
         my $secret = get_secret $dbh;
 
         my $token = encrypt_validation_token $secret, ($username, $email);
-        my $url = sprintf "http://terra.snellman.net/alias/validate/%s", $token;
+        my $url = sprintf "http://terra.snellman.net/app/alias/validate/%s", $token;
 
         my $smtp = Net::SMTP->new('localhost', ( Debug => 0 ));
 
