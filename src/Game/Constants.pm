@@ -202,6 +202,7 @@ Readonly our %faction_setups => (
     alchemists => { C => 15, W => 3, P1 => 5, P2 => 7,
                     WATER => 1, FIRE => 1, color => 'black',
                     display => "Alchemists",
+                    faction_board_id => 11,
                     ship => { 
                         level => 0, max_level => 3,
                         advance_cost => { C => 4, P => 1 },
@@ -243,6 +244,7 @@ Readonly our %faction_setups => (
         WATER => 1, EARTH => 1,
         color => 'black',
         display => "Darklings",
+        faction_board_id => 12,
         ship => { 
             level => 0, max_level => 3,
             advance_cost => { C => 4, P => 1 },
@@ -274,6 +276,7 @@ Readonly our %faction_setups => (
                WATER => 1, AIR => 1,
                color => 'green',
                display => "Auren",
+               faction_board_id => 13,
                ship => { 
                    level => 0, max_level => 3,
                    advance_cost => { C => 4, P => 1 },
@@ -308,6 +311,7 @@ Readonly our %faction_setups => (
                      map(("TW$_", { VP => 5 }), 1..8)
                  },
                  display => "Witches",
+                 faction_board_id => 14,
                  ship => { 
                      level => 0, max_level => 3,
                      advance_cost => { C => 4, P => 1 },
@@ -341,6 +345,7 @@ Readonly our %faction_setups => (
         WATER => 2,
         color => 'blue',
         display => "Mermaids",
+        faction_board_id => 6,
         ship => { 
             level => 1, max_level => 5,
             advance_cost => { C => 4, P => 1 },
@@ -376,6 +381,7 @@ Readonly our %faction_setups => (
                     FIRE => 1, EARTH => 1,
                     WATER => 1, AIR => 1, color => 'blue',
                     display => "Swarmlings",
+                    faction_board_id => 5,
                     ship => { 
                         level => 0, max_level => 3,
                         advance_cost => { C => 4, P => 1 },
@@ -410,6 +416,7 @@ Readonly our %faction_setups => (
     nomads => { C => 15, W => 2, P1 => 5, P2 => 7,
                 FIRE => 1, EARTH => 1, color => 'yellow',
                 display => "Nomads",
+                faction_board_id => 2,
                 ship => { 
                     level => 0, max_level => 3,
                     advance_cost => { C => 4, P => 1 },
@@ -441,6 +448,7 @@ Readonly our %faction_setups => (
     fakirs => { C => 15, W => 3, P1 => 7, P2 => 5,
                 FIRE => 1, AIR => 1, color => 'yellow',
                 display => "Fakirs",
+                faction_board_id => 1,
                 ship => { 
                     level => 0, max_level => 0,
                 },
@@ -475,6 +483,7 @@ Readonly our %faction_setups => (
                 }},
     engineers => { C => 10, W => 2, P1 => 3, P2 => 9, color => 'gray',
                    display => "Engineers",
+                   faction_board_id => 8,
                    ship => { 
                        level => 0, max_level => 3,
                        advance_cost => { C => 4, P => 1 },
@@ -509,6 +518,7 @@ Readonly our %faction_setups => (
     dwarves => { C => 15, W => 3, P1 => 5, P2 => 7,
                 EARTH => 2, color => 'gray',
                 display => "Dwarves",
+                faction_board_id => 7,
                 ship => { 
                     level => 0, max_level => 0,
                 },
@@ -545,6 +555,7 @@ Readonly our %faction_setups => (
         FIRE => 2,
         color => 'red',
         display => "Chaos Magicians",
+        faction_board_id => 3,
         ship => { 
             level => 0, max_level => 3,
             advance_cost => { C => 4, P => 1 },
@@ -581,6 +592,7 @@ Readonly our %faction_setups => (
     giants => { C => 15, W => 3, P1 => 5, P2 => 7,
                 FIRE => 1, AIR => 1, color => 'red',
                 display => "Giants",
+                faction_board_id => 4,
                 ship => { 
                     level => 0, max_level => 3,
                     advance_cost => { C => 4, P => 1 },
@@ -612,6 +624,7 @@ Readonly our %faction_setups => (
     halflings => { C => 15, W => 3, P1 => 3, P2 => 9,
                    EARTH => 1, AIR => 1, color => 'brown',
                    display => "Halflings",
+                   faction_board_id => 9,
                    special => {
                        SPADE => { VP => 1 }
                    },
@@ -650,6 +663,7 @@ Readonly our %faction_setups => (
     cultists => { C => 15, W => 3, P1 => 5, P2 => 7,
                   EARTH => 1, FIRE => 1, color => 'brown',
                   display => "Cultists",
+                  faction_board_id => 10,
                   ship => { 
                       level => 0, max_level => 3,
                       advance_cost => { C => 4, P => 1 },

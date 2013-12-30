@@ -819,15 +819,23 @@ function renderTreasury(board, treasury, faction, filter) {
     });
 }
 
-function makeBoard(color, name, klass, style) {
+function makeBoard(color, name, info_link, klass, style) {
     var board = new Element('div', {
         'class': klass,
         'style': style
     });
-    board.insert(new Element('div', {
-        'style': 'padding: 1px 1px 1px 5px; background-color: ' + colors[color] + '; color: ' +
-            (color == 'black' ? '#ccc' : '#000')
-    }).update(name));
+    var bgcolor = colors[color];
+    var fgcolor = (color == 'black' ? '#ccc' : '#000');
+    var heading = new Element('div', {
+        'style': 'padding: 1px 1px 1px 5px; background-color: ' + bgcolor + '; color: ' + fgcolor
+    });
+    heading.insert(new Element('span').update(name));
+    if (info_link) {
+        heading.insert(new Element('a', { href: info_link,
+                                          target: '_blank',
+                                          style: 'float: right; color: ' + fgcolor }).update('[info]'));
+    }
+    board.insert(heading);
 
     return board;
 }
@@ -849,6 +857,7 @@ function renderColorCycle(parent, startColor) {
     ctx.translate(40, 41);
 
     var base = cycle.indexOf(startColor);
+    if (base < 0) { base = 0; }
 
     for (var i = 0; i < 7; ++i) {
         ctx.save()
@@ -932,7 +941,7 @@ function drawFactions() {
     });
 
    
-    var pool = makeBoard("orange", "Pool", 'pool');
+    var pool = makeBoard("orange", "Pool", '', 'pool');
     renderTreasury(pool, state.pool, 'pool',
                    function (tile) { return !tile.match(/^ACT/) } );
     $("shared-actions").update("");
@@ -957,7 +966,11 @@ function drawFaction(name) {
     }
 
     var container = new Element('div', { 'class': 'faction-board' });
-    var board = makeBoard(color, title, '', style);
+    var info_link = '';
+    if (faction.faction_board_id) {
+        info_link = 'http://www.terra-mystica-spiel.de/en/voelker.php?show=' + faction.faction_board_id;
+    }
+    var board = makeBoard(color, title, info_link, '', style);
     container.insert(board);
 
     if (!faction.placeholder) {
