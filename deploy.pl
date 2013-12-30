@@ -160,7 +160,8 @@ sub deploy_stc {
 }
 
 sub deploy_html {
-    for my $f (qw(alias.html
+    for my $f (qw(about.html
+                  alias.html
                   changes.html
                   edit.html
                   faction.html

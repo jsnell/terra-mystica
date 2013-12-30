@@ -198,7 +198,8 @@ function renderSidebar(id) {
     insertLink("/stats/", "Statistics");
     insertLink("/ratings/", "Ratings");
     insertLink("/changes/", "Changes");
-    insertLink("/usage.html", "Help");
+    insertLink("/about/", "About");
+    insertLink("/usage/", "Help");
 
     $(id).insert(p);
 }
