@@ -35,6 +35,18 @@ var bgcolors = {
     player: '#404040'
 };
 
+var contrastColor = {
+    red: '#000',
+    green: '#000',
+    yellow: '#000',
+    blue: '#000',
+    black: '#c0c0c0',
+    white: '#000',
+    gray: '#000',
+    brown: '#000',
+    player: '#000'
+};
+
 var cult_bgcolor = {
     FIRE: "#f88",
     WATER: "#ccf",
@@ -78,11 +90,8 @@ function fillBuilding(ctx, hex) {
     ctx.fillStyle = colors[hex.color];
     ctx.fill();
 
-    if (hex.color == "black") {
-        ctx.strokeStyle = '#808080';
-    } else {
-        ctx.strokeStyle = '#000';
-    }
+    
+    ctx.strokeStyle = contrastColor[hex.color];
     ctx.lineWidth = 2;
     ctx.stroke();
 }
@@ -252,11 +261,7 @@ function drawHex(ctx, elem) {
     }
 
     ctx.save();
-    if (hex.color == "black") {
-        ctx.strokeStyle = "#c0c0c0";
-    } else {
-        ctx.strokeStyle = "#000";
-    }
+    ctx.strokeStyle = contrastColor[hex.color];
     drawText(ctx, id, loc[0] - 9, loc[1] + 25,
              hex.town ? "bold 12px Verdana" : "12px Verdana");
     ctx.restore();
@@ -532,7 +537,7 @@ function drawCultMarker(ctx, color, name, hex) {
     ctx.restore();
 
     ctx.save();
-    ctx.strokeStyle = (color == 'black' ? '#ccc' : '#000');
+    ctx.strokeStyle = contrastColor[color];
     ctx.textAlign = 'center';
     var l = name[0].toUpperCase();
     if (name == 'cultists') { l  = 'c' }
@@ -825,7 +830,7 @@ function makeBoard(color, name, info_link, klass, style) {
         'style': style
     });
     var bgcolor = colors[color];
-    var fgcolor = (color == 'black' ? '#ccc' : '#000');
+    var fgcolor = contrastColor[color];
     var heading = new Element('div', {
         'style': 'padding: 1px 1px 1px 5px; background-color: ' + bgcolor + '; color: ' + fgcolor
     });
@@ -1181,11 +1186,7 @@ function drawLedger() {
 
             var leech = "";
             $H(record.leech).each(function (elem, index) {
-                if (elem.key == "black") {
-                    elem.color = "#aaa";
-                } else {
-                    elem.color = "#000";
-                }
+                elem.color = contrastColor[elem.key];
                 elem.key = colors[elem.key];
                 leech += "<span style='color: #{color}; background-color: #{key}'>#{value}</span>&#160;".interpolate(elem);
             });
