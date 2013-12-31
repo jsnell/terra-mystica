@@ -105,8 +105,8 @@ sub deploy_cgi {
                   ledger.pm
                   map.pm
                   resources.pm
-                  scoring.pm
-                  Server/Alias.pm
+                  scoring.pm),
+               qw(Server/Alias.pm
                   Server/AppendGame.pm 
                   Server/Chat.pm
                   Server/EditGame.pm
@@ -127,6 +127,7 @@ sub deploy_cgi {
                   Server/ViewGame.pm 
                   Util/NaturalCmp.pm
                   Util/CryptUtil.pm
+                  Util/PageGenerator.pm
                   towns.pm
                   tracker.pm)) {
         copy_with_mode 0444, "src/$f", "$target/lib/$f";
@@ -159,38 +160,32 @@ sub deploy_stc {
     copy_with_mode 0444, "stc/favicon-inactive.ico", "$target/favicon-inactive.ico";
 }
 
-sub deploy_html {
-    for my $f (qw(about.html
-                  alias.html
-                  changes.html
-                  edit.html
-                  faction.html
-                  game.html
-                  index.html
-                  joingame.html
-                  login.html
-                  newgame.html
-                  player.html
-                  ratings.html
-                  register.html
-                  reset.html
-                  robots.txt
-                  settings.html
-                  stats.html
-                  )) {
-        my $to = "$target/$f";
-
-        mangle_with_mode 0444, "$f", "$to", sub {
-            local $_ = shift;
-            s{=(['"])(/stc/.*)\1}{=$1$2?tag=$tag$1}g;
-            $_;
-        }
-    }
-}
-
 sub deploy_data {
     for my $f (qw(changes.json)) {
         my $to = "$target/data/$f";
+        copy_with_mode 0444, $f, $to;
+    }
+
+    for my $f (qw(pages/content/about.pl
+                  pages/content/alias.pl
+                  pages/content/changes.pl
+                  pages/content/edit.pl
+                  pages/content/game.pl
+                  pages/content/faction.pl
+                  pages/content/index.pl
+                  pages/content/login.pl
+                  pages/content/joingame.pl
+                  pages/content/login.pl
+                  pages/content/newgame.pl
+                  pages/content/player.pl
+                  pages/content/ratings.pl
+                  pages/content/register.pl
+                  pages/content/reset.pl
+                  pages/content/stats.pl
+                  pages/content/settings.pl),
+               qw(pages/layout/sidebar.html
+                  pages/layout/topbar.html)) {
+        my $to = "$target/$f";
         copy_with_mode 0444, $f, $to;
     }
 }
@@ -198,7 +193,6 @@ sub deploy_data {
 deploy_docs;
 deploy_stc;
 deploy_cgi;
-deploy_html;
 deploy_data;
 
 $target =~ s/www-//;

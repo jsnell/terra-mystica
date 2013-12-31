@@ -7,18 +7,11 @@
     <script type="text/javascript" language="javascript"
             src="/stc/prototype-1.7.1.js">
     </script>
-    <script type="text/javascript" language="javascript"
-            src="/stc/common.js">
-    </script>
-    <script type="text/javascript" language="javascript"
-            src="/stc/faction.js">
-    </script>
-    <script type="text/javascript" language="javascript"
-            src="/stc/game.js">
-    </script>
-    <script type="text/javascript" language="javascript"
-            src="/stc/debug.js">
-    </script>
+    {
+      for my $record (@scripts) {
+          $OUT .= "<script type='text/javascript' language='javascript'\nsrc='$record->{url}'>\n</script>\n"
+      }
+    }
     <link rel="stylesheet" type="text/css" href="/stc/style.css">
     <link id="favicon" rel="shortcut icon" href="/favicon.ico" />
   </head>
@@ -28,12 +21,6 @@
     </div>
     <script language="javascript">
        init($("game-root"));
-       loadGame(document.location.host, document.location.pathname);
-       fetchGames($("user-info"), "user", "running", showActiveGames);
-
-       setInterval(function() {
-          fetchGames($("user-info"), "user", "running", showActiveGames);
-       }, 5*60*1000);
     </script>
   </body>
 </html>

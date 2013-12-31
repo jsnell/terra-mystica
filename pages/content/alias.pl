@@ -1,24 +1,13 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Terra Mystica - Register New Account</title>
-    <script type="text/javascript" language="javascript"
-            src="/stc/prototype-1.7.1.js">
-    </script>
-    <script type="text/javascript" language="javascript"
-            src="/stc/debug.js">
-    </script>
-    <script type="text/javascript" language="javascript"
-            src="/stc/common.js">
-    </script>
-    <script type="text/javascript" language="javascript"
-            src="/stc/alias.js">
-    </script>
-    <link rel="stylesheet" type="text/css" href="/stc/style.css">
-  </head>
-  <body style="padding: 5ex">
+{
+    layout => 'sidebar',
+    scripts => [ "/stc/common.js",
+                 "/stc/alias.js" ],
+    title => 'Register Email Alias',
+    content => join '', <DATA>
+}
+
+__DATA__
     <div id="error"></div>
-    <h3>Register email alias</h3>
     <form id="userinfo" action="/app/alias/request/">
       <table>
         <tr><td>Email Address<td><input name="email" id="email"></input>
@@ -51,5 +40,3 @@
         <li> That you entered the correct email address above
       </ul>
     </div>
-  </body>
-</html>

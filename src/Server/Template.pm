@@ -10,21 +10,19 @@ extends 'Server::Server';
 
 use File::Slurp;
 use Server::Session;
+use Util::PageGenerator;
 
 method handle($q, $suffix) {
     ensure_csrf_cookie $q, $self;
 
-    my $file;
-
-    if ($suffix eq '') {
-        $file = 'index.html';
-    } else {
-        ($file) = ($suffix =~ m{^([a-z]+)/}g);
-        $file .= ".html";
+    if (!$suffix) {
+        $suffix = 'index';
     }
 
+    $suffix =~ s{/.*}{}g;
+
     $self->no_cache();
-    $self->output_html(scalar read_file "../$file");
+    $self->output_html(generate_page '..', $suffix);
 }
 
 1;

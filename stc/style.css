@@ -301,7 +301,7 @@ tr.game-status-action-unread-chat td {
 
 table.gamelist {
     margin-left: 2ex;
-    width: 80ex;
+    max-width: 80ex;
 }
 
 table.gamelist thead {
@@ -369,3 +369,12 @@ div.menu div.menu-item {
     white-space: nowrap;
 }
 
+td#sidebar {
+    white-space: nowrap;
+    padding-right: 2ex;
+}
+
+#fallback-editor {
+    height: 600px;
+    width: 800px;
+};

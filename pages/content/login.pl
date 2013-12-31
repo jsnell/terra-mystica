@@ -1,11 +1,11 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Terra Mystica - Login</title>
-    <link rel="stylesheet" type="text/css" href="/stc/style.css">
-  </head>
-  <body style="padding: 5ex">
-    <h3>Login</h3>
+{
+    layout => 'sidebar',
+    scripts => [ "/stc/common.js" ],
+    title => 'Login',
+    content => join '', <DATA>
+}
+
+__DATA__
     <div id="error"></div>
     <script>
       if (document.location.hash == "#failed") {
@@ -25,6 +25,4 @@
 
     <p>
       Trouble logging in? <a href="/register/">Register</a> an account
-      or <a href="/reset/request/">reset</a> your password.
-  </body>
-</html>
+      or <a href="/reset/">reset</a> your password.

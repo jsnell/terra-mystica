@@ -1,22 +1,14 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Terra Mystica - Register New Account</title>
-    <script type="text/javascript" language="javascript"
-            src="/stc/prototype-1.7.1.js">
-    </script>
-    <script type="text/javascript" language="javascript"
-            src="/stc/debug.js">
-    </script>
-    <script type="text/javascript" language="javascript"
-            src="/stc/reset.js">
-    </script>
-    <link rel="stylesheet" type="text/css" href="/stc/style.css">
-  </head>
-  <body style="padding: 5ex">
+{
+    layout => 'sidebar',
+    scripts => [ "/stc/common.js",
+                 "/stc/reset.js" ],
+    title => 'Reset Password',
+    content => join '', <DATA>
+}
+
+__DATA__
     <div id="error"></div>
-    <h3>Reset password</h3>
-    <form id="userinfo" action="/app/reset/register/">
+    <form id="userinfo" action="/app/reset/request/">
       <table>
         <tr><td>Email Address<td><input name="email" id="email"></input>
         <tr><td>New Password<td><input name="password" type="password" id="password"></input>
@@ -35,5 +27,3 @@
         <li> That you entered the correct email address above
       </ul>
     </div>
-  </body>
-</html>

@@ -2957,5 +2957,11 @@ function init(root) {
       <col span=2 style="background-color: #e0e0f0"></col> \
     </table>';
 
+    loadGame(document.location.host, document.location.pathname);
+    fetchGames($("user-info"), "user", "running", showActiveGames);
+
+    setInterval(function() {
+        fetchGames($("user-info"), "user", "running", showActiveGames);
+    }, 5*60*1000);
 }
 
