@@ -2,10 +2,29 @@ var state = null;
 var id = document.location.pathname;
 
 function listGames(games, div, mode, status) {
-    $(div).update("<thead><td>Game<td>Faction<td>Last move<td>Round<td>Waiting for<td>Status<td>VP</thead>");
-    var tbody = new Element("tbody");
     var action_required_count = 0;
-    $(div).insert(tbody);
+    var fields = $H({
+        "id": "Game",
+        "link": "Faction",
+        "time_since_update": "Last move",
+        "round": "Round",
+        "waiting_for": "Waiting for",
+        "status_msg": "Status",
+        "vp": "VP"
+    });
+    if (isMobile.any()) {
+       fields = $H({
+        "id": "Game",
+        "link": "Faction",
+        "status_msg": "Status",
+       }); 
+    }
+
+    var thead = new Element("thead");
+    var tbody = new Element("tbody");
+    fields.each(function (field) {
+        thead.insert(new Element("td").update(field.value));
+    });
     games.each(function(elem) {
         elem.status = "";
         elem.status_msg = "";
@@ -30,9 +49,14 @@ function listGames(games, div, mode, status) {
         } else if (elem.finished) {
             elem.status_msg = "finished";
         }
+        elem.link = new Element("a", {"href": elem.link}).update(elem.role);
 
-        $(tbody).insert("<tr class='#{status}'><td>#{id}<td><a href='#{link}'> #{role}<td>#{time_since_update}</a><td>#{round}<td>#{waiting_for}<td>#{status_msg}<td>#{vp}</tr>"
-                        .interpolate(elem));
+        var row = new Element("tr", {"class": elem.status});
+        fields.each(function(field) {
+            row.insert(new Element("td").update(elem[field.key]));
+        });
+
+        $(tbody).insert(row);
     });
     if (mode == "user") {
         var link = new Element('a', {"href": "#", "accesskey": "n"}).update("Refresh");
@@ -46,6 +70,10 @@ function listGames(games, div, mode, status) {
             setTitle();
         }
     }
+
+    $(div).update("");
+    $(div).insert(thead);
+    $(div).insert(tbody);
 }
 
 function nextGame(games, div, mode, status) {
