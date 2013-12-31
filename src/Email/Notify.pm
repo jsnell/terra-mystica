@@ -147,7 +147,10 @@ sub fetch_email_settings {
 
 sub pretty_faction_name {
     my ($game, $faction) = @_;
-    my $faction_pretty = ($faction_setups{$faction}{display} or $faction);
+    my $faction_pretty = $faction;
+    if (exists $faction_setups{$faction}) {
+        $faction_pretty = $faction_setups{$faction}{display};
+    }
     my $displayname = $game->{factions}{$faction}{displayname};
     if (defined $displayname) {
         $faction_pretty .= " ($displayname)";
