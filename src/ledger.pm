@@ -93,8 +93,10 @@ method finish_row {
 
     my $row_summary = "$faction->{name}: $info->{commands}";
 
-    if (!$terra_mystica::game{finished}) {
-        for my $f (values %terra_mystica::factions) {
+    my $game = $self->game();
+
+    if (!$game->{finished}) {
+        for my $f ($game->{acting}->factions_in_order()) {
             push @{$f->{recent_moves}}, $row_summary;
         }
     }
