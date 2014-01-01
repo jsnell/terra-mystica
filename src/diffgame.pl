@@ -7,7 +7,6 @@ use File::Basename qw(dirname);
 use IPC::Open2;
 use JSON;
 use Text::Diff qw(diff);
-use Time::HiRes qw(time);
 
 BEGIN { push @INC, dirname $0 };
 
@@ -32,19 +31,26 @@ sub get_proc {
     return $procs{$target};
 }
 
-sub pretty_res {
+sub request_result {
     my ($target, $game) = @_;
-    my $begin = time;
     my $proc = get_proc $target;
     my $in = $proc->{input};
+
+    print $in "$game";    
+}
+
+sub fetch_result {
+    my ($target, $game) = @_;
+    my $proc = get_proc $target;
     my $out = $proc->{output};
-    print $in "$game";
     my $res = <$out>;
     my $json = decode_json $res;
-    if ($time) {
-        $time{$target} += (time - $begin);
+    my $cost = $json->{cost};
+
+    if ($time eq 'total') {
+        $time{$target} += $cost;
     } elsif ($time eq 'single') {
-        printf "  %s: %5.3f\n", $target, (time - $begin);
+        printf "  %s: %5.3f\n", $target, $cost;
     }
 
     for my $faction (values %{$json->{factions}}) {
@@ -95,8 +101,11 @@ for (@{$games}) {
         }
     }
 
-    my $a = pretty_res $dir1, $id;
-    my $b = pretty_res $dir2, $id;
+    request_result $dir1, $id;
+    request_result $dir2, $id;
+
+    my $a = fetch_result $dir1, $id;
+    my $b = fetch_result $dir2, $id;
 
     my $header_printed = 0;
 

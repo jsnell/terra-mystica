@@ -2,9 +2,11 @@
 
 package terra_mystica;
 
-use List::Util qw(max);
 use strict;
+
 use JSON;
+use List::Util qw(max);
+use Time::HiRes qw(time);
 
 our $target;
 
@@ -41,6 +43,7 @@ while (<>) {
     my $id = $_;
     chomp $id;
     my @rows = get_game_commands $dbh, $id;
+    my $begin = time;
 
 # @rows = @rows[0..(min $ENV{MAX_ROW}, scalar(@rows)-1)];
 
@@ -49,6 +52,7 @@ while (<>) {
         faction_info => get_game_factions($dbh, $id),
         players => get_game_players($dbh, $id),
     };
+    $res->{cost} = time - $begin;
     $| = 1;
     print_json $res;
     if (@{$res->{error}}) {
