@@ -168,6 +168,9 @@ method require_subaction($faction, $type, $followup) {
         if (@unpassed == 1 or $faction->{planning}) {
             $self->maybe_advance_to_next_player($faction);
 
+            if (!$ledger->force_finish_row()) {
+                $ledger->finish_row();
+            }
             $ledger->start_new_row($faction);
             $self->start_full_move($faction);
             $self->require_subaction($faction, $type, $followup);

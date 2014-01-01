@@ -567,12 +567,6 @@ sub command_pass {
     if ($discard) {
         adjust_resource $faction, $discard, -1;
     }
-
-    if ($faction->{planning}) {
-        $ledger->finish_row();
-        $ledger->start_new_row($faction);
-        command_start_planning($faction);
-    }
 }
 
 sub command_action {
@@ -789,6 +783,8 @@ sub command_start_planning {
         command_start;
     }
 
+    $game{ledger}->finish_row();
+    $game{ledger}->start_new_row($faction);
     $game{acting}->start_full_move($faction);
 }
 
@@ -1121,13 +1117,17 @@ sub play {
             $active_faction->{allowed_sub_actions}{convert} = 1;
         }
 
+        my $faction = $game{acting}->get_faction($this->[0]);
         if (($next->[0] // '') ne ($this->[0] // '')) {
-            my $faction = $game{acting}->get_faction($this->[0]);
             if ($this->[0] and $faction) {
                 $game{acting}->maybe_advance_to_next_player($faction);
             }
         }
         $game{acting}->what_next();
+
+        if ($faction and $faction->{passed} and $faction->{planning}) {
+            command_start_planning($faction);
+        }
 
         if ($max_row) {
             my $size = $game{ledger}->size();
