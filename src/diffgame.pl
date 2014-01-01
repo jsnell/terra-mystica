@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use File::Basename qw(dirname);
+use IPC::Open2;
 use JSON;
 use Text::Diff qw(diff);
 use Time::HiRes qw(time);
@@ -16,18 +17,34 @@ my $dir = dirname $0;
 my $time = 'total';
 my %time = ();
 
+my %procs = ();
+sub get_proc {
+    my ($target) = @_;
+    if (!$procs{$target}) {
+        my $pid = open2(my $reader, my $writer, "perl $dir/tracker.pl $target");
+        $procs{$target} = {
+            output => $reader,
+            input => $writer,
+            pid => $pid,
+        };
+    }
+
+    return $procs{$target};
+}
 
 sub pretty_res {
+    my ($target, $game) = @_;
     my $begin = time;
-    my $res = qx(perl $dir/tracker.pl @_);
+    my $proc = get_proc $target;
+    my $in = $proc->{input};
+    my $out = $proc->{output};
+    print $in "$game";
+    my $res = <$out>;
     my $json = decode_json $res;
     if ($time) {
-        $time{$_[0]} += (time - $begin);
+        $time{$target} += (time - $begin);
     } elsif ($time eq 'single') {
-        printf "  %s: %5.3f\n", $_[0], (time - $begin);
-    }
-    if (@{$json->{error}}) {
-        print "Error in @_";
+        printf "  %s: %5.3f\n", $target, (time - $begin);
     }
 
     for my $faction (values %{$json->{factions}}) {
@@ -80,6 +97,7 @@ for (@{$games}) {
 
     my $a = pretty_res $dir1, $id;
     my $b = pretty_res $dir2, $id;
+
     my $header_printed = 0;
 
     for my $key (keys %{$a}) {

@@ -6,9 +6,11 @@ use List::Util qw(max);
 use strict;
 use JSON;
 
+our $target;
+
 BEGIN {
-    my $target = shift @ARGV;
-    unshift @INC, "$target/cgi-bin/";
+    $target = shift @ARGV;
+    unshift @INC, "$target/lib/";
 }
 
 use tracker;
@@ -35,20 +37,22 @@ sub print_json {
 
 my $dbh = get_db_connection;
 
-my $id = $ARGV[0];
-my @rows = get_game_commands $dbh, $id;
+while (<>) {
+    my $id = $_;
+    chomp $id;
+    my @rows = get_game_commands $dbh, $id;
 
 # @rows = @rows[0..(min $ENV{MAX_ROW}, scalar(@rows)-1)];
 
-my $res = evaluate_game {
-    rows => [ @rows ],
-    faction_info => get_game_factions($dbh, $id),
-    players => get_game_players($dbh, $id),
-};
-print_json $res;
-
-if (scalar @{$res->{error}}) {
-    print STDERR $_ for @{$res->{error}};
-    exit 1;
+    my $res = evaluate_game {
+        rows => [ @rows ],
+        faction_info => get_game_factions($dbh, $id),
+        players => get_game_players($dbh, $id),
+    };
+    $| = 1;
+    print_json $res;
+    if (@{$res->{error}}) {
+        print STDERR "$target $id: ERROR: $_" for @{$res->{error}};
+    }
 }
 
