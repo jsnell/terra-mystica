@@ -88,11 +88,7 @@ sub finalize {
         if ($game{round} == 6 and !$game{finished}) {
             $faction->{vp_projection} = { faction_vps $faction };
         }
-        # delete $faction->{allowed_actions};
-        # delete $faction->{allowed_sub_actions};
-        # delete $faction->{allowed_build_locations};
         delete $faction->{locations};
-        delete $faction->{BRIDGE_COUNT};
         delete $faction->{leech_not_rejected};
         delete $faction->{leech_rejected};
         if ($game{round} == 6) {

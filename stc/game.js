@@ -1384,7 +1384,7 @@ function drawActionRequired() {
                 record.pretty = 'may form #{amount} towns'.interpolate(record);
             }
         } else if (record.type == 'bridge') {
-            record.pretty = 'may place a bridge'.interpolate(record);
+            record.pretty = 'may place a bridge (click on map)'.interpolate(record);
         } else if (record.type == 'favor') {
             if (record.amount == 1) {
                 record.pretty = 'must take a favor tile'.interpolate(record);
@@ -1776,6 +1776,10 @@ function addFactionInput(parent, record, index) {
         $H(state.map).sortBy(naturalSortKey).each(function(elem) {
             var hex = elem.value;
 
+            if (!faction.BRIDGE_COUNT) {
+                return;
+            }
+
             if (hex.row == null) {
                 return;
             }
@@ -1789,17 +1793,14 @@ function addFactionInput(parent, record, index) {
             }
 
             $H(hex.bridgable).each(function(to) {
-                var br = [elem.key, to.key].sort().join(":");
-                if (already_added[br]) {
-                    return;
-                }
-                already_added[br] = true;
-                var button = new Element("button").update(br);
-                button.onclick = function() {
-                    $("leech-" + index).style.display = "none";
-                    appendCommand("bridge " + br);
+                var menu_item = {};
+                menu_item["To " + to.key] = {
+                    "fun": function (loc) {
+                        appendCommand("Bridge " + elem.key + ":" + to.key);
+                    },
+                    "label": ""
                 };
-                div.insert(button);
+                addMapClickHandler("Bridge", elem.key, menu_item);
             });
         });
 
