@@ -3,7 +3,7 @@
     scripts => [ "/stc/common.js",
                  "/stc/stats.js"],
     title => 'Faction Statistics',
-    content => join '', <DATA>
+    content => read_then_close(*DATA)
 }
 
 __DATA__

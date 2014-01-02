@@ -3,7 +3,7 @@
     scripts => [ "/stc/common.js",
                  "/stc/joingame.js"],
     title => 'Open Games',
-    content => join '', <DATA>
+    content => read_then_close(*DATA)
 }
 
 __DATA__

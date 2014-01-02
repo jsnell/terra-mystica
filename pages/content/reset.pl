@@ -3,7 +3,7 @@
     scripts => [ "/stc/common.js",
                  "/stc/reset.js" ],
     title => 'Reset Password',
-    content => join '', <DATA>
+    content => read_then_close(*DATA)
 }
 
 __DATA__

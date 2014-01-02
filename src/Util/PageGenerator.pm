@@ -37,4 +37,11 @@ sub generate_page {
     return $template->fill_in(HASH => $data);    
 }
 
+sub read_then_close {
+    my ($fh) = @_;
+    my $data = join '', <$fh>;
+    close $fh;
+    $data;
+};
+
 1;

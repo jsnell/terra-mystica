@@ -3,7 +3,7 @@
     scripts => [ "/stc/common.js",
                  "/stc/index.js" ],
     title => 'Online Terra Mystica',
-    content => join '', <DATA>
+    content => read_then_close(*DATA)
 }
 
 __DATA__
