@@ -1792,16 +1792,16 @@ function addFactionInput(parent, record, index) {
                 return;
             }
 
+            var menu = {};
             $H(hex.bridgable).each(function(to) {
-                var menu_item = {};
-                menu_item["To " + to.key] = {
+                menu["To " + to.key] = {
                     "fun": function (loc) {
                         appendCommand("Bridge " + elem.key + ":" + to.key);
                     },
                     "label": ""
                 };
-                addMapClickHandler("Bridge", elem.key, menu_item);
             });
+            addMapClickHandler("Bridge", elem.key, menu);
         });
 
         if (faction.BRIDGE > 0) {
