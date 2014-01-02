@@ -9,7 +9,7 @@
     </script>
     {
       for my $record (@scripts) {
-          $OUT .= "<script type='text/javascript' language='javascript'\nsrc='$record->{url}'>\n</script>\n"
+          $OUT .= "<script type='text/javascript' language='javascript'\nsrc='$record->{url}?tag=$record->{csum}'>\n</script>\n"
       }
     }
     <link rel="stylesheet" type="text/css" href="/stc/style.css">
