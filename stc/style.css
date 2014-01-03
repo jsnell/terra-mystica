@@ -189,8 +189,20 @@ table.interleave-row-colors tr:nth-child(odd) {
     background-color: #dcdcdc;
 }
 
+table.ranking-table td {
+    vertical-align: top;
+}
+
 table.ranking-table tr:nth-child(5n+1) {
     background-color: #dcdcdc;
+}
+
+table.ranking-breakdown-table {
+    background-color: #fff;
+}
+
+table.ranking-breakdown-table tr:nth-child(5n+1) {
+    background-color: #fff;
 }
 
 table.vp-breakdown {

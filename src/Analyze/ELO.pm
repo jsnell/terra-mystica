@@ -12,7 +12,7 @@ use JSON;
 ### Tunable parameters
 
 # How many times the full set of games is scored.
-my $ITERS = 2;
+my $ITERS = 3;
 # Later iterations have exponentially less effect on scores. This controls
 # the exponent.
 my $ITER_DECAY_EXPONENT = 2;
@@ -77,8 +77,13 @@ sub iterate_results {
             ($ap1, $ap2) = (0, 1);
         }
 
-        $p1->{score} += $pot * ($ap1 - $ep1);
-        $p2->{score} += $pot * ($ap2 - $ep2);
+        my $p1_delta = $pot * ($ap1 - $ep1);
+        my $p2_delta = $pot * ($ap2 - $ep2);
+        $p1->{score} += $p1_delta;
+        $p2->{score} += $p2_delta;
+
+        $p1->{faction_breakdown}{$res->{a}{faction}} += $p1_delta;
+        $p2->{faction_breakdown}{$res->{b}{faction}} += $p2_delta;
 
         $f1->{score} += $pot * ($ap1 - $ep1);
         $f2->{score} += $pot * ($ap2 - $ep2);

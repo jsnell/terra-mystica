@@ -11,6 +11,9 @@ function showRatings(kind) {
     header.insert(new Element("td").updateText("Rating"));
     header.insert(new Element("td").updateText("Name"));
     header.insert(new Element("td").updateText("Games Played"));
+    if (kind == "player") {
+        header.insert(new Element("td").updateText("Breakdown"));
+    }
     table.insert(header);
 
     var rank = 1;
@@ -31,10 +34,27 @@ function showRatings(kind) {
             row.insert(new Element("td").update(
                 new Element("a", {"href":"/player/" + value.username}).
                     updateText(value.username)));
+            row.insert(new Element("td").updateText(value.games));
+            var breakdown = new Element("table", {
+                "class": "ranking-breakdown-table",
+            });
+            $H(value.faction_breakdown).sortBy(function (elem) { return -elem.value }).each(function (elem) {
+                var breakdown_row = new Element("tr");
+                breakdown_row.insert(new Element("td").updateText(elem.key));
+                breakdown_row.insert(new Element("td").updateText(Math.round(elem.value)));
+                breakdown.insert(breakdown_row);
+            });
+            breakdown.hide();
+            var cell = new Element("td");
+            var show = new Element("a", { href: "javascript:" }).updateText("show");
+            show.onclick = function() { show.hide(); breakdown.show(); };
+            cell.insert(show);
+            cell.insert(breakdown);
+            row.insert(cell);
         } else {
             row.insert(new Element("td").updateText(value.name));
+            row.insert(new Element("td").updateText(value.games));
         }
-        row.insert(new Element("td").updateText(value.games));
         table.insert(row);
     });
 }
