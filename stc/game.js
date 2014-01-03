@@ -2441,7 +2441,7 @@ function tileLabel(record) {
             }
         });
         if (gain_strs) {
-            label.push(" &#8594; " + gain_strs.join(", "));
+            label.push(" \u2192 " + gain_strs.join(", "));
         }
     }    
 
@@ -2472,7 +2472,7 @@ function actionLabel(record) {
             }
         });
         if (gain_strs) {
-            label += " &#8594; " + gain_strs.join(", ");
+            label += " \u2192 " + gain_strs.join(", ");
         }
     }    
 
