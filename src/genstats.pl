@@ -34,6 +34,7 @@ sub record_stats {
         $stat->{high_score}{$faction_count} = {
             vp => $_->{vp},
             game => $res->{id},
+            player => $_->{username},
         }
     }
     $stat->{average_vp} += $_->{vp};

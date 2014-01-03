@@ -229,7 +229,7 @@ function makeTextSpan(content, klass) {
             return element;
         },
         insertTextSpan: function(element, text, klass) {
-            element.insert(makeTextSpan(text, klass));
+            return element.insert(makeTextSpan(text, klass));
         },
         clearContent: function(element) {
             element.innerHTML = "";

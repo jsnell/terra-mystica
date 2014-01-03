@@ -371,6 +371,10 @@ a.navi {
     line-height: 150%;
 }
 
+a.static-color {
+    color: #00f;
+}
+
 div.menu {
     position: absolute;
     padding: 2px;

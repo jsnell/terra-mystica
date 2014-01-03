@@ -13,8 +13,25 @@ function showStats() {
         $("faction-stats").insert("<tr><td>#{key}<td>#{value.wins}<td>#{value.count}<td>#{value.win_rate}<td>#{value.average_position}<td>#{value.average_vp}<td>#{value.average_loss_vp}<td><span id=#{key}-links style='display: none'>#{value.game_links}</span><a href='javascript:showLinks(\"#{key}\")' id=#{key}-show-link>[show]</a></tr>"
                                   .interpolate(elem));
         count += elem.value.wins;
-        $("high-scores").insert("<tr><td>#{key}<td><a href='/game/#{value.high_score.3.game}'>#{value.high_score.3.vp}</a><td><a href='/game/#{value.high_score.4.game}'>#{value.high_score.4.vp}</a><td><a href='/game/#{value.high_score.5.game}'>#{value.high_score.5.vp}</a></tr>"
-                                .interpolate(elem));
+        {
+            var row = new Element("tr");
+            row.insert(new Element("td").updateText(elem.key));
+            for (var i = 3; i <= 5; ++i) {
+                var score = elem.value.high_score[i].vp;
+                var game = elem.value.high_score[i].game;
+                var player = elem.value.high_score[i].player;
+                var gamelink = new Element("a", { href: "/game/" + game }).updateText(score);
+                var playerlink = null;
+                if (player) {
+                    playerlink = new Element("a", { 'class': 'static-color',
+                                                    href: "/player/" + player }).updateText(player);
+                }
+                row.insert(new Element("td").insert(gamelink).
+                           insertTextSpan(" ").insert(playerlink));
+            }
+            $("high-scores").insert(row);
+        }
+
     });
     ["-3p", "-4p", "-5p"].each(function(count) {
         $H(state["positions" + count]).sortBy(function (a) { return -a.value.win_rate } ).each(function(elem) {
