@@ -988,11 +988,13 @@ function drawFaction(name) {
     var style = 'float: left; margin-right: 20px; ';
     if (faction.passed) {
         style += 'opacity: 0.5';
-        title.textContent += ", passed";
+        title = new Element("span").insert(title).insert(
+            makeTextSpan(", passed"));
     }
 
     if (faction.start_player) {
-        title.textContent += ", start player";
+        title = new Element("span").insert(title).insert(
+            makeTextSpan(", start player"));
     }
 
     var container = new Element('div', { 'class': 'faction-board' });
