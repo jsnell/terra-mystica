@@ -215,12 +215,25 @@ function renderSidebar(id) {
     $(id).insert(p);
 }
 
+function makeTextSpan(content, klass) {
+    var attrs = klass ? { 'class': klass } : {};
+    var elem = new Element('span', attrs);
+    elem.updateText(content);
+    return elem;
+}
+
 {
     Element.addMethods({
         updateText: function(element, text) {
-            $(element).textContent = text;
+            element.textContent = text;
             return element;
-        }
+        },
+        insertTextSpan: function(element, text, klass) {
+            element.insert(makeTextSpan(text, klass));
+        },
+        clearContent: function(element) {
+            element.innerHTML = "";
+        },
     });
 }                      
 

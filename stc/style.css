@@ -32,6 +32,7 @@ div.faction-board {
 div.faction-info {
     float: left;
     width: 350px;
+    white-space: nowrap;
 }
 
 div.shared-actions {
@@ -196,9 +197,22 @@ table.vp-breakdown {
     font: 14px Verdana;    
 }
 
+span.faction-info-unimportant {
+    color: #888;
+}
+
+span.faction-info-building-max {
+    color: #f00;
+}
+
+span.faction-info-income-overflow {
+    color: #f00;
+}
+
 table#ledger {
     border-spacing: 0px;
     padding-bottom: 40px;
+    white-space: nowrap;
 }
 
 table#ledger tr td {
@@ -219,6 +233,10 @@ table#ledger tr td.ledger-value {
 
 span.warning {
     background-color: #e88;
+}
+
+span.bold {
+    font-weight: bold;
 }
 
 div#preview_status {
@@ -375,6 +393,24 @@ td#sidebar {
 }
 
 #fallback-editor {
-    height: 600px;
-    width: 800px;
-};
+    height: 600px
+    width: 800px
+}
+
+span.cult-FIRE {
+    background-color: #f88
+}
+
+span.cult-WATER {
+    background-color: #ccf
+}
+
+span.cult-EARTH {
+    background-color: #b84
+}
+
+span.cult-AIR {
+    background-color: #f0f0f0
+}
+
+

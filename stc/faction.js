@@ -83,8 +83,8 @@ function previewOrSave(save, preview_data, prefix_data) {
                 } else {
                     $("preview_status").innerHTML = "Executed the following commands for " + currentFaction;
                     if (state.email) {
-                        $("move_entry").update("<br>");
-                        $("move_entry").insert(new Element("a", {"href": makeMailToLink()}).update("Send email"));
+                        $("move_entry").insert(new Element("br"));
+                        $("move_entry").insert(new Element("a", {"href": makeMailToLink()}).updateText("Send email"));
                     } else {
                         $("move_entry").innerHTML = "";
                     }
@@ -154,7 +154,7 @@ function showActiveGames(games, div, mode, status) {
     });
     $(div).innerHTML = "<div style='display: block-inline; margin-right: 10px'>Moves required in #{action_required_count}/#{active_count} games</div>".interpolate(record);
 
-    var link = new Element('a', {"href": "#", "accesskey": "n"}).update("Next game");
+    var link = new Element('a', {"href": "#", "accesskey": "n"}).updateText("Next game");
     link.onclick = function() { fetchGames(div, mode, "running", nextGame); } 
     $(div).insert(link);
 
@@ -242,10 +242,15 @@ function loadOrSendChat(send) {
             if (send) {
                 $("chat_entry_input").value = "";
             }
-            $("chat_messages").update("");
+            $("chat_messages").clearContent();
 
             if (state.chat_hide_message_count > 0) {
-                $("chat_messages").insert("<tr id='chat_messages_show_old'><td><td><span style='text-decoration: underline' onclick='showOldMessages()'>Show #{chat_hide_message_count} older messages</span></tr>".interpolate(state));                
+                var row = new Element("tr", { id: 'chat_messages_show_old' });
+                row.insert(new Element("td"));
+                var link = new Element("span", { style: 'text-decoration: underline', onclick: 'showOldMessages()'});
+                link.insertTextSpan("Show #{chat_hide_message_count} older messages".interpolate(state));
+                row.insert(new Element("td").insert(link));
+                $("chat_messages").insert(row);                
             }
 
             if (messages.error.size() > 0) {
@@ -259,26 +264,34 @@ function loadOrSendChat(send) {
                                 "chat-message-hidden" :
                                 "chat-message-visible");
                 var row = new Element("tr", {"class": cssClass});
-                var from = entry.faction;
+                var from;
                 try {
                     from = coloredFactionSpan(entry.faction);
                 } catch (e) {
+                    from = makeTextSpan(entry.faction);
                 }
 
-                row.insert(new Element("td", {"style": "white-space:nowrap"}).update(from));
+                row.insert(new Element("td", {"style": "white-space:nowrap"}).insert(from));
 
                 var message_div = new Element("div", {"style": "max-width: 60ex"});
                 // Normalize
                 var message_text = entry.message.sub(/\n$/, "");
                 message_text.split(/\n/).each(function (message_row) {
-                    message_div.insert(new Element("div").updateText(message_row).insert(new Element("span").update("&nbsp")));
+                    message_div.insert(new Element("div").updateText(message_row).insert(makeTextSpan("\u00a0")));
                 });
-                var turn = "";
+
+                var posted_on_div = new Element("div", {"style": "color: #888; font-size: 75%;"});
+                posted_on_div.updateText(seconds_to_pretty_time(entry.message_age) + " ago");
 
                 if (entry.posted_on_turn) {
-                    turn = ", <a class='turnlink' href='#" + commentAnchor(entry.posted_on_turn) + "'>" + entry.posted_on_turn.escapeHTML() + "</a>";
+                    var link = new Element("a", { 'class': 'turnlink',
+                                                  'href': '#' + commentAnchor(entry.posted_on_turn) });
+                    link.updateText(entry.posted_on_turn);
+                    posted_on_div.insertTextSpan(", ");
+                    posted_on_div.insert(link);
                 }
-                message_div.insert(new Element("div", {"style": "color: #888; font-size: 75%;"}).update("(" + seconds_to_pretty_time(entry.message_age) + " ago" + turn + ")"));
+
+                message_div.insert(posted_on_div);
                 row.insert(new Element("td").insert(message_div));
 
                 $("chat_messages").insert(row);

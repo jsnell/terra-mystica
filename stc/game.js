@@ -673,7 +673,15 @@ function renderAction(canvas, name, key, border_color) {
 
 function cultStyle(name) {
     if (cult_bgcolor[name]) {
-        return "style='background-color:" + cult_bgcolor[name] + "'";
+        return "background-color:" + cult_bgcolor[name] + "";
+    }
+
+    return "";
+}
+
+function cultClass(name) {
+    if (cult_bgcolor[name]) {
+        return "cult-" + name;
     }
 
     return "";
@@ -686,39 +694,49 @@ function insertAction(parent, name, key) {
     renderAction(canvas, name, key, '#000');
 }
 
-function renderTile(div, name, record, faction, count) {
-    div.insert(name);
+function renderTile(tile, name, record, faction, count) {
+    tile.insertTextSpan(name);
     if (state.bonus_coins[name] && state.bonus_coins[name].C) {
-        div.insert(" [#{C}c]".interpolate(state.bonus_coins[name]));
+        tile.insertTextSpan(" [#{C}c]".interpolate(state.bonus_coins[name]));
     }
     if (count > 1) {
-        div.insert("(x" + count + ")");
+        tile.insertTextSpan("(x" + count + ")");
     }
-    div.insert("<hr>");
+    tile.insert(new Element("hr"));
 
     if (!record) {
         return;
     }
 
     $H(record.gain).each(function (elem, index) {
-        elem.style = cultStyle(elem.key);
-        div.insert("<div><span #{style}>#{value} #{key}</span></div>".interpolate(elem));
+        var row = new Element("div");
+        row.insert(new Element("span", { style: cultStyle(elem.key)}).updateText(elem.value + " " + elem.key));
+        tile.insert(row);
     });
     $H(record.vp).each(function (elem, index) {
-        div.insert("<div>#{key} &gt;&gt; #{value} vp</div>".interpolate(elem));
+        var row = new Element("div");       
+        row.updateText("#{key} >> #{value} vp".interpolate(elem));
+        tile.insert(row);
     });
     $H(record.pass_vp).each(function (elem, index) {
         elem.value = passVpString(elem.value);
-        div.insert("<div>pass-vp:#{key}#{value}</div>".interpolate(elem));
+
+        var row = new Element("div");       
+        row.updateText("pass-vp:#{key}#{value}".interpolate(elem));
+        tile.insert(row);
     });
     if (record.action) {
-        insertAction(div, name, name + "/" + faction);
+        insertAction(tile, name, name + "/" + faction);
     }
     $H(record.income).each(function (elem, index) {
-        div.insert("<div>+#{value} #{key}</div>".interpolate(elem));
+        var row = new Element("div");       
+        row.updateText("+#{value} #{key}".interpolate(elem));
+        tile.insert(row);
     });
     $H(record.special).each(function (elem, index) {
-        div.insert("<div>#{value} #{key}</div>".interpolate(elem));
+        var row = new Element("div");       
+        row.updateText("#{value} #{key}".interpolate(elem));
+        tile.insert(row);
     });
 }
 
@@ -746,25 +764,28 @@ function renderFavor(div, name, faction, count) {
     renderTile(div, name, state.favors[name], faction, count);
 }
 
-function renderTown(div, name, faction, count) {
+function renderTown(tile, name, faction, count) {
     if (count != 1) {
-        div.insert(name + " (x" + count + ")");
+        tile.insertTextSpan(name + " (x" + count + ")");
     } else {
-        div.insert(name);
+        tile.insertTextSpan(name);
     }
 
     var head = "#{VP} vp".interpolate(state.towns[name].gain);
     if (state.towns[name].gain.KEY != 1) {
         head += ", #{KEY} keys".interpolate(state.towns[name].gain);
     } 
-    div.insert(new Element("div").update(head));
+    tile.insert(new Element("div").updateText(head));
     $H(state.towns[name].gain).each(function(elem, index) {
         var key = elem.key;
         var value = elem.value;
-        elem.style = cultStyle(key);
+        var klass = cultClass(key);
 
         if (key != "VP" && key != "KEY") {
-            div.insert("<div><span #{style}>#{value} #{key}</span></div>".interpolate(elem));
+            var row = new Element("div");
+            row.insertTextSpan("#{value} #{key}".interpolate(elem),
+                              klass);
+            tile.insert(row);
         }
     });
 }
@@ -824,7 +845,7 @@ function renderTreasury(board, treasury, faction, filter) {
     });
 }
 
-function makeBoard(color, name, info_link, klass, style) {
+function makeBoard(color, title, info_link, klass, style) {
     var board = new Element('div', {
         'class': klass,
         'style': style
@@ -834,11 +855,11 @@ function makeBoard(color, name, info_link, klass, style) {
     var heading = new Element('div', {
         'style': 'padding: 1px 1px 1px 5px; background-color: ' + bgcolor + '; color: ' + fgcolor
     });
-    heading.insert(new Element('span').update(name));
+    heading.insert(title);
     if (info_link) {
         heading.insert(new Element('a', { href: info_link,
                                           target: '_blank',
-                                          style: 'float: right; color: ' + fgcolor }).update('[info]'));
+                                          style: 'float: right; color: ' + fgcolor }).updateText('[info]'));
     }
     board.insert(heading);
 
@@ -883,7 +904,11 @@ function renderColorCycle(parent, startColor) {
 function rowFromArray(array, style) {
     var tr = new Element("tr", {'style': style});
     array.each(function(elem) {
-        tr.insert(new Element("td").update(elem));
+        if (elem instanceof Element) {
+            tr.insert(new Element("td").insert(elem));
+        } else {
+            tr.insert(new Element("td").updateText(elem));
+        }
     });
 
     return tr;
@@ -918,7 +943,7 @@ function commentAnchor(string) {
 }
 
 function drawFactions() {
-    $("factions").innerHTML = "";
+    $("factions").clearContent();
 
     var order = state.order.concat([]);
     for (var i = order.size(); i < state.players.size(); ++i) {
@@ -946,10 +971,10 @@ function drawFactions() {
     });
 
    
-    var pool = makeBoard("orange", "Pool", '', 'pool');
+    var pool = makeBoard("orange", makeTextSpan("Pool"), '', 'pool');
     renderTreasury(pool, state.pool, 'pool',
                    function (tile) { return !tile.match(/^ACT/) } );
-    $("shared-actions").update("");
+    $("shared-actions").clearContent();
     renderTreasury($("shared-actions"), state.pool, '',
                    function (tile) { return tile.match(/^ACT/) } );
     $("factions").insert(pool);
@@ -960,14 +985,14 @@ function drawFaction(name) {
     var color = faction.color;
     var title = factionDisplayName(faction);
 
-    var style ='float: left; margin-right: 20px; ';
+    var style = 'float: left; margin-right: 20px; ';
     if (faction.passed) {
         style += 'opacity: 0.5';
-        title += ", passed";
+        title.textContent += ", passed";
     }
 
     if (faction.start_player) {
-        title += ", start player";
+        title.textContent += ", start player";
     }
 
     var container = new Element('div', { 'class': 'faction-board' });
@@ -988,53 +1013,90 @@ function drawFaction(name) {
     $("factions").insert(container);
 }
 
+function makeToggleLink(text, fun) {
+    var link = new Element("a", {'href': 'javascript:'});
+    link.updateText(text);
+    link.onclick = fun;
+    return link;
+}
+
 function drawRealFaction(faction, board) {
     var name = faction.name;
 
     var info = new Element('div', {'class': 'faction-info' });
     board.insert(info);
 
+    var vp_id = faction.name + "/vp";
     if (faction.vp_source) {
-        var vp_id = faction.name + "/vp";
         var vp_breakdown = new Element('table', {'id': vp_id,
                                                  'style': 'display: none',
                                                  'class': 'vp-breakdown'});
-        board.insert(vp_breakdown);
-        vp_breakdown.insert("<tr><td colspan=2><b>VP breakdown</b></td></tr>")
+        vp_breakdown.insert(new Element("tr").insert(
+            new Element("td", { colspan: 2 }).insert(
+                new Element("b").updateText("VP breakdown"))));
         $H(faction.vp_source).sortBy(function(a) { return -a.value}).each(function(record) {
-            vp_breakdown.insert("<tr><td>#{key}<td>#{value}</tr>".interpolate(record));
+            var row = new Element("tr");
+            row.insert(new Element("td").updateText(record.key));
+            row.insert(new Element("td").updateText(record.value));
+            vp_breakdown.insert(row);
         });
+        board.insert(vp_breakdown);
     }
 
-    faction.vp_id = vp_id;
-    info.insert(new Element('div').update(
-        "#{C} c, #{W} w, #{P}<span style='color:#888'>/#{MAX_P}</span> p, <a href='javascript:toggleVP(\"#{name}/vp\")'>#{VP} vp</a>, #{P1}/#{P2}/#{P3} pw".interpolate(faction)));
-    if (faction.BON4 > 0) {
-        faction.ship_bonus = " (+1)";
+    {
+        var resources = new Element("div");
+        resources.insertTextSpan("#{C} c, ".interpolate(faction));
+        resources.insertTextSpan("#{W} w, ".interpolate(faction));
+
+        resources.insertTextSpan(faction.P);
+        resources.insertTextSpan("/" + faction.MAX_P,
+                                 'faction-info-unimportant');
+        resources.insertTextSpan(" p, ");
+
+        var link = makeToggleLink(faction.VP,
+                                  function() { toggleVP(vp_id); });
+        resources.insert(link);
+        resources.insertTextSpan(" vp, ");
+        resources.insertTextSpan("#{P1}/#{P2}/#{P3} pw".interpolate(faction));
+        info.insert(resources);
     }
 
-    var levels = [];
+    var levels = new Element("div");
 
     if (faction.dig.max_level > 0) {
-        var dig = "dig level #{dig.level}<span style='color:#888'>/#{dig.max_level}</span>".interpolate(faction);
-        levels.push(dig);
+        if (levels.innerHTML != '') {
+            levels.insertTextSpan(", ");
+        }
+        levels.insertTextSpan("dig level " + faction.dig.level);
+        levels.insertTextSpan("/" + faction.dig.max_level,
+                                   'faction-info-unimportant');
     }
 
     if (faction.teleport) {
-        levels.push("range " + faction[faction.teleport.type + "_range"] + "/" + faction[faction.teleport.type + "_max_range"]);
+        if (levels.innerHTML != '') {
+            levels.insertTextSpan(", ");
+        }
+        var range = faction[faction.teleport.type + "_range"];
+        var max_range = faction[faction.teleport.type + "_max_range"];
+        levels.insertTextSpan("range " + range);
+        levels.insertTextSpan("/" + max_range,
+                              'faction-info-unimportant');
     }
 
     if (faction.ship.max_level > 0) {
-        var ship = "ship level #{ship.level}<span style='color:#888'>/#{ship.max_level}</span>".interpolate(faction);
-        if (faction.BON4 > 0) {
-            ship += " (+1)";
+        if (levels.innerHTML != '') {
+            levels.insertTextSpan(", ");
         }
-        levels.push(ship);
+        levels.insertTextSpan("ship level " + faction.ship.level);
+        levels.insertTextSpan("/" + faction.ship.max_level,
+                                   'faction-info-unimportant');
+        if (faction.BON4 > 0) {
+            levels.insertTextSpan(" (+1)");
+        }
     }
 
-    info.insert(new Element('div').update(levels.join(", ")));
-
-    info.insert("<div></div>");
+    info.insert(levels);
+    info.insert(new Element("div"));
 
     var buildings_id = "buildings-" + name;
     var buildings = new Element('table', {'class': 'building-table', 'id': buildings_id});
@@ -1049,11 +1111,12 @@ function drawRealFaction(faction, board) {
         record = faction.buildings[key];
         record.key = key;
         var text = "#{level}/#{max_level}".interpolate(record);
+        var klass = '';
         if (record.level == record.max_level && record.max_level > 3) {
-            text = "<span style='color: red'>" + text + "</span>";
+            klass = 'faction-info-building-max';
         }
-        count.push(text);
-        cost.push("#{advance_cost.C}c,&#160;#{advance_cost.W}w".interpolate(record));
+        count.push(makeTextSpan(text, klass));
+        cost.push("#{advance_cost.C}c, #{advance_cost.W}w".interpolate(record));
         if (record.level == record.max_level) {
             income.push("");
         } else {
@@ -1067,14 +1130,17 @@ function drawRealFaction(faction, board) {
                 }
             });
             if (income_delta.size() > 0) {
-                income.push("+" + income_delta.join(",&#160;"));
+                income.push("+" + income_delta.join(", "));
             } else {
                 income.push("");
             }
         }
     });
 
-    buildings.insert(rowFromArray(b, '').insert("<td><a href='javascript:toggleBuildings(\"" + buildings_id + "\")'>+</a>"));
+    var head_row = rowFromArray(b, '');
+    head_row.insert(new Element("td").insert(
+        makeToggleLink("+", function() { toggleBuildings(buildings_id); })))
+    buildings.insert(head_row);
     buildings.insert(rowFromArray(count, ''));
     buildings.insert(rowFromArray(cost, 'display: none'));
     buildings.insert(rowFromArray(income, 'display: none'));
@@ -1085,28 +1151,47 @@ function drawRealFaction(faction, board) {
 
     if (faction.income) {
 	var row = new Element('tr');
-        if (faction.income.P > faction.MAX_P - faction.P) {
-            faction.income.P_style = "style='color: #f00'";
-        }
-        if (faction.income.PW > faction.P1 * 2 + faction.P2) {
-            faction.income.PW_style = "style='color: #f00'";
-        }
+        row.insert(new Element("td").updateText("Income:"));
+        row.insert(new Element("td").updateText("total"));
+        row.insert(new Element("td").updateText(faction.income.C + " c"));
+        row.insert(new Element("td").updateText(faction.income.W + " w"));
 
-	row.update("<td>Income:<td>total<td>#{C}c<td>#{W}w<td #{P_style}>#{P}p<td #{PW_style}>#{PW}pw".interpolate(faction.income));
-	row.insert(new Element('td').update("<a href='javascript:toggleIncome(\"" + income_id + "\")'>+</a>"));
+        var P_class = '';
+        if (faction.income.P > faction.MAX_P - faction.P) {
+            P_class = 'faction-info-income-overflow';
+        }
+        row.insert(new Element("td").insert(
+            makeTextSpan(faction.income.P + " p", P_class)));
+
+        var PW_class = '';
+        if (faction.income.PW > faction.P1 * 2 + faction.P2) {
+            PW_class = 'faction-info-income-overflow';
+        }
+        row.insert(new Element("td").insert(
+            makeTextSpan(faction.income.PW + " pw", PW_class)));
+
+	row.insert(new Element('td').insert(
+            makeToggleLink("+", function() { toggleIncome(income_id); })));
         income.insert(row);
     }
 
     if (faction.income_breakdown) {
-        income.insert(Element('tr', {'style': 'display: none'}).update("<td colspan=6><hr>"));
+        income.insert(Element('tr', {'style': 'display: none'}).insert(
+            new Element("td", { colspan: 6 }).insert(
+                new Element("hr"))));
         $H(faction.income_breakdown).each(function(elem, ind) {
             if (!elem.value) {
                 return;
             }
 
-            elem.value.key = elem.key;
             var row = new Element('tr', {'style': 'display: none'});
-            income.insert(row.update("<td><td>#{key}<td>#{C}<td>#{W}<td>#{P}<td>#{PW}".interpolate(elem.value)));
+            row.insert(new Element("td"));
+            row.insert(new Element("td").updateText(elem.key));
+            row.insert(new Element("td").updateText(elem.value.C));
+            row.insert(new Element("td").updateText(elem.value.W));
+            row.insert(new Element("td").updateText(elem.value.P));
+            row.insert(new Element("td").updateText(elem.value.PW));
+            income.insert(row);
         });
     }
 
@@ -1116,90 +1201,141 @@ function drawRealFaction(faction, board) {
         info.insert(vp_proj);
         {
 	    var row = new Element('tr');
-	    row.update("<td>VP projection:<td>total<td>#{total}".interpolate(faction.vp_projection));
-	    row.insert(new Element('td').update("<a href='javascript:toggleIncome(\"" + vp_proj_id + "\")'>+</a>"));
+            row.insert(new Element('td').updateText('VP projection:'));
+            row.insert(new Element('td').updateText('total'));
+            row.insert(new Element('td').updateText(faction.vp_projection.total));
+            row.insert(new Element('td').insert(
+                makeToggleLink("+", function() { toggleIncome(vp_proj_id) })));
             vp_proj.insert(row);
         }
 
-        vp_proj.insert(Element('tr', {'style': 'display: none'}).update("<td colspan=3><hr>"));
+        vp_proj.insert(Element('tr', {'style': 'display: none'}).insert(
+            new Element("td", { colspan: 3 }).insert(
+                new Element("hr"))));
         $H(faction.vp_projection).each(function(elem, ind) {
             if (!elem.value || elem.key == "total") {
                 return;
             }
 
             var row = new Element('tr', {'style': 'display: none'});
-            vp_proj.insert(row.update("<td><td>#{key}<td style='white-space: nowrap'>#{value}</nobr>".interpolate(elem)));
+            row.insert(new Element("td"));
+            row.insert(new Element("td").updateText(elem.key));
+            row.insert(new Element("td").updateText(elem.value));
+            vp_proj.insert(row);
         });            
     }
 }
 
-function drawLedger() {
+function drawLedger(draw_full_ledger) {
     var ledger = $("ledger");
-    ledger.innerHTML = "";
-    if ($("recent_moves")) {
-        $("recent_moves").update("");
+    ledger.clearContent();
+    var recent_moves = [];
+
+    var small_ledger_rows = 20;
+    var count = state.ledger.size();
+    if (count < small_ledger_rows) {
+        draw_full_ledger = true;
+    }
+
+    if (!draw_full_ledger) {
+        var row = new Element("tr");
+        row.insert(new Element("td", { colspan: 14 }));
+
+        var col = new Element("td");
+        row.insert(col);
+        col.insertTextSpan("Showing only last 20 lines of the game log. ",
+                           "bold");
+        col.insert(new Element("br"));
+        var button = new Element("button").updateText("Load full log");
+        button.onclick = function() { drawLedger(true); }
+        col.insert(button);
+
+        ledger.insert(row);
     }
 
     state.ledger.each(function(record, index) {
+        if (!draw_full_ledger && index < count - small_ledger_rows) {
+            return;
+        }
         if (record.comment) {
-            ledger.insert("<tr id='" + commentAnchor(record.comment) + "'>" +
-                          "<td><td colspan=13><b>" + 
-                          record.comment.escapeHTML() +
-                          "</b>" +
-                          "<td><a href='" + showHistory(index + 1) +
-                          "'>show history</a></tr>");
+            var row = new Element("tr", { id: commentAnchor(record.comment) });
+            row.insert(new Element("td"));
+            row.insert(new Element("td", { colspan: 13,
+                                           style: "font-weight: bold" }).
+                       updateText(record.comment));
+            row.insert(new Element("td").
+                       insert(new Element("a", { href: showHistory(index + 1) }).updateText("show history")));
 
-            var move_entry = new Element("tr");
-            move_entry.insert(new Element("td", {"colspan": 2, "style": "font-weight: bold"}).update(
-                record.comment.escapeHTML()));
+            // var move_entry = new Element("tr");
+            // move_entry.insert(new Element("td", {"colspan": 2, "style": "font-weight: bold"}).updateText(record.comment));
+            // $("recent_moves").insert(move_entry);
+            ledger.insert(row);
         } else {
             record.bg = colors[state.factions[record.faction].color];
             record.fg = (record.bg == '#000000' ? '#ccc' : '#000');
-            record.commands = record.commands.escapeHTML();
 
-            if ($("recent_moves")) {
+            if (currentFaction) {
                 if (record.faction == currentFaction &&
                     !/^(leech|decline)/i.match(record.commands)) {
-                    $("recent_moves").update("");
+                    recent_moves = [];
                 }
-
-                var move_entry = new Element("tr");
-                move_entry.insert(new Element("td").insert(
-                    coloredFactionSpan(record.faction)));
-                move_entry.insert(new Element("td").insert(
-                    record.commands));
-                $("recent_moves").insert(move_entry);
+                recent_moves.push(record);
             }
 
-            var row = "<tr><td style='background-color:#{bg}; color: #{fg}'>#{faction}".interpolate(record);
+            var row = new Element("tr");
+            row.insert(new Element("td", { style: 'background-color:#{bg}; color: #{fg}'.interpolate(record) }).updateText(record.faction));
+
             ["VP", "C", "W", "P", "PW", "CULT"].each(function(key) {
                 var elem = record[key];
-                if (key != "CULT") { elem.type = key };
-                if (!elem.delta) {
-                    elem.delta = '';
-                } else if (elem.delta > 0) {
-                    elem.delta = "+" + elem.delta;
+                var type = (key == "CULT" ? '' : key);
+                var delta = elem.delta;
+
+                if (!delta) {
+                    delta = '';
+                } else if (delta > 0) {
+                    delta = "+" + delta;
                 }
-                row += "<td class='ledger-delta'>#{delta}<td class='ledger-value'>#{value}&#160;#{type}</span>".
-                    interpolate(elem);
+                row.insert(new Element("td", { 'class': 'ledger-delta' }).updateText(delta));
+                row.insert(new Element("td", { 'class': 'ledger-value' }).updateText(elem.value + " " + type));
             });
 
-            var leech = "";
+            var leechCell = new Element("td", { 'class': 'ledger-delta' });
             $H(record.leech).each(function (elem, index) {
                 elem.color = contrastColor[elem.key];
                 elem.key = colors[elem.key];
-                leech += "<span style='color: #{color}; background-color: #{key}'>#{value}</span>&#160;".interpolate(elem);
+                var leech = new Element("span", { style: 'color: #{color}; background-color: #{key}'.interpolate(elem) });
+                leech.updateText(elem.value);
+                leechCell.insert(leech);
+                leechCell.insertTextSpan("\u00a0");
             });
-            row += "<td class='ledger-delta'>" + leech;
+            row.insert(leechCell);
+            row.insert(new Element("td", { 'class': 'ledger-delta' }).updateText(record.commands));
 
-            row += "<td class='ledger-delta'>#{commands}</tr>".interpolate(record);
             ledger.insert(row);
             if (record.warning) {
-                ledger.insert("<tr><td colspan=14><td><span class='warning'>" + 
-                              record.warning.escapeHTML() +
-                              "</span></tr>")
+                var warnRow = new Element("tr");
+                warnRow(insert(new Element("td").insert(
+                    makeTextSpan(record.warning, 'warning'))));
+                ledger.insert(warnRow);
             }
         }
+    });
+
+    return recent_moves;
+}
+
+function drawRecentMoves(recent_moves) {
+    var container = $("recent_moves");
+    if (!container) {
+        return;
+    }
+    container.clearContent();
+    recent_moves.each(function (record) {
+        var move_entry = new Element("tr");
+        move_entry.insert(new Element("td").insert(
+            coloredFactionSpan(record.faction)));
+        move_entry.insert(new Element("td").updateText(record.commands));
+        container.insert(move_entry);
     });
 }
 
@@ -1211,7 +1347,7 @@ function showHistory(row) {
 
 function drawScoringTiles() {
     var container = $("scoring");
-    container.innerHTML = "";
+    container.clearContent();
 
     state.score_tiles.each(function(record, index) {
         var style = '';
@@ -1221,13 +1357,23 @@ function drawScoringTiles() {
             style = 'opacity: 0.5';
         }
         var tile = new Element('div', {'class': 'scoring', 'style': style});
-        tile.insert(new Element('div', {'style': 'float: right; border-style: solid; border-width: 1px; '}).update("r" + (index + 1)));
-        tile.insert(new Element('div').update(
-            "<div class='scoring-head'>vp:</div><div>#{vp_display}</div>".interpolate(record)));
+        tile.insert(new Element('div', {'style': 'float: right; border-style: solid; border-width: 1px; '}).updateText("r" + (index + 1)));
+        
+        {
+            var row = new Element("div");
+            row.insert(new Element("div", { "class": "scoring-head" }).updateText("vp:"));
+            row.insert(new Element("div").updateText(record.vp_display));
+            tile.insert(row);
+        }
+
 	if (index < 5) {
-            record.style = cultStyle(record.cult);
-            tile.insert(new Element('div').update(
-                "<div class='scoring-head'>income:</div><div><span #{style}>#{income_display}</span></div>".interpolate(record)));
+            var style = cultStyle(record.cult);
+            var row = new Element('div');
+            row.insert(new Element("div", { "class": "scoring-head" }).updateText("income:"));
+            row.insert(new Element("div").insert(
+                new Element("span", { style: style }).updateText(
+                    record.income_display)));
+            tile.insert(row);
 	}
         container.insert(tile);
     });
@@ -1240,27 +1386,37 @@ function coloredFactionSpan(faction_name) {
         record.fg = (record.bg == '#000000' ? '#ccc' : '#000');
         record.display = factionDisplayName(state.factions[faction_name]);
     } else {
+        var display = '';
         var players = {};
         state.players.each(function (value, index) {
-            players["player" + (index + 1)] = value.name.escapeHTML();
+            players["player" + (index + 1)] = (value.displayname || value.name);
         });
         if (players[faction_name]) {
-            return faction_name + " (" + players[faction_name] + ")"
+            display = faction_name + " (" + players[faction_name] + ")"
         } else {
-            return faction_name;
+            display = faction_name;
         }
+
+        return makeTextSpan(display);
     }
 
-    return "<span style='background-color:#{bg}; color: #{fg}'>#{display}</span>".interpolate(record);
+    var style = "background-color:#{bg}; color: #{fg}".interpolate(record);
+    return new Element("span", { style: style }).insert(record.display);
 }
 
 function factionDisplayName(faction, fg) {
+    var res = new Element("span");
+    res.insertTextSpan(faction.display + " ");
     if (faction.registered) {
-        faction.player_escaped = faction.player.escapeHTML();
-        return "#{display} (<a style='color: inherit' href='/player/#{username}'>#{player_escaped}</a>)".interpolate(faction);
+        var url = '/player/#{username}'.interpolate(faction);
+        var link = new Element("a", { style: 'color: inherit',
+                                      href: url });
+        link.updateText("(" + faction.player + ")");
+        res.insert(link);                
     } else {
-        return "#{display} (#{player})".interpolate(faction);
+        res.insertTextSpan(faction.player);
     }
+    return res;
 }
 
 var allowSaving = false;
@@ -1272,27 +1428,26 @@ function menuClickHandler(title, loc, funs) {
     var select = function(loc, event) {
         var menu = $("menu");
         menu.hide();
-        menu.update("");
+        menu.clearContent();
         var head = new Element("div", {"style": "width: 100%"});
-        head.insert(new Element("div", {"style": "white-space: nowrap"}).update(loc + ": " + title));
+        head.insert(new Element("div", {"style": "white-space: nowrap"}).updateText(loc + ": " + title));
         menu.insert(head);
-
 
         $H(funs).each(function (elem) {
             var type = elem.key;
             var fun = elem.value.fun;
-            var label = elem.value.label;
+            var label = " " + elem.value.label;
 
-            var button = new Element("button").update(type);
+            var button = new Element("button").updateText(type);
             button.onclick = function() {
                 menu.hide();
                 fun(loc, type);
             }
-            menu.insert(new Element("div", {"class": "menu-item"}).insert(button).insert(" ").insert(label));
+            menu.insert(new Element("div", {"class": "menu-item"}).insert(button).insertTextSpan(label));
         });
 
 
-        var cancel = new Element("button").update("Cancel");
+        var cancel = new Element("button").updateText("Cancel");
         menu.insert(new Element("div", {"class": "menu-item"}).insert(cancel));
         cancel.onclick = function () { menu.hide(); }
 
@@ -1329,7 +1484,7 @@ function drawActionRequired() {
         return;
     }
 
-    parent.innerHTML = "";
+    parent.clearContent();
 
     var needMoveEntry = false;
 
@@ -1351,83 +1506,97 @@ function drawActionRequired() {
     });
 
     state.action_required.each(function(record, index) {
+        var pretty_text = '';
+        var pretty_elem = null;
+
         if (record.type == 'full') {
-            record.pretty = 'should take an action';
+            pretty_text = 'should take an action';
             if (state.factions[record.faction].can_leech) {
-                record.pretty += ' after power leeching decision';
+                pretty_text += ' after power leeching decision';
             }
         } else if (record.type == 'leech') {
-            record.from_faction_span = coloredFactionSpan(record.from_faction);
-            record.pretty = 'may gain #{amount} power from #{from_faction_span}'.interpolate(record);
+            pretty_elem = new Element("span");
+            pretty_elem.insertTextSpan('may gain #{amount} power from '.interpolate(record));
+            pretty_elem.insert(coloredFactionSpan(record.from_faction));
             if (record.actual != record.amount) {
-                record.pretty += " (actually #{actual} power)".interpolate(record);
+                pretty_elem.insertTextSpan(" (actually #{actual} power)".interpolate(record));
             }
-            state.factions[record.faction].can_leech = true;
+            state.factions[record.faction].can_leech = true;            
         } else if (record.type == 'transform') {
             if (record.amount == 1) {
-                record.pretty = 'may use a spade (click on map to transform)'.interpolate(record);
+                pretty_text = 'may use a spade (click on map to transform)'.interpolate(record);
             } else if (record.amount == null) {
-                record.pretty = 'may transform a space for free (click on map)'.interpolate(record);
+                pretty_text = 'may transform a space for free (click on map)'.interpolate(record);
             } else {
-                record.pretty = 'may use #{amount} spades (click on map to transform)'.interpolate(record);
+                pretty_text = 'may use #{amount} spades (click on map to transform)'.interpolate(record);
             }
         } else if (record.type == 'cult') {
             if (record.amount == 1) {
-                record.pretty = 'may advance 1 step on a cult track'.interpolate(record);
+                pretty_text = 'may advance 1 step on a cult track'.interpolate(record);
             } else {
-                record.pretty = 'may advance #{amount} steps on cult tracks'.interpolate(record);
+                pretty_text = 'may advance #{amount} steps on cult tracks'.interpolate(record);
             }
         } else if (record.type == 'town') {
             if (record.amount == 1) {
-                record.pretty = 'may form a town'.interpolate(record);
+                pretty_text = 'may form a town'.interpolate(record);
             } else {
-                record.pretty = 'may form #{amount} towns'.interpolate(record);
+                pretty_text = 'may form #{amount} towns'.interpolate(record);
             }
         } else if (record.type == 'bridge') {
-            record.pretty = 'may place a bridge (click on map)'.interpolate(record);
+            pretty_text = 'may place a bridge (click on map)'.interpolate(record);
         } else if (record.type == 'favor') {
             if (record.amount == 1) {
-                record.pretty = 'must take a favor tile'.interpolate(record);
+                pretty_text = 'must take a favor tile'.interpolate(record);
             } else {
-                record.pretty = 'must take #{amount} favor tiles'.interpolate(record);
+                pretty_text = 'must take #{amount} favor tiles'.interpolate(record);
             }
         } else if (record.type == 'dwelling') {
-            record.pretty = 'should place a dwelling (choose option or click on map)';
+            pretty_text = 'should place a dwelling (choose option or click on map)';
         } else if (record.type == 'upgrade') {
-            record.pretty = 'may place a free #{to_building} upgrade (choose option or click on map)'.interpolate(record);
+            pretty_text = 'may place a free #{to_building} upgrade (choose option or click on map)'.interpolate(record);
         } else if (record.type == 'bonus') {
-            record.pretty = 'should pick a bonus tile';
+            pretty_text = 'should pick a bonus tile';
         } else if (record.type == 'gameover') {
+            pretty_elem = new Element("div");
             record.reason = record.aborted ? "aborted" : "over";
             if (state.metadata) {
                 record.age = seconds_to_pretty_time(state.metadata.time_since_update);
-                record.pretty = "<span>The game is #{reason} (finished #{age} ago)\n</span>".interpolate(record);
+                pretty_elem.insertTextSpan("The game is #{reason} (finished #{age} ago)".interpolate(record));
             } else {
-                record.pretty = "<span>The game is #{reason}</span>".interpolate(record);
+                pretty_elem.insertTextSpan("The game is #{reason}".interpolate(record));
             }
-            var table = "";
+            var table = new Element("table");
             $H(state.factions).sortBy(function(a) { return -a.value.VP }).each(function(elem) {
-                elem.faction_span = coloredFactionSpan(elem.key);
-                table += "<tr><td>#{faction_span}<td> #{value.VP}</tr>\n".interpolate(elem);
+                var row = new Element("tr");
+                row.insert(new Element("td").insert(coloredFactionSpan(elem.key)));
+                row.insert(new Element("td").updateText(" " + elem.value.VP));
+                table.insert(row);
             });
-            record.pretty += "<table>" + table + "</table>";
+            pretty_elem.insert(table);
         } else if (record.type == 'faction') {
-            record.pretty = '#{player} should pick a faction'.interpolate(record);
+            pretty_text = '#{player} should pick a faction'.interpolate(record);
         } else if (record.type == 'not-started') {
-            record.pretty = "Game hasn't started yet, #{player_count}/#{wanted_player_count} players have joined.".interpolate(record);
+            pretty_text = "Game hasn't started yet, #{player_count}/#{wanted_player_count} players have joined.".interpolate(record);
         } else if (record.type == 'planning') {
-            record.pretty = 'are planning';
+            pretty_text = 'are planning';
         } else {
-            record.pretty = '?';
+            pretty_text = '?';
         }
+
+        var faction_span = new Element("span");
 
 	if (record.faction) {
             record.faction_span = coloredFactionSpan(record.faction);
-	} else {
-	    record.faction_span = "";
 	}
 
-        var row = new Element("div", {'style': 'margin: 3px'}).update("#{faction_span} #{pretty}</div>".interpolate(record));
+        var row = new Element("div", {'style': 'margin: 3px'});
+        row.insert(record.faction_span);
+        row.insertTextSpan(" ");
+        if (pretty_elem) {
+            row.insert(pretty_elem);
+        } else {
+            row.insertTextSpan(pretty_text);
+        }
         parent.insert(row);
 
         if (currentFaction &&
@@ -1443,6 +1612,7 @@ function drawActionRequired() {
         return;
     }
 
+    // XXX 
     if (currentFaction && $("data_entry").innerHTML == "") {
         $("data_entry").insert("<div id='data_entry_tabs'></div>");
         $("data_entry_tabs").insert("<button onclick='dataEntrySelect(\"move\"); updateMovePicker();' id='data_entry_tab_move' class='tab' accesskey='m'>Moves</button>");
@@ -1489,7 +1659,7 @@ function drawActionRequired() {
                                              "style": "font-family: monospace; width: 60ex; height: 5em;" } );
         $("chat_entry").insert(input);
         $("chat_entry").insert(new Element("br"));
-        $("chat_entry").insert(new Element("button", {"id": "chat_entry_submit", "onclick": "javascript:sendChat()"}).update("Send"));
+        $("chat_entry").insert(new Element("button", {"id": "chat_entry_submit", "onclick": "javascript:sendChat()"}).updateText("Send"));
     }
 
     if (needMoveEntry && $("move_entry").innerHTML == "") {
@@ -1549,7 +1719,7 @@ function addTakeTileButtons(parent, index, prefix, id) {
 
         var container = new Element("div", {"style": "display: inline-block"});
 
-        var button = new Element("button").update(tile.key);
+        var button = new Element("button").updateText(tile.key);
         button.onclick = function() {
             gainResource(index, '', tile.key, id);
         };
@@ -1571,7 +1741,7 @@ function addTakeTileButtons(parent, index, prefix, id) {
 }
 
 function makeDeclineButton(resource, amount) {
-    var button = new Element("button").update("Decline");
+    var button = new Element("button").updateText("Decline");
     button.onclick = function() {
         if (amount == 1) {
             appendCommand("-" + resource);
@@ -1592,14 +1762,23 @@ function addDeclineButton(parent, index, resource, amount) {
 function addFactionInput(parent, record, index) {
     var faction = state.factions[currentFaction];
     if (record.type == "leech") {
-        parent.insert("<div id='leech-" + index + "' style='padding-left: 2em'><button onclick='javascript:acceptLeech(" + index + ")'>Accept</button> <button onclick='javascript:declineLeech(" + index + ")'>Decline</button></div>")
+        var div = new Element("div", { "id": "leech-" + index,
+                                       "style": "padding-left: 2em" });
+        var accept = new Element("button").updateText("Accept");
+        var decline = new Element("button").updateText("Decline");
+        accept.onclick = function() { acceptLeech(index); };
+        decline.onclick = function() { declineLeech(index); };
+        div.insert(accept);
+        div.insertTextSpan(" ");
+        div.insert(decline);
+        parent.insert(div);
     }
     if (record.type == "cult") {
         var amount = record.amount;
         var div = new Element("div", { "id": "leech-" + index + "-0",
                                        "style": "padding-left: 2em" });
         cults.each(function(cult) {
-            var button = new Element("button").update(cult.capitalize());
+            var button = new Element("button").updateText(cult.capitalize());
             button.onclick = function() {
                 gainResource(index, amount == 1 ? '' : amount, cult, 0);
             };
@@ -1678,13 +1857,13 @@ function addFactionInput(parent, record, index) {
 
         $H(boards).each(function(board) {
             board.value.sort().each(function(free_faction) {
-                var button = new Element("button").update(free_faction);
+                var button = new Element("button").updateText(free_faction);
                 button.onclick = function() {
                     appendCommand("setup " + free_faction + "\n");
                 };
                 div.insert(button);
             });
-            div.insert("<br>");
+            div.insert(new Element("br"));
         });
         parent.insert(div);
     }
@@ -1706,7 +1885,7 @@ function addFactionInput(parent, record, index) {
                 return;
             }
 
-            var button = new Element("button").update(elem.key);
+            var button = new Element("button").updateText(elem.key);
             button.onclick = function() {
                 $("leech-" + index).style.display = "none";
                 appendCommand("build #{key}\n".interpolate(elem));
@@ -1746,7 +1925,7 @@ function addFactionInput(parent, record, index) {
                 return;
             }
 
-            var button = new Element("button").update(elem.key);
+            var button = new Element("button").updateText(elem.key);
             button.onclick = function() {
                 $("leech-" + index).style.display = "none";
                 appendCommand("Upgrade " + elem.key + " to #{to_building}\n".interpolate(record));
@@ -1846,10 +2025,10 @@ function moveEntryInputChanged() {
     }
 
     $("move_entry_input").oninput = null;
-    $("move_entry_action").innerHTML = "Preview";
+    $("move_entry_action").updateText("Preview");
     $("move_entry_action").onclick = preview;
     $("move_entry_action").enable();
-    $("move_entry_explanation").innerHTML = "";
+    $("move_entry_explanation").clearContent();
 } 
 
 function dataEntrySetStatus(disabled) {
@@ -1864,17 +2043,17 @@ function moveEntryEnabled() {
 
 function moveEntryAfterPreview() {
     if ($("move_entry_action")) {
-        $("move_entry_explanation").innerHTML = "";
-        $("move_entry_action").innerHTML = "Preview";
+        $("move_entry_explanation").clearContent();
+        $("move_entry_action").updateText("Preview");
         $("move_entry_action").onclick = preview;
 
         if ($("move_entry_input").value != "") {
             if ($("error").innerHTML != "") {
-                $("move_entry_explanation").innerHTML = "Can't save yet - input had errors";
+                $("move_entry_explanation").updateText("Can't save yet - input had errors");
             } else if (!allowSaving) {
-                $("move_entry_explanation").innerHTML = "Can't save yet - it's still your turn to move. (Also see the 'wait' command).";
+                $("move_entry_explanation").updateText("Can't save yet - it's still your turn to move. (Also see the 'wait' command).");
             } else {
-                $("move_entry_action").innerHTML = "Save";
+                $("move_entry_action").updateText("Save");
                 $("move_entry_action").onclick = save;
             }
         }
@@ -1916,7 +2095,7 @@ function updateMovePicker() {
 function makeSelectWithOptions(options) {
     var select = new Element("select");
     options.each(function (elem) {
-        select.insert(new Element("option").update(elem));
+        select.insert(new Element("option").updateText(elem));
     });
     return select;
 }
@@ -1941,7 +2120,7 @@ function insertOrClearPickerRow(picker, id) {
         row = new Element("div", {"id": id});
         picker.insert(row);
     } else {
-        row.update("");
+        row.clearContent();
     }
 
     return row;
@@ -1992,16 +2171,16 @@ function addUndoToMovePicker(picker, faction) {
     }
         
     var row = insertOrClearPickerRow(picker, "move_picker_undo");
-    var undo = new Element("button").update("Undo");
+    var undo = new Element("button").updateText("Undo");
     undo.onclick = execute_undo;
     undo.disable();
 
-    var done = new Element("button").update("Done");
+    var done = new Element("button").updateText("Done");
     done.onclick = execute_done;
     done.disable();
 
     row.insert(undo);
-    row.insert(" /  ");
+    row.insertTextSpan(" /  ");
     row.insert(done);
     
     validate();
@@ -2028,7 +2207,7 @@ function addPassToMovePicker(picker, faction) {
     };
 
     var row = insertOrClearPickerRow(picker, "move_picker_pass");
-    var button = new Element("button").update("Pass");
+    var button = new Element("button").updateText("Pass");
     button.onclick = execute;
     button.disable();
     row.insert(button);
@@ -2036,7 +2215,7 @@ function addPassToMovePicker(picker, faction) {
     var bonus_tiles = makeSelectWithOptions(["-"]);
     bonus_tiles.onchange = validate;
     if (state.round < 6) {
-        row.insert(" and take tile ");
+        row.insertTextSpan(" and take tile ");
         $H(state.pool).sortBy(naturalSortKey).each(function (tile) {
             if (tile.key.startsWith("BON") && tile.value > 0) {
                 addAnnotatedOptionToSelect(bonus_tiles, tile.key,
@@ -2079,7 +2258,7 @@ function addActionToMovePicker(picker, faction) {
     };
 
     var row = insertOrClearPickerRow(picker, "move_picker_action");
-    var button = new Element("button").update("Action");
+    var button = new Element("button").updateText("Action");
     button.onclick = execute;
     button.disable();
     row.insert(button);
@@ -2089,8 +2268,8 @@ function addActionToMovePicker(picker, faction) {
     var action_count = 0;
 
     var generate = function () {
-        action.update("");
-        action.insert(new Element("option").update("-"));
+        action.clearContent();
+        action.insert(new Element("option").updateText("-"));
         action.onchange = validate;
         var pw = faction.P3;
         var max_pw = pw + faction.P2 / 2;
@@ -2152,7 +2331,7 @@ function addActionToMovePicker(picker, faction) {
 
     row.insert(action);
     row.insert(new Element("label", {'for':'move_picker_action_burn'}).
-               update(", burn power if needed"));
+               updateText(", burn power if needed"));
     row.insert(burn);
     
     if (faction.allowed_actions && action_count > 0) {
@@ -2209,7 +2388,7 @@ function addAnnotatedOptionToSelect(select, name, record) {
     }
     label = name + bonus_coins + label;
 
-    select.insert(new Element("option", {"value": name}).update(label));
+    select.insert(new Element("option", {"value": name}).updateText(label));
 }
 
 function tileLabel(record) {
@@ -2347,7 +2526,7 @@ function addBuildToMovePicker(picker, faction) {
     var dwelling_costs = faction.buildings["D"].advance_cost;
 
     var row = insertOrClearPickerRow(picker, "move_picker_build");
-    var button = new Element("button").update("Build");
+    var button = new Element("button").updateText("Build");
     button.onclick = execute;
 
     var location = makeSelectWithOptions([]);
@@ -2365,7 +2544,7 @@ function addBuildToMovePicker(picker, faction) {
             });
         }
     } else if (faction.allowed_actions) {
-        location.insert(new Element("option").update("-"));
+        location.insert(new Element("option").updateText("-"));
         var resources = ["C", "W", "P"];
         faction.reachable_build_locations.each(function (elem) {
             var loc = elem.hex;
@@ -2381,7 +2560,7 @@ function addBuildToMovePicker(picker, faction) {
     }
 
     row.insert(button);
-    row.insert(" in ");
+    row.insertTextSpan(" in ");
     row.insert(location);
 
     validate();
@@ -2394,7 +2573,7 @@ function addBuildToMovePicker(picker, faction) {
         possible_builds.each(function (elem) {
             var loc = elem[0];
             var cost = elem[1];
-            location.insert(new Element("option").update(loc));
+            location.insert(new Element("option").updateText(loc));
             addMapClickHandler("Build", loc, {
                 "D": {
                     "fun": function (loc) {
@@ -2458,7 +2637,7 @@ function addUpgradeToMovePicker(picker, faction) {
     };
 
     var row = insertOrClearPickerRow(picker, "move_picker_upgrade");
-    var button = new Element("button").update("Upgrade");
+    var button = new Element("button").updateText("Upgrade");
     button.onclick = execute;
     button.disable();
     row.insert(button);
@@ -2503,7 +2682,7 @@ function addUpgradeToMovePicker(picker, faction) {
             var cost_str = effectString([cost, lonely_cost],
                                         upgrade_gains.get(wanted_new));
             if (can_afford) {
-                upgrade.insert(new Element("option").update(
+                upgrade.insert(new Element("option").updateText(
                     id + " to " + wanted_new));
                 if (!upgrade_locations[id]) {
                     upgrade_locations[id] = [];
@@ -2556,7 +2735,7 @@ function addBurnToMovePicker(picker, faction) {
 
     var row = insertOrClearPickerRow(picker, "move_picker_burn");
 
-    var button = new Element("button").update("Burn");
+    var button = new Element("button").updateText("Burn");
     button.onclick = execute;
     button.disable();
 
@@ -2569,7 +2748,7 @@ function addBurnToMovePicker(picker, faction) {
 
     row.insert(button);
     row.insert(amount);
-    row.insert(" power");
+    row.insertTextSpan(" power");
 
     if (faction.P2 > 1 &&
         (faction.allowed_actions > 0||
@@ -2607,23 +2786,23 @@ function addConvertToMovePicker(picker, faction) {
     var convert_possible = false;
 
     var generate = function () {
-        amount.update("");
+        amount.clearContent();
         if (type.value == '-') {
-            amount.insert(new Element("option").update("-"));
+            amount.insert(new Element("option").updateText("-"));
         } else {
             var types = type.value.split(/,/);
             var from_type = types[0];
             var to_type = types[1];
             var rate = faction.exchange_rates[from_type][to_type];
             for (var i = 1; rate * i <= faction[from_type]; i++) {
-                amount.insert(new Element("option").update(i));
+                amount.insert(new Element("option").updateText(i));
             }
         }
     };
 
     var row = insertOrClearPickerRow(picker, "move_picker_convert");
 
-    var button = new Element("button").update("Convert");
+    var button = new Element("button").updateText("Convert");
     button.onclick = execute;
     button.disable();
 
@@ -2648,24 +2827,24 @@ function addConvertToMovePicker(picker, faction) {
                     label = rate + " " +label;
                 }
                 type.insert({"top": new Element("option",
-                                                { "value": from + "," + to_type }).update("&nbsp;&nbsp;" + label)});
+                                                { "value": from + "," + to_type }).updateText("\u00a0\u00a0" + label)});
                 convert_possible = true;
                 need_label = true;
             }
         });
         if (need_label) {
-            type.insert({"top": new Element("option", {"value": "-"}).update(from)});
+            type.insert({"top": new Element("option", {"value": "-"}).updateText(from)});
         }
     });
 
-    type.insert({"top": new Element("option", {"value": "-"}).update("-")});
+    type.insert({"top": new Element("option", {"value": "-"}).updateText("-")});
 
     var amount = makeSelectWithOptions(["-"]);
 
     row.insert(button);
     row.insert(type);
     row.insert(amount);
-    row.insert(" times");
+    row.insertTextSpan(" times");
  
     if (convert_possible &&
         (faction.allowed_actions > 0 ||
@@ -2693,7 +2872,7 @@ function addDigToMovePicker(picker, faction) {
 
     var row = insertOrClearPickerRow(picker, "move_picker_dig");
 
-    var button = new Element("button").update("Dig");
+    var button = new Element("button").updateText("Dig");
     button.onclick = execute;
     button.disable();
 
@@ -2706,13 +2885,13 @@ function addDigToMovePicker(picker, faction) {
         var can_afford = canAfford(faction, [cost]);
         if (can_afford) {
             amount_count++;
-            amount.insert(new Element("option").update(i));
+            amount.insert(new Element("option").updateText(i));
         }
     }
 
     row.insert(button);
     row.insert(amount);
-    row.insert(" times");
+    row.insertTextSpan(" times");
  
     if ((faction.allowed_actions || faction.allowed_sub_actions.dig) &&
         amount_count > 0) {
@@ -2743,7 +2922,7 @@ function addSendToMovePicker(picker, faction) {
 
     var row = insertOrClearPickerRow(picker, "move_picker_send");
 
-    var button = new Element("button").update("Send");
+    var button = new Element("button").updateText("Send");
     button.onclick = execute;
     button.disable();
     var cult_selection = makeSelectWithOptions(["-", "Fire", "Water", "Earth", "Air"]);
@@ -2752,9 +2931,9 @@ function addSendToMovePicker(picker, faction) {
     amount.onchange = validate;
 
     row.insert(button);
-    row.insert("priest to ");
+    row.insertTextSpan("priest to ");
     row.insert(cult_selection);
-    row.insert(" for ");
+    row.insertTextSpan(" for ");
     row.insert(amount);
 
     if (faction.P > 0 && faction.allowed_actions) {
@@ -2798,7 +2977,7 @@ function addAdvanceToMovePicker(picker, faction) {
 
     var row = insertOrClearPickerRow(picker, "move_picker_advance");
 
-    var button = new Element("button").update("Advance");
+    var button = new Element("button").updateText("Advance");
     button.onclick = execute;
     button.disable();
 
@@ -2814,13 +2993,13 @@ function addAdvanceToMovePicker(picker, faction) {
         var can_afford = canAfford(faction,
                                    [faction[type].advance_cost]);
         if (can_afford) {
-            track.insert(new Element("option").update(type));
+            track.insert(new Element("option").updateText(type));
             track_count++;
         }
     });
 
     row.insert(button);
-    row.insert(" on ");
+    row.insertTextSpan(" on ");
     row.insert(track);
 
     if (track_count && faction.allowed_actions) {
@@ -2849,7 +3028,7 @@ function addConnectToMovePicker(picker, faction) {
     };
 
     var row = insertOrClearPickerRow(picker, "move_picker_connect");
-    var button = new Element("button").update("Connect");
+    var button = new Element("button").updateText("Connect");
     button.onclick = execute;
 
     var location = makeSelectWithOptions(["-"].concat(faction.possible_towns));
@@ -2866,9 +3045,9 @@ function addConnectToMovePicker(picker, faction) {
     });
 
     row.insert(button);
-    row.insert(" over ");
+    row.insertTextSpan(" over ");
     row.insert(location);
-    row.insert(" to form town ");
+    row.insertTextSpan(" to form town ");
 
     validate();
     
@@ -2881,10 +3060,10 @@ function addConnectToMovePicker(picker, faction) {
     return row;
 }
 
-function draw() {
-    $("error").innerHTML = "";
+function draw(n) {
+    $("error").clearContent();
     state.error.each(function(row) {
-        $("error").insert("<div>" + row.escapeHTML() + "</div>");
+        $("error").insert(new Element("div").updateText(row));
     });
 
     if ($("main-data")) {
@@ -2898,7 +3077,9 @@ function draw() {
     // Draw this after factions, so that we can manipulate the DOM of
     // the action markers.
     drawActionRequired();
-    drawLedger();
+    // Draw the full ledger right from the start when in history view.
+    recent_moves = drawLedger(state.history_view);
+    drawRecentMoves(recent_moves);
 
     if (state.history_view > 0) {
         $("root").style.backgroundColor = "#ffeedd";
@@ -2906,18 +3087,21 @@ function draw() {
 }
 
 function failed() {
-    $("action_required").innerHTML = "";
+    $("action_required").clearContent();
     if (state.error) {
         state.error.each(function(row) {
-            $("error").insert("<div>" + row.escapeHTML() + "</div>");
+            $("error").insert(new Element("div").updateText(row));
         });
     } else {
-        $("error").insert("Couldn't load game");
+        $("error").insertTextSpan("Couldn't load game");
     }
 }
 
 function spin() {
-    $("action_required").innerHTML = '<img src="/stc/spinner.gif"></img> loading ...';
+    $("action_required").clearContent();
+    $("action_required").insert(new Element("img",
+                                            { src: "/stc/spinner.gif" }));
+    $("action_required").insertTextSpan('loading ...');
 }
 
 function init(root) {
