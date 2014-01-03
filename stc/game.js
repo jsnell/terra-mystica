@@ -1314,8 +1314,9 @@ function drawLedger(draw_full_ledger) {
             ledger.insert(row);
             if (record.warning) {
                 var warnRow = new Element("tr");
-                warnRow(insert(new Element("td").insert(
-                    makeTextSpan(record.warning, 'warning'))));
+                warnRow.insert(new Element("td", { colspan: 14 }));
+                warnRow.insert(new Element("td").insert(
+                    makeTextSpan(record.warning, 'warning')));
                 ledger.insert(warnRow);
             }
         }
