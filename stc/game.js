@@ -2918,7 +2918,7 @@ function addSendToMovePicker(picker, faction) {
     var execute = function() {
         var command = "send p to " + cult_selection.value;
         if (amount.value != 'max') {
-            command += " amount " + amount.value;
+            command += " for " + amount.value;
         }
         appendAndPreview(command);
     };
