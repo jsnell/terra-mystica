@@ -39,6 +39,7 @@ method handle($q) {
     my ($read_id) = $write_id =~ /(.*?)_/g;
     my ($prefix_data, $data) = get_game_content $dbh, $read_id, $write_id;
     my $players = get_game_players($dbh, $read_id);
+    my $metadata = get_game_metadata($dbh, $read_id);
 
     my $res = terra_mystica::evaluate_game {
         rows => [ split /\n/, "$prefix_data\n$data" ],
@@ -60,6 +61,7 @@ method handle($q) {
         action_required => $res->{action_required},
         players => $players,
         factions => $res->{factions},
+        metadata => $metadata,
     };
 
     $self->output_json($out);

@@ -408,9 +408,9 @@ td#sidebar {
     padding-right: 2ex;
 }
 
-#fallback-editor {
-    height: 600px
-    width: 800px
+textarea#fallback-editor {
+    height: 600px;
+    width: 800px;
 }
 
 span.cult-FIRE {

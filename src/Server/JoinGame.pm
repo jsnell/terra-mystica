@@ -27,13 +27,13 @@ sub joingame {
                               $read_id);
 
     if (!defined $wanted_player_count) {
-        die "Can't join a private game";
+        die "Can't join a private game\n";
     }
     if ($already_playing) {
-        die "You've already joined this game";
+        die "You've already joined this game\n";
     }
     if ($wanted_player_count <= $current_count) {
-        die "Game is already full";
+        die "Game is already full\n";
     }
 
     $dbh->do("insert into game_player (game, player, sort_key, index) values (?, ?, ?, ?)",
@@ -80,7 +80,7 @@ method handle($q) {
         eval {
             joingame $dbh, $read_id, $username;
         }; if ($@) {
-            $res->error = [ $@ ];
+            $res->{error} = [ $@ ];
         }
     }
 

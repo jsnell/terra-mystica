@@ -89,7 +89,7 @@ sub get_game_metadata {
     my ($dbh, $id) = @_;
 
     my ($rows) =
-        $dbh->selectall_arrayref("select extract(epoch from now() - last_update) as time_since_update, description from game where id=?",
+        $dbh->selectall_arrayref("select extract(epoch from now() - last_update) as time_since_update, description, finished, aborted, game_options, player_count, wanted_player_count from game where id=?",
                                  { Slice => {} },
                                  $id);
 
@@ -173,7 +173,7 @@ sub get_open_game_list {
     my ($dbh) = @_;
 
     my $games = $dbh->selectall_arrayref(
-        "select game.id, game.player_count, game.wanted_player_count, game.description, array(select player from game_player where game_player.game=game.id) as players from game where game.wanted_player_count is not null and game.player_count != game.wanted_player_count and not game.finished",
+        "select game.id, game.player_count, game.wanted_player_count, game.description, array(select player from game_player where game_player.game=game.id) as players, game_options from game where game.wanted_player_count is not null and game.player_count != game.wanted_player_count and not game.finished",
         { Slice => {} }
         );
 

@@ -11,6 +11,9 @@ __DATA__
 
 <div id="action_required"></div>
 
+<div id="status"></div>
+<div id="options"></div>
+<div id="description"></div>
 <div id="players"></div>
 
 <h4>Commands</h4>

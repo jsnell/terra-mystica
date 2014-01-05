@@ -28,7 +28,8 @@ create table game (
     wanted_player_count integer,
     round integer,
     commands text,
-    description text
+    description text,
+    game_options text array default '{}',
 );
 
 create table game_player (

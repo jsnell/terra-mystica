@@ -63,6 +63,38 @@ function drawPlayers(state) {
     $("players").insert(table);
 }
 
+function drawMetadata(state) {
+    var metadata = state.metadata;
+
+    // Status
+    var status = "Running, last update " + seconds_to_pretty_time(state.metadata.time_since_update) + " ago";
+    if (metadata.aborted) {
+        status = "Aborted";
+    } else if (metadata.finished) {
+        status = "Finished";
+    } else if (metadata.wanted_player_count &&
+               metadata.player_count != metadata.wanted_player_count) {
+        status = "Waiting for players";
+    }
+
+    $("status").insert(new Element("h4").updateText("Status"));
+    $("status").insertTextSpan(status);
+
+    // Options
+    if (metadata.game_options) {
+        $("options").insert(new Element("h4").updateText("Options"));
+        var list = new Element("ul");
+        metadata.game_options.each(function (elem) {
+            list.insert(new Element("li").updateText(elem));        
+        });
+        $("options").insert(list);
+    }
+
+    // Description
+    $("description").insert(new Element("h4").updateText("Description"));
+    $("description").insertTextSpan(metadata.description);
+}
+
 function save() {
     if ($("save-button").disabled) {
         return;
@@ -136,6 +168,7 @@ function load() {
 
                 drawActionRequired(res);
                 drawPlayers(res);
+                drawMetadata(res);
 
                 $("links").innerHTML = "<h4>Game links</h4>";
                 { 

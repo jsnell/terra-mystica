@@ -41,6 +41,7 @@ function showOpenGames(games) {
     header.insert(new Element("td", {"style": "width: 8ex"}).updateText("ID"));
     header.insert(new Element("td", {"style": "width: 8ex"}).updateText("Players"));
     header.insert(new Element("td", {"style": "width: 32ex"}).updateText("Description"));
+    header.insert(new Element("td", {"style": "width: 32ex"}).updateText("Options"));
     header.insert(new Element("td", {"style": "width: 8ex"}).updateText("Action"));
     header.insert(new Element("td", {"style": "width: 20ex"}).updateText("Status"));
     table.insert(header);
@@ -59,6 +60,15 @@ function showOpenGames(games) {
         });
         row.insert(players);
         row.insert(new Element("td").updateText(game.description));
+        {
+            var cell = new Element("td");
+            if (game.game_options) {
+                game.game_options.each(function (elem) {
+                    cell.insert(new Element("div").updateText(elem));        
+                });
+            }
+            row.insert(cell);
+        }
         var join = new Element("button").updateText("Join");
         var status = new Element("span");
         join.onclick = function() {
