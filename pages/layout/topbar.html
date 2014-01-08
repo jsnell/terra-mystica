@@ -8,11 +8,11 @@
             src="/stc/prototype-1.7.1.js">
     </script>
     {
-      for my $record (@scripts) {
-          $OUT .= "<script type='text/javascript' language='javascript'\nsrc='$record->{url}?tag=$record->{csum}'>\n</script>\n"
+      for my $path (@scripts) {
+          $OUT .= "<script type='text/javascript' language='javascript' src='".(Util::PageGenerator::static_resource_link $root, $path)."'></script>\n"
       }
     }
-    <link rel="stylesheet" type="text/css" href="/stc/style.css">
+    <link rel="stylesheet" type="text/css" href="{Util::PageGenerator::static_resource_link $root, '/stc/style.css'}">
     <link id="favicon" rel="shortcut icon" href="/favicon.ico" />
   </head>
   <body id="root" class="gameview">
