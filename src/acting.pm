@@ -80,7 +80,8 @@ method dismiss_action($faction, $type) {
     $self->action_required([
         grep {
             !(($faction->{name} // '') eq ($_->{faction} // '') and
-              ($type // '') eq ($_->{type} // ''))
+              (!defined $type or 
+               $type eq ($_->{type} // '')))
         } $self->action_required_elements()
     ]);
 }
