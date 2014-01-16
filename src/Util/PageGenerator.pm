@@ -7,15 +7,30 @@ use Digest::SHA1 qw(sha1_hex);
 use File::Slurp qw(read_file);
 use Text::Template;
 
+my %page_data_cache = ();
+
+sub get_page_data {
+    my ($dir, $name) = @_;
+    my $content_file = "$dir/content/$name.pl";
+    die "No content file '$content_file'\n" if !-f $content_file;
+    my $mtime = (stat($content_file))[9];
+
+    if (!defined $page_data_cache{$content_file}{mtime} or
+        $mtime > $page_data_cache{$content_file}{mtime}) {
+        $page_data_cache{$content_file}{mtime} = $mtime;
+        $page_data_cache{$content_file}{content} = do $content_file;
+    }        
+
+    $page_data_cache{$content_file}{content};
+}
+
 sub generate_page {
     my ($root, $name) = @_;
     my $dir = "$root/pages/";
 
     $name =~ s/[^a-z]//g;
-    my $content = "$dir/content/$name.pl";
-    die "No content file '$content'\n" if !-f $content;
-    my $data = do $content;
-
+    my $data = get_page_data $dir, $name;
+    
     my $layout = "$dir/layout/$data->{layout}.html";
     my $template = Text::Template->new(TYPE => 'FILE',
                                        SOURCE => $layout);
