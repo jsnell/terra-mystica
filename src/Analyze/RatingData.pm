@@ -92,6 +92,7 @@ sub handle_game {
                 a => { id_hash => $f1->{id_hash}, faction => $f1->{faction}, vp => $f1->{vp} },
                 b => { id_hash => $f2->{id_hash}, faction => $f2->{faction}, vp => $f2->{vp} },
                 last_update => $res->{last_update},
+                id => $res->{id},
             };
             push @{$output}, $record;
         }

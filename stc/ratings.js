@@ -38,10 +38,16 @@ function showRatings(kind) {
             var breakdown = new Element("table", {
                 "class": "ranking-breakdown-table",
             });
-            $H(value.faction_breakdown).sortBy(function (elem) { return -elem.value }).each(function (elem) {
+            breakdown.insert(new Element("tr").insert(
+                new Element("td").updateText("Faction")).insert(
+                    new Element("td").updateText("Delta")).insert(
+                        new Element("td").updateText("Plays")));
+                    
+            $H(value.faction_breakdown).sortBy(function (elem) { return -elem.value.score }).each(function (elem) {
                 var breakdown_row = new Element("tr");
                 breakdown_row.insert(new Element("td").updateText(elem.key));
-                breakdown_row.insert(new Element("td").updateText(Math.round(elem.value)));
+                breakdown_row.insert(new Element("td").updateText(Math.round(elem.value.score)));
+                breakdown_row.insert(new Element("td").updateText(Math.round(elem.value.count)));
                 breakdown.insert(breakdown_row);
             });
             breakdown.hide();

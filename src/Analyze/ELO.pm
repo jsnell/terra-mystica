@@ -82,11 +82,14 @@ sub iterate_results {
         $p1->{score} += $p1_delta;
         $p2->{score} += $p2_delta;
 
-        $p1->{faction_breakdown}{$res->{a}{faction}} += $p1_delta;
-        $p2->{faction_breakdown}{$res->{b}{faction}} += $p2_delta;
+        $p1->{faction_breakdown}{$res->{a}{faction}}{score} += $p1_delta;
+        $p2->{faction_breakdown}{$res->{b}{faction}}{score} += $p2_delta;
 
         $f1->{score} += $pot * ($ap1 - $ep1);
         $f2->{score} += $pot * ($ap2 - $ep2);
+
+        $p1->{faction_plays}{$res->{a}{faction}}{$res->{id}} = 1;
+        $p2->{faction_plays}{$res->{b}{faction}}{$res->{id}} = 1;
     }
 }
 
@@ -106,6 +109,10 @@ sub compute_elo {
     return {
         players => {
             map {
+                for my $faction (keys %{$_->{faction_plays}}) {
+                    $_->{faction_breakdown}{$faction}{count} = scalar keys %{$_->{faction_plays}{$faction}};
+                }
+                delete $_->{faction_plays};
                 ($_->{username} => $_);
             } grep {
                 $_->{games} >= $MIN_GAMES;
