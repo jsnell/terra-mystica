@@ -69,11 +69,14 @@ sub detect_towns_from {
         }
     };
     $handle->($where);
+    $handle = undef;
+
+    my @reachable = keys %reachable;
 
     if ($power >= $faction->{TOWN_SIZE} and $count >= 4 and
         grep { /^TW/ and $game{pool}{$_} > 0 } keys %{$game{pool}}) {
         # Use the same town id for all towns for now.
-        $map{$_}{town} = 1 for keys %reachable;
+        $map{$_}{town} = 1 for @reachable;
         adjust_resource($faction, "GAIN_TW", 1);
         return 1;
     }
@@ -115,6 +118,7 @@ sub check_mermaid_river_connection_town {
         }
     };
     $handle->($river);
+    $handle = undef;
 
     if ($power >= $faction->{TOWN_SIZE} and $count >= 4 and
         grep { /^TW/ and $game{pool}{$_} > 0 } keys %{$game{pool}}) {
