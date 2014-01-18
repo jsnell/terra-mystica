@@ -2,7 +2,7 @@ package terra_mystica;
 
 use strict;
 
-use vars qw(%game @score_tiles %map);
+use vars qw(%game %map);
 
 use Game::Constants;
 
@@ -12,7 +12,7 @@ sub compute_network_size;
 
 sub current_score_tile {
     if ($game{round} > 0) {
-        return $tiles{$score_tiles[$game{round} - 1]};
+        return $tiles{$game{score_tiles}[$game{round} - 1]};
     }
 }
 

@@ -806,6 +806,7 @@ sub full_action_required {
 
 sub command {
     my ($faction_name, $command) = @_;
+
     my $faction = $faction_name ? $game{acting}->get_faction($faction_name) : undef;
     my $ledger = $game{ledger};
 
@@ -915,13 +916,14 @@ sub command {
         command_advance $assert_faction->(), lc $1;
     } elsif ($command =~ /^score (.*)/i) {
         my $setup = uc $1;
-        @score_tiles = split /,/, $setup;
+        my @score_tiles = split /,/, $setup;
         die "Invalid scoring tile setup: $setup\n" if @score_tiles != 6;
         for my $i (0..$#score_tiles) {
             my $r = $i + 1;
             my $desc = $tiles{$score_tiles[$i]}{vp_display};
             $game{ledger}->add_comment("Round $r scoring: $score_tiles[$i], $desc");
         }
+        $game{score_tiles} = \@score_tiles;
     } elsif ($command =~ /^finish$/i) {
         die "Game can only be finished from admin view\n" if $faction_name;
         return 0 if non_leech_action_required;
@@ -1111,6 +1113,7 @@ sub play {
         }; if ($@) {
             die "Error in command '".($this->[1])."': $@";
         }
+
         my $active_faction = $game{acting}->active_faction();
         if (!defined $next and $active_faction) {
             $active_faction->{allowed_sub_actions}{burn} = 1;

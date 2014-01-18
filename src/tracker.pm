@@ -144,6 +144,7 @@ sub evaluate_game {
         pool => undef,
         cults => setup_cults,
         bridges => [],
+        score_tiles => [],
     );
     $game{ledger} = terra_mystica::Ledger->new({game => \%game});
     $game{acting} = terra_mystica::Acting->new(
@@ -153,7 +154,6 @@ sub evaluate_game {
         });
 
     local %map = ();
-    local @score_tiles = ();
 
     setup_map;
 
@@ -194,7 +194,7 @@ sub evaluate_game {
     maybe_setup_pool;
     finalize $data->{delete_email} // 1, $faction_info // {};
 
-    return {
+    my $ret = {
         order => [ map { $_->{name} } $game{acting}->factions_in_order() ],
         map => \%map,
         actions => \%actions,
@@ -204,7 +204,7 @@ sub evaluate_game {
         ledger => $game{ledger}->flush(),
         error => \@error,
         towns => { map({$_, $tiles{$_}} grep { /^TW/ } keys %tiles ) },
-        score_tiles => [ map({$tiles{$_}} @score_tiles ) ],
+        score_tiles => [ map({$tiles{$_}} @{$game{score_tiles}} ) ],
         bonus_tiles => { map({$_, $tiles{$_}} grep { /^BON/ } keys %tiles ) },
         bonus_coins => $game{bonus_coins},
         favors => { map({$_, $tiles{$_}} grep { /^FAV/ } keys %tiles ) },
@@ -220,8 +220,11 @@ sub evaluate_game {
         player_count => $game{player_count},
         options => $game{options},
         admin => $data->{delete_email} ? '' : $game{admin_email},
-    }
+    };
 
+    %game = ();
+    
+    $ret;
 }
 
 1;
