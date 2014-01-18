@@ -267,6 +267,8 @@ sub compute_network_size {
     # Trigger the search for each building.
     my $n = 1;
     $handle->($_, $n++) for @locations;
+    # Break the reference cycle.
+    $handle = undef;
 
     # Find the clique with the most members.
     my %clique_sizes = ();
