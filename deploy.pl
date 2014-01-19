@@ -156,6 +156,7 @@ sub deploy_stc {
                   style.css)) {
         copy_with_mode 0444, "stc/$f", "$target/stc/$f";
     }
+    copy_with_mode 0444, "robots.txt", "$target/robots.txt";
     copy_with_mode 0444, "stc/favicon.ico", "$target/favicon.ico";
     copy_with_mode 0444, "stc/favicon-inactive.ico", "$target/favicon-inactive.ico";
 }
