@@ -82,6 +82,7 @@ sub evaluate_and_save {
         rows => [ split /\n/, "$prefix_content\n$new_content" ],
         faction_info => get_game_factions($dbh, $read_id),
         players => get_game_players($dbh, $read_id),
+        metadata => get_game_metadata($dbh, $read_id),
         delete_email => 0
     };
 

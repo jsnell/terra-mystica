@@ -35,7 +35,10 @@ my %paths = (
         Server::Chat->new()
     },
     '/edit-game/' => sub {
-        Server::EditGame->new()
+        Server::EditGame->new({ mode => 'content' })
+    },
+    '/set-game-status/' => sub {
+        Server::EditGame->new({ mode => 'status' })
     },
     '/join-game/' => sub {
         Server::JoinGame->new()

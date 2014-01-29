@@ -284,6 +284,7 @@ method advance_state($new_state) {
     # We can always abort the game.
     if ($new_state eq 'abort') {
         $self->state($new_state);
+        $self->in_abort();
     }
 }
 
@@ -401,7 +402,9 @@ method in_play() {
 }
 
 method in_abort() {
-    $self->replace_all_actions({ type => 'gameover', aborted => 1 });
+    $self->replace_all_actions({ type => 'gameover', aborted => 1 });       
+    $self->game()->{aborted} = 1;
+    $self->game()->{finished} = 1;
 }
 
 ## Switching the turn from one player to the next

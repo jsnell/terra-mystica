@@ -51,6 +51,7 @@ while (<>) {
         rows => [ @rows ],
         faction_info => get_game_factions($dbh, $id),
         players => get_game_players($dbh, $id),
+        metadata => get_game_metadata($dbh, $id),
     };
     $res->{cost} = time - $begin;
     $| = 1;

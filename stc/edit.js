@@ -79,6 +79,18 @@ function drawMetadata(state) {
 
     $("status").insert(new Element("h4").updateText("Status"));
     $("status").insertTextSpan(status);
+    var status_action = new Element("div");
+    $("status").insert(status_action);
+
+    if (!metadata.finished) {
+        var abort = new Element("button").update("Abort");
+        status_action.insert(abort);
+        abort.onclick = function () { setStatus('abort', status_action) };
+    } else if (metadata.aborted) {
+        var unabort = new Element("button").update("Restart");
+        status_action.insert(unabort);
+        unabort.onclick = function () { setStatus('unabort', status_action) };
+    }
 
     // Options
     if (metadata.game_options) {
@@ -93,6 +105,36 @@ function drawMetadata(state) {
     // Description
     $("description").insert(new Element("h4").updateText("Description"));
     $("description").insertTextSpan(metadata.description);
+}
+
+function setStatus(action, result) {
+    disableDescendants($("status"));    
+
+    new Ajax.Request("/app/set-game-status/", {
+        parameters: {
+            "cache-token": new Date(),
+            "csrf-token": getCSRFToken(),
+            "game": id,
+            "action": action, 
+        },
+        method: "post",
+        onSuccess: function(transport) {
+            enableDescendants($("status"));
+            try {
+                var resp = transport.responseText.evalJSON();
+                state = resp;
+                if (resp.error.size()) {
+                    result.style.color = "red";
+                    result.update(resp.error.join("<br>"));
+                } else {
+                    result.style.color = "green";
+                    result.updateText(resp.status);
+                }
+            } catch (e) {
+                handleException(e);
+            };
+        }
+    });    
 }
 
 function save() {

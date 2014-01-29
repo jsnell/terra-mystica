@@ -930,10 +930,7 @@ sub command {
         command_finish;
     } elsif ($command =~ /^abort$/i) {
         die "Game can only be aborted from admin view\n" if $faction_name;
-        $game{finished} = 1;
-        $game{aborted} = 1;
-        # $game{ledger}->add_comment("Game aborted by admin");
-        $game{acting}->advance_state('abort');
+        # backwards-compatibility nop
     } elsif ($command =~ /^score_resources$/i) {
         score_final_resources_for_faction $faction;
     } elsif ($command =~ /^admin email (.*)/i) {

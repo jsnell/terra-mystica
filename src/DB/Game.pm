@@ -14,6 +14,8 @@ use Exporter::Easy (
                   get_finished_game_results
                   get_open_game_list
                   get_user_game_list
+                  abort_game
+                  unabort_game
                 )]
     );
 
@@ -220,6 +222,22 @@ sub get_user_game_list {
           unread_chat_messages => 1*$_->{unread_chat},
           aborted => $_->{aborted},
         } } @{$roles});
+}
+
+sub abort_game {
+    my ($dbh, $write_id) = @_;
+
+    $dbh->do("update game set aborted=true, finished=true where write_id=?",
+             {},
+             $write_id);
+}
+
+sub unabort_game {
+    my ($dbh, $write_id) = @_;
+
+    $dbh->do("update game set aborted=false, finished=false where write_id=?",
+             {},
+             $write_id);
 }
 
 1;

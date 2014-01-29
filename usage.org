@@ -320,14 +320,14 @@ which [[options]] to include in the game.
 ** Administrating the Game
 
 The creator of the game has administrator rights to the game, and can
-edit the history arbitrarily. You can find the admin section of the
+edit the history arbitrarily. You can find the admin view of the
 games you run under the "Games you Administrate" section on the home
 page.
 
-The admin section is useful for example in the following circumstances:
+The admin view is useful for example in the following circumstances:
 
 - A player misenters an order and would like to undo it. It's up to the game creator to decide under which circumstances a rollback is reasonable.
-- You wish to stop the game prematurely. This can be done with the [[abort]] command.
+- You wish to stop the game prematurely. This can be done using the abort / restart buttons under the "Status" section.
 
 Note that the administrator rights only apply to the game itself. Most
 importantly the admin can't read the planning notes of other players.
@@ -354,11 +354,6 @@ faction selection. The following options are available:
 - =shipping-bonus=: Additional bonus tile from Spielbox 6/2013, http://boardgamegeek.com/image/1843355/terra-mystica-navigation-round-bonus-tile
 - =email-notify=: Automatically send email notifications after moves (players can configure exactly which emails they want to see). Can't be used in games with unregistered players.
 - =strict-leech=: Validate that any 'leech' commands by a single player happen in the correct order. This option is on by default for new games. Turning it off is not recommended.
-
-*** =abort=
-
-Forcibly end the game. Useful for hiding a stalled game from the "your
-games" list.
 
 
 

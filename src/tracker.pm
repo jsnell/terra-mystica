@@ -127,6 +127,7 @@ sub finalize {
 sub evaluate_game {
     my $data = shift;
     my $faction_info = $data->{faction_info};
+    my $metadata = $data->{metadata};
 
     local %game = (
         # How many players the game should have. Note that this can be
@@ -189,6 +190,10 @@ sub evaluate_game {
         }; if ($@) {
             push @error, "$@\n";
         }
+    }
+
+    if ($metadata->{aborted}) {
+        $game{acting}->advance_state('abort');
     }
 
     maybe_setup_pool;

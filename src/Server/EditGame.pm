@@ -1,4 +1,5 @@
 use strict;
+no indirect;
 
 package Server::EditGame;
 
@@ -15,12 +16,10 @@ use DB::EditLink;
 use DB::Game;
 use Server::Session;
 
+has 'mode' => (is => 'ro', required => 1);
+
 method handle($q) {
     $self->no_cache();
-
-    my $write_id = $q->param('game');
-    $write_id =~ s{.*/}{};
-    $write_id =~ s{[^A-Za-z0-9_]}{}g;
 
     my $dbh = get_db_connection;
 
@@ -35,7 +34,19 @@ method handle($q) {
         $self->output_json($out);
         return;
     }
-       
+
+    my $write_id = $q->param('game');
+    $write_id =~ s{.*/}{};
+    $write_id =~ s{[^A-Za-z0-9_]}{}g;
+
+    if ($self->mode() eq 'content') {
+        $self->edit_content($dbh, $q, $write_id, $username);
+    } elsif ($self->mode() eq 'status') {
+        $self->edit_status($dbh, $q, $write_id);
+    }
+}
+
+method edit_content($dbh, $q, $write_id, $username) {
     my ($read_id) = $write_id =~ /(.*?)_/g;
     my ($prefix_data, $data) = get_game_content $dbh, $read_id, $write_id;
     my $players = get_game_players($dbh, $read_id);
@@ -45,6 +56,7 @@ method handle($q) {
         rows => [ split /\n/, "$prefix_data\n$data" ],
         faction_info => get_game_factions($dbh, $read_id),
         players => $players,
+        metadata => $metadata,
     };
 
     # Development hack
@@ -65,6 +77,26 @@ method handle($q) {
     };
 
     $self->output_json($out);
+}
+
+method edit_status($dbh, $q, $write_id) {
+    my $action = $q->param('action');
+    my $res = {
+        error => [],
+    };
+
+    if ($action eq 'abort') {
+        $res->{status} = 'aborted';
+        abort_game $dbh, $write_id;
+    } elsif ($action eq 'unabort') {
+        $res->{status} = 'restarted';
+        unabort_game $dbh, $write_id;
+    } else {
+        $res->{status} = 'error';
+        $res->{error} = [ "Invalid action '$action'" ];
+    }
+
+    $self->output_json($res);
 }
 
 1;

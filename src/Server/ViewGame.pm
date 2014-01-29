@@ -49,6 +49,7 @@ method handle($q) {
         rows => \@rows,
         faction_info => get_game_factions($dbh, $id),
         players => get_game_players($dbh, $id),
+        metadata => get_game_metadata($dbh, $id),
         max_row => $max_row
     };
     eval {
