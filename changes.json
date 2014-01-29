@@ -1,5 +1,9 @@
 {
     "changes": [
+        { "date": "2014-01-29",
+          "title": "Idle games aborted after 2 weeks",
+          "description": "Games that remain idle (with no moves entered) for over 2 weeks are automatically aborted. Aborted games can be restarted from the admin interface."
+        },
         { "date": "2013-12-18",
           "title": "Manual 'send email' feature obsoleted",
           "description": "The manual 'send email' functionality is no longer available, except for a few ongoing games. For PBEM games, please use the automatic email notification system."
