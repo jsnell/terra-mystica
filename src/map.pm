@@ -309,30 +309,6 @@ sub alias_color {
     $color;
 }
 
-sub color_at_offset {
-    my ($color, $target, $max_steps) = @_;
-    
-    if ($max_steps == 0) {
-        return $color;
-    }
-
-    my $difference = color_difference $color, $target;
-    if ($difference <= $max_steps) {
-        return $target;
-    }
-
-    my @colors_at_offset = grep {
-        $max_steps == color_difference $color, $_ 
-    } @colors;
-    my @diff_to_target = map { color_difference $target, $_ } @colors_at_offset;
-
-    if ($diff_to_target[0] < $diff_to_target[1]) {
-        $colors_at_offset[0];
-    } else {
-        $colors_at_offset[1];
-    }
-}
-
 # Given a faction and a hex, figure out who can leach power when a
 # building is built or upgraded, and how much. (Note: won't take into
 # account the amount of power tokens the receiver has. That's taken
@@ -357,18 +333,43 @@ sub compute_leech {
     return %this_leech;
 }
 
+sub transform_colors {
+    my ($faction, $where) = @_;
+    if ($faction->{FREE_TF} or
+        $faction->{name} eq 'giants') {
+        return ($faction->{color}, undef);
+    }
+
+    my $current_color = $map{$where}{color};
+    my $home_color = $faction->{color};
+
+    return ($current_color, $current_color) if !$faction->{SPADE};
+
+    my $index = $colors{$current_color};
+    my ($cw, $ccw) = ($current_color, $current_color);
+
+    for my $offset (1..$faction->{SPADE}) {
+        if ($cw ne $home_color) {
+            $cw = $colors[($index + $offset) % 7];
+        }
+        if ($ccw ne $home_color) {
+            $ccw = $colors[($index - $offset) % 7];
+        }
+    }
+
+    if (color_difference($cw, $home_color) <
+        color_difference($ccw, $home_color)) {
+        return ($cw, $ccw);
+    } else {
+        return ($ccw, $cw);
+    }
+}
+
 sub transform_cost {
     my ($faction, $where, $color) = @_;
 
     if (!$color) {
-        if ($faction->{FREE_TF}) {
-            $color = $faction->{color};
-        } elsif ($faction->{name} eq 'giants') {
-            $color = $faction->{color};
-        } else {
-            $color = color_at_offset($map{$where}{color}, $faction->{color},
-                                     $faction->{SPADE});
-        }
+        ($color) = transform_colors $faction, $where;
     }
 
     my ($cost, $gain, $need_teleport) = check_reachable $faction, $where;
@@ -431,29 +432,32 @@ sub update_reachable_tf_locations {
     for my $faction ($game{acting}->factions_in_order()) {
         if ($game{acting}->is_active($faction) or
             ($faction->{passed} and $faction->{SPADE} > 0)) {
-            $faction->{reachable_tf_locations} = [
-                grep {
-                    $_
-                } map {
-                    my $ret = 0;
-                    my $loc = $_;
+            my %res = ();
+
+            for (keys %map) {
+                my @res = ();
+                my $loc = $_;
+
+                next if !exists $map{$loc}{row} or $loc =~ /^r/;
+                next if $map{$loc}{color} eq $faction->{color} or
+                    $map{$loc}{building};
+
+                for my $color (transform_colors $faction, $loc) {
+                    next if !$color;
+
                     my $cost = {};
                     my $gain = {};
                     my $color_diff = 0;
                     my $teleport = '';
-                    my $color = '';
-                    if (exists $map{$loc}{row} and
-                        $map{$loc}{color} ne $faction->{color} and
-                        !$map{$loc}{building}) {
-                        eval {
-                            ($cost, $gain, $teleport, $color_diff, $color) = transform_cost $faction, $loc, undef;
-                        };
-                    }
-                    if ($color_diff and $color) {
-                        { hex => $loc, cost => $cost, gain => $gain, to_color => $color, teleport => $teleport }
-                    }
-                } keys %map
-            ];
+                    eval {
+                        ($cost, $gain, $teleport, $color_diff, $color) = transform_cost $faction, $loc, $color;
+                    };
+                    next if !$color_diff or !$color;
+                    push @{$res{$loc}}, { hex => $loc, cost => $cost, gain => $gain, to_color => $color, teleport => $teleport };
+                }
+            }
+
+            $faction->{reachable_tf_locations} = \%res;
         } else {
             $faction->{reachable_tf_locations} = [];
         }

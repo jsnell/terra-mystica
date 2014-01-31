@@ -1807,38 +1807,41 @@ function addFactionInput(parent, record, index) {
         if (faction.FREE_TF > 0) {
             addDeclineButton(parent, index, "FREE_TF", faction.FREE_TF);
         }
-        faction.reachable_tf_locations.each(function (tf) {
+        $H(faction.reachable_tf_locations).each(function (elem) {
+            var hex = elem.key;
             var menu = {};
-            if (canAfford(faction, [tf.cost])) {
-                var cost_str = effectString([tf.cost], [tf.gain])
-                menu["to " + tf.to_color] = {
-                    "fun": function (loc) {
-                        appendAndPreview("transform " + loc);
-                    },
-                    "label": cost_str
-                };
-            }
-            if (tf.to_color == faction.color &&
-                !(faction.SPADE - tf.cost.SPADE) &&
-                faction.allowed_sub_actions.build &&
-                faction.buildings.D.level < faction.buildings.D.max_level) {
-                var dwelling_cost = faction.buildings["D"].advance_cost;
-                var dwelling_gain = computeBuildingEffect(faction, 'D');
-                var can_afford = canAfford(faction, 
-                                           [tf.cost, dwelling_cost]);
-                if (can_afford) {
-                    cost_str = effectString([tf.cost, dwelling_cost],
-                                            [tf.gain].concat(dwelling_gain));
-                    menu["build"] = {
+            elem.value.each(function (tf) {
+                if (canAfford(faction, [tf.cost])) {
+                    var cost_str = effectString([tf.cost], [tf.gain])
+                    menu["to " + tf.to_color] = {
                         "fun": function (loc) {
-                            appendAndPreview("build " + loc);
+                            appendAndPreview("transform " + loc + " to " + tf.to_color);
                         },
                         "label": cost_str
                     };
                 }
-            }
+                if (tf.to_color == faction.color &&
+                    !(faction.SPADE - tf.cost.SPADE) &&
+                    faction.allowed_sub_actions.build &&
+                    faction.buildings.D.level < faction.buildings.D.max_level) {
+                    var dwelling_cost = faction.buildings["D"].advance_cost;
+                    var dwelling_gain = computeBuildingEffect(faction, 'D');
+                    var can_afford = canAfford(faction, 
+                                               [tf.cost, dwelling_cost]);
+                    if (can_afford) {
+                        cost_str = effectString([tf.cost, dwelling_cost],
+                                                [tf.gain].concat(dwelling_gain));
+                        menu["build"] = {
+                            "fun": function (loc) {
+                                appendAndPreview("build " + loc);
+                            },
+                            "label": cost_str
+                        };
+                    }
+                }
+            });
             if ($H(menu).size() > 0) {
-                addMapClickHandler("Transform", tf.hex, menu);
+                addMapClickHandler("Transform", hex, menu);
             }
         })
     }
