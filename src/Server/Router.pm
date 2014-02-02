@@ -13,6 +13,7 @@ use Server::PasswordReset;
 use Server::Plan;
 use Server::Register;
 use Server::NewGame;
+use Server::Results;
 use Server::SaveGame;
 use Server::Settings;
 use Server::Template;
@@ -69,6 +70,9 @@ my %paths = (
     },
     '/reset/validate/' => sub {
         Server::PasswordReset->new({ mode => 'validate' })
+    },
+    '/results/' => sub {
+        Server::Results->new()
     },
     '/template/' => sub {
         Server::Template->new()
