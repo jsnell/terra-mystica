@@ -12,11 +12,13 @@ use vars qw(%map);
 # Initialize %map, with the correct coordinates, from the above raw data.
 sub setup_base_map {
     my ($reverse_map) = @_;
+    my @row_labels = 'A'..'Z';
+    my $row_count = grep { $_ eq 'E' } @{$game{base_map}};
 
     my $i = 0;
     my $ri = 0;
     my $river = 0;
-    for my $row ('A'..'I') {
+    for my $row (@row_labels[0..$row_count - 1]) {
         my $col = 1;
         for my $ci (0..13) {
             my $color = $game{base_map}[$i++];

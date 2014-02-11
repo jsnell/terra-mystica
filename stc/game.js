@@ -318,11 +318,17 @@ function drawMap() {
         canvas.width = canvas.width;
         var ctx = canvas.getContext("2d");
 
+        ctx.save();
+        if (!state.map["A1"]) {
+            ctx.translate(0, -hex_height);
+        }
+
         state.bridges.each(function(bridge, index) {
             drawBridge(ctx, bridge.from, bridge.to, bridge.color);
         });
 
         $H(state.map).each(function(hex, index) { drawHex(ctx, hex) });
+        ctx.restore();
     }
 }
 

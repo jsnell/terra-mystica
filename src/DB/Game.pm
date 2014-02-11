@@ -99,7 +99,7 @@ sub get_game_metadata {
 
     if ($res->{base_map}) {
         my ($map_str) = $dbh->selectrow_array("select terrain from map_variant where id=?", {}, $res->{base_map});
-        $res->{base_map} = [ split / /, $map_str ];
+        $res->{base_map} = [ split /\s+/, $map_str ];
     }
 
     $res;
@@ -107,7 +107,7 @@ sub get_game_metadata {
 
 sub begin_game_transaction {
     my ($dbh, $id) = @_;
-    
+
     $dbh->do("begin");
     $dbh->do("select * from game where id=? for update",
              {},
@@ -116,7 +116,7 @@ sub begin_game_transaction {
 
 sub finish_game_transaction {
     my ($dbh) = @_;
-    
+
     $dbh->do("commit");
 }
 
