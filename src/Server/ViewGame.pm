@@ -9,6 +9,7 @@ extends 'Server::Server';
 
 use DB::Connection qw(get_db_connection);
 use DB::Game;
+use Server::Security;
 use Server::Session;
 use tracker;
 
@@ -45,11 +46,16 @@ method handle($q) {
         }
     }
 
+    my $players = get_game_players($dbh, $id);
+    my $metadata = get_game_metadata($dbh, $id);
+
+    ensure_user_may_view_game $username, $players, $metadata;
+
     my $res = terra_mystica::evaluate_game {
         rows => \@rows,
         faction_info => get_game_factions($dbh, $id),
-        players => get_game_players($dbh, $id),
-        metadata => get_game_metadata($dbh, $id),
+        players => $players,
+        metadata => $metadata,
         max_row => $max_row
     };
     eval {

@@ -121,6 +121,7 @@ sub deploy_cgi {
                   Server/Register.pm
                   Server/Results.pm
                   Server/SaveGame.pm
+                  Server/Security.pm
                   Server/Server.pm
                   Server/Session.pm
                   Server/Settings.pm

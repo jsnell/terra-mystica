@@ -119,7 +119,7 @@ sub route {
         print STDERR "ERROR: $@\n", '-'x60, "\n";
         $ret = [500,
                 ["Content-Type", "application/json"],
-                [encode_json { error => $@ }]];
+                [encode_json { error => [ $@ ] }]];
     }
 
     $ret;

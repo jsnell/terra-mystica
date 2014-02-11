@@ -17,6 +17,7 @@ use DB::IndexGame;
 use DB::SaveGame;
 use DB::Secret;
 use Email::Notify;
+use Server::Security;
 use Server::Session;
 
 use tracker;
@@ -79,11 +80,16 @@ method handle($q) {
 
     $new_content .= $append;
 
+    my $players = get_game_players($dbh, $read_id);
+    my $metadata = get_game_metadata($dbh, $read_id);
+
+    ensure_user_may_view_game $username, $players, $metadata;
+
     my $res = terra_mystica::evaluate_game {
         rows => [ split /\n/, "$prefix_content\n$new_content" ],
         faction_info => get_game_factions($dbh, $read_id),
-        players => get_game_players($dbh, $read_id),
-        metadata => get_game_metadata($dbh, $read_id),
+        players => $players,
+        metadata => $metadata,
         delete_email => 0
     };
 
