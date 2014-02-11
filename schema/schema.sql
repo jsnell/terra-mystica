@@ -16,6 +16,11 @@ create table email (
 );
 create unique index email_address_lowercase_idx on email(lower(address));
 
+create table map_variant (
+    id text primary key,
+    terrain text not null
+);
+
 create table game (
     id text primary key,
     write_id text,
@@ -30,6 +35,7 @@ create table game (
     commands text,
     description text,
     game_options text array default '{}',
+    base_map text references map_variant (id)
 );
 
 create table game_player (

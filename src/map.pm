@@ -19,7 +19,7 @@ sub setup_base_map {
     for my $row ('A'..'I') {
         my $col = 1;
         for my $ci (0..13) {
-            my $color = $map[$i++];
+            my $color = $game{base_map}[$i++];
             last if $color eq 'E';
             if ($color ne 'x') {
                 $map{"$row$col"}{color} = $color;

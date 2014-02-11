@@ -146,6 +146,7 @@ sub evaluate_game {
         cults => setup_cults,
         bridges => [],
         score_tiles => [],
+        base_map => ($metadata->{base_map} or \@base_map),
     );
     $game{ledger} = terra_mystica::Ledger->new({game => \%game});
     $game{acting} = terra_mystica::Acting->new(

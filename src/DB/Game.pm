@@ -91,11 +91,18 @@ sub get_game_metadata {
     my ($dbh, $id) = @_;
 
     my ($rows) =
-        $dbh->selectall_arrayref("select extract(epoch from now() - last_update) as time_since_update, description, finished, aborted, game_options, player_count, wanted_player_count from game where id=?",
+        $dbh->selectall_arrayref("select extract(epoch from now() - last_update) as time_since_update, description, finished, aborted, game_options, player_count, wanted_player_count, base_map from game where id=?",
                                  { Slice => {} },
                                  $id);
 
-    $rows->[0];
+    my $res = $rows->[0];
+
+    if ($res->{base_map}) {
+        my ($map_str) = $dbh->selectrow_array("select terrain from map_variant where id=?", {}, $res->{base_map});
+        $res->{base_map} = [ split / /, $map_str ];
+    }
+
+    $res;
 }
 
 sub begin_game_transaction {

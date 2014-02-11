@@ -7,7 +7,7 @@ use Exporter::Easy (EXPORT => [ '@cults',
                                 '@colors',
                                 '%colors',
                                 '%faction_setups',
-                                '@map',
+                                '@base_map',
                                 '%resource_aliases',
                                 '%tiles' ]);
 
@@ -182,7 +182,7 @@ Readonly our %tiles => init_tiles (
 
 ## Initial game board
 
-Readonly our @map =>
+Readonly our @base_map =>
     qw(brown gray green blue yellow red brown black red green blue red black E
        yellow x x brown black x x yellow black x x yellow E
        x x black x gray x green x green x gray x x E
