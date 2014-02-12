@@ -14,7 +14,7 @@ sub ensure_user_may_view_game {
 
     my @in_player_list = grep { $_->{username} eq $username } @{$players};
 
-    if (!@in_player_list and $username ne 'jsnell') {
+    if (!@in_player_list and $username ne 'jsnell' and $username ne 'nan') {
         die "This is a restricted game. Only players can view it.\n";
     }
 }
