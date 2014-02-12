@@ -3,9 +3,14 @@ var hex_width = (Math.cos(Math.PI / 6) * hex_size * 2);
 var hex_height = Math.sin(Math.PI / 6) * hex_size + hex_size;
 
 function hexCenter(row, col) {
+    var y_offset = 0;
+    if (!state.map["A1"]) {
+        y_offset = -hex_height;
+    }
+
     var x_offset = row % 2 ? hex_width / 2 : 0;
     var x = 5 + hex_size + col * hex_width + x_offset,
-        y = 5 + hex_size + row * hex_height;
+        y = 5 + hex_size + row * hex_height + y_offset;
     return [x, y];
 }
 
@@ -319,10 +324,6 @@ function drawMap() {
         var ctx = canvas.getContext("2d");
 
         ctx.save();
-        if (!state.map["A1"]) {
-            ctx.translate(0, -hex_height);
-        }
-
         state.bridges.each(function(bridge, index) {
             drawBridge(ctx, bridge.from, bridge.to, bridge.color);
         });
@@ -340,7 +341,7 @@ function hexClickHandler(fun) {
         var y = event.clientY - position.top;
         var best_dist = null;
         var best_loc = null;
-        for (var r = 0; r < 9; ++r) {
+        for (var r = 0; r < 10; ++r) {
             for (var c = 0; c < 13; ++c) {
                 var center = hexCenter(r, c);
                 var xd = (x - center[0]);
