@@ -8,12 +8,13 @@ function viewMap(mapid) {
             "cache-token": new Date() - Math.random(),            
         },
         onSuccess: function(transport) {
-            $("map").show();
             state = transport.responseText.evalJSON();
 
             if (state.error.length) {
+                $("map").hide();
                 $("error").innerHTML = state.error.join("<br>");
             } else {
+                $("map").show();
                 updateMapId(state.mapid, true);
                 drawMap();
                 $("map-data").value = state.mapdata;
@@ -33,12 +34,13 @@ function previewMap() {
             "map-data": $("map-data").value,
         },
         onSuccess: function(transport){
-            $("map").show();
             state = transport.responseText.evalJSON();
 
             if (state.error.length) {
+                $("map").hide();
                 $("error").innerHTML = state.error.join("<br>");
             } else {
+                $("map").show();
                 updateMapId(state.mapid, state.saved);
                 drawMap();
                 $("map-data").value = state.mapdata;

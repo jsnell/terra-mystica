@@ -9,6 +9,8 @@
 }
 
 __DATA__
+<div id="error"></div>
+
 <h4>ID</h4>
 <div id="map-id"></div>
 

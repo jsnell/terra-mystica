@@ -25,6 +25,13 @@ method handle($q, $id) {
         $dbh,
         $q->cookie('session-token') // '');
 
+    if (!defined $username) {
+        $self->output_json({
+            error => [ "Not logged in\n" ]
+        });
+        return;
+    }
+
     my $base_map = $q->param('base_map');
 
     my $res = {
@@ -35,7 +42,7 @@ method handle($q, $id) {
     if ($self->mode() eq 'preview') {
         preview($dbh, $q->param('map-data'), $res);
     } elsif ($self->mode() eq 'save') {
-        save($dbh, $q->param('map-data'), $res);
+        save($dbh, $q->param('map-data'), $res, $username);
     } elsif ($self->mode() eq 'view') {
         view($dbh, $id, $res);
     }
