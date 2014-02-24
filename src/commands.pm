@@ -968,6 +968,12 @@ sub command {
         ($assert_faction->())->{allowed_actions} = 0;
     } elsif ($command =~ /^start_planning$/i) {
         command_start_planning $assert_faction->();
+    } elsif ($command =~ /^map (.*)/i) {
+        if ($1 eq 'original') {
+            $game{map_variant} = undef;
+        } else {
+            $game{map_variant} = $1;
+        }
     } else {
         die "Could not parse command '$command'.\n";
     }

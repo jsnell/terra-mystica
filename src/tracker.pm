@@ -147,6 +147,7 @@ sub evaluate_game {
         bridges => [],
         score_tiles => [],
         base_map => ($metadata->{base_map} or \@base_map),
+        map_variant => $metadata->{map_variant},
     );
     $game{ledger} = terra_mystica::Ledger->new({game => \%game});
     $game{acting} = terra_mystica::Acting->new(
@@ -226,6 +227,7 @@ sub evaluate_game {
         player_count => $game{player_count},
         options => $game{options},
         admin => $data->{delete_email} ? '' : $game{admin_email},
+        map_variant => $game{map_variant},
     };
 
     %game = ();

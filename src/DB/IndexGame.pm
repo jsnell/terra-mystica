@@ -22,11 +22,12 @@ sub index_game {
     };
 
     my ($res) = $dbh->do(
-        'update game set needs_indexing=?, write_id=?, finished=?, round=?, last_update=?, player_count=?, game_options=? where id = ?',
+        'update game set needs_indexing=?, write_id=?, finished=?, round=?, last_update=?, player_count=?, game_options=?, base_map=? where id = ?',
         {},
         0, $write_id, 1*(!!$game->{finished}), $game->{round}, $timestamp, 
         $player_count,
         [ grep { $game->{options}{$_} } keys %{$game->{options}} ],
+        $game->{map_variant},
         $id);
 
     if (!defined $game->{player_count} or
