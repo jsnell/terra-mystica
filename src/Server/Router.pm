@@ -9,10 +9,11 @@ use Server::JoinGame;
 use Server::ListGames;
 use Server::Login;
 use Server::Logout;
+use Server::Map;
+use Server::NewGame;
 use Server::PasswordReset;
 use Server::Plan;
 use Server::Register;
-use Server::NewGame;
 use Server::Results;
 use Server::SaveGame;
 use Server::Settings;
@@ -52,6 +53,15 @@ my %paths = (
     },
     '/logout/' => sub {
         Server::Logout->new()
+    },
+    '/map/preview/' => sub {
+        Server::Map->new({ mode => 'preview' })
+    },
+    '/map/save/' => sub {
+        Server::Map->new({ mode => 'save' })
+    },
+    '/map/view/' => sub {
+        Server::Map->new({ mode => 'view' })
     },
     '/new-game/' => sub {
         Server::NewGame->new()

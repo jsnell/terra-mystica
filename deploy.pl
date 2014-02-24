@@ -114,6 +114,7 @@ sub deploy_cgi {
                   Server/ListGames.pm
                   Server/Login.pm
                   Server/Logout.pm
+                  Server/Map.pm
                   Server/NewGame.pm
                   Server/PasswordReset.pm
                   Server/Plan.pm
@@ -146,6 +147,7 @@ sub deploy_stc {
                   game.js
                   index.js
                   joingame.js
+                  map.js
                   newgame.js
                   ratings.js
                   register.js
@@ -179,6 +181,7 @@ sub deploy_data {
                   pages/content/login.pl
                   pages/content/joingame.pl
                   pages/content/login.pl
+                  pages/content/map.pl
                   pages/content/newgame.pl
                   pages/content/player.pl
                   pages/content/ratings.pl
