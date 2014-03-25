@@ -61,8 +61,13 @@ method make_game($dbh, $q, $username) {
     my $game_type = $q->param("game-type");
     my @players = ();
     my $player_count = undef;
+    my %blacklist = map { ($_ => 1) } qw(filgalaxy999);
 
     if ($game_type eq 'private') {
+        if ($blacklist{$username}) {
+            die "Sorry, your have been banned from creating private games.\n";
+        }
+
         my $players = $q->param('players');
         @players = grep {
             /\S/;
