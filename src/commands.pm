@@ -955,6 +955,14 @@ sub command {
             username => $3,
         });
         check_player_count;
+    } elsif ($command =~ /^order ([\w,]+)$/i) {
+        my $i = 0;
+        my %usernames = map { ($_, $i++) } split /,/, lc $1;
+        my @players = sort {
+            $usernames{lc $a->{username}} <=> $usernames{lc $b->{username}}
+        } @{$game{acting}->players()};
+        $game{acting}->players([@players]);
+        $game{acting}->advance_state('select-factions');
     } elsif ($command =~ /^randomize v1 seed (.*)/i) {
         maybe_setup_pool;
         if (!defined $game{player_count}) {
