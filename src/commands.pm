@@ -688,8 +688,7 @@ sub command_advance {
 
 sub command_finish {
     $game{finished} = 1;
-    score_final_cults;
-    score_final_networks;
+    score_final;
     score_final_resources;
     for my $faction ($game{acting}->factions_in_order()) {
         $faction->{passed} = 0;
@@ -828,7 +827,7 @@ sub command {
         $faction->{waiting} = 0;
     }
 
-    if ($command =~ /^([+-])(\d*)(\w+)(?: for (\w+))?$/i) {
+    if ($command =~ /^([+-])(\d*)(\w+)(?: for ([\w -]+))?$/i) {
         my ($sign, $count) = (($1 eq '+' ? 1 : -1),
                               ($2 eq '' ? 1 : $2));        
         my $delta = $sign * $count;

@@ -24,10 +24,11 @@ sub setup_base_map {
             my $color = $game{base_map}[$i++];
             last if $color eq 'E';
             if ($color ne 'x') {
-                $map{"$row$col"}{color} = $color;
-                $map{"$row$col"}{row} = $ri;
-                $map{"$row$col"}{col} = $ci;
-                $reverse_map->{$ri}{$ci} = "$row$col";
+                my $key = "$row$col";
+                $map{$key}{color} = $color;
+                $map{$key}{row} = $ri;
+                $map{$key}{col} = $ci;
+                $reverse_map->{$ri}{$ci} = $key;
                 $col++;
             } else {
                 my $key = "r$river";
@@ -40,6 +41,21 @@ sub setup_base_map {
         }
         $ri++;
     }
+
+    my @rows = sort { $a <=> $b } keys %{$reverse_map};
+    for my $row (@rows) {
+        my @cols = sort { $a <=> $b } keys %{$reverse_map->{$row}};
+        for my $col (@cols) {
+            my $loc = $reverse_map->{$row}{$col};
+            if ($col == $cols[0] or
+                $col == $cols[-1] or
+                $row == $rows[0] or
+                $row == $rows[-1]) {
+                $map{$loc}{edge} = 1;
+            }
+        }
+    }
+    
 }
 
 # Set up the a list of directly adjacent hexes. Store it under the
@@ -73,6 +89,41 @@ sub setup_direct_adjacencies {
         record_adjacent $coord, $reverse_map->{$row + 1}{$col};
         record_adjacent $coord, $reverse_map->{$row + 1}{$col + 1};
     }
+}
+
+# Distance between two hexes
+sub hex_distance {
+    my ($a, $b) = @_;
+    
+    if ($a eq $b) {
+        return 0;
+    }
+
+    my $rdelta = abs $map{$a}{row} - $map{$b}{row};
+    my $ac = $map{$a}{col} * 2 + $map{$a}{row} % 2;
+    my $bc = $map{$b}{col} * 2 + $map{$b}{row} % 2;
+    my $cdelta = abs $ac - $bc;
+
+    $cdelta = abs $cdelta;
+    $rdelta = abs $rdelta;
+
+    if ($cdelta < $rdelta) {
+        return $rdelta;
+    }
+
+    my $dist = 0;
+    while ($rdelta > 1) {
+        $rdelta -= 2;
+        $cdelta -= 2;
+        $dist += 2;
+    }
+    if ($rdelta) {
+        $cdelta--;
+        $dist++;
+    }
+    $dist += $cdelta / 2;
+
+    return $dist;
 }
 
 # For each hex, set up a hash table 'range' > other-hex > mode, stating
@@ -225,14 +276,13 @@ sub adjacent_own_buildings {
     } @adjacent;
 }
 
-# Given a faction, compute the largest contiguous blob of buildings
-# (taking into account river travel / teleporting).
-sub compute_network_size {
-    my $faction = shift;
+sub find_building_cliques {
+    my ($faction, $allow_indirect) = @_;
+
+    my ($range, $ship);
+    my %clique = ();
 
     my @locations = @{$faction->{locations}};
-    my %clique = ();
-    my ($range, $ship);
 
     if ($faction->{teleport}) {
         my $t = $faction->{teleport};
@@ -259,7 +309,8 @@ sub compute_network_size {
         for my $to (@locations) {
             next if $loc eq $to;
             if (exists $map{$loc}{adjacent}{$to} or
-                (exists $map{$loc}{range}{$ship}{$to} and
+                ($allow_indirect and
+                 exists $map{$loc}{range}{$ship}{$to} and
                  $map{$loc}{range}{$ship}{$to} <= $range)) {
                 $handle->($to, $id);
             };
@@ -272,12 +323,71 @@ sub compute_network_size {
     # Break the reference cycle.
     $handle = undef;
 
-    # Find the clique with the most members.
-    my %clique_sizes = ();
-    $clique_sizes{$_}++ for values %clique;
+    %clique;
+}
 
-    # And that's the size of the network.
-    $faction->{network} = max values %clique_sizes;
+# Given a faction, compute the largest contiguous blob of buildings
+# (taking into account river travel / teleporting).
+sub compute_network_size {
+    my $faction = shift;
+
+    my %clique = find_building_cliques $faction, 1;
+    my %clusters = find_building_cliques $faction, 0;
+
+    {
+        # Find the clique with the most members.
+        my %clique_sizes = ();
+        $clique_sizes{$_}++ for values %clique;
+        # And that's the size of the network.
+        $faction->{network} = max values %clique_sizes;
+    }
+
+    if ($game{final_scoring}{'connected-distance'}) {
+        my $distance = 0;
+        for my $a (keys %clique) {
+            for my $b (keys %clique) {
+                next if $clique{$a} != $clique{$b};
+                my $new_dist = hex_distance $a, $b;
+                $distance = max $distance, $new_dist;
+            }
+        }
+        # And that's the size of the network.
+        $faction->{'connected-distance'} = $distance;
+    }
+
+    if ($game{final_scoring}{'connected-sa-sh-distance'}) {
+        my $distance = 0;
+        for my $a (keys %clique) {
+            for my $b (keys %clique) {
+                next if $clique{$a} != $clique{$b};
+                next if ($map{$a}{building} ne 'SA' or
+                         $map{$b}{building} ne 'SH');
+                my $new_dist = hex_distance $a, $b;
+                $distance = max $distance, $new_dist;
+            }
+        }
+        $faction->{'connected-sa-sh-distance'} = $distance;
+    }
+
+    if ($game{final_scoring}{'connected-clusters'}) {
+        my %clique_clusters = ();
+        for my $a (keys %clique) {
+            my $clique = $clique{$a};
+            my $cluster = $clusters{$a};
+            $clique_clusters{$clique}{$cluster} = 1;
+        }
+        my @counts = map { scalar values %{$_} } values %clique_clusters;
+        my $count = max @counts;
+        $faction->{'connected-clusters'} = $count;
+    }
+
+    if ($game{final_scoring}{'buildings-on-edge'}) {
+        my $count = 0;
+        for my $loc (@{$faction->{locations}}) {
+            $count++ if $map{$loc}{edge};
+        }
+        $faction->{'buildings-on-edge'} = $count;
+    }
 }
 
 # The terraforming color wheel.

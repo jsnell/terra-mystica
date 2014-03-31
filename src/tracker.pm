@@ -107,6 +107,7 @@ sub finalize {
         delete $hex->{adjacent};
         delete $hex->{range};
         delete $hex->{bridge};
+        delete $hex->{edge};
     }
     
     # Gross, but still needed
@@ -148,6 +149,7 @@ sub evaluate_game {
         score_tiles => [],
         base_map => ($metadata->{base_map} or \@base_map),
         map_variant => $metadata->{map_variant},
+        final_scoring => { map { $_ => 1 } qw(network FIRE WATER EARTH AIR) },
     );
     $game{ledger} = terra_mystica::Ledger->new({game => \%game});
     $game{acting} = terra_mystica::Acting->new(
@@ -228,6 +230,7 @@ sub evaluate_game {
         options => $game{options},
         admin => $data->{delete_email} ? '' : $game{admin_email},
         map_variant => $game{map_variant},
+        final_scoring => $game{final_scoring},
     };
 
     %game = ();

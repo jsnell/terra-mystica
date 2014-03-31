@@ -9,6 +9,7 @@ use Game::Constants;
 sub adjust_resource;
 sub command;
 sub compute_network_size;
+sub compute_connected_distance;
 
 sub current_score_tile {
     if ($game{round} > 0) {
@@ -74,17 +75,18 @@ sub score_type_rankings {
     }
 }
 
-sub score_final_cults {
-    for my $cult (@cults) {
-        $game{ledger}->add_comment("Scoring $cult cult");
-        score_type_rankings $cult, \&score_with_ledger_entry, 8, 4, 2;
-    }
-}
-
-sub score_final_networks {
+sub score_final {
     compute_network_size $_ for $game{acting}->factions_in_order();
-    $game{ledger}->add_comment("Scoring largest network");
-    score_type_rankings 'network', \&score_with_ledger_entry, 18, 12, 6;
+
+    for my $type (sort keys %{$game{final_scoring}}) {
+        if (grep /^$type$/, @cults) {
+            $game{ledger}->add_comment("Scoring $type cult");
+            score_type_rankings $type, \&score_with_ledger_entry, 8, 4, 2;
+        } else {
+            $game{ledger}->add_comment("Scoring $type");
+            score_type_rankings $type, \&score_with_ledger_entry, 18, 12, 6;
+        }
+    }
 }
 
 sub score_final_resources_for_faction {
@@ -184,10 +186,16 @@ sub faction_vps {
             compute_network_size $faction
         }
     }
-    score_type_rankings 'network', $score_to_projection, 18, 12, 6;
-    
-    for my $cult (@cults) {
-        score_type_rankings $cult, $score_to_projection, 8, 4, 2;
+    for my $type (keys %{$game{final_scoring}}) {
+        if (grep /^$type$/, @cults) {
+            score_type_rankings $type, $score_to_projection, 8, 4, 2;
+        } else {
+            score_type_rankings $type, $score_to_projection, 18, 12, 6;
+            $projection{$type} ||= 0;
+            if ($type ne 'network') {
+                $projection{$type} .= " [$faction->{$type}]";
+            }
+        }
     }
 
     my $rate = $faction->{exchange_rates}{C}{VP} // 3;
