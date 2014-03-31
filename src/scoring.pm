@@ -79,12 +79,15 @@ sub score_final {
     compute_network_size $_ for $game{acting}->factions_in_order();
 
     for my $type (sort keys %{$game{final_scoring}}) {
-        if (grep /^$type$/, @cults) {
-            $game{ledger}->add_comment("Scoring $type cult");
-            score_type_rankings $type, \&score_with_ledger_entry, 8, 4, 2;
+        my @points = @{$game{final_scoring}{$type}{points}};
+        if ($type eq 'cults') {
+            for my $type (@cults) {
+                $game{ledger}->add_comment("Scoring $type cult");
+                score_type_rankings $type, \&score_with_ledger_entry, @points;
+            }
         } else {
             $game{ledger}->add_comment("Scoring $type");
-            score_type_rankings $type, \&score_with_ledger_entry, 18, 12, 6;
+            score_type_rankings $type, \&score_with_ledger_entry, @points;
         }
     }
 }
@@ -187,8 +190,11 @@ sub faction_vps {
         }
     }
     for my $type (keys %{$game{final_scoring}}) {
-        if (grep /^$type$/, @cults) {
-            score_type_rankings $type, $score_to_projection, 8, 4, 2;
+        my @points = @{$game{final_scoring}{$type}{points}};
+        if ($type eq 'cults') {
+            for my $type (@cults) {
+                score_type_rankings $type, $score_to_projection, 8, 4, 2;
+            }
         } else {
             score_type_rankings $type, $score_to_projection, 18, 12, 6;
             $projection{$type} ||= 0;

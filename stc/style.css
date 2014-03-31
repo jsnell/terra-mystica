@@ -87,7 +87,7 @@ div.scoring {
     margin: 2px;
     padding: 3px;
     width: 90px;
-    height: 71px;
+    height: 90px;
     background-color: #fff;
     float: left;
 }
@@ -429,4 +429,16 @@ span.cult-AIR {
     background-color: #f0f0f0
 }
 
+div.final-scoring {
+    font: 11px Verdana;
+    margin: 2px;
+    width: 90px;
+    height: 90px;
+    background-color: #fff;
+    float: left;
+}
 
+table.final-scoring {
+    padding: 0px;
+    border-spacing: 0px;
+}

@@ -9,7 +9,8 @@ use Exporter::Easy (EXPORT => [ '@cults',
                                 '%faction_setups',
                                 '@base_map',
                                 '%resource_aliases',
-                                '%tiles' ]);
+                                '%tiles',
+                                '%final_scoring' ]);
 
 use strict;
 use Readonly;
@@ -692,6 +693,38 @@ Readonly our %faction_setups => (
                        SA => { advance_cost => { W => 4, C => 8 },
                                income => { P => [ 0, 1 ] } },
                }},
+);
+
+Readonly our %final_scoring => (
+    network => {
+        description => "Largest connected network",
+        points => [18, 12, 6],
+        label => "network",
+    },
+    'connected-distance' => {
+        description => "Largest distance between two connected buildings",
+        points => [18, 12, 6],
+        label => 'distance',
+    },
+    'connected-sa-sh-distance' => {
+        description => "Largest distance between a connected stronghold and sanctuary",
+        points => [18, 12, 6],
+        label => 'sa-sh-distance',
+    },
+    'building-on-edge' => {
+        description => "Most buildings on the edge of the map",
+        points => [18, 12, 6],
+        label => 'edge',
+    },
+    'connected-clusters' => {
+        description => "Most indirectly connected clusters of directly connected buildings",
+        points => [18, 12, 6],
+        label => 'clusters',
+    },
+    'cults' => {
+        description => "Position on each cult",
+        points => [ 8, 4, 2 ]
+    }
 );
 
 1;

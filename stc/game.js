@@ -1387,6 +1387,27 @@ function drawScoringTiles() {
 	}
         container.insert(tile);
     });
+
+    {
+        var tile = new Element('div', {'class': 'final-scoring' });
+        var table = new Element('table', {'class': 'final-scoring'});
+        tile.insert(table);
+        table.insert(new Element("tr").insert(
+            new Element("td", {"style": "font-weight: bold", "colspan": 2}).updateText(
+                "Final vp")));
+        $H(state.final_scoring).sortBy(naturalSortKey).each(function (elem) {
+            var type = elem.value.label || elem.key;
+            var desc = elem.value.description;
+            var points = elem.value.points;
+            var row = new Element("tr");
+            var label = new Element("span", { "title": desc });
+            label.updateText(type);
+            row.insert(new Element("td").insert(label));
+            row.insert(new Element("td").updateText(points.join('/')));
+            table.insert(row);
+        });
+        container.insert(tile);
+    }
 }
 
 function coloredFactionSpan(faction_name) {

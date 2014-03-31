@@ -149,7 +149,7 @@ sub evaluate_game {
         score_tiles => [],
         base_map => ($metadata->{base_map} or \@base_map),
         map_variant => $metadata->{map_variant},
-        final_scoring => { map { $_ => 1 } qw(network FIRE WATER EARTH AIR) },
+        final_scoring => { map { $_ => $final_scoring{$_} } qw(network cults) },
     );
     $game{ledger} = terra_mystica::Ledger->new({game => \%game});
     $game{acting} = terra_mystica::Acting->new(
