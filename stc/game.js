@@ -1400,7 +1400,7 @@ function drawScoringTiles() {
             var desc = elem.value.description;
             var points = elem.value.points;
             var row = new Element("tr");
-            var label = new Element("span", { "title": desc });
+            var label = new Element("span", { "title": desc, "style": "text-decoration: underline" });
             label.updateText(type);
             row.insert(new Element("td").insert(label));
             row.insert(new Element("td").updateText(points.join('/')));
