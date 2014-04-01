@@ -981,6 +981,12 @@ sub command {
         } else {
             $game{map_variant} = $1;
         }
+    } elsif ($command =~ /^final-scoring (.*)/i) {
+        if ($final_scoring{$1}) {
+            $game{final_scoring}{$1} = $final_scoring{$1};
+        } else {
+            die "Unknown final scoring type: $1\n";
+        }
     } else {
         die "Could not parse command '$command'.\n";
     }
