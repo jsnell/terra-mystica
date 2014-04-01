@@ -697,17 +697,17 @@ Readonly our %faction_setups => (
 
 Readonly our %final_scoring => (
     network => {
-        description => "Largest connected network",
+        description => "Largest connected network of buildings",
         points => [18, 12, 6],
         label => "network",
     },
     'connected-distance' => {
-        description => "Largest distance between two connected buildings",
+        description => "Largest distance between two buildings in one network of connected buildings",
         points => [18, 12, 6],
         label => 'distance',
     },
     'connected-sa-sh-distance' => {
-        description => "Largest distance between a connected stronghold and sanctuary",
+        description => "Largest distance between a stronghold and sanctuary, which are in the same network of connected buildings",
         points => [18, 12, 6],
         label => 'sa-sh-distance',
     },
@@ -717,7 +717,7 @@ Readonly our %final_scoring => (
         label => 'edge',
     },
     'connected-clusters' => {
-        description => "Most indirectly connected clusters of directly connected buildings",
+        description => "Most separate clusters in one network of connected buildings. (Where a cluster is a group of directly connected buildings).",
         points => [18, 12, 6],
         label => 'clusters',
     },
