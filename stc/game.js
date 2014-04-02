@@ -1406,6 +1406,11 @@ function drawScoringTiles() {
             row.insert(new Element("td").updateText(points.join('/')));
             table.insert(row);
         });
+        if (state.final_scoring_help) {
+            table.insert(new Element("tr").insert(
+                new Element("td", {"colspan": 2}).insert(
+                    new Element("a", { "href": state.final_scoring_help, "target": "_blank" }).updateText("Rules"))));
+        }
         container.insert(tile);
     }
 }

@@ -712,7 +712,7 @@ Readonly our %final_scoring => (
         label => 'sa-sh-distance',
     },
     'building-on-edge' => {
-        description => "Most buildings on the edge of the map",
+        description => "Number of buildings on the edge of the map",
         points => [18, 12, 6],
         label => 'edge',
     },
