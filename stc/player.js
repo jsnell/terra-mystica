@@ -1,5 +1,5 @@
-function fetchStats(table, user) {
-    var target = "/app/user/stats/" + user;
+function fetchStats(table, type, callback, user) {
+    var target = "/app/user/" + type + "/" + user;
 
     var form_params = {
         "cache-token": new Date() - Math.random(),
@@ -14,7 +14,7 @@ function fetchStats(table, user) {
             if (stats.error.length) {
                 $("error").innerHTML = state.error.join("<br>");
             } else {
-                renderStats(table, stats);
+                callback(table, stats);
             }
         }
     });
@@ -24,13 +24,35 @@ function renderStats(table, stats) {
     $H(stats.stats).each(function (elem) {
         var data = elem.value;
 
-        // data.wins = (data.ranks.filter(function(x) { return x == 1;})).length;
-        // data['win-percentage'] = Math.round(data.wins / data.count * 100);
         data.ranks = data.ranks.sort();
 
         var row = new Element("tr");
         ['faction', 'wins', 'count', 'win_percentage', 'mean_vp', 'max_vp', 'ranks'].each(function (field) {
             row.insert(new Element("td").updateText(data[field]));
+        });
+        table.insert(row);
+    });
+}
+
+function renderOpponents(table, stats) {
+    stats.opponents.each(function (elem) {
+        var data = elem;
+
+        var row = new Element("tr");
+        ['username', 'count', 'player_better', 'opponent_better', 'draw'].each(function (field) {
+            var cell = new Element("td");
+            var value = data[field] || "";
+
+            if (field == 'username') {
+                cell.insert(new Element("a", {"href": "/player/" + value}).updateText(value));                
+            } else {
+                cell.updateText(value);
+            }
+            if (field == 'opponent_better' &&
+                data.opponent_better > data.player_better) {
+                cell.style.color = '#c00';
+            }
+            row.insert(cell);
         });
         table.insert(row);
     });
@@ -52,7 +74,9 @@ function selectPlayerTab() {
         } else if (hash == "finished") {
             fetchGames("games-finished", "other-user", "finished", listGames, user);
         } else if (hash == "stats") {
-            fetchStats($("stats-table"), user);
+            fetchStats($("stats-table"), 'stats', renderStats, user);
+        } else if (hash == "opponents") {
+            fetchStats($("opponents-table"), 'opponents', renderOpponents, user);
         }
         fetched[hash] = true;
     }

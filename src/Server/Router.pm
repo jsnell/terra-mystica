@@ -94,8 +94,11 @@ my %paths = (
     '/settings/' => sub {
         Server::Settings->new()
     },
+    '/user/opponents/' => sub {
+        Server::UserInfo->new({mode => 'opponents'})
+    },
     '/user/stats/' => sub {
-        Server::UserInfo->new()
+        Server::UserInfo->new({mode => 'stats'})
     },
     '/view-game/' => sub {
         Server::ViewGame->new()

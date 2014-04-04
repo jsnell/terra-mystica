@@ -13,6 +13,7 @@ __DATA__
 <button id="active-button" onclick="javascript:switchToPlayerTab('active')">Active</button>
 <button id="finished-button" onclick="javascript:switchToPlayerTab('finished')">Finished</button>
 <button id="stats-button" onclick="javascript:switchToPlayerTab('stats')">Stats</button>
+<button id="opponents-button" onclick="javascript:switchToPlayerTab('opponents')">Opponents</button>
 
 <div id="active" style="display: none">
     <h4>Active / Recently Finished Games</h4>
@@ -27,6 +28,11 @@ __DATA__
 <div id="stats" style="display: none">
     <h4>Faction Statistics</h4>
     <table id="stats-table" class="building-table"><tr><td>Faction<td>Wins<td>Games<td>Win %<td>Average score<td>Max score<td>Ranks</tr></table>
+</div>
+
+<div id="opponents" style="display: none">
+    <h4>Opponent Statistics</h4>
+    <table id="opponents-table" class="building-table"><tr><td>Opponent<td>Games<td>Player better<td>Opponent better<td>Draw<td></tr></table>
 </div>
 </div>
 
