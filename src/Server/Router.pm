@@ -18,6 +18,7 @@ use Server::Results;
 use Server::SaveGame;
 use Server::Settings;
 use Server::Template;
+use Server::UserInfo;
 use Server::ViewGame;
 
 use CGI::PSGI;
@@ -92,6 +93,9 @@ my %paths = (
     },
     '/settings/' => sub {
         Server::Settings->new()
+    },
+    '/user/stats/' => sub {
+        Server::UserInfo->new()
     },
     '/view-game/' => sub {
         Server::ViewGame->new()

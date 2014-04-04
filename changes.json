@@ -1,5 +1,9 @@
 {
     "changes": [
+        { "date": "2014-04-04",
+          "title": "Detailed player statistics",
+          "description": "A 'stats' tab has been added to the player info page, currently showing statistics of that player's games with different factions."
+        },
         { "date": "2014-01-29",
           "title": "Idle games aborted after 2 weeks",
           "description": "Games that remain idle (with no moves entered) for over 2 weeks are automatically aborted. Aborted games can be restarted from the admin interface."

@@ -97,6 +97,7 @@ sub deploy_cgi {
                   DB/SaveGame.pm
                   DB/Secret.pm
                   DB/Settings.pm
+                  DB/UserInfo.pm
                   DB/UserValidate.pm
                   Email/Notify.pm
                   Game/Constants.pm
@@ -127,6 +128,7 @@ sub deploy_cgi {
                   Server/Session.pm
                   Server/Settings.pm
                   Server/Template.pm
+                  Server/UserInfo.pm 
                   Server/ViewGame.pm 
                   Util/NaturalCmp.pm
                   Util/CryptUtil.pm
@@ -152,6 +154,7 @@ sub deploy_stc {
                   ratings.js
                   register.js
                   reset.js
+                  player.js
                   prototype-1.7.1.js
                   org.css
                   settings.js
