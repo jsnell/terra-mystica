@@ -18,7 +18,6 @@ the letters A-Z and a-z and the digits 0-9.
     <tr style="vertical-align: top">
       <td>Options
       <td>
-        <input name="game-options" type="checkbox" id="option-errata-cultist-power" value="errata-cultist-power" checked="true"></input><label for="option-errata-cultist-power">Cultist errata</label><br>
         <input name="game-options" type="checkbox" id="option-mini-expansion-1" value="mini-expansion-1"></input><label for="option-mini-expansion-1">Mini Expansion #1 (town tiles)</label><br>
         <input name="game-options" type="checkbox" id="option-shipping-bonus" value="shipping-bonus"></input><label for="option-shipping-bonus">Shipping bonus tile (Spielbox 6/2013)</label><br>
         <input name="game-options" type="checkbox" id="option-email-notify" value="email-notify" onchange="javascript:newGameValidate()" checked></input><label id="option-email-notify-label" for="option-email-notify">Automatic email notifications</label><br>

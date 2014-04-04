@@ -64,6 +64,10 @@ function showOpenGames(games) {
             var cell = new Element("td");
             if (game.game_options) {
                 game.game_options.each(function (elem) {
+                    if (elem == "strict-leech" ||
+                        elem == "errata-cultist-power") {
+                        return;
+                    }
                     cell.insert(new Element("div").updateText(elem));        
                 });
             }

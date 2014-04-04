@@ -124,6 +124,7 @@ sub create_game {
     my $content = <<EOF;
 # Default game options
  option strict-leech
+ option errata-cultist-power
  @options
 
 # Randomize setup
