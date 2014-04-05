@@ -985,6 +985,7 @@ sub command {
         if ($final_scoring{$1}) {
             $game{final_scoring}{$1} = $final_scoring{$1};
             $game{final_scoring_help} = "http://terra.snellman.net/b174ebeb6e37e3be86613ce95d226d61a454f1cc.html";
+            $game{non_standard} = 1;
         } else {
             die "Unknown final scoring type: $1\n";
         }

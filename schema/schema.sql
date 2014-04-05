@@ -35,7 +35,8 @@ create table game (
     commands text,
     description text,
     game_options text array default '{}',
-    base_map text references map_variant (id)
+    base_map text references map_variant (id),
+    nonstandard boolean default false
 );
 
 create table game_player (

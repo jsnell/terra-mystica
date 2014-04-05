@@ -21,9 +21,11 @@ sub handle_game {
         }
     }
 
-    for (keys %{$res->{factions}}) {
-        # $res->{factions}{$_}{vp} += ($adjust{$_} // 0);
-    }
+    # for (values %{$res->{factions}}) {
+    #     if ($_->{username} and $_->{username} eq 'jsnell') {
+    #         $_->{vp} += 1;
+    #     }
+    # }
     my @f = sort { $b->{vp} <=> $a->{vp} } values %{$res->{factions}};
     my $r = 0;
     for (@f) {

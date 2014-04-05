@@ -30,8 +30,9 @@ sub record_stats {
         $stat->{wins} += 1 / $winner_count;
         push @{$stat->{games_won}}, $res->{id};
     }
-    if ($_->{vp} > ($stat->{high_score}{$faction_count}{vp} // 0)) {
-        $stat->{high_score}{$faction_count} = {
+    my $standard = $res->{non_standard} ? 'non-standard' : 'standard';
+    if ($_->{vp} > ($stat->{high_score}{$standard}{$faction_count}{vp} // 0)) {
+        $stat->{high_score}{$standard}{$faction_count} = {
             vp => $_->{vp},
             game => $res->{id},
             player => $_->{username},
@@ -149,6 +150,7 @@ my %games = ();
 for (@{$results{results}}) {
     $games{$_->{game}}{factions}{$_->{faction}} = $_;
     $games{$_->{game}}{id} = $_->{game};
+    $games{$_->{game}}{non_standard} = $_->{non_standard};
 }
 
 for (values %games) {

@@ -232,6 +232,7 @@ sub evaluate_game {
         map_variant => $game{map_variant},
         final_scoring => $game{final_scoring},
         final_scoring_help => $game{final_scoring_help},
+        non_standard => $game{non_standard},
     };
 
     %game = ();

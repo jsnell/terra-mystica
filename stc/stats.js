@@ -3,6 +3,7 @@ var id = document.location.pathname;
 
 function showStats() {
     var count = 0;
+    $("high-scores-non-standard").hide();
     $H(state.factions).sortBy(function (a) { return -a.value.win_rate } ).each(function(elem) {
         elem.value.game_links = "";
         (elem.value.games_won || []).each(function (id) {
@@ -13,13 +14,18 @@ function showStats() {
         $("faction-stats").insert("<tr><td>#{key}<td>#{value.wins}<td>#{value.count}<td>#{value.win_rate}<td>#{value.average_position}<td>#{value.average_vp}<td>#{value.average_loss_vp}<td><span id=#{key}-links style='display: none'>#{value.game_links}</span><a href='javascript:showLinks(\"#{key}\")' id=#{key}-show-link>[show]</a></tr>"
                                   .interpolate(elem));
         count += elem.value.wins;
-        {
+        ['standard', 'non-standard'].each(function(standard) {
             var row = new Element("tr");
             row.insert(new Element("td").updateText(elem.key));
             for (var i = 3; i <= 5; ++i) {
-                var score = elem.value.high_score[i].vp;
-                var game = elem.value.high_score[i].game;
-                var player = elem.value.high_score[i].player;
+                if (!elem.value.high_score[standard] ||
+                    !elem.value.high_score[standard][i]) {
+                    row.insert(new Element("td"));
+                    continue;
+                }
+                var score = elem.value.high_score[standard][i].vp;
+                var game = elem.value.high_score[standard][i].game;
+                var player = elem.value.high_score[standard][i].player;
                 var gamelink = new Element("a", { href: "/game/" + game }).updateText(score);
                 var playerlink = null;
                 if (player) {
@@ -29,9 +35,8 @@ function showStats() {
                 row.insert(new Element("td").insert(gamelink).
                            insertTextSpan(" ").insert(playerlink));
             }
-            $("high-scores").insert(row);
-        }
-
+            $("high-scores-" + standard).insert(row);
+        });
     });
     ["-3p", "-4p", "-5p"].each(function(count) {
         $H(state["positions" + count]).sortBy(function (a) { return -a.value.win_rate } ).each(function(elem) {
@@ -60,4 +65,10 @@ function loadStats() {
             };
         }
     });
+}
+
+function selectHighScoreTable() {
+    var kind = $("high-score-selector").value;
+    $$("#high-scores table").each(function(table) { table.hide() });
+    $("high-scores-" + kind).show();
 }
