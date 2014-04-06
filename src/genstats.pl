@@ -31,8 +31,8 @@ sub record_stats {
         push @{$stat->{games_won}}, $res->{id};
     }
     my $standard = $res->{non_standard} ? 'non-standard' : 'standard';
-    if ($_->{vp} > ($stat->{high_score}{$standard}{$faction_count}{vp} // 0)) {
-        $stat->{high_score}{$standard}{$faction_count} = {
+    if ($_->{vp} > ($stat->{high_score}{$standard}{vp} // 0)) {
+        $stat->{high_score}{$standard} = {
             vp => $_->{vp},
             game => $res->{id},
             player => $_->{username},
@@ -114,11 +114,6 @@ sub handle_game {
             } values %{$res->{factions}};
         }
 
-        my $faction_stat = ($stats{factions}{$_->{faction}} ||= {
-            wins => 0,
-            games_won => [],
-        });
-
         my $start_position = ($_->{start_order} - 1) / ($faction_count - 1);
         if ($start_position == 0) {
             $start_position = 'first';
@@ -131,12 +126,21 @@ sub handle_game {
         } else {
             $start_position = 'second-to-last';
         }
+
+        my $faction_stat_all = ($stats{factions}{'all'}{$_->{faction}} ||= {
+            wins => 0,
+            games_won => [],
+        });
+        my $faction_stat_count = ($stats{factions}{$faction_count}{$_->{faction}} ||= {
+            wins => 0,
+            games_won => [],
+        });
         my $position_stat = ($stats{"positions-${faction_count}p"}{$start_position} ||= {
             wins => 0,
             games_won => [],
         });
 
-        for my $stat (($faction_stat, $position_stat)) {
+        for my $stat (($faction_stat_all, $faction_stat_count, $position_stat)) {
             record_stats($res, $stat, $pos, $faction_count,
                          $win_vp, $winner_count);
         }
@@ -157,16 +161,18 @@ for (values %games) {
     handle_game $_;
 }
 
-for my $stat (values %{$stats{factions}}) {
-    $stat->{win_rate} = int(100 * $stat->{wins} / $stat->{count});
-    $stat->{expected_win_rate} = int(100 * $stat->{expected_wins} / $stat->{count});
-    $stat->{average_loss_vp} = sprintf "%5.2f", ($stat->{average_winner_vp} - $stat->{average_vp}) / $stat->{count};
-    $stat->{average_vp} = sprintf "%5.2f", $stat->{average_vp} / $stat->{count};
-    $stat->{average_position} = sprintf "%5.2f", $stat->{average_position} / $stat->{count};
+for my $faction (values %{$stats{factions}}) {
+    for my $stat (values %{$faction}) {
+        $stat->{win_rate} = int(100 * $stat->{wins} / $stat->{count});
+        $stat->{expected_win_rate} = int(100 * $stat->{expected_wins} / $stat->{count});
+        $stat->{average_loss_vp} = sprintf "%5.2f", ($stat->{average_winner_vp} - $stat->{average_vp}) / $stat->{count};
+        $stat->{average_vp} = sprintf "%5.2f", $stat->{average_vp} / $stat->{count};
+        $stat->{average_position} = sprintf "%5.2f", $stat->{average_position} / $stat->{count};
 
-    $stat->{wins} = 0 + sprintf "%5.2f", $stat->{wins};
+        $stat->{wins} = 0 + sprintf "%5.2f", $stat->{wins};
 
-    delete $stat->{average_winner_vp};
+        delete $stat->{average_winner_vp};
+    }
 }
 
 for (3..5) {
