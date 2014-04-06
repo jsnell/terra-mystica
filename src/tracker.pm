@@ -108,6 +108,9 @@ sub finalize {
         delete $hex->{range};
         delete $hex->{bridge};
         delete $hex->{edge};
+        if ($hex->{town}) {
+            $hex->{town} = 1;
+        }
     }
     
     # Gross, but still needed

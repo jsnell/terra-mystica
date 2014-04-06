@@ -309,6 +309,9 @@ sub find_building_cliques {
         for my $to (@locations) {
             next if $loc eq $to;
             if (exists $map{$loc}{adjacent}{$to} or
+                ($faction->{name} eq 'mermaids' and
+                 exists $map{$loc}{skip} and
+                 exists $map{$loc}{skip}{$to}) or
                 ($allow_indirect and
                  exists $map{$loc}{range}{$ship}{$to} and
                  $map{$loc}{range}{$ship}{$to} <= $range)) {

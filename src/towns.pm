@@ -72,11 +72,11 @@ sub detect_towns_from {
     $handle = undef;
 
     my @reachable = keys %reachable;
-
+    my $town_tile_count = grep { /^TW/ and $game{pool}{$_} > 0 } keys %{$game{pool}};
     if ($power >= $faction->{TOWN_SIZE} and $count >= 4 and
-        grep { /^TW/ and $game{pool}{$_} > 0 } keys %{$game{pool}}) {
+        $town_tile_count) {
         # Use the same town id for all towns for now.
-        $map{$_}{town} = 1 for @reachable;
+        $map{$_}{town} = $town_tile_count for @reachable;
         adjust_resource($faction, "GAIN_TW", 1);
         return 1;
     }
