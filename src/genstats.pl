@@ -144,7 +144,7 @@ sub handle_game {
 }
 
 my $dbh = get_db_connection;
-my %results = get_finished_game_results $dbh, '';
+my %results = get_finished_game_results $dbh, '', $ARGV[0];
 my %games = ();
 
 for (@{$results{results}}) {
