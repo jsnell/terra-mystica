@@ -179,8 +179,11 @@ sub setup_valid_bridges {
         next if $coord =~ /^r/;
 
         # Same column, 2 rows off
-        if (($reverse_map->{$row+1}{$offset_col} // '') =~ /^r/ and
-            ($reverse_map->{$row+1}{$offset_col+1} // '') =~ /^r/) {
+        my $sw = ($reverse_map->{$row+1}{$offset_col} // '');
+        my $se = ($reverse_map->{$row+1}{$offset_col+1} // '');
+        if (($sw =~ /^r/ and $se =~ /^r/) or
+            ($sw =~ /^r/ and !$se) or
+            ($se =~ /^r/ and !$sw)) {
             record_bridgable $coord, $reverse_map->{$row+2}{$col};
         }
 
