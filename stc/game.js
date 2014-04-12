@@ -14,44 +14,6 @@ function hexCenter(row, col) {
     return [x, y];
 }
 
-var colors = {
-    red: '#e04040',
-    green: '#40a040',
-    yellow: '#e0e040',
-    brown: '#a06040',
-    blue: '#2080f0',
-    black: '#000000',
-    white: '#ffffff',
-    gray: '#808080',
-    orange: '#f0c040',
-    player: '#c0c0c0',
-    activeUI: '#8f8'
-};
-
-var bgcolors = {
-    red: '#f08080',
-    green: '#80f080',
-    yellow: '#f0f080',
-    blue: '#60c0f0',
-    black: '#404040',
-    white: '#ffffff',
-    gray: '#c0c0c0',
-    brown: '#b08040',
-    player: '#404040'
-};
-
-var contrastColor = {
-    red: '#000',
-    green: '#000',
-    yellow: '#000',
-    blue: '#000',
-    black: '#c0c0c0',
-    white: '#000',
-    gray: '#000',
-    brown: '#000',
-    player: '#000'
-};
-
 var cult_bgcolor = {
     FIRE: "#f88",
     WATER: "#ccf",

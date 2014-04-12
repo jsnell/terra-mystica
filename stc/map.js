@@ -17,6 +17,7 @@ function viewMap(mapid) {
                 $("map").show();
                 updateMapId(state.mapid, true);
                 drawMap();
+                drawGamesPlayed();
                 $("map-data").value = state.mapdata;
             }
         }
@@ -99,4 +100,34 @@ function showMap() {
     if (mapid) {
         viewMap(mapid);
     }
+}
+
+function drawGamesPlayed() {
+    var table = $("games-played");
+
+    var header = new Element("tr");
+    header.insert(new Element("td").updateText("Game"));
+    header.insert(new Element("td").updateText("Round"));
+    header.insert(new Element("td", {"colspan": 5}).updateText("Factions"));
+    table.insert(header);
+    state.games.each(function (game) {
+        var tr = new Element("tr");
+        var link = new Element("a", {"href": "/game/" + game.id}).
+            updateText(game.id)
+        if (game.finished) {
+            link.style.backgroundColor = "#8f8";
+        }
+        tr.insert(new Element("td").insert(link));
+        tr.insert(new Element("td").updateText(game.round));
+        game.factions.each(function (faction_info) {
+            if (faction_info == null) {
+                return;
+            }
+            var faction_name = faction_info.split(/ /)[0];
+            var faction = factionTableCell(faction_name);
+            faction.updateText(faction_info);
+            tr.insert(faction);
+        });
+        table.insert(tr);
+    });    
 }

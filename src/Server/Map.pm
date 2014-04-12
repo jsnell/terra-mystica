@@ -136,6 +136,12 @@ func view($dbh, $id, $res) {
     $res->{'map'} = \%terra_mystica::map;
     $res->{'mapdata'} = convert_to_lodev($map_str);
     $res->{'mapid'} = $id;
+
+    my $game_ids = $dbh->selectall_arrayref("select id, round, finished, array (select faction || ' ' || vp from game_role where faction != 'admin' and game=game.id order by vp desc) as factions from game where base_map=? order by finished, round",
+                                            { Slice => {} },
+                                            $id);
+
+    $res->{'games'} = $game_ids;
 }
 
 1;

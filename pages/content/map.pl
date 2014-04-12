@@ -31,4 +31,7 @@ __DATA__
   <button id="preview" onclick="javascript:previewMap()">Preview</button>
 </div>
 
+<h4>Games</h4>
+<table id="games-played" class="gamelist"></table>
+
 <script>showMap();</script>
