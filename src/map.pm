@@ -387,12 +387,12 @@ sub compute_network_size {
         $faction->{'connected-clusters'} = $count;
     }
 
-    if ($game{final_scoring}{'buildings-on-edge'}) {
+    if ($game{final_scoring}{'building-on-edge'}) {
         my $count = 0;
         for my $loc (@{$faction->{locations}}) {
             $count++ if $map{$loc}{edge};
         }
-        $faction->{'buildings-on-edge'} = $count;
+        $faction->{'building-on-edge'} = $count;
     }
 }
 
