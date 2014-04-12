@@ -49,11 +49,19 @@ function listGames(games, div, mode, status) {
         } else if (elem.finished) {
             elem.status_msg = "finished";
         }
-        elem.link = new Element("a", {"href": elem.link}).update(elem.role);
+        elem.link = new Element("a", {"href": elem.link, "class": "passthrough-color"}).update(elem.role);
 
         var row = new Element("tr", {"class": elem.status});
         fields.each(function(field) {
-            row.insert(new Element("td").update(elem[field.key]));
+            var td;
+            if (field.key == "link") {
+                td = factionTableCell(elem.role);
+                td.innerHTML = "";
+                td.insert(elem.link);
+            } else {
+                td = new Element("td").update(elem[field.key])
+            }
+            row.insert(td);
         });
 
         $(tbody).insert(row);

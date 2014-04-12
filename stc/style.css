@@ -387,6 +387,10 @@ a.static-color {
     color: #00f;
 }
 
+a.passthrough-color {
+    color: inherit;
+}
+
 div.menu {
     position: absolute;
     padding: 2px;

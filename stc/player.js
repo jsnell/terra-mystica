@@ -27,7 +27,8 @@ function renderStats(table, stats) {
         data.ranks = data.ranks.sort();
 
         var row = new Element("tr");
-        ['faction', 'wins', 'count', 'win_percentage', 'mean_vp', 'max_vp', 'ranks'].each(function (field) {
+        row.insert(factionTableCell(data.faction));
+        ['wins', 'count', 'win_percentage', 'mean_vp', 'max_vp', 'ranks'].each(function (field) {
             row.insert(new Element("td").updateText(data[field]));
         });
         table.insert(row);

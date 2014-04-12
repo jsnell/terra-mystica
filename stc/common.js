@@ -262,8 +262,10 @@ var isMobile = {
 
 function factionTableCell(faction_name) {
     var td = new Element("td").updateText(faction_name);
-    td.style.backgroundColor = bgcolors[factionColor[faction_name]];
-    td.style.color = contrastColor[factionColor[faction_name]];
+    if (factionColor[faction_name]) {
+        td.style.backgroundColor = bgcolors[factionColor[faction_name]];
+        td.style.color = contrastColor[factionColor[faction_name]];
+    }
     return td;
 }
 
