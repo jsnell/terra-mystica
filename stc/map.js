@@ -115,7 +115,7 @@ function drawGamesPlayed() {
         var link = new Element("a", {"href": "/game/" + game.id}).
             updateText(game.id)
         if (game.finished) {
-            link.style.backgroundColor = "#8f8";
+            game.round = "over";
         }
         tr.insert(new Element("td").insert(link));
         tr.insert(new Element("td").updateText(game.round));
