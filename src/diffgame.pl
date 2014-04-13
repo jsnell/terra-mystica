@@ -92,7 +92,7 @@ for (@{$games}) {
         printf "."; 
     }
 
-    if ($count % 10 == 0) {
+    if ($count % 40 == 0) {
         print "\n";
         if ($time eq 'total') {
             for my $dir ($dir1, $dir2) {
