@@ -1853,17 +1853,30 @@ function addFactionInput(parent, record, index) {
                      };
 
         $H(state.factions).each(function(used_faction) {
-            delete boards[used_faction.value.color];
+            if (boards[used_faction.value.color]) {
+                boards[used_faction.value.color] = [];
+            }
         });
 
         $H(boards).each(function(board) {
-            board.value.sort().each(function(free_faction) {
-                var button = new Element("button").updateText(free_faction);
-                button.onclick = function() {
-                    appendCommand("setup " + free_faction + "\n");
-                };
-                div.insert(button);
-            });
+            var color_factions = board.value.sort();
+            if (color_factions.size() == 0) {
+                var notAvailable = new Element("button").updateText(
+                    "Already taken");
+                notAvailable.style.backgroundColor = bgcolors[board.key];
+                notAvailable.style.color = contrastColor[board.key];
+                notAvailable.disabled = true;
+                div.insert(notAvailable);
+            } else {
+                color_factions.each(function(faction) {
+                    var button = new Element("button").updateText(faction);
+                    button.onclick = function() {
+                        appendCommand("setup " + faction + "\n");
+                    };
+                    setFactionStyleForElement(button, faction);
+                    div.insert(button);
+                });
+            }
             div.insert(new Element("br"));
         });
         parent.insert(div);

@@ -260,12 +260,16 @@ var isMobile = {
 
 // Colors
 
+function setFactionStyleForElement(element, faction_name) {
+    if (factionColor[faction_name]) {
+        element.style.backgroundColor = bgcolors[factionColor[faction_name]];
+        element.style.color = contrastColor[factionColor[faction_name]];
+    }
+}
+
 function factionTableCell(faction_name) {
     var td = new Element("td").updateText(faction_name);
-    if (factionColor[faction_name]) {
-        td.style.backgroundColor = bgcolors[factionColor[faction_name]];
-        td.style.color = contrastColor[factionColor[faction_name]];
-    }
+    setFactionStyleForElement(td, faction_name);
     return td;
 }
 
