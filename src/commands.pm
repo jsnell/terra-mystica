@@ -537,6 +537,10 @@ sub command_pass {
         $faction->{start_player} = 1;
     }
 
+    if ($faction->{passed}) {
+        die "Can't pass multiple times in one round\n";
+    }
+
     $faction->{passed} = 1;
     for (keys %{$faction}) {
         next if !$faction->{$_};
