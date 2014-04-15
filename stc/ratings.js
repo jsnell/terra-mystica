@@ -45,7 +45,7 @@ function showRatings(kind) {
                     
             $H(value.faction_breakdown).sortBy(function (elem) { return -elem.value.score }).each(function (elem) {
                 var breakdown_row = new Element("tr");
-                breakdown_row.insert(new Element("td").updateText(elem.key));
+                breakdown_row.insert(factionTableCell(elem.key));
                 breakdown_row.insert(new Element("td").updateText(Math.round(elem.value.score)));
                 breakdown_row.insert(new Element("td").updateText(Math.round(elem.value.count)));
                 breakdown.insert(breakdown_row);
@@ -58,7 +58,7 @@ function showRatings(kind) {
             cell.insert(breakdown);
             row.insert(cell);
         } else {
-            row.insert(new Element("td").updateText(value.name));
+            row.insert(factionTableCell(value.name));
             row.insert(new Element("td").updateText(value.games));
         }
         table.insert(row);
