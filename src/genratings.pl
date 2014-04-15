@@ -20,5 +20,16 @@ my $elo = compute_elo $rating_data;
 
 $elo->{timestamp} = POSIX::strftime "%Y-%m-%d %H:%M UTC", gmtime time;
 
+$dbh = get_db_connection;
+$dbh->do("begin");
+$dbh->do("delete from player_ratings");
+for my $player (keys %{$elo->{players}}) {
+    my $rating = $elo->{players}{$player}{score};
+    $dbh->do("insert into player_ratings (player, rating) values (?, ?)",
+             {},
+             $player, int $rating);
+}
+$dbh->do("commit");
+
 print encode_json $elo;
 

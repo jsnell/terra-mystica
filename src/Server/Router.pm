@@ -94,6 +94,9 @@ my %paths = (
     '/settings/' => sub {
         Server::Settings->new()
     },
+    '/user/metadata/' => sub {
+        Server::UserInfo->new({mode => 'metadata'})
+    },
     '/user/opponents/' => sub {
         Server::UserInfo->new({mode => 'opponents'})
     },

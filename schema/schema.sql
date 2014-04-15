@@ -102,3 +102,9 @@ create table chat_read (
     last_read timestamp,
     primary key (game, player)
 );
+
+create table player_ratings (
+    player text references player (username),
+    rating integer,
+    primary key (player)
+);

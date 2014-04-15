@@ -35,6 +35,19 @@ function renderStats(table, stats) {
     });
 }
 
+function renderMetadata(table, stats) {
+    var metadata = stats.metadata;
+    table.insert(new Element("tr").insert(
+        new Element("td").updateText("Username")).insert(
+            new Element("td").updateText(metadata.username)));
+    table.insert(new Element("tr").insert(
+        new Element("td").updateText("Display Name")).insert(
+            new Element("td").updateText(metadata.displayname)));
+    table.insert(new Element("tr").insert(
+        new Element("td").updateText("Rating")).insert(
+            new Element("td").updateText(metadata.rating || '-')));
+}
+
 function renderOpponents(table, stats) {
     stats.opponents.each(function (elem) {
         var data = elem;
@@ -64,7 +77,7 @@ var fetched = {};
 function selectPlayerTab() {
     var hash = document.location.hash;
     if (!hash) {
-        hash = "active"
+        hash = "metadata"
     } else {
         hash = hash.sub(/#/, '');
     }
@@ -78,6 +91,8 @@ function selectPlayerTab() {
             fetchStats($("stats-table"), 'stats', renderStats, user);
         } else if (hash == "opponents") {
             fetchStats($("opponents-table"), 'opponents', renderOpponents, user);
+        } else if (hash == "metadata") {
+            fetchStats($("metadata-table"), 'metadata', renderMetadata, user);
         }
         fetched[hash] = true;
     }

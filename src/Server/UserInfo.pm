@@ -27,6 +27,8 @@ method handle($q, $username) {
             $res->{stats} = fetch_user_stats $dbh, $username;
         } elsif ($self->mode() eq 'opponents') {
             $res->{opponents} = fetch_user_opponents $dbh, $username;
+        } elsif ($self->mode() eq 'metadata') {
+            $res->{metadata} = fetch_user_metadata $dbh, $username;
         } else {
             die "unknown mode\n";
         }

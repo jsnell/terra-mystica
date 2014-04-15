@@ -2,10 +2,21 @@
 
 package DB::UserInfo;
 use Exporter::Easy (
-    EXPORT => [qw(fetch_user_stats fetch_user_opponents)]
+    EXPORT => [qw(fetch_user_metadata fetch_user_stats fetch_user_opponents)]
     );
 
 use strict;
+
+sub fetch_user_metadata {
+    my ($dbh, $username) = @_;
+
+    my ($rows) =
+        $dbh->selectall_arrayref("select username, displayname, rating from player left join player_ratings on player.username=player_ratings.player where username=?;",
+                                 { Slice => {} },
+                                 $username);
+
+    $rows->[0];
+}
 
 sub fetch_user_stats {
     my ($dbh, $username) = @_;
