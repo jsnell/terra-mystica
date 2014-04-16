@@ -108,12 +108,10 @@ method make_game($dbh, $q, $username) {
         error "Game $gameid already exists";
     }
 
-    my ($email) = $dbh->selectrow_array("select address from email where player = ? and is_primary", {}, $username);
-
     my @options = $q->param('game-options');
 
     eval {
-        my $write_id = create_game $dbh, $gameid, $email, [@players], $player_count, @options;
+        my $write_id = create_game $dbh, $gameid, $username, [@players], $player_count, @options;
 
         my $description = $q->param('description');
         if ($description) {

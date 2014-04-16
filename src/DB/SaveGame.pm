@@ -107,7 +107,7 @@ sub evaluate_and_save {
 
 
 sub create_game {
-    my ($dbh, $id, $admin, $players, $player_count, @options) = @_;
+    my ($dbh, $id, $admin_user, $players, $player_count, @options) = @_;
 
     die "Invalid game id $id\n" if !$id or $id =~ /[^A-Za-z0-9]/;
 
@@ -134,14 +134,16 @@ EOF
     my $write_id = "${id}_${hash}";
     
     $dbh->do(
-        'insert into game (id, write_id, finished, round, player_count, wanted_player_count, needs_indexing) values  (?, ?, false, 0, ?, ?, false)',
+        'insert into game (id, write_id, finished, round, player_count, wanted_player_count, needs_indexing, admin_user) values  (?, ?, false, 0, ?, ?, false, ?)',
         {},
-        $id, $write_id, length @{$players}, $player_count);
+        $id, $write_id, length @{$players}, $player_count, $admin_user);
+
+    my ($admin_email) = $dbh->selectrow_array("select address from email where player = ? and is_primary", {}, $admin_user);
 
     $dbh->do("insert into game_role (game, email, faction, action_required) values (?, lower(?), 'admin', false)",
              {},
              $id,
-             $admin);
+             $admin_email);
  
     my $i = 0;
     for my $player (sort { $a->{username} cmp $b->{username} } @{$players}) {
