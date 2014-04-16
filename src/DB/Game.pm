@@ -238,7 +238,7 @@ sub get_admin_game_list {
     my ($dbh, $user, $mode, $status) = @_;
 
     my $games = $dbh->selectall_arrayref(
-        "select id, write_id, finished, (extract(epoch from now() - game.last_update)) as time_since_update, (select faction from game_role as gr2 where gr2.game = game.id and action_required limit 1) as waiting_for, round, aborted from game where admin_user=? and (finished = ? or (finished and last_update > now() - interval '2 days'))",
+        "select id, 'admin' as faction, write_id, finished, (extract(epoch from now() - game.last_update)) as time_since_update, (select faction from game_role as gr2 where gr2.game = game.id and action_required limit 1) as waiting_for, round, aborted from game where admin_user=? and (finished = ? or (finished and last_update > now() - interval '2 days'))",
         { Slice => {} },
         $user, $status);
     sorted_user_games (map {
