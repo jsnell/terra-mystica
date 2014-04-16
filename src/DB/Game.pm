@@ -211,13 +211,13 @@ sub role_link {
     }
 }
 
-sub get_user_game_list {
-    my ($dbh, $user, $mode, $status, $admin) = @_;
+sub get_player_game_list {
+    my ($dbh, $user, $mode, $status) = @_;
 
     my $roles = $dbh->selectall_arrayref(
-        "select game, faction, game.write_id, game.finished, action_required, (extract(epoch from now() - game.last_update)) as time_since_update, vp, rank, (select faction from game_role as gr2 where gr2.game = gr1.game and action_required limit 1) as waiting_for, leech_required, game.round, (select count(*) from chat_message where game=game.id and posted_at > (select coalesce((select last_read from chat_read where game=chat_message.game and player=?), '2012-01-01'))) as unread_chat, game.aborted from game_role as gr1 left join game on game=game.id where email in (select address from email where player = ?) and (game.finished = ? or (game.finished and last_update > now() - interval '2 days')) and (gr1.faction = 'admin') = ?",
+        "select game, faction, game.write_id, game.finished, action_required, (extract(epoch from now() - game.last_update)) as time_since_update, vp, rank, (select faction from game_role as gr2 where gr2.game = gr1.game and action_required limit 1) as waiting_for, leech_required, game.round, (select count(*) from chat_message where game=game.id and posted_at > (select coalesce((select last_read from chat_read where game=chat_message.game and player=?), '2012-01-01'))) as unread_chat, game.aborted from game_role as gr1 left join game on game=game.id where email in (select address from email where player = ?) and (game.finished = ? or (game.finished and last_update > now() - interval '2 days')) and (gr1.faction != 'admin')",
         { Slice => {} },
-        $user, $user, $status, $admin);
+        $user, $user, $status);
     sorted_user_games (map {
         { id => $_->{game},
           role => $_->{faction},
@@ -232,6 +232,38 @@ sub get_user_game_list {
           unread_chat_messages => 1*$_->{unread_chat},
           aborted => $_->{aborted},
         } } @{$roles});
+}
+
+sub get_admin_game_list {
+    my ($dbh, $user, $mode, $status) = @_;
+
+    my $games = $dbh->selectall_arrayref(
+        "select id, write_id, finished, (extract(epoch from now() - game.last_update)) as time_since_update, (select faction from game_role as gr2 where gr2.game = game.id and action_required limit 1) as waiting_for, round, aborted from game where admin_user=? and (finished = ? or (finished and last_update > now() - interval '2 days'))",
+        { Slice => {} },
+        $user, $status);
+    sorted_user_games (map {
+        { id => $_->{id},
+          role => 'admin',
+          link => ($mode eq 'other-user' ? "/game/$_->{game}" : role_link($dbh, $_)),
+          finished => $_->{finished} ? 1 : 0,
+          action_required => 0,
+          seconds_since_update => $_->{time_since_update},
+          vp => '',
+          rank => '',
+          waiting_for => $_->{waiting_for},
+          round => $_->{round},
+          aborted => $_->{aborted},
+        } } @{$games});
+}
+
+sub get_user_game_list {
+    my ($dbh, $user, $mode, $status, $admin) = @_;
+
+    if ($admin) {
+        get_admin_game_list $dbh, $user, $mode, $status;
+    } else {
+        get_player_game_list $dbh, $user, $mode, $status;
+    }
 }
 
 sub abort_game {
