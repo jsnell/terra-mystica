@@ -140,11 +140,6 @@ EOF
 
     my ($admin_email) = $dbh->selectrow_array("select address from email where player = ? and is_primary", {}, $admin_user);
 
-    $dbh->do("insert into game_role (game, email, faction, action_required) values (?, lower(?), 'admin', false)",
-             {},
-             $id,
-             $admin_email);
- 
     my $i = 0;
     for my $player (sort { $a->{username} cmp $b->{username} } @{$players}) {
         $dbh->do("insert into game_player (game, player, sort_key, index) values (?, ?, ?, ?)",
