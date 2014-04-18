@@ -130,7 +130,7 @@ sub command_build {
             if ($teleport) {
                 $faction->{TELEPORT_TO} = $where;
             }
-            pay $faction, $cost, 'faction';
+            pay $faction, $cost;
             gain $faction, $gain, 'faction';
         }
     }
@@ -456,7 +456,7 @@ sub command_transform {
     if ($teleport) {
         $faction->{TELEPORT_TO} = $where;
     }
-    pay $faction, $transform_cost, 'faction';
+    pay $faction, $transform_cost;
     gain $faction, $transform_gain, 'faction';
 
     if (!$faction->{SPADE}) {
@@ -594,7 +594,8 @@ sub command_action {
         $action .= "/$faction_name";
     }
 
-    if ($map{$action}{blocked}) {
+    if ($map{$action}{blocked} && !
+        $faction->{allow_reuse}{$action}) {
         die "Action space $action is blocked\n"
     }
 
@@ -604,7 +605,7 @@ sub command_action {
 
     $game{acting}->require_subaction($faction, 'action', \%subaction);
 
-    pay $faction, $actions{$name}{cost};
+    pay $faction, $actions{$name}{cost}, ($faction->{discount} and $faction->{discount}{$name});
     gain $faction, $actions{$name}{gain};
 
     $map{$action}{blocked} = 1;

@@ -86,10 +86,13 @@ sub alias_resource {
 }
 
 sub pay {
-    my ($faction, $cost) = @_;
+    my ($faction, $cost, $discount) = @_;
 
     for my $currency (keys %{$cost}) {
         my $amount = $cost->{$currency};
+        if (defined $discount and $discount->{$currency}) {
+            $amount -= $discount->{$currency};
+        }
         adjust_resource $faction, $currency, -$amount;
     }
 }
@@ -100,7 +103,12 @@ sub gain {
     my @c = sort { $b eq 'KEY' } keys %{$cost};
     for my $currency (@c) {
         my $amount = $cost->{$currency};
-        adjust_resource $faction, $currency, $amount, $source;
+        if (ref $amount) {
+            die "Internal error: tried to gain a reference multiple times\n" if $faction->{$currency};
+            $faction->{$currency} = clone $amount;
+        } else {
+            adjust_resource $faction, $currency, $amount, $source;
+        }
     }
 }
 

@@ -2325,9 +2325,23 @@ function addActionToMovePicker(picker, faction) {
             button.enable();
         }
     };
+    var action_pw_cost = function(action) {
+        var pw_discount = 0;
+        if (faction.discount && faction.discount[action]) {
+            pw_discount = faction.discount[action].PW || 0;
+        }
+        var pw_cost = state.actions[action].cost.PW - pw_discount;
+        return pw_cost;
+    }
+    var action_not_blocked = function(key, fkey) {
+        var blocked = (state.map[fkey] && state.map[fkey].blocked);
+        var allowed = faction.allow_reuse && faction.allow_reuse[key];
+
+        return !blocked || allowed;
+    };
     var execute = function() {
         var command = "action " + action.value;
-        var pw_cost = state.actions[action.value].cost.PW;
+        var pw_cost = action_pw_cost(action.value);
         if (burn.checked && pw_cost > faction.P3) {
             command = "burn " + (pw_cost - faction.P3) + ". " + command;
         }
@@ -2356,18 +2370,22 @@ function addActionToMovePicker(picker, faction) {
             if (!key.startsWith("ACT")) { return; }
             var action_canvas = $("action/" + key);
             action_canvas.onclick = function() { };
-            var pw_cost = state.actions[key].cost.PW;
-            if (!(state.map[key] && state.map[key].blocked) &&
+            var pw_cost = action_pw_cost(key);
+            if (action_not_blocked(key, key) &&
                 max_pw >= pw_cost) {
                 if (pw >= pw_cost) {
                     var burn = "";
                     if (pw_cost > faction.P3) {
                         burn = " (burn " + (pw_cost - faction.P3) + ")";
                     }
+                    var discount = (faction.discount ? faction.discount[key] : {})
                     possible_actions.push({
                         "key": key,
                         "name": elem.key,
-                        "cost": effectString([state.actions[key].cost], []) + burn,
+                        "cost": effectString([state.actions[key].cost],
+                                             // HACK: treat discounts as
+                                             // a gain here
+                                             []) + burn,
                         "canvas": action_canvas,
                     });
                 }
@@ -2388,7 +2406,7 @@ function addActionToMovePicker(picker, faction) {
             var action_canvas = $("action/" + fkey);
             action_canvas.onclick = function() {};
 
-            if (!(state.map[fkey] && state.map[fkey].blocked)) {
+            if (action_not_blocked(key, fkey)) {
                 possible_actions.push({
                     "key": key,
                     "name": elem.key,

@@ -77,6 +77,7 @@ Readonly our %actions => (
     BON2 => { cost => {}, gain => { CULT => 1 } },
     FAV6 => { cost => {}, gain => { CULT => 1 } },
 );
+my @power_action_names =  map { "ACT$_" } 1..6;
        
 sub init_tiles {
     my %tiles = @_;
@@ -698,46 +699,86 @@ Readonly our %faction_setups => (
 
 Readonly our %faction_setups_extra => (
     playtest_v1 => {
-    'icemaidens' => {
-        C => 15, W => 3, P1 => 5, P2 => 7,
-        GAIN_FAVOR => 1,
-        PICK_COLOR => 1,
-        WATER => 1, AIR => 1,
-        color => 'ice',
-        secondary_color => undef,
-        display => "Ice Maidens",
-        faction_board_id => undef,
-        ship => {
-            level => 0, max_level => 3,
-            advance_cost => { C => 4, P => 1 },
-            advance_gain => [ { VP => 2 },
-                              { VP => 3 },
-                              { VP => 4 } ]
-        },
-        dig => {
-            level => 0, max_level => 2,
-            cost => [ { W => 3 }, { W => 2 }, { W => 1 } ],
-            advance_cost => { C => 5, P => 1 },
-            advance_gain => [ { VP => 6 },
-                              { VP => 6 } ],
-        },
-        buildings => {
-            D => { advance_cost => { W => 1, C => 2 },
-                   income => { W => [ 1, 2, 3, 4, 5, 6, 7, 8, 8 ] } },
-            TP => { advance_cost => { W => 2, C => 3 },
-                    income => { C => [ 0, 2, 4, 6, 8 ],
-                                PW => [ 0, 1, 2, 6, 8 ] } },
-            TE => { advance_cost => { W => 2, C => 5 },
-                    income => { P => [ 0, 1, 2, 3 ] } },
-            SH => { advance_cost => { W => 4, C => 6 },
-                    pass_vp => [
-                        {},
-                        { TE => [0, 3, 6, 9] }
-                    ],
-                    income => { PW => [ 0, 4 ] } },
-            SA => { advance_cost => { W => 4, C => 6 },
-                    income => { P => [ 0, 1 ] } },
-        }},
+        'icemaidens' => {
+            C => 15, W => 3, P1 => 5, P2 => 7,
+            GAIN_FAVOR => 1,
+            PICK_COLOR => 1,
+            WATER => 1, AIR => 1,
+            color => 'ice',
+            secondary_color => undef,
+            display => "Ice Maidens",
+            faction_board_id => undef,
+            ship => {
+                level => 0, max_level => 3,
+                advance_cost => { C => 4, P => 1 },
+                advance_gain => [ { VP => 2 }, { VP => 3 }, { VP => 4 } ],
+            },
+            dig => {
+                level => 0, max_level => 2,
+                cost => [ { W => 3 }, { W => 2 }, { W => 1 } ],
+                advance_cost => { C => 5, P => 1 },
+                advance_gain => [ { VP => 6 },
+                                  { VP => 6 } ],
+            },
+            buildings => {
+                D => { advance_cost => { W => 1, C => 2 },
+                       income => { W => [ 1, 2, 3, 4, 5, 6, 7, 8, 8 ] } },
+                TP => { advance_cost => { W => 2, C => 3 },
+                        income => { C => [ 0, 2, 4, 6, 8 ],
+                                    PW => [ 0, 1, 2, 6, 8 ] } },
+                TE => { advance_cost => { W => 2, C => 5 },
+                        income => { P => [ 0, 1, 2, 3 ] } },
+                SH => { advance_cost => { W => 4, C => 6 },
+                        pass_vp => [
+                            {},
+                            { TE => [0, 3, 6, 9] }
+                            ],
+                        income => { PW => [ 0, 4 ] } },
+                SA => { advance_cost => { W => 4, C => 6 },
+                        income => { P => [ 0, 1 ] } },
+            }},
+        'yetis' => {
+            C => 15, W => 3, P1 => 0, P2 => 12,
+            PICK_COLOR => 1,
+            EARTH => 1, AIR => 1,
+            discount => {
+                (map { ($_ => { PW => 1 }) } @power_action_names),
+            },
+            color => 'ice',
+            secondary_color => undef,
+            display => "Yetis",
+            faction_board_id => undef,
+            ship => {
+                level => 0, max_level => 3,
+                advance_cost => { C => 4, P => 1 },
+                advance_gain => [ { VP => 2 },
+                                  { VP => 3 },
+                                  { VP => 4 } ],
+            },
+            dig => {
+                level => 0, max_level => 2,
+                cost => [ { W => 3 }, { W => 2 }, { W => 1 } ],
+                advance_cost => { W => 1, C => 5, P => 1 },
+                advance_gain => [ { VP => 6 },
+                                  { VP => 6 } ],
+            },
+            buildings => {
+                D => { advance_cost => { W => 1, C => 2 },
+                       income => { W => [ 1, 2, 3, 4, 5, 6, 7, 8, 8 ] } },
+                TP => { advance_cost => { W => 2, C => 3 },
+                        income => { C => [ 0, 2, 4, 6, 8 ],
+                                    PW => [ 0, 2, 4, 6, 8 ] } },
+                TE => { advance_cost => { W => 2, C => 5 },
+                        income => { P => [ 0, 1, 2, 3 ] } },
+                SH => { advance_cost => { W => 4, C => 6 },
+                        advance_gain => [ {
+                            allow_reuse => {
+                                (map { ($_ => 1) } @power_action_names),
+                            }} ],
+                        income => { PW => [ 0, 4 ] } },
+                SA => { advance_cost => { W => 4, C => 6 },
+                        income => { P => [ 0, 1 ] } },
+            }},
     }
     );
 
