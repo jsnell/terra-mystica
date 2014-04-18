@@ -7,8 +7,6 @@
 }
 
 __DATA__
-<div id="error"></div>
-
 <div id="action_required"></div>
 
 <div id="status"></div>
@@ -20,6 +18,8 @@ __DATA__
 <div>
   <textarea id="fallback-editor"></textarea>
 </div>
+
+<div id="error"></div>
 
 <input type="button" value="Save" onClick="javascript:save()" id="save-button"/>
 
