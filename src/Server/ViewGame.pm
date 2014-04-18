@@ -38,8 +38,10 @@ method handle($q) {
 
     if (defined $preview) {
         if ($preview_faction =~ /^player/) {
-            if ($preview =~ /(setup \w+)/i) {
-                push @rows, "$1\n"; 
+            if ($preview =~ s/(setup (\w+))//i) {
+                push @rows, "$1\n";
+                $preview_faction = lc $2;
+                push @rows, (map { "$preview_faction: $_" } grep { /\S/ } split /\n/, $preview);
             }
         } else {
             push @rows, (map { "$preview_faction: $_" } split /\n/, $preview);

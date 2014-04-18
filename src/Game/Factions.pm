@@ -26,7 +26,8 @@ sub clone {
 };
 
 func initialize_faction($faction_name) {
-    my $faction = clone $faction_setups{$faction_name};
+    my $faction = clone ($faction_setups{$faction_name} or
+                         $faction_setups_extra{playtest_v1}{$faction_name});
 
     die "Unknown faction: $faction_name\n" if !$faction;
 

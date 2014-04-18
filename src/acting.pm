@@ -311,12 +311,27 @@ method in_select_factions() {
         return;
     }
 
+    my $faction = ($self->factions_in_order())[-1];
+    if ($faction) {
+        $self->replace_all_actions();
+        my ($incomplete) = $self->detect_incomplete_turn($faction);
+        if ($incomplete) {
+            my $player_index = "player".($self->faction_count());
+            for my $record (@{$self->action_required()}) {
+                $record->{player_index} = $player_index;
+            }
+            return;
+        }
+    }
+
     if ($self->player_count() != $self->faction_count()) {
         my $player = $self->players->[$self->faction_count()];
+        my $player_index = "player".(1+$self->faction_count());
         $self->replace_all_actions({
             type => 'faction',
             player => ($player->{displayname} // $player->{name}),
-            player_index => "player".(1+$self->faction_count())});
+            player_index => $player_index,
+        });
     } else {
         $self->state('initial-dwellings');
     }
@@ -414,6 +429,13 @@ method detect_incomplete_turn($faction) {
     my $faction_name = $faction->{name};
     my $ledger = $self->game()->{ledger};
     my $incomplete = 0;
+
+    if ($faction->{PICK_COLOR}) {
+        $incomplete = 1;
+        $self->require_action($faction, {
+            type => 'pick-color',
+        });
+    }
 
     if ($faction->{SPADE}) {
         $incomplete = 1;

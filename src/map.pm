@@ -398,7 +398,8 @@ sub compute_network_size {
 
 # The terraforming color wheel.
 my @colors = qw(yellow brown black blue green gray red);
-my %colors = map { ($colors[$_], $_) } 0..$#colors;
+my %color_cycle = map { ($colors[$_], $_) } 0..$#colors;
+my %colors = map { ($_ => 1) } @colors, qw(ice);
 
 sub assert_color {
     for (@_) {
@@ -410,7 +411,7 @@ sub assert_color {
 
 sub color_difference {
     my ($a, $b) = assert_color @_;
-    my $diff = abs $colors{$a} - $colors{$b};
+    my $diff = abs $color_cycle{$a} - $color_cycle{$b};
 
     if ($diff > 3) {
         $diff = 7 - $diff;
@@ -451,22 +452,12 @@ sub compute_leech {
     return %this_leech;
 }
 
-sub transform_colors {
-    my ($faction, $where) = @_;
-    if ($faction->{FREE_TF} or
-        $faction->{name} eq 'giants') {
-        return ($faction->{color}, undef);
-    }
-
-    my $current_color = $map{$where}{color};
-    my $home_color = $faction->{color};
-
-    return ($current_color, $current_color) if !$faction->{SPADE};
-
-    my $index = $colors{$current_color};
+sub transform_colors_on_cycle {
+    my ($current_color, $home_color, $spades) = @_;
+    my $index = $color_cycle{$current_color};
     my ($cw, $ccw) = ($current_color, $current_color);
 
-    for my $offset (1..$faction->{SPADE}) {
+    for my $offset (1..$spades) {
         if ($cw ne $home_color) {
             $cw = $colors[($index + $offset) % 7];
         }
@@ -483,6 +474,39 @@ sub transform_colors {
     }
 }
 
+sub transform_colors {
+    my ($faction, $where) = @_;
+    my $current_color = $map{$where}{color};
+
+    if ($current_color eq 'ice') {
+        die "Can't transform $current_color\n";
+    }
+
+    if ($faction->{FREE_TF} or
+        $faction->{name} eq 'giants') {
+        return ($faction->{color}, undef);
+    }
+
+    my $spades = $faction->{SPADE};
+    return ($current_color, $current_color) if !$spades;
+
+    my $home_color = $faction->{color};
+    my $secondary_color = $faction->{secondary_color};
+
+    if ($secondary_color) {
+        if ($current_color eq $secondary_color) {
+            return ($home_color, $home_color);
+        } else {
+            my @a = map {
+                $_ eq $secondary_color ? $home_color : $_
+            } transform_colors_on_cycle $current_color, $secondary_color, $spades;            
+            return @a;
+        }
+    } else {
+        return transform_colors_on_cycle $current_color, $home_color, $spades;
+    }
+}
+
 sub transform_cost {
     my ($faction, $where, $color) = @_;
 
@@ -492,7 +516,17 @@ sub transform_cost {
 
     my ($cost, $gain, $need_teleport) = check_reachable $faction, $where;
 
-    my $color_difference = color_difference $map{$where}{color}, $color;
+    my $color_difference;
+
+    if ($color eq 'ice') {
+        if ($map{$where}{color} eq $faction->{secondary_color}) {
+            $color_difference = 1;
+        } else {
+            $color_difference = color_difference $map{$where}{color}, $faction->{secondary_color};
+        }
+    } else {
+        $color_difference = color_difference $map{$where}{color}, $color;
+    }
 
     if ($faction->{name} eq 'giants' and $color_difference != 0) {
         $color_difference = 2;

@@ -282,6 +282,7 @@ var colors = {
     black: '#000000',
     white: '#ffffff',
     gray: '#808080',
+    ice: '#ffffff',
     orange: '#f0c040',
     player: '#c0c0c0',
     activeUI: '#8f8'
@@ -296,6 +297,7 @@ var bgcolors = {
     white: '#ffffff',
     gray: '#c0c0c0',
     brown: '#b08040',
+    ice: '#f0f0ff',
     player: '#404040'
 };
 
@@ -308,6 +310,7 @@ var contrastColor = {
     white: '#000',
     gray: '#000',
     brown: '#000',
+    ice: '#000',
     player: '#000'
 };
 
@@ -326,5 +329,7 @@ var factionColor = {
     auren: 'green',
     dwarves: 'gray',
     engineers: 'gray',
+    icemaidens: 'ice',
+    yetis: 'ice',
 };
 

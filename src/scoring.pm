@@ -148,6 +148,18 @@ sub do_pass_vp {
         }
     }
 
+    for my $building (values %{$faction->{buildings}}) {
+        my $pass_vps = $building->{pass_vp};
+        next if !defined $pass_vps;
+        my $pass_vp = $pass_vps->[$building->{level}];
+
+        for my $type (keys %{$pass_vp}) {
+            my $level = $faction->{buildings}{$type}{level} //
+                $faction->{$type}{level};
+            $fun->($pass_vp->{$type}[$level], $_);
+        }
+    }
+
     # XXX hack
     if ($faction->{name} eq 'engineers' and
         $faction->{buildings}{SH}{level}) {

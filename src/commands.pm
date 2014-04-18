@@ -119,7 +119,12 @@ sub command_build {
             if $tf_needed;
     } else {
         if ($tf_needed) {
-            command $faction_name, "transform $where to $color";
+            if ($game{round} == 0 and
+                $map{$where}{color} eq $faction->{secondary_color}) {
+                $map{$where}{color} = $color;
+            } else {
+                command $faction_name, "transform $where to $color";
+            }
         } else {
             my ($cost, $gain, $teleport) = check_reachable $faction, $where;
             if ($teleport) {
@@ -977,6 +982,20 @@ sub command {
     } elsif ($command =~ /^done$/i) {
         ($assert_faction->())->{allowed_sub_actions} = {};
         ($assert_faction->())->{allowed_actions} = 0;
+    } elsif ($command =~ /^pick-color (\w+)$/i) {
+        my $faction = $assert_faction->();
+        if (!$faction->{PICK_COLOR}) {
+            die "$faction->{name} is not allowed to pick a color\n";
+        }
+        my ($wanted_color) = assert_color alias_color $1;
+        for my $other ($game{acting}->factions_in_order()) {
+            if ($other->{color} eq $wanted_color or
+                $other->{secondary_color} eq $wanted_color) {
+                die "$wanted_color is not available\n";
+            }
+        }
+        delete $faction->{PICK_COLOR};
+        $faction->{secondary_color} = $wanted_color;
     } elsif ($command =~ /^start_planning$/i) {
         command_start_planning $assert_faction->();
     } elsif ($command =~ /^map (.*)/i) {

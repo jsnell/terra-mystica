@@ -61,9 +61,12 @@ method handle($q) {
                                      $read_id, $faction_name, $faction_key);
 
     if ($faction_name =~ /^player/) {
-        $preview =~ /(setup (\w+))/i;
-        $append = "$1\n";
-        $faction_name = lc $2;
+        $preview =~ s/\r//g;
+        if ($preview =~ s/(setup (\w+))//i) {
+            $faction_name = lc $2;
+            $append = "$1\n";
+            $append .= join "\n", (map { chomp; "$faction_name: $_" } grep { /\S/ } split /\n/, $preview);
+        } 
     } else {
         $append = join "\n", (map { "$faction_name: $_" } grep { /\S/ } split /\n/, $preview);
     }

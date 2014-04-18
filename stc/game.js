@@ -837,10 +837,11 @@ function makeBoard(color, title, info_link, klass, style) {
 
 var cycle = [ "red", "yellow", "brown", "black", "blue", "green", "gray" ]; 
 
-function renderColorCycle(parent, startColor) {
+function renderColorCycle(parent, primaryColor, secondaryColor) {
     parent.insert(new Element('canvas', {
         'class': 'colorcycle', 'width': 90, 'height': 80}));
     var canvas = parent.childElements().last();
+    var startColor = secondaryColor || primaryColor;
 
     if (!canvas.getContext) {
         return;
@@ -865,6 +866,20 @@ function renderColorCycle(parent, startColor) {
         ctx.stroke();
         ctx.restore();
         ctx.rotate(Math.PI * 2 / 7);
+    }
+
+    if (secondaryColor) {
+        ctx.save();
+        ctx.translate(0, 20);
+
+        ctx.beginPath();
+        ctx.arc(0, -30, 10, Math.PI * 2, 0, false);
+
+        ctx.fillStyle = bgcolors[primaryColor];
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.restore();
     }
 
     ctx.restore();
@@ -978,7 +993,9 @@ function drawFaction(name) {
         drawRealFaction(faction, board);
     }
 
-    renderColorCycle(container, faction.color);
+    renderColorCycle(container,
+                     faction.color,
+                     faction.secondary_color);
     renderTreasury(container, faction, name);
     
     $("factions").insert(container);
@@ -1573,6 +1590,8 @@ function drawActionRequired() {
             pretty_elem.insert(table);
         } else if (record.type == 'faction') {
             pretty_text = '#{player} should pick a faction'.interpolate(record);
+        } else if (record.type == 'pick-color') {
+            pretty_text = 'must pick a color'.interpolate(record);
         } else if (record.type == 'not-started') {
             pretty_text = "Game hasn't started yet, #{player_count}/#{wanted_player_count} players have joined.".interpolate(record);
         } else if (record.type == 'planning') {
@@ -1711,7 +1730,9 @@ function addTakeTileButtons(parent, index, prefix, id) {
             return;
         }
 
-        if (prefix == "FAV" && state.factions[currentFaction][tile.key] > 0) {
+        if (prefix == "FAV" &&
+            state.factions[currentFaction] &&
+            state.factions[currentFaction][tile.key] > 0) {
             return;
         }
 
@@ -1881,6 +1902,47 @@ function addFactionInput(parent, record, index) {
         });
         parent.insert(div);
     }
+    if (record.type == "pick-color") {
+        var div = new Element("div", { "id": "leech-" + index + "-0",
+                                       "style": "padding-left: 2em" });
+        var available = { "green": true,
+                          "blue": true,
+                          "black": true,
+                          "brown": true,
+                          "yellow": true,
+                          "red": true,
+                          "gray": true
+                        };
+
+        $H(state.factions).each(function(used_faction) {
+            if (available[used_faction.value.color]) {
+                available[used_faction.value.color] = false;
+            }
+        });
+
+        $H(available).each(function(elem) {
+            var color = elem.key;
+            var ok = elem.value;
+            if (!ok) {
+                var notAvailable = new Element("button").updateText(
+                    "Already taken");
+                notAvailable.style.backgroundColor = bgcolors[color];
+                notAvailable.style.color = contrastColor[color];
+                notAvailable.disabled = true;
+                div.insert(notAvailable);
+            } else {
+                var button = new Element("button").updateText(color);
+                button.onclick = function() {
+                    appendCommand("pick-color " + color + "\n");
+                };
+                button.style.backgroundColor = bgcolors[color];
+                button.style.color = contrastColor[color];
+                div.insert(button);
+            }
+            div.insert(new Element("br"));
+        });
+        parent.insert(div);
+    }
     if (record.type == "dwelling") {
         var div = new Element("div", { "id": "leech-" + index,
                                        "style": "padding-left: 2em" });
@@ -1891,7 +1953,8 @@ function addFactionInput(parent, record, index) {
                 return;
             }
 
-            if (hex.color != faction.color) {
+            if (hex.color != faction.color &&
+                hex.color != faction.secondary_color) {
                 return;
             }
 
