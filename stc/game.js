@@ -2889,7 +2889,7 @@ function addConvertToMovePicker(picker, faction) {
             var from_type = types[0];
             var to_type = types[1];
             var rate = faction.exchange_rates[from_type][to_type];
-            for (var i = 1; rate * i <= faction[from_type]; i++) {
+            for (var i = 1; rate * i <= faction[from_type] && i < 10; i++) {
                 amount.insert(new Element("option").updateText(i));
             }
         }
@@ -2910,6 +2910,7 @@ function addConvertToMovePicker(picker, faction) {
     var rates = $H(faction.exchange_rates);
     rates.sortBy(naturalSortKey).reverse().each(function (elem) {
         var from = elem.key;
+        var from_type = from == "P" ? "Priest" : from;
         var to = $H(elem.value);
         var need_label = false;
         to.sortBy(naturalSortKey).reverse().each(function (to_elem) {
@@ -2917,7 +2918,7 @@ function addConvertToMovePicker(picker, faction) {
             var rate = to_elem.value;
 
             if (faction[from] >= rate) {
-                var label = from + " to " + to_type;
+                var label = from_type + " to " + to_type;
                 if (rate > 1) {
                     label = rate + " " +label;
                 }
@@ -2928,7 +2929,7 @@ function addConvertToMovePicker(picker, faction) {
             }
         });
         if (need_label) {
-            type.insert({"top": new Element("option", {"value": "-"}).updateText(from)});
+            type.insert({"top": new Element("option", {"value": "-"}).updateText(from_type)});
         }
     });
 
