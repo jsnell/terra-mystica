@@ -837,7 +837,10 @@ function makeBoard(color, title, info_link, klass, style) {
 
 var cycle = [ "red", "yellow", "brown", "black", "blue", "green", "gray" ]; 
 
-function renderColorCycle(parent, primaryColor, secondaryColor) {
+function renderColorCycle(faction, parent) {
+    var primaryColor = faction.color;
+    var secondaryColor = faction.secondary_color;
+
     parent.insert(new Element('canvas', {
         'class': 'colorcycle', 'width': 90, 'height': 80}));
     var canvas = parent.childElements().last();
@@ -870,7 +873,11 @@ function renderColorCycle(parent, primaryColor, secondaryColor) {
 
     if (secondaryColor) {
         ctx.save();
-        ctx.translate(0, 20);
+        if (primaryColor == "ice") {
+            ctx.translate(0, 20);
+        } else {
+            ctx.translate(0, 30);
+        }
 
         ctx.beginPath();
         ctx.arc(0, -30, 10, Math.PI * 2, 0, false);
@@ -993,9 +1000,7 @@ function drawFaction(name) {
         drawRealFaction(faction, board);
     }
 
-    renderColorCycle(container,
-                     faction.color,
-                     faction.secondary_color);
+    renderColorCycle(faction, container);
     renderTreasury(container, faction, name);
     
     $("factions").insert(container);
@@ -1541,7 +1546,7 @@ function drawActionRequired() {
             if (record.amount == 1) {
                 pretty_text = 'may use a spade (click on map to transform)'.interpolate(record);
             } else if (record.amount == null) {
-                pretty_text = 'may transform a space for free (click on map)'.interpolate(record);
+                pretty_text = 'may transform a space (click on map)'.interpolate(record);
             } else {
                 pretty_text = 'may use #{amount} spades (click on map to transform)'.interpolate(record);
             }
@@ -1549,7 +1554,13 @@ function drawActionRequired() {
             if (record.amount == 1) {
                 pretty_text = 'may advance 1 step on a cult track'.interpolate(record);
             } else {
-                pretty_text = 'may advance #{amount} steps on cult tracks'.interpolate(record);
+                pretty_text = 'may advance #{amount} steps on a cult track'.interpolate(record);
+            }
+        } else if (record.type == 'lose-cult') {
+            if (record.amount == 1) {
+                pretty_text = 'must lose 1 step on a cult track'.interpolate(record);
+            } else {
+                pretty_text = 'must lose #{amount} steps on a cult track'.interpolate(record);
             }
         } else if (record.type == 'town') {
             if (record.amount == 1) {
@@ -1800,6 +1811,22 @@ function addFactionInput(parent, record, index) {
             var button = new Element("button").updateText(cult.capitalize());
             button.onclick = function() {
                 gainResource(index, amount == 1 ? '' : amount, cult, 0);
+            };
+            div.insert(button);                                               
+        });
+        parent.insert(div);
+    }
+    if (record.type == "lose-cult") {
+        var amount = record.amount;
+        var div = new Element("div", { "id": "leech-" + index + "-0",
+                                       "style": "padding-left: 2em" });
+        cults.each(function(cult) {
+            if (faction[cult] < amount) {
+                return;
+            }
+            var button = new Element("button").updateText(cult.capitalize());
+            button.onclick = function() {
+                gainResource(index, -amount, cult, 0);
             };
             div.insert(button);                                               
         });
@@ -2091,6 +2118,8 @@ function gainResource(index, amount, resource, id) {
     $("leech-" + index + "-" + id).style.display = "none";
     if (resource.startsWith("BON")) {
         appendCommand("Pass #{resource}\n".interpolate(record));
+    } else if (amount < 0) {
+        appendCommand("-#{amount}#{resource}".interpolate(record));
     } else {
         appendCommand("+#{amount_pretty}#{resource}".interpolate(record));
     }
@@ -2152,6 +2181,10 @@ function updateMovePicker() {
     var faction = state.factions[currentFaction];
     if (!picker || !faction || faction.placeholder) {
         return;
+    }
+
+    if (!faction.allowed_sub_actions) {
+        faction.allowed_sub_actions = {};
     }
 
     var undo = addUndoToMovePicker(picker, faction);

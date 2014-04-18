@@ -35,12 +35,14 @@ sub setup_pool {
 
         # Temporary pseudo-resources for tracking activation effects
         SPADE => 10000,
+        VOLCANO_TF => 10000,
         FREE_TF => 10000,
         FREE_TP => 10000,
         FREE_D => 10000,
         TELEPORT_NO_TF => 10000,
         TF_NEED_HEX_ADJACENCY => 10000,
         CULT => 10000,
+        LOSE_CULT => 10000,
         GAIN_FAVOR => 10000,
         GAIN_SHIP => 10000,
         GAIN_TW => 10000,
@@ -48,6 +50,7 @@ sub setup_pool {
         BRIDGE => 10000,
         CONVERT_W_TO_P => 3,
         TOWN_SIZE => 10000,
+        LOSE_PW_TOKEN => 10000,
         carpet_range => 3,
     };
 
@@ -174,6 +177,12 @@ sub maybe_gain_power_from_cult {
             }
         }
     }
+    if ($old_value == 10 && $new_value < 10) {
+        adjust_resource $faction, 'KEY', 1;
+        for my $other_faction ($game{acting}->factions_in_order()) {
+            $other_faction->{"MAX_$cult"} = 10;
+        }
+    }
 }
 
 sub advance_track {
@@ -215,6 +224,19 @@ sub adjust_resource {
         $type = '';
     } elsif ($type eq 'GAIN_ACTION') {
         $faction->{allowed_actions} += $delta;
+        return;
+    } elsif ($type eq 'LOSE_PW_TOKEN') {
+        for (1..$delta) {
+            if ($faction->{P1}) {
+                $faction->{P1}--;
+            } elsif ($faction->{P2}) {
+                $faction->{P2}--;
+            } elsif ($faction->{P3}) {
+                $faction->{P3}--;
+            } else {
+                die "Don't have $delta power tokens to spend\n"
+            }
+        }
         return;
     } elsif ($type eq 'PW') {
         if ($delta > 0) {

@@ -31,6 +31,17 @@ sub command_adjust_resources {
         if ($faction->{CULT} < $delta) {
             # die "Advancing $delta steps on $type cult not allowed\n";
         } elsif ($delta < 0) {
+            if ($faction->{LOSE_CULT}) {
+                my $loss = -$delta;
+                if ($faction->{LOSE_CULT} != $loss) {
+                    die "All cult steps must be lost on the same cult track\n";
+                }
+                if ($faction->{$type} < $loss) {
+                    die "Not high enough on $type to lose $loss steps";
+                }
+                $faction->{LOSE_CULT} -= $loss;
+                $checked = 1;
+            }
         } elsif ($faction->{CULT} > $delta) {
             die "All cult advances must be used on the same cult track\n";
         } else {
@@ -494,7 +505,9 @@ sub command_dig {
         });
     };
 
-    adjust_resource $faction, 'SPADE', $amount;
+    if (!$gain) {
+        adjust_resource $faction, 'SPADE', $amount;
+    }
     pay $faction, $cost for 1..$amount;
     gain $faction, $gain, 'faction' for 1..$amount;
 }

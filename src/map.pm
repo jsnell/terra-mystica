@@ -4,6 +4,7 @@ package terra_mystica;
 
 use strict;
 
+use Carp;
 use Clone qw(clone);
 
 use vars qw(%game);
@@ -480,10 +481,11 @@ sub transform_colors {
 
     if ($current_color eq 'ice' or
         $current_color eq 'volcano') {
-        die "Can't transform $current_color\n";
+        confess "Can't transform $current_color\n";
     }
 
     if ($faction->{FREE_TF} or
+        $faction->{color} eq 'volcano' or
         $faction->{name} eq 'giants') {
         return ($faction->{color}, undef);
     }
@@ -525,6 +527,9 @@ sub transform_cost {
         } else {
             $color_difference = color_difference $map{$where}{color}, $faction->{secondary_color};
         }
+    } elsif ($color eq 'volcano') {
+        # Arbitrary, but must be non-zero.
+        $color_difference = 7;
     } else {
         $color_difference = color_difference $map{$where}{color}, $color;
     }
@@ -533,7 +538,31 @@ sub transform_cost {
         $color_difference = 2;
     }
 
-    if ($faction->{FREE_TF}) {
+    if ($color eq 'volcano') {
+        $cost->{VOLCANO_TF} += 1;
+        my $hex_type = 'not_home';
+        for my $other_faction ($game{acting}->factions_in_order()) {
+            if ($other_faction->{color} eq $map{$where}{color}) {
+                $hex_type = 'home';
+            }
+        }
+        my $effect = $faction->{volcano_effect}{$hex_type};
+        for my $currency (keys %{$effect}) {
+            my $amount = $effect->{$currency};
+            if ($currency eq 'LOSE_PW_TOKEN') {
+                if ($faction->{P1} + $faction->{P2} + $faction->{P3} < $amount) {
+                    die "Not enough power for volcano\n";
+                }
+            } elsif ($currency eq 'LOSE_CULT') {
+                my $ok = 0;
+                for my $cult (@cults) {
+                    $ok = 1 if $faction->{$cult} >= $amount;
+                }
+                die "Not high enough in any cult for volcano\n" if !$ok;
+            }
+            $cost->{$currency} -= $amount;
+        }
+    } elsif ($faction->{FREE_TF}) {
         $cost->{FREE_TF} += 1;
     } else {
         $cost->{SPADE} += $color_difference;
@@ -599,7 +628,12 @@ sub update_reachable_tf_locations {
                 next if $map{$loc}{color} eq $faction->{color} or
                     $map{$loc}{building};
 
-                for my $color (transform_colors $faction, $loc) {
+                my @colors = eval {
+                    transform_colors $faction, $loc
+                };
+                next if $@;
+
+                for my $color (@colors) {
                     next if !$color;
 
                     my $cost = {};

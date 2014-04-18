@@ -235,6 +235,10 @@ method what_next() {
         $self->in_select_factions();
     }
 
+    if ($self->state() eq 'post-setup') {
+        $self->in_post_setup();
+    }
+
     if ($self->state() eq 'initial-dwellings') {
         $self->in_initial_dwellings();
     }
@@ -333,6 +337,21 @@ method in_select_factions() {
             player_index => $player_index,
         });
     } else {
+        $self->state('post-setup');
+    }
+}
+
+method in_post_setup() {
+    my $incomplete = 0;
+    for my $faction ($self->factions_in_order()) {
+        my $post_setup = $faction->{post_setup};
+        for (keys %{$post_setup}) {
+            $faction->{$_} = $post_setup->{$_};
+        }
+        delete $faction->{post_setup};
+        $incomplete += $self->detect_incomplete_turn($faction);
+    }
+    if (!$incomplete) {
         $self->state('initial-dwellings');
     }
 }
@@ -455,6 +474,22 @@ method detect_incomplete_turn($faction) {
         $ledger->warn("Unused free terraform for $faction_name");
         $self->require_action($faction, {
             type => 'transform',
+        });
+    }
+
+    if ($faction->{VOLCANO_TF}) {
+        $incomplete = 1;
+        $ledger->warn("Unused terraform for $faction_name");
+        $self->require_action($faction, {
+            type => 'transform',
+        });
+    }
+
+    if ($faction->{LOSE_CULT}) {
+        $incomplete = 1;
+        $self->require_action($faction, {
+            type => 'lose-cult',
+            amount => $faction->{LOSE_CULT}
         });
     }
 
