@@ -282,7 +282,7 @@ var colors = {
     black: '#000000',
     white: '#ffffff',
     gray: '#808080',
-    ice: '#ffffff',
+    ice: '#f0f8ff',
     orange: '#f0c040',
     player: '#c0c0c0',
     activeUI: '#8f8'
@@ -297,7 +297,7 @@ var bgcolors = {
     white: '#ffffff',
     gray: '#c0c0c0',
     brown: '#b08040',
-    ice: '#f0f0ff',
+    ice: '#e0f0ff',
     player: '#404040'
 };
 
