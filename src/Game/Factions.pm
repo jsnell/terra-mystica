@@ -25,9 +25,13 @@ sub clone {
     }
 };
 
-func initialize_faction($faction_name) {
-    my $faction = clone ($faction_setups{$faction_name} or
-                         $faction_setups_extra{playtest_v1}{$faction_name});
+func initialize_faction($game, $faction_name) {
+    my $faction;
+
+    for my $variant (@{$game->{faction_variants}}) {
+        $faction //= clone $faction_setups_extra{$variant}{$faction_name};
+    }
+    $faction //= clone $faction_setups{$faction_name};
 
     die "Unknown faction: $faction_name\n" if !$faction;
 
@@ -93,7 +97,7 @@ func initialize_faction($faction_name) {
 func setup_faction($game, $faction_name, $player, $email) {
     my $acting = $game->{acting};
 
-    my $faction = initialize_faction($faction_name);
+    my $faction = initialize_faction($game, $faction_name);
     my $player_record = {};
     my $players = $acting->players();
     if (@{$players}) {

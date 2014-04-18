@@ -478,7 +478,8 @@ sub transform_colors {
     my ($faction, $where) = @_;
     my $current_color = $map{$where}{color};
 
-    if ($current_color eq 'ice') {
+    if ($current_color eq 'ice' or
+        $current_color eq 'volcano') {
         die "Can't transform $current_color\n";
     }
 
@@ -534,6 +535,12 @@ sub transform_cost {
 
     if ($faction->{FREE_TF}) {
         $cost->{FREE_TF} += 1;
+    } else {
+        $cost->{SPADE} += $color_difference;
+    }
+
+    if ($faction->{TF_NEED_HEX_ADJACENCY}) {
+        $cost->{TF_NEED_HEX_ADJACENCY} += 1;
         my $ok = 0;
         for my $from (@{$faction->{locations}}) {
             next if $map{$where}{bridge}{$from};
@@ -542,9 +549,7 @@ sub transform_cost {
                 last;
             }
         }
-        die "ActN requires direct non-bridge adjacency" if !$ok;
-    } else {
-        $cost->{SPADE} += $color_difference;
+        die "Direct non-bridge adjacency required for transforming\n" if !$ok;
     }
 
     ($cost, $gain, $need_teleport, $color_difference, $color)

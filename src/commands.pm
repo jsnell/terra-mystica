@@ -1005,6 +1005,8 @@ sub command {
         } else {
             $game{map_variant} = $1;
         }
+    } elsif ($command =~ /^faction-variant (.*)/i) {
+        push @{$game{faction_variants}}, $1;
     } elsif ($command =~ /^final-scoring (.*)/i) {
         if ($final_scoring{$1}) {
             $game{final_scoring}{$1} = $final_scoring{$1};

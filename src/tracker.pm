@@ -101,6 +101,7 @@ sub finalize {
         if ($faction->{waiting}) {
             $game{acting}->dismiss_action($faction, undef);
         }
+        delete $faction->{TF_NEED_HEX_ADJACENCY};
     }
 
     for my $hex (values %map) {
@@ -123,7 +124,7 @@ sub finalize {
         $map{$key} = $game{bonus_coins}{$key};
     }
 
-    for (qw(BRIDGE TOWN_SIZE GAIN_ACTION carpet_range)) {
+    for (qw(BRIDGE TOWN_SIZE GAIN_ACTION TF_NEED_HEX_ADJACENCY carpet_range)) {
         delete $game{pool}{$_};
     }
 }
@@ -152,6 +153,7 @@ sub evaluate_game {
         score_tiles => [],
         base_map => ($metadata->{base_map} or \@base_map),
         map_variant => $metadata->{map_variant},
+        faction_variants => [],
         final_scoring => { map { $_ => $final_scoring{$_} } qw(network cults) },
     );
     $game{ledger} = terra_mystica::Ledger->new({game => \%game});

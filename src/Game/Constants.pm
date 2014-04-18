@@ -67,7 +67,7 @@ Readonly our %actions => (
               subaction => { dig => 1, 'transform' => 1, 'build' => 1 } },
     ACTS => { cost => {}, gain => { FREE_TP => 1 },
               subaction => { 'upgrade' => 1 }},
-    ACTN => { cost => {}, gain => { FREE_TF => 1 },
+    ACTN => { cost => {}, gain => { FREE_TF => 1, TF_NEED_HEX_ADJACENCY => 1 },
               subaction => { dig => 1, 'transform' => 1, 'build' => 1 } },
     ACTW => { cost => {}, gain => { FREE_D => 1, TELEPORT_NO_TF => 1 },
               subaction => { 'build' => 1 } },
