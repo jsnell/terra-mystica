@@ -114,7 +114,10 @@ sub gain {
 }
 
 sub maybe_gain_faction_special {
-    my ($faction, $type) = @_;
+    my ($faction, $type, $mode) = @_;
+
+    return if !exists $faction->{special}{mode};
+    return if $faction->{special}{mode} ne $mode;
 
     my $enable_if = $faction->{special}{enable_if};
     if ($enable_if) {
@@ -273,8 +276,8 @@ sub adjust_resource {
         }
 
         for (1..$delta) {
-            maybe_score_current_score_tile $faction, $type;
-            maybe_gain_faction_special $faction, $type;
+            maybe_score_current_score_tile $faction, $type, 'gain';
+            maybe_gain_faction_special $faction, $type, 'gain';
         }
     }
 

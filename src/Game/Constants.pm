@@ -133,41 +133,49 @@ Readonly our %tiles => init_tiles (
 
     SCORE1 => { vp => { SPADE => 2 },
                 vp_display => 'SPADE >> 2',
+                vp_mode => 'spend',
                 cult => 'EARTH',
                 req => 1, 
                 income => { C => 1 } },
     SCORE2 => { vp => { map(("TW$_", 5), 1..8) },
                 vp_display => 'TOWN >> 5',
+                vp_mode => 'gain',
                 cult => 'EARTH',
                 req => 4, 
                 income => { SPADE => 1 } },
     SCORE3 => { vp => { D => 2 },
                 vp_display => 'D >> 2',
+                vp_mode => 'build',
                 cult => 'WATER',
                 req => 4, 
                 income => { P => 1 } },    
     SCORE4 => { vp => { SA => 5, SH => 5 },
                 vp_display => 'SA/SH >> 5',
+                vp_mode => 'build',
                 cult => 'FIRE',
                 req => 2,
                 income => { W => 1 } },    
     SCORE5 => { vp => { D => 2 },
                 vp_display => 'D >> 2',
+                vp_mode => 'build',
                 cult => 'FIRE',
                 req => 4, 
                 income => { PW => 4 } },    
     SCORE6 => { vp => { TP => 3 },
                 vp_display => 'TP >> 3',
+                vp_mode => 'build',
                 cult => 'WATER',
                 req => 4, 
                 income => { SPADE => 1 } },    
     SCORE7 => { vp => { SA => 5, SH => 5 },
                 vp_display => 'SA/SH >> 5',
+                vp_mode => 'build',
                 cult => 'AIR',
                 req => 2,
                 income => { W => 1 } },    
     SCORE8 => { vp => { TP => 3 },
                 vp_display => 'TP >> 3',
+                vp_mode => 'build',
                 cult => 'AIR',
                 req => 4, 
                 income => { SPADE => 1 } },    
@@ -223,6 +231,7 @@ Readonly our %faction_setups => (
                     special => {
                         SPADE => { PW => 2 },
                         enable_if => { SH => 1 },
+                        mode => 'gain',
                     },
                     exchange_rates => {
                         C => { VP => 2 },
@@ -311,6 +320,7 @@ Readonly our %faction_setups => (
     witches => { C => 15, W => 3, P1 => 5, P2 => 7,
                  AIR => 2, color => 'green',
                  special => {
+                     mode => 'gain',
                      map(("TW$_", { VP => 5 }), 1..8)
                  },
                  display => "Witches",
@@ -400,6 +410,7 @@ Readonly our %faction_setups => (
                                           { VP => 6 } ]
                     },
                     special => {
+                        mode => 'gain',
                         map(("TW$_", { W => 3 }), 1..8)
                     },
                     buildings => {
@@ -629,6 +640,7 @@ Readonly our %faction_setups => (
                    display => "Halflings",
                    faction_board_id => 9,
                    special => {
+                       mode => 'gain',
                        SPADE => { VP => 1 }
                    },
                    ship => { 

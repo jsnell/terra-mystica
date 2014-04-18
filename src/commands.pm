@@ -149,7 +149,7 @@ sub command_build {
     advance_track $faction, $type, $faction->{buildings}{$type}, $free;
 
     maybe_score_favor_tile $faction, $type;
-    maybe_score_current_score_tile $faction, $type;
+    maybe_score_current_score_tile $faction, $type, 'build';
 
     $map{$where}{building} = $type;
     push @{$faction->{locations}}, $where;
@@ -203,7 +203,7 @@ sub command_upgrade {
     advance_track $faction, $type, $faction->{buildings}{$type}, $free;
 
     maybe_score_favor_tile $faction, $type;
-    maybe_score_current_score_tile $faction, $type;
+    maybe_score_current_score_tile $faction, $type, 'build';
 
     $map{$where}{building} = $type;
 
@@ -458,6 +458,14 @@ sub command_transform {
     }
     pay $faction, $transform_cost;
     gain $faction, $transform_gain, 'faction';
+
+    for my $type (keys %{$transform_cost}) {
+        my $amount = $transform_cost->{$type};
+        for (1..$amount) {
+            maybe_score_current_score_tile $faction, $type, 'spend';
+            maybe_gain_faction_special $faction, $type, 'spend';
+        }
+    }
 
     if (!$faction->{SPADE}) {
         $game{acting}->dismiss_action($faction, 'transform');

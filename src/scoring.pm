@@ -18,12 +18,12 @@ sub current_score_tile {
 }
 
 sub maybe_score_current_score_tile {
-    my ($faction, $type) = @_;
+    my ($faction, $type, $mode) = @_;
 
     my $scoring = current_score_tile;
     if ($scoring) {
         my $gain = $scoring->{vp}{$type};
-        if ($gain) {
+        if ($gain and $mode eq $scoring->{vp_mode}) {
             adjust_resource $faction, 'VP', $gain, $scoring->{vp_display};
         }
     }

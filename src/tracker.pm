@@ -102,6 +102,9 @@ sub finalize {
             $game{acting}->dismiss_action($faction, undef);
         }
         delete $faction->{TF_NEED_HEX_ADJACENCY};
+        if (exists $faction->{special}) {
+            delete $faction->{special}{mode};
+        }
     }
 
     for my $hex (values %map) {
