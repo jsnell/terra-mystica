@@ -283,7 +283,7 @@ var colors = {
     white: '#ffffff',
     gray: '#808080',
     ice: '#f0f8ff',
-    volcano: '#f0c040',
+    volcano: '#f0a020',
     orange: '#f0c040',
     player: '#c0c0c0',
     activeUI: '#8f8'
@@ -299,7 +299,7 @@ var bgcolors = {
     gray: '#c0c0c0',
     brown: '#b08040',
     ice: '#e0f0ff',
-    volcano: '#f0d080',
+    volcano: '#f0c060',
     player: '#404040'
 };
 

@@ -1921,6 +1921,10 @@ function addFactionInput(parent, record, index) {
     if (record.type == "faction") {
         var div = new Element("div", { "id": "leech-" + index + "-0",
                                        "style": "padding-left: 2em" });
+        var table = new Element("table"); div.insert(table);
+        var row = new Element("tr"); table.insert(row);
+        var cell1 = new Element("td", {"valign": "top"}); row.insert(cell1);
+        var cell2 = new Element("td", {"valign": "top"}); row.insert(cell2);
         var boards = { "green": ["witches", "auren"],
                        "blue": ["mermaids", "swarmlings" ],
                        "black": ["darklings", "alchemists"],
@@ -1942,6 +1946,10 @@ function addFactionInput(parent, record, index) {
         });
 
         $H(boards).each(function(board) {
+            var cell = cell1;
+            if (board.key == "ice" || board.key == "volcano") {
+                cell = cell2;
+            }
             var color_factions = board.value.sort();
             if (color_factions.size() == 0) {
                 var notAvailable = new Element("button").updateText(
@@ -1949,7 +1957,7 @@ function addFactionInput(parent, record, index) {
                 notAvailable.style.backgroundColor = bgcolors[board.key];
                 notAvailable.style.color = contrastColor[board.key];
                 notAvailable.disabled = true;
-                div.insert(notAvailable);
+                cell.insert(notAvailable);
             } else {
                 color_factions.each(function(faction) {
                     if (!state.available_factions[faction]) {
@@ -1960,17 +1968,16 @@ function addFactionInput(parent, record, index) {
                         appendCommand("setup " + faction + "\n");
                     };
                     setFactionStyleForElement(button, faction);
-                    div.insert(button);
+                    cell.insert(button);
                 });
             }
-            if (state.faction_variant_help &&
-                (board.value == "ice" || board.value == "volcano")) {
-                div.insert(new Element("a", {
+            if (state.faction_variant_help && cell == cell2) {
+                cell.insert(new Element("a", {
                     "href": state.faction_variant_help
                 }).updateText("[info]"));
             }
 
-            div.insert(new Element("br"));
+            cell.insert(new Element("br"));
         });
         parent.insert(div);
     }
@@ -2468,7 +2475,7 @@ function addActionToMovePicker(picker, faction) {
                         "cost": effectString([state.actions[key].cost],
                                              // HACK: treat discounts as
                                              // a gain here
-                                             []) + burn,
+                                             [discount]) + burn,
                         "canvas": action_canvas,
                     });
                 }

@@ -237,7 +237,7 @@ sub command_send {
                 next if $spot->{gain}{$cult} != $amount;
             }
 
-            $gain = $spot->{gain};
+            $gain = clone $spot->{gain};
             delete $spot->{gain};
             $spot->{building} = 'P';
             $spot->{color} = $faction->{color};
@@ -249,6 +249,8 @@ sub command_send {
     if ($amount) {
         die "No $amount spot on $cult track\n" if $gain->{$cult} != $amount;
     }
+
+    $gain->{$cult} += ($faction->{PRIEST_CULT_BONUS} // 0);
 
     gain $faction, $gain;
 

@@ -51,6 +51,7 @@ sub setup_pool {
         CONVERT_W_TO_P => 3,
         TOWN_SIZE => 10000,
         LOSE_PW_TOKEN => 10000,
+        PRIEST_CULT_BONUS => 10000,
         carpet_range => 3,
     };
 
