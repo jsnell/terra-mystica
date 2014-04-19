@@ -734,7 +734,7 @@ Readonly our %faction_setups_extra => (
             },
             buildings => {
                 D => { advance_cost => { W => 1, C => 2 },
-                       income => { W => [ 1, 2, 3, 4, 5, 6, 7, 8, 8 ] } },
+                       income => { W => [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] } },
                 TP => { advance_cost => { W => 2, C => 3 },
                         income => { C => [ 0, 2, 4, 6, 8 ],
                                     PW => [ 0, 1, 2, 4, 6 ] } },
@@ -776,7 +776,7 @@ Readonly our %faction_setups_extra => (
             },
             buildings => {
                 D => { advance_cost => { W => 1, C => 2 },
-                       income => { W => [ 1, 2, 3, 4, 5, 6, 7, 8, 8 ] } },
+                       income => { W => [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] } },
                 TP => { advance_cost => { W => 2, C => 3 },
                         income => { C => [ 0, 2, 4, 6, 8 ],
                                     PW => [ 0, 2, 4, 6, 8 ] } },
