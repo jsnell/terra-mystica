@@ -1811,7 +1811,9 @@ function addFactionInput(parent, record, index) {
         var div = new Element("div", { "id": "leech-" + index + "-0",
                                        "style": "padding-left: 2em" });
         cults.each(function(cult) {
-            var button = new Element("button").updateText(cult.capitalize());
+            var button = new Element("button",
+                                     {"style": cultStyle(cult)}).
+                updateText(cult.capitalize());
             button.onclick = function() {
                 gainResource(index, amount == 1 ? '' : amount, cult, 0);
             };
@@ -1827,7 +1829,9 @@ function addFactionInput(parent, record, index) {
             if (faction[cult] < amount) {
                 return;
             }
-            var button = new Element("button").updateText(cult.capitalize());
+            var button = new Element("button",
+                                     {"style": cultStyle(cult)}).
+                updateText(cult.capitalize());
             button.onclick = function() {
                 gainResource(index, -amount, cult, 0);
             };
