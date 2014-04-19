@@ -1553,6 +1553,12 @@ function drawActionRequired() {
             } else {
                 pretty_text = 'may use #{amount} spades (click on map to transform)'.interpolate(record);
             }
+        } else if (record.type == 'convert') {
+            if (record.amount == 1) {
+                pretty_text = 'may convert 1 #{from} to #{to}'.interpolate(record);
+            } else {
+                pretty_text = 'may convert #{amount} #{from} to #{to}'.interpolate(record);
+            }
         } else if (record.type == 'cult') {
             if (record.amount == 1) {
                 pretty_text = 'may advance 1 step on a cult track'.interpolate(record);
@@ -1894,6 +1900,23 @@ function addFactionInput(parent, record, index) {
                 addMapClickHandler("Transform", hex, menu);
             }
         })
+    }
+    if (record.type == "convert") {
+        var div = new Element("div", { "id": "leech-" + index + "-0",
+                                       "style": "padding-left: 2em" });
+        var action = "CONVERT_#{from}_TO_#{to}".interpolate(record);
+        for (var i = 1; i <= record.amount && i <= faction[record.from]; ++i) {
+            var button = new Element("button").updateText("Convert " + i);
+            var cmd = "convert " + i + record.from + " to " + i + record.to;
+            button.onclick = function() {
+                appendAndPreview(cmd);
+            };
+            div.insert(button);
+        }
+
+        div.insert(makeDeclineButton(action,
+                                     faction[action]));
+        parent.insert(div);
     }
     if (record.type == "faction") {
         var div = new Element("div", { "id": "leech-" + index + "-0",
