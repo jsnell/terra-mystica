@@ -12,6 +12,7 @@ use Util::CryptUtil;
 
 sub session_token {
     my ($dbh, $username, $seed) = @_;
+    $seed =~ s{/}{_}g;
     $seed = substr($seed . "0"x8, 0, 8);
 
     my $secret = get_secret $dbh;
