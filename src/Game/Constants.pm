@@ -873,7 +873,7 @@ Readonly our %faction_setups_extra => (
                         income => { P => [ 0, 1, 2, 3 ] } },
                 SH => { advance_cost => { W => 4, C => 8 },
                         # XXX: Actually depends on player count
-                        advance_gain => [ { PW1 => 4 } ],
+                        advance_gain => [ { P1 => 4 } ],
                         income => { PW => [ 0, 4 ] } },
                 SA => { advance_cost => { W => 4, C => 8 },
                         income => { P => [ 0, 1 ] } },

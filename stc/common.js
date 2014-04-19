@@ -334,5 +334,7 @@ var factionColor = {
     engineers: 'gray',
     icemaidens: 'ice',
     yetis: 'ice',
+    acolytes: 'volcano',
+    dragonmasters: 'volcano',
 };
 

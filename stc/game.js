@@ -1897,12 +1897,17 @@ function addFactionInput(parent, record, index) {
                        "brown": ["halflings", "cultists"], 
                        "yellow": ["nomads", "fakirs"],
                        "red": ["giants", "chaosmagicians"],
-                       "gray": ["dwarves", "engineers"] 
+                       "gray": ["dwarves", "engineers"],
+                       "ice": ["icemaidens", "yetis"],
+                       "volcano": ["dragonmasters", "acolytes"],
                      };
 
         $H(state.factions).each(function(used_faction) {
             if (boards[used_faction.value.color]) {
                 boards[used_faction.value.color] = [];
+            }
+            if (boards[used_faction.value.secondary_color]) {
+                boards[used_faction.value.secondary_color] = [];
             }
         });
 
@@ -1917,6 +1922,9 @@ function addFactionInput(parent, record, index) {
                 div.insert(notAvailable);
             } else {
                 color_factions.each(function(faction) {
+                    if (!state.available_factions[faction]) {
+                        return;
+                    }
                     var button = new Element("button").updateText(faction);
                     button.onclick = function() {
                         appendCommand("setup " + faction + "\n");
@@ -1941,9 +1949,14 @@ function addFactionInput(parent, record, index) {
                           "gray": true
                         };
 
-        $H(state.factions).each(function(used_faction) {
-            if (available[used_faction.value.color]) {
-                available[used_faction.value.color] = false;
+        $H(state.factions).each(function(elem) {
+            var used_faction = elem.value;
+            if (available[used_faction.color]) {
+                available[used_faction.color] = false;
+            }
+            if (used_faction.secondary_color &&
+                available[used_faction.secondary_color]) {
+                available[used_faction.secondary_color] = false;
             }
         });
 

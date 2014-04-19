@@ -127,7 +127,8 @@ sub finalize {
         $map{$key} = $game{bonus_coins}{$key};
     }
 
-    for (qw(BRIDGE TOWN_SIZE GAIN_ACTION TF_NEED_HEX_ADJACENCY carpet_range)) {
+    for (qw(BRIDGE TOWN_SIZE GAIN_ACTION TF_NEED_HEX_ADJACENCY carpet_range
+            LOSE_CULT LOSE_PW_TOKEN VOLCANO_TF)) {
         delete $game{pool}{$_};
     }
 }
@@ -241,6 +242,11 @@ sub evaluate_game {
         final_scoring => $game{final_scoring},
         final_scoring_help => $game{final_scoring_help},
         non_standard => $game{non_standard},
+        available_factions => {
+            map({ ($_, 1) }
+                keys %faction_setups,
+                map { keys %{$faction_setups_extra{$_}} } @{$game{faction_variants}})
+        },
     };
 
     %game = ();
