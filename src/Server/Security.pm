@@ -5,7 +5,7 @@ sub ensure_user_may_view_game {
     my ($username, $players, $metadata) = @_;
 
     if (!$metadata->{base_map}) {
-        return;
+        return 0;
     }
 
     if (!$username) {
@@ -17,6 +17,8 @@ sub ensure_user_may_view_game {
     if (!@in_player_list and $username ne 'jsnell' and $username ne 'nan') {
         die "This is a restricted game. Only players can view it.\n";
     }
+
+    1;
 }
 
 1;

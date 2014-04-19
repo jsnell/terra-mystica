@@ -241,6 +241,7 @@ sub evaluate_game {
         map_variant => $game{map_variant},
         final_scoring => $game{final_scoring},
         final_scoring_help => $game{final_scoring_help},
+        faction_variant_help => $game{faction_variant_help},
         non_standard => $game{non_standard},
         available_factions => {
             map({ ($_, 1) }

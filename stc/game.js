@@ -992,7 +992,10 @@ function drawFaction(name) {
     var info_link = '';
     if (faction.faction_board_id) {
         info_link = 'http://www.terra-mystica-spiel.de/en/voelker.php?show=' + faction.faction_board_id;
+    } else if (state.faction_variant_help) {
+        info_link = state.faction_variant_help;
     }
+
     var board = makeBoard(color, title, info_link, '', style);
     container.insert(board);
 
@@ -1933,6 +1936,13 @@ function addFactionInput(parent, record, index) {
                     div.insert(button);
                 });
             }
+            if (state.faction_variant_help &&
+                (board.value == "ice" || board.value == "volcano")) {
+                div.insert(new Element("a", {
+                    "href": state.faction_variant_help
+                }).updateText("[info]"));
+            }
+
             div.insert(new Element("br"));
         });
         parent.insert(div);

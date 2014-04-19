@@ -5,6 +5,7 @@ use strict;
 
 use Digest::SHA1 qw(sha1_hex);
 use File::Slurp qw(read_file);
+use JSON;
 use Text::Template;
 
 my %page_data_cache = ();
@@ -25,7 +26,7 @@ sub get_page_data {
 }
 
 sub generate_page {
-    my ($root, $name) = @_;
+    my ($root, $name, $params) = @_;
     my $dir = "$root/pages/";
 
     $name =~ s/[^a-z]//g;
@@ -35,6 +36,13 @@ sub generate_page {
     my $template = Text::Template->new(TYPE => 'FILE',
                                        SOURCE => $layout);
     die "Could not render page '$name', layout '$layout'\n" if !$template;
+
+    if ($data->{require_access}) {
+        if ($data->{require_access} ne $params->{access}) {
+            print STDERR "Access denied to $name: ", encode_json $params, "\n";
+            die "Access restricted\n";
+        }
+    }
 
     $data->{root} = $root;
 
