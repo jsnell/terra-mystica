@@ -554,14 +554,13 @@ method detect_incomplete_turn($faction) {
     }
     
     if ($faction->{CONVERT_W_TO_P}) {
-        $incomplete = 1;
-        $ledger->warn("Unused conversion for $faction_name\n");
-        $self->require_action($faction, {
-            type => 'convert',
-            from => 'W',
-            amount => $faction->{CONVERT_W_TO_P}, 
-            to => 'P',
-        });
+        # $incomplete = 1;
+        # $self->require_action($faction, {
+        #     type => 'convert',
+        #     from => 'W',
+        #     amount => $faction->{CONVERT_W_TO_P}, 
+        #     to => 'P',
+        # });
     }
 
     $incomplete;
