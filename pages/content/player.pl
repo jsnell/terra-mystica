@@ -9,6 +9,8 @@
 
 __DATA__
 
+<div id="error"></div>
+
 <div id="tabs">
 <button id="metadata-button" onclick="javascript:switchToPlayerTab('metadata')">Metadata</button>
 <button id="active-button" onclick="javascript:switchToPlayerTab('active')">Active</button>

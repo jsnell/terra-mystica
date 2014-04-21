@@ -12,15 +12,35 @@ use Digest::SHA1 qw(sha1_hex);
 
 use DB::Connection;
 use DB::UserInfo;
+use DB::UserValidate;
 
 has 'mode' => (is => 'ro', required => 1);
 
-method handle($q, $username) {
+method handle($q, $query_username) {
     $self->no_cache();
 
     my $dbh = get_db_connection;
 
     my $res = { error => [] };
+
+    my $username;
+
+    eval {
+        ($username) = check_username_is_registered $dbh, $query_username;
+    };
+
+    if ($@ or !defined $username) {
+        return $self->output_json(
+            {
+                error => [ "No such user: $query_username" ]
+            });
+    } elsif ($username ne $query_username) {
+        return $self->output_json(
+            {
+                link => "/player/$username",
+                error => [],
+            });
+    }
 
     eval {
         if ($self->mode() eq 'stats') {

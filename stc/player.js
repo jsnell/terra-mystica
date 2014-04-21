@@ -9,12 +9,14 @@ function fetchStats(table, type, callback, user) {
     new Ajax.Request(target, {
         method: "post",
         parameters: form_params,
-        onSuccess: function(transport){
-            var stats = transport.responseText.evalJSON();
-            if (stats.error.length) {
-                $("error").innerHTML = state.error.join("<br>");
+        onSuccess: function(transport) {
+            var response = transport.responseText.evalJSON();
+            if (response.error.length) {
+                $("error").innerHTML = response.error.join("<br>");
+            } else if (response.link) {
+                document.location = response.link;
             } else {
-                callback(table, stats);
+                callback(table, response);
             }
         }
     });
