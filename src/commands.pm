@@ -974,7 +974,8 @@ sub command {
             mini-expansion-1
             shipping-bonus
             email-notify
-            strict-leech);
+            strict-leech
+            strict-darkling-sh);
         if (!$valid_options{$opt}) {
             die "Unknown option $opt\n";
         }

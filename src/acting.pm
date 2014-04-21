@@ -48,7 +48,6 @@ has 'action_required' => (is => 'rw',
                           traits => ['Array'],
                           default => sub { [] },
                           handles => {
-                              action_required_count => 'count',
                               action_required_elements => 'elements',
                               push_action_required => 'push',
                           });
@@ -69,6 +68,10 @@ has 'game' => (is => 'rw');
 has 'full_turn_played' => (is => 'rw', default => 0);
 
 ## Tracking what each player needs to do
+
+method action_required_count() {
+    scalar grep { !$_->{optional} } @{$self->action_required()};
+}
 
 method require_action($faction, $action) {
     die "Invalid faction" if !$action or !$faction;
@@ -553,14 +556,16 @@ method detect_incomplete_turn($faction) {
         $self->dismiss_action($faction, 'bridge');
     }
     
-    if ($faction->{CONVERT_W_TO_P}) {
-        # $incomplete = 1;
-        # $self->require_action($faction, {
-        #     type => 'convert',
-        #     from => 'W',
-        #     amount => $faction->{CONVERT_W_TO_P}, 
-        #     to => 'P',
-        # });
+    if ($faction->{CONVERT_W_TO_P} and
+        $self->game()->{options}{'strict-darkling-sh'}) {
+        $incomplete = 1;
+        $self->require_action($faction, {
+            type => 'convert',
+            from => 'W',
+            amount => $faction->{CONVERT_W_TO_P}, 
+            to => 'P',
+            optional => 1,
+        });
     }
 
     $incomplete;
@@ -618,7 +623,6 @@ method maybe_advance_to_next_player($faction) {
             $self->start_full_move($next);
             $self->maybe_advance_turn($faction, $next);
         }
-
         $faction->{recent_moves} = [];
     }
 
