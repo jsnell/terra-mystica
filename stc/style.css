@@ -446,3 +446,11 @@ table.final-scoring {
     padding: 0px;
     border-spacing: 0px;
 }
+
+div.motd {
+    max-width: 60ex;
+    border-style: solid;
+    border-width: 1px;
+    padding: 5px;
+    background-color: #eef;
+}

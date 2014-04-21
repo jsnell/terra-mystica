@@ -7,6 +7,14 @@
 }
 
 __DATA__
+
+<div class="motd">
+    The 4 player Terra Mystica online league will start in
+    early May. See the
+    <a href="http://boardgamegeek.com/article/15552590">BGG thread</a>
+    for more information or to sign up.
+</div>
+
 <h4>Your Active / Recently Finished Games</h4>
 <table id="yourgames-active" class="gamelist"></table>
 
