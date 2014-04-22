@@ -98,7 +98,7 @@ to another terrain type.
 <h4>Dragon Masters</h4>
 
 <ul>
-<li> Start with 4/4/0 power, 2/0/0/0 on cults
+<li> Start with 4/4/0 power, 2/0/0/0 on cults, and only 2 workers
 <li> Permanently remove power tokens (from any bowl) to transform. 2 tokens if transforming from another player's home terrain to a volcano, 1 token if transforming from some other color. (The ice factions do not have a home terrain).
 <li> SH produces 2pw, and gives an instant one-time production of as many power tokens as there are players (tokens go into bowl 1).
 <li> 4th dwelling produces no worker income.
