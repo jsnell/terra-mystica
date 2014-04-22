@@ -34,15 +34,28 @@ any other terrain type.
 <h4>Terrain: Volcano</h4>
 
 <p>
-Like the ice factions, a volcano faction needs to choose an unpicked color.
-However, they choose their color after all factions have been selected rather
-than immediately. They place their initial dwellings on hexes of that type,
-which get immediately transformed to volcanos.
+Like the ice factions, a volcano faction needs to choose an unpicked
+color.  However, they choose their color after all factions have been
+selected rather than immediately. They place their initial dwellings
+on hexes of that type, which get immediately transformed to
+volcanos. After the initial dwelling placement the volcano factions
+must transform spaces to volcanos using their special power.
 
 <p>
-The volcano factions never pay spades to transform. Instead they will use
-their special powers to transform hexes directly to volcanos. If a volcano
-faction receives spades, they'll get some other benefit instead. 
+The volcano factions have no digging track to advance on, can't use
+the dig command to generate spades, and never pay spades to
+transform. Instead they will use their special powers to transform
+hexes directly to volcanos. If a volcano faction receives spades from
+some source (bonus tile, cult bonus, power action, etc), they'll get
+some other benefit instead. Note that the transformation costs of the
+volcano factions do not depend at all on the transformation cycle, but
+on other factors (explained in faction description).
+
+<p>
+Using the special power to transform a hex to a volcano doesn't count
+as using spades for the purposes of a round scoring tile. Likewise
+receiving a spade from a bonus tile or a power action doesn't count
+as using the spade, and thus doesn't generate any points.
 
 <p>
 Once a hex has been transformed to a volcano, it can never be transformed
@@ -66,7 +79,7 @@ to another terrain type.
 <li> Start with 0/12/0 power, 0/0/1/1 on cults
 <li> Have a discount of one power on the power actions (so act4 costs 3pw, not 4pw)
 <li> Advancing on the digging track requires just 5c+1w+1p.
-<li> SH produces 4pw, and allows the Yetis to take power actions that have already been taken (either by themselves or another player) 
+<li> SH produces 4pw, and allows the Yetis to take any power action that they can pay for, even if it has already been taken during that round. The same power action can be taken multiple times, regardless of how many times and by whom it has been taken.
 <li> Every TP produces 2pw+2c
 <li> The 8th dwelling produces a worker
 </ul>
