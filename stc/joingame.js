@@ -65,6 +65,8 @@ function showOpenGames(games) {
             if (game.game_options) {
                 game.game_options.each(function (elem) {
                     if (elem == "strict-leech" ||
+                        elem == "strict-darkling-sh" ||
+                        elem == "strict-chaosmagician-sh" ||
                         elem == "errata-cultist-power") {
                         return;
                     }

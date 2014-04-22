@@ -565,7 +565,7 @@ sub command_pass {
         $faction->{start_player} = 1;
     }
 
-    if ($faction->{passed}) {
+    if ($game{options}{'strict-chaosmagician-sh'} and $faction->{passed}) {
         die "Can't pass multiple times in one round\n";
     }
 
@@ -975,6 +975,7 @@ sub command {
             shipping-bonus
             email-notify
             strict-leech
+            strict-chaosmagician-sh
             strict-darkling-sh);
         if (!$valid_options{$opt}) {
             die "Unknown option $opt\n";

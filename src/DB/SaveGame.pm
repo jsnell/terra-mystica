@@ -125,8 +125,9 @@ sub create_game {
 # Default game options
  option strict-leech
  option strict-darkling-sh
+ option strict-chaosmagician-sh
  option errata-cultist-power
- @options
+@options
 
 # Randomize setup
 randomize v1 seed $id
