@@ -804,7 +804,8 @@ Readonly our %faction_setups_extra => (
                 PICK_COLOR => 1,
             },
             special => {
-                SPADE => { SPADE => -1, CULT => 1 }
+                SPADE => { SPADE => -1, CULT => 1 },
+                mode => 'gain',
             },
             ship => {
                 level => 0, max_level => 3,
@@ -845,7 +846,8 @@ Readonly our %faction_setups_extra => (
                 PICK_COLOR => 1,
             },
             special => {
-                SPADE => { SPADE => -1, P1 => 1 }
+                SPADE => { SPADE => -1, P1 => 1 },
+                mode => 'gain',
             },
             ship => {
                 level => 0, max_level => 3,
