@@ -442,10 +442,13 @@ sub compute_leech {
 
     for my $adjacent (keys %{$map{$where}{adjacent}}) {
         my $map_color = $map{$adjacent}{color};
-        if ($map{$adjacent}{building} and
-            $map_color ne $color) {
-            $this_leech{$map_color} +=
-                $building_strength{$map{$adjacent}{building}};
+        my $type = $map{$adjacent}{building};
+        if ($type and $map_color ne $color) {
+            my ($to_faction) = grep {
+                $_->{color} eq $map_color;
+            } $game{acting}->factions_in_order();
+            my $str = $to_faction->{building_strength}{$type} // $building_strength{$type};
+            $this_leech{$map_color} += $str;
             $this_leech{$map_color} = $this_leech{$map_color};
         }
     }

@@ -59,7 +59,9 @@ sub detect_towns_from {
         return if exists $reachable{$loc};
 
         $reachable{$loc} = 1;
-        $power += $building_strength{$map{$loc}{building}};
+        my $type = $map{$loc}{building};
+        my $str = $faction->{building_strength}{$type} // $building_strength{$type};
+        $power += $str;
         $count++;
         # Sanctuary counts as two buildings.
         $count++ if $map{$loc}{building} eq 'SA';
@@ -107,10 +109,12 @@ sub check_mermaid_river_connection_town {
 
         $reachable{$loc} = 1;
         if ($map{$loc}{building}) {
-            $power += $building_strength{$map{$loc}{building}};
+            my $type = $map{$loc}{building};
+            my $str = $faction->{building_strength}{$type} // $building_strength{$type};
+            $power += $str;
             $count++;
             # Sanctuary counts as two buildings.
-            $count++ if $map{$loc}{building} eq 'SA';
+            $count++ if $type eq 'SA';
         }
 
         for my $adjacent (adjacent_own_buildings $faction, $loc) {

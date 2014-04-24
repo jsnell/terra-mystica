@@ -760,6 +760,10 @@ Readonly our %faction_setups_extra => (
             secondary_color => undef,
             display => "Yetis",
             faction_board_id => undef,
+            building_strength => {
+                SH => 4,
+                SA => 4,
+            },
             ship => {
                 level => 0, max_level => 3,
                 advance_cost => { C => 4, P => 1 },

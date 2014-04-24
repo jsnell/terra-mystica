@@ -80,6 +80,7 @@ to another terrain type.
 <li> Have a discount of one power on the power actions (so act4 costs 3pw, not 4pw)
 <li> Advancing on the digging track requires just 5c+1w+1p.
 <li> SH produces 4pw, and allows the Yetis to take any power action that they can pay for, even if it has already been taken during that round. The same power action can be taken multiple times, regardless of how many times and by whom it has been taken.
+<li> The SH and SA have a power level of 4 for leeching / forming towns, instead of the normal 3
 <li> Every TP produces 2pw+2c
 <li> The 8th dwelling produces a worker
 </ul>

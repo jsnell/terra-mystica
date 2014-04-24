@@ -105,6 +105,7 @@ sub finalize {
         if (exists $faction->{special}) {
             delete $faction->{special}{mode};
         }
+        delete $faction->{building_strength};
     }
 
     for my $hex (values %map) {
