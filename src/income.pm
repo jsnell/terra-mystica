@@ -104,6 +104,12 @@ sub take_income_for_faction {
                                       { type => 'transform',
                                         amount => $faction->{SPADE} });
     }
+
+    if ($faction->{CULT}) {
+        $game{acting}->require_action($faction,
+                                      { type => 'cult',
+                                        amount => $faction->{CULT} });
+    }
 }
 
 1;
