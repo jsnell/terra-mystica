@@ -162,6 +162,11 @@ for (values %games) {
 }
 
 for my $faction (values %{$stats{factions}}) {
+    # Remove stats if there haven't been at least 20 games with a given
+    # faction + player count.
+    %{$faction} = map {
+        $faction->{$_}{count} > 20 ? ($_, $faction->{$_}) : ()
+    } keys %{$faction};
     for my $stat (values %{$faction}) {
         $stat->{win_rate} = int(100 * $stat->{wins} / $stat->{count});
         $stat->{expected_win_rate} = int(100 * $stat->{expected_wins} / $stat->{count});
@@ -170,7 +175,6 @@ for my $faction (values %{$stats{factions}}) {
         $stat->{average_position} = sprintf "%5.2f", $stat->{average_position} / $stat->{count};
 
         $stat->{wins} = 0 + sprintf "%5.2f", $stat->{wins};
-
         delete $stat->{average_winner_vp};
     }
 }

@@ -109,15 +109,26 @@ sub read_rating_data {
 
     my %results = get_finished_game_results $dbh, '';
     my %games = ();
+    my %faction_count = ();
 
     for (@{$results{results}}) {
         $games{$_->{game}}{factions}{$_->{faction}} = $_;
         $games{$_->{game}}{id} = $_->{game};
         $games{$_->{game}}{last_update} = $_->{last_update};
+        $faction_count{$_->{faction}}++;
     }
 
     for (values %games) {
-        handle_game $_, \@output, \%players, \%factions;
+        my $ok = 1;
+        for (keys %{$_->{factions}}) {
+            # Don't include games with new factions in ratings until there's
+            # at least a bit of data.
+            $ok = 0 if $faction_count{$_} < 20;
+        }
+
+        if ($ok) {
+            handle_game $_, \@output, \%players, \%factions;
+        }
     }
 
     return {
