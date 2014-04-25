@@ -1016,7 +1016,7 @@ sub command {
         my ($wanted_color) = assert_color alias_color $1;
         for my $other ($game{acting}->factions_in_order()) {
             if ($other->{color} eq $wanted_color or
-                $other->{secondary_color} eq $wanted_color) {
+                ($other->{secondary_color} // '') eq $wanted_color) {
                 die "$wanted_color is not available\n";
             }
         }

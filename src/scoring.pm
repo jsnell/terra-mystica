@@ -177,6 +177,11 @@ sub do_pass_vp {
 
 }
 
+sub to_int {
+    no warnings 'numeric';
+    int shift;
+}
+
 sub faction_vps {
     my $faction = shift;
     my %projection = ();
@@ -220,7 +225,7 @@ sub faction_vps {
     my $coins = sum map { $faction->{$_} } qw(P3 C W P);
     $coins += int($faction->{P2} / 2);
     $projection{resources} = int($coins / $rate);
-    $projection{total} = sum values %projection;
+    $projection{total} = sum map { to_int $_ } values %projection;
 
     {
         my $total = sum map {
