@@ -81,7 +81,7 @@ sub finalize {
     }
 
     for my $faction ($game{acting}->factions_in_order()) {
-        $faction->{income} = { faction_income $faction };        
+        $faction->{income} = (faction_income $faction)->{total};
         if ($delete_email) {
             delete $faction->{email};
         }

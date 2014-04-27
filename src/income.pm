@@ -82,7 +82,13 @@ sub faction_income {
         }
     }
 
-    return %total_income;
+    return {
+        total => \%total_income,
+        ordered => [ \%total_scoring_income,
+                     \%total_bonus_income,
+                     \%total_building_income,
+                     \%total_favor_income ]
+    };
 }
 
 sub take_income_for_faction {
@@ -94,8 +100,10 @@ sub take_income_for_faction {
         $faction->{passed} = 1;
     }
 
-    my %income = faction_income $faction;
-    gain $faction, \%income;
+    my $income = faction_income $faction;
+    for my $subincome (@{$income->{ordered}}) {
+        gain $faction, $subincome;
+    }
         
     $faction->{income_taken} = 1;
 
