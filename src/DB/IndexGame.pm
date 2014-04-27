@@ -99,8 +99,9 @@ sub set_game_roles {
             }
         } 
 
-        $dbh->do('insert into game_role (game, email, faction, action_required, leech_required, vp, rank, start_order, dropped) values (?, lower(?), ?, ?, ?, ?, ?, ?, ?)',
+        $dbh->do('insert into game_role (game, faction_player, email, faction, action_required, leech_required, vp, rank, start_order, dropped) values (?, ?, lower(?), ?, ?, ?, ?, ?, ?, ?)',
                  {}, $id,
+                 $faction->{username},
                  $faction->{email}, $faction->{name},
                  $action_required,
                  $leech_required,

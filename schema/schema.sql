@@ -50,6 +50,7 @@ create table game_player (
 
 create table game_role (
     game text references game (id),
+    faction_player text references player (username),
     email text, -- Conceptually references email (address), but not enforced
     faction text,
     boolean action_required,
