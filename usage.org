@@ -357,6 +357,24 @@ faction selection. The following options are available:
 
 
 
+** Timeouts
+
+All games will be automatically aborted after 2 weeks of inactivity.
+Changes made in the admin view don't extend the lifespan of the game,
+only moves made directly by players.
+
+# <<drop>>
+
+Player who become inactive are dropped from the game after a week. Being
+dropped has the following effects on the faction:
+
+- They will take no actions
+- They will leech no power (for the purposes of the cultists they can't leech power, rather than decline it)
+- They will not have any effect on the turn order (except if they've already passed on the round they're dropped).
+- Their current bonus tile is immediately returned to the pool. The rest of the game will be played with an extra bonus tile available.
+- Their buildings will still give discounts for TP upgrades of other players
+- They still affect the end game scorings (network, cult tracks)
+
 * Notes on specific factions
 
 ** Mermaids

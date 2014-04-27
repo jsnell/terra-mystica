@@ -1,5 +1,9 @@
 {
     "changes": [
+        { "date": "2014-04-27",
+          "title": "Idle players dropped from games",
+          "description": "Players who don't make their moves for a week are now automatically <a href='/usage.html#drop'>dropped from the game</a>."
+        },
         { "date": "2014-04-04",
           "title": "Detailed player statistics",
           "description": "A 'stats' tab has been added to the player info page, currently showing statistics of that player's games with different factions."
