@@ -41,7 +41,7 @@ sub index_game {
 sub set_game_roles {
     my ($dbh, $id, $game) = @_;
 
-    $dbh->do("delete from game_role where game=? and faction != 'admin'",
+    $dbh->do("delete from game_role where game=?",
              {},
              $id);
 

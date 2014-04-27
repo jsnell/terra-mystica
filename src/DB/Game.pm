@@ -70,7 +70,7 @@ sub get_game_factions {
     my ($dbh, $id) = @_;
 
     my ($rows) =
-        $dbh->selectall_hashref("select game_role.faction, player.username, game_role.email, player.displayname from email inner join game_role on game_role.email=email.address inner join player on player.username=email.player where game_role.game=? and game_role.faction != 'admin'",
+        $dbh->selectall_hashref("select game_role.faction, player.username, game_role.email, player.displayname from email inner join game_role on game_role.email=email.address inner join player on player.username=email.player where game_role.game=?",
                                 'faction',
                                  { Slice => {} },
                                  $id);
@@ -149,10 +149,10 @@ sub get_finished_game_results {
 
     # Filter out games by some dicks who are getting their kicks by
     # distorting the stats with ridiculous games.
-    $dbh->do("update game set exclude_from_stats=true where id in (select id from game left join game_role on game.id = game_role.game left join blacklist on game_role.email=blacklist.email where game_role.faction='admin' and blacklist.email is not null)");
+    $dbh->do("update game set exclude_from_stats=true where admin_user in (select player from blacklist) and not exclude_from_stats");
 
     my $rows = $dbh->selectall_arrayref(
-        "select game, faction, vp, rank, start_order, email.player, email, game.player_count, game.last_update, game.non_standard from game_role left join game on game=game.id left join email on email=email.address where faction != 'admin' and game.finished and game.round=6 and not game.aborted and not game.exclude_from_stats and game.id like ?",
+        "select game, faction, vp, rank, start_order, email.player, email, game.player_count, game.last_update, game.non_standard from game_role left join game on game=game.id left join email on email=email.address where game.finished and game.round=6 and not game.aborted and not game.exclude_from_stats and game.id like ?",
         {},
         $id_pattern || '%');
 
@@ -216,7 +216,7 @@ sub get_player_game_list {
     my ($dbh, $user, $mode, $status) = @_;
 
     my $roles = $dbh->selectall_arrayref(
-        "select game, faction, game.write_id, game.finished, action_required, (extract(epoch from now() - game.last_update)) as time_since_update, vp, rank, (select faction from game_role as gr2 where gr2.game = gr1.game and action_required limit 1) as waiting_for, leech_required, game.round, (select count(*) from chat_message where game=game.id and posted_at > (select coalesce((select last_read from chat_read where game=chat_message.game and player=?), '2012-01-01'))) as unread_chat, game.aborted, gr1.dropped from game_role as gr1 left join game on game=game.id where email in (select address from email where player = ?) and (game.finished = ? or (game.finished and last_update > now() - interval '2 days')) and (gr1.faction != 'admin')",
+        "select game, faction, game.write_id, game.finished, action_required, (extract(epoch from now() - game.last_update)) as time_since_update, vp, rank, (select faction from game_role as gr2 where gr2.game = gr1.game and action_required limit 1) as waiting_for, leech_required, game.round, (select count(*) from chat_message where game=game.id and posted_at > (select coalesce((select last_read from chat_read where game=chat_message.game and player=?), '2012-01-01'))) as unread_chat, game.aborted, gr1.dropped from game_role as gr1 left join game on game=game.id where email in (select address from email where player = ?) and (game.finished = ? or (game.finished and last_update > now() - interval '2 days'))",
         { Slice => {} },
         $user, $user, $status);
     sorted_user_games (map {
@@ -274,7 +274,7 @@ sub get_game_list_by_pattern {
     $ids .= '%';
 
     my $res = $dbh->selectall_arrayref(
-        "select id, round, from game where id like ?",
+        "select id, round, array_agg(from game join game_role on game.id=game_role.game where id like ?",
         { Slice => {} },
         $ids);
 

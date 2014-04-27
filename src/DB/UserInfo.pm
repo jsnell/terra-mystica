@@ -16,7 +16,7 @@ sub fetch_user_metadata {
                                  $username);
 
     my ($games) =
-        $dbh->selectall_arrayref("select game.id, game_role.dropped, game.finished, game.aborted from game_role left join game on game.id=game_role.game left join email on email.address=game_role.email where faction != 'admin' and email.player=?",
+        $dbh->selectall_arrayref("select game.id, game_role.dropped, game.finished, game.aborted from game_role left join game on game.id=game_role.game left join email on email.address=game_role.email where email.player=?",
                                  { Slice => {} },
                                  $username);
 
@@ -45,7 +45,7 @@ sub fetch_user_stats {
     my ($dbh, $username) = @_;
 
     my ($rows) =
-        $dbh->selectall_arrayref("select faction, max(vp) as max_vp, sum(vp)/count(*) as mean_vp, count(*), count(case when rank = 1 then true end) as wins, count(case when rank = 1 then true end)*100/count(*) as win_percentage, array_agg(rank) as ranks from game_role where email in (select address from email where player=?) and faction != 'admin' and game in (select id from game where finished and not aborted and not exclude_from_stats) group by faction order by win_percentage desc",
+        $dbh->selectall_arrayref("select faction, max(vp) as max_vp, sum(vp)/count(*) as mean_vp, count(*), count(case when rank = 1 then true end) as wins, count(case when rank = 1 then true end)*100/count(*) as win_percentage, array_agg(rank) as ranks from game_role where email in (select address from email where player=?) and game in (select id from game where finished and not aborted and not exclude_from_stats) group by faction order by win_percentage desc",
                                  { Slice => {} },
                                  $username);
     $rows;
@@ -57,7 +57,7 @@ sub fetch_user_opponents {
     my %res = ();
 
     my ($games) =
-        $dbh->selectall_arrayref("select game, array_agg(email.player) as players, array_agg(rank) as ranks from game_role inner join email on game_role.email=email.address where game in (select game from game_role where email in (select address from email where player=?) and faction != 'admin' and game in (select id from game where finished and not aborted and not exclude_from_stats)) and faction != 'admin' group by game",
+        $dbh->selectall_arrayref("select game, array_agg(email.player) as players, array_agg(rank) as ranks from game_role inner join email on game_role.email=email.address where game in (select game from game_role where email in (select address from email where player=?) and game in (select id from game where finished and not aborted and not exclude_from_stats)) group by game",
                                  { Slice => {} },
                                  $username);
 

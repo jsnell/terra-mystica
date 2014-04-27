@@ -66,6 +66,7 @@ create index game_role_game_idx on game_role (game);
 
 create table blacklist (
        email text references email (address)
+       player text references player (username)
 );
 
 create table game_note (
