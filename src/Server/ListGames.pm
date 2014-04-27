@@ -52,6 +52,7 @@ method handle($q, $path_suffix) {
         $self->open_games($dbh, \%res, $user);
     } elsif ($mode eq 'by-pattern') {
         $res{games} = get_game_list_by_pattern $dbh, $path_suffix;
+        $res{error} = [];
     }
 
     $self->output_json({%res});
