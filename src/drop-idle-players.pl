@@ -15,7 +15,7 @@ use tracker;
 
 my $dbh = get_db_connection;
 
-my $id_pattern = 'pubtest8';
+my $id_pattern = '%';
 
 my $idle_players = $dbh->selectall_arrayref("select game, array_agg(faction) as factions from game_role where game in (select id from game where not finished and not aborted and last_update < now() - interval '1 weeks' and round > 0) and (action_required or leech_required) and game like ? group by game",
                                             { Slice => {} },

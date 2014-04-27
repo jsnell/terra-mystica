@@ -1062,6 +1062,8 @@ sub command {
         $faction->{allowed_actions} = 0;
         $faction->{allowed_sub_actions} = {};
 
+        $game{acting}->dismiss_action($faction, undef);
+
         my $discard = find_bonus_to_discard $faction;
         if ($discard) {
             adjust_resource $faction, $discard, -1;
