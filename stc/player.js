@@ -39,15 +39,24 @@ function renderStats(table, stats) {
 
 function renderMetadata(table, stats) {
     var metadata = stats.metadata;
-    table.insert(new Element("tr").insert(
-        new Element("td").updateText("Username")).insert(
-            new Element("td").updateText(metadata.username)));
-    table.insert(new Element("tr").insert(
-        new Element("td").updateText("Display Name")).insert(
-            new Element("td").updateText(metadata.displayname)));
-    table.insert(new Element("tr").insert(
-        new Element("td").updateText("Rating")).insert(
-            new Element("td").updateText(metadata.rating || '-')));
+    var mapping = [
+        ["Username", metadata.username],
+        ["Display Name", metadata.displayname],
+        ["Rating", metadata.rating || '-'],
+        ["Games Started", metadata.total_games || 0],
+        [" Running", metadata.running || 0],
+        [" Finished", metadata.finished || 0],
+        [" Aborted", metadata.aborted || 0],
+        [" Dropped Out", metadata.dropped || 0],
+    ];
+
+    mapping.each(function(record) {
+        var label = record[0];
+        var value = record[1];
+        table.insert(new Element("tr").insert(
+            new Element("td").updateText(label)).insert(
+                new Element("td").updateText(value)));
+    });
 }
 
 function renderOpponents(table, stats) {

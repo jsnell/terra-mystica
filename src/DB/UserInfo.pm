@@ -10,12 +10,35 @@ use strict;
 sub fetch_user_metadata {
     my ($dbh, $username) = @_;
 
-    my ($rows) =
-        $dbh->selectall_arrayref("select username, displayname, rating from player left join player_ratings on player.username=player_ratings.player where username=?;",
+    my ($metadata) =
+        $dbh->selectall_arrayref("select username, displayname, rating from player left join player_ratings on player.username=player_ratings.player where username=?",
                                  { Slice => {} },
                                  $username);
 
-    $rows->[0];
+    my ($games) =
+        $dbh->selectall_arrayref("select game.id, game_role.dropped, game.finished, game.aborted from game_role left join game on game.id=game_role.game left join email on email.address=game_role.email where faction != 'admin' and email.player=?",
+                                 { Slice => {} },
+                                 $username);
+
+    my $metadata = $metadata->[0];
+
+    my %handled = ();
+    for my $game (@{$games}) {
+        next if $handled{$game->{id}}++;
+
+        if ($game->{dropped}) {
+            $metadata->{dropped}++;
+        } elsif ($game->{aborted}) {
+            $metadata->{aborted}++;
+        } elsif ($game->{finished}) {
+            $metadata->{finished}++;
+        } else {
+            $metadata->{running}++;
+        }
+        $metadata->{total_games}++;
+    }
+
+    $metadata;
 }
 
 sub fetch_user_stats {
