@@ -16,14 +16,16 @@ use DB::EditLink;
 use Util::NaturalCmp;
 use Server::Session;
 
-method handle($q) {
+has 'mode' => (is => 'ro', required => 1);
+
+method handle($q, $path_suffix) {
     $self->no_cache();
     $self->set_header("Connection", "Close");
 
     ensure_csrf_cookie $q, $self;
 
     my $dbh = get_db_connection;
-    my $mode = $q->param('mode') // 'all';
+    my $mode = $q->param('mode') // $self->mode() // 'all';
     my $status = $q->param('status') // 'running';
 
     my %res = (error => '');
@@ -48,6 +50,8 @@ method handle($q) {
         my $user = username_from_session_token($dbh,
                                                $q->cookie('session-token') // '');
         $self->open_games($dbh, \%res, $user);
+    } elsif ($mode eq 'by-pattern') {
+        $res{games} = get_game_list_by_pattern $dbh, $path_suffix;
     }
 
     $self->output_json({%res});

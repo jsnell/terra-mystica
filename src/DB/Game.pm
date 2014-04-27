@@ -14,6 +14,7 @@ use Exporter::Easy (
                   get_finished_game_results
                   get_open_game_list
                   get_user_game_list
+                  get_game_list_by_pattern
                   abort_game
                   unabort_game
                 )]
@@ -265,6 +266,19 @@ sub get_user_game_list {
     } else {
         get_player_game_list $dbh, $user, $mode, $status;
     }
+}
+
+sub get_game_list_by_pattern {
+    my ($dbh, $ids) = @_;
+
+    $ids .= '%';
+
+    my $res = $dbh->selectall_arrayref(
+        "select id, round, from game where id like ?",
+        { Slice => {} },
+        $ids);
+
+    $res;
 }
 
 sub abort_game {

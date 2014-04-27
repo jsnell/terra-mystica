@@ -46,8 +46,11 @@ my %paths = (
     '/join-game/' => sub {
         Server::JoinGame->new()
     },
+    '/list-games/by-pattern/' => sub {
+        Server::ListGames->new( mode => 'by-pattern')
+    },
     '/list-games/' => sub {
-        Server::ListGames->new()
+        Server::ListGames->new( mode => '')
     },
     '/login/' => sub {
         Server::Login->new()
