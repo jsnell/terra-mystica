@@ -28,7 +28,10 @@ function listGames(games, div, mode, status) {
     games.each(function(elem) {
         elem.status = "";
         elem.status_msg = "";
-        if (elem.action_required && !elem.aborted) {
+        if (elem.dropped) {
+            elem.status = "game-status-dropped";
+            elem.status_msg = "dropped out";
+        } else if (elem.action_required && !elem.aborted) {
             elem.status = "game-status-action-required";
             elem.status_msg = "your turn";
             action_required_count++;

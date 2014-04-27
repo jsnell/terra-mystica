@@ -329,6 +329,10 @@ tr.game-status-action-unread-chat td {
     background-color: #ccf;
 }
 
+tr.game-status-dropped td {
+    background-color: #f88;
+}
+
 table.gamelist {
     margin-left: 2ex;
     max-width: 80ex;
