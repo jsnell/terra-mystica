@@ -668,11 +668,17 @@ sub command_start {
         $faction->{order} = $i++;
     }
 
-    my $start_player = $order[0];
-    $game{acting}->require_action($start_player,
-                                  { type => 'full' });
-    $game{acting}->start_full_move($start_player);
-    $game{acting}->full_turn_played(0);
+    for (@order ){
+        my $start_player = $_;
+        next if $start_player->{dropped};
+
+        $game{acting}->require_action($start_player,
+                                      { type => 'full' });
+        $game{acting}->start_full_move($start_player);
+        $game{acting}->full_turn_played(0);
+        last;
+    }
+
 }
 
 sub command_connect {
