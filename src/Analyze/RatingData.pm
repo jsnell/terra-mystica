@@ -83,16 +83,16 @@ sub handle_game {
         $players->{$f->{id_hash}}{games}++;
     }
 
-    for my $i (0..$#factions) {
-        my $f1 = $factions[$i];
+    for my $i (0..$#f) {
+        my $f1 = $f[$i];
 
         for my $j (($i+1)..$#factions) {
-            my $f2 = $factions[$j];
+            my $f2 = $f[$j];
             next if $f1->{id_hash} eq 'unknown';
             next if $f2->{id_hash} eq 'unknown';
             my $record = {
-                a => { id_hash => $f1->{id_hash}, faction => $f1->{faction}, vp => $f1->{vp} },
-                b => { id_hash => $f2->{id_hash}, faction => $f2->{faction}, vp => $f2->{vp} },
+                a => { username => $f1->{username}, id_hash => $f1->{id_hash}, faction => $f1->{faction}, vp => $f1->{vp} },
+                b => { username => $f2->{username}, id_hash => $f2->{id_hash}, faction => $f2->{faction}, vp => $f2->{vp} },
                 last_update => $res->{last_update},
                 id => $res->{id},
             };
