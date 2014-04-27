@@ -327,6 +327,9 @@ sub note_leech {
         next if !$this_leech{$color};
         my $amount = $this_leech{$color};
         my $actual = min $this_leech{$color}, $faction->{P1} * 2 + $faction->{P2};
+        if ($faction->{dropped}) {
+            $actual = 0;
+        }
 
         $game{acting}->require_action($faction,
                                       {

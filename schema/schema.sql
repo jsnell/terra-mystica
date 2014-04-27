@@ -57,6 +57,7 @@ create table game_role (
     vp integer,
     rank integer,
     start_order integer,
+    dropped boolean default false,
     primary key (game, faction)
 );
 

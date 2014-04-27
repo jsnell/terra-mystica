@@ -982,6 +982,11 @@ function drawFaction(name) {
         title = new Element("span").insert(title).insert(
             makeTextSpan(", passed"));
     }
+    if (faction.dropped) {
+        style += 'opacity: 0.25';
+        title = new Element("span").insert(title).insert(
+            makeTextSpan(", dropped"));
+    }
 
     if (faction.start_player) {
         title = new Element("span").insert(title).insert(

@@ -547,12 +547,24 @@ sub command_bridge {
     detect_towns_from $faction, $to;
 }
 
+sub find_bonus_to_discard {
+    my ($faction, $bon) = @_;
+
+    for (keys %{$faction}) {
+        next if !$faction->{$_};
+
+        if (/^BON/) {
+            return $_;
+        }
+    }
+
+    undef;
+}
+
 sub command_pass {
     my ($faction, $bon) = @_;
     my $faction_name = $faction->{name};
     my $ledger = $game{ledger};
-
-    my $discard;
 
     $game{acting}->require_subaction($faction, 'pass', {});
 
@@ -570,13 +582,7 @@ sub command_pass {
     }
 
     $faction->{passed} = 1;
-    for (keys %{$faction}) {
-        next if !$faction->{$_};
-
-        if (/^BON/) {
-            $discard = $_;
-        }
-    }
+    my $discard = find_bonus_to_discard $faction;
 
     do_pass_vp $faction, sub {
         adjust_resource $faction, 'VP', $_[0], $_[1];
@@ -1041,6 +1047,21 @@ sub command {
         } else {
             die "Unknown final scoring type: $1\n";
         }
+    } elsif ($command =~ /^drop-faction (\w+)$/i) {
+        die "Players can only be dropped from admin view\n" if $faction_name;
+        my $f = lc $1;
+        my $faction = $game{acting}->get_faction($f);
+        die "Faction $f is not in the game" if !$faction;
+        $faction->{dropped} = 1;
+        $faction->{allowed_actions} = 0;
+        $faction->{allowed_sub_actions} = {};
+
+        my $discard = find_bonus_to_discard $faction;
+        if ($discard) {
+            adjust_resource $faction, $discard, -1;
+        }
+        $game{acting}->maybe_advance_to_next_player($faction);
+        $game{ledger}->add_comment("$f dropped from the game");
     } else {
         die "Could not parse command '$command'.\n";
     }

@@ -75,6 +75,7 @@ method action_required_count() {
 
 method require_action($faction, $action) {
     die "Invalid faction" if !$action or !$faction;
+    return if $faction->{dropped};
     $action->{faction} = $faction->{name};
     $self->push_action_required($action);
 }
@@ -423,7 +424,7 @@ method in_play() {
 
     my $all_passed = 1;
     for my $faction ($self->factions_in_order()) {
-        $all_passed &&= $faction->{passed};
+        $all_passed &&= ($faction->{passed} || $faction->{dropped});
     }
 
     if (!$all_passed) {
@@ -451,6 +452,8 @@ method detect_incomplete_turn($faction) {
     my $faction_name = $faction->{name};
     my $ledger = $self->game()->{ledger};
     my $incomplete = 0;
+
+    return 0 if $faction->{dropped};
 
     if ($faction->{PICK_COLOR}) {
         $incomplete = 1;
@@ -575,7 +578,7 @@ method next_faction_in_turn($faction) {
     return if $self->game()->{finished};
 
     for my $f ($self->factions_in_order_from($faction)) {
-        return $f if !$f->{passed};
+        return $f if !$f->{passed} and !$f->{dropped};
     }
 
     undef;
