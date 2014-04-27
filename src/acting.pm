@@ -169,7 +169,7 @@ method require_subaction($faction, $type, $followup) {
         # Taking an action is an implicit "decline"
         terra_mystica::command_decline($faction, undef, undef);
     } else {
-        my @unpassed = grep { !$_->{passed} } $self->factions_in_order();
+        my @unpassed = grep { !$_->{passed} and !$_->{dropped} } $self->factions_in_order();
         if (@unpassed == 1 or $faction->{planning}) {
             $self->maybe_advance_to_next_player($faction);
 
