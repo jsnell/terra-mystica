@@ -38,16 +38,47 @@ method handle($q) {
     my $write_id = $q->param('game');
     $write_id =~ s{.*/}{};
     $write_id =~ s{[^A-Za-z0-9_]}{}g;
+    my ($read_id) = $write_id =~ /(.*?)_/g;
+
+    eval {
+        $self->check_user_is_admin($dbh, $read_id, $username);
+        $self->check_user_is_not_deadbeat($dbh, $read_id, $username);
+    }; if ($@) {
+        $self->output_json({ error => [ $@ ] });
+        return;
+    }
 
     if ($self->mode() eq 'content') {
-        $self->edit_content($dbh, $q, $write_id, $username);
+        $self->edit_content($dbh, $q, $read_id, $write_id, $username);
     } elsif ($self->mode() eq 'status') {
         $self->edit_status($dbh, $q, $write_id);
     }
 }
 
-method edit_content($dbh, $q, $write_id, $username) {
-    my ($read_id) = $write_id =~ /(.*?)_/g;
+method check_user_is_admin($dbh, $read_id, $username) {
+    my ($game_admin) = $dbh->selectrow_array("select admin_user from game where id=?",
+                                             { Slice => {} },
+                                             $read_id);
+
+    if ($username ne $game_admin and
+        $username ne 'jsnell') {
+        die "Sorry, it appears you're not the game admin.\n"
+    }
+}
+
+method check_user_is_not_deadbeat($dbh, $read_id, $username) {
+    my ($dropped) = $dbh->selectall_arrayref(" select player from game_role join email on email.address=game_role.email where game=? and dropped",
+                                             { Slice => {} },
+                                             $read_id);
+
+    for my $record (@{$dropped}) {
+        if ($username eq $record->{player}) {
+            die "Sorry, you're no longer allowed to admin this game\n"
+        }
+    }
+}
+
+method edit_content($dbh, $q, $read_id, $write_id, $username) {
     my ($prefix_data, $data) = get_game_content $dbh, $read_id, $write_id;
     my $players = get_game_players($dbh, $read_id);
     my $metadata = get_game_metadata($dbh, $read_id);
