@@ -46,7 +46,11 @@ method handle($q) {
         $res = evaluate_and_save $dbh, $read_id, $write_id, $prefix_content, $new_content;
     }
 
-    finish_game_transaction $dbh;
+    if (@{$res->{error}}) {
+        $dbh->do("rollback");
+    } else {
+        finish_game_transaction $dbh;
+    }
 
     my $out = {
         error => $res->{error},
