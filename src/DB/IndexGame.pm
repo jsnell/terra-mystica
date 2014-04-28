@@ -48,11 +48,12 @@ sub set_game_roles {
     my $pi = 0;
     my @player_roles = map {
         { name => "player".++$pi,
+          username => $_->{username},
           email => $_->{email} }
     } @{$game->{players}};
     shift @player_roles for 1..(values %{$game->{factions}});
 
-     if ($game->{finished}) {
+    if ($game->{finished}) {
         my @by_vp = sort { $b->{VP} <=> $a->{VP} } values %{$game->{factions}};
         my $pos = 0;
         my $prev;
@@ -79,6 +80,10 @@ sub set_game_roles {
                      @player_roles) {
         my $action_required = 0;
         my $leech_required = 0;
+
+        if (!$faction->{username}) {
+            print STDERR "$game->{id}: faction without username:\n", JSON::encode_json $faction;
+        }
 
         for my $action (@{$game->{action_required}}) {
             my $acting = '';
