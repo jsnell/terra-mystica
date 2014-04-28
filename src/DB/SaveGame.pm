@@ -155,8 +155,8 @@ EOF
         $dbh->do("insert into game_role (game, email, faction_player, faction, action_required) values (?, lower(?), ?, ?, false)",
                  {},
                  $id,
-                 $player->{username},
                  $player->{email},
+                 $player->{username},
                  "player".($i));
     }
 
