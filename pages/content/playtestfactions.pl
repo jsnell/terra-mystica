@@ -69,7 +69,7 @@ to another terrain type.
 <li> Start with 6/6/0 power, 0/1/0/1 on cults
 <li> Start with a favor tile (taken immediately on faction selection)
 <li> Advancing on the digging track requires just 5c+1p, no workers
-<li> SH produces 4power, +3vp per temple when passing
+<li> SH produces 4pw, +3vp per temple when passing
 <li> The 8th dwelling produces a worker
 </ul>
 
@@ -92,6 +92,7 @@ to another terrain type.
 <li> Start with 1 extra worker, but produce one worker less.
 <li> Pay cult steps to transform. 4 steps on a single cult if transforming from another player's home terrain to a volcano, 3 steps if transforming from some other color. (The ice factions do not have a home terrain).
 <li> SH produces 2pw, and gives the Acolytes one extra cult step for each priest sent to the cult tracks
+<li> <b>v2</b>: 4th dwelling produces no worker income.
 <li> If the Acolytes gain a spade from somewhere, they'll gain a cult step instead.
 <li> The Acolytes are unique in that they can go down on cult tracks. They do not gain power from the cult track thresholds when going down, but can gain the same reward multiple times when going up. If they leave the 10 space, it's free for another player to take.
 </ul>
@@ -99,7 +100,9 @@ to another terrain type.
 <h4>Dragon Masters</h4>
 
 <ul>
-<li> Start with 4/4/0 power, 2/0/0/0 on cults, and only 2 workers
+<li> Start with 4/4/0 power, 2/0/0/0 on cults
+<li> <b>v1</b>: Start with only 2 workers
+<li> <b>v2</b>: Start with 3 workers, but produce one worker less
 <li> Permanently remove power tokens (from any bowl) to transform. 2 tokens if transforming from another player's home terrain to a volcano, 1 token if transforming from some other color. (The ice factions do not have a home terrain).
 <li> SH produces 2pw, and gives an instant one-time production of as many power tokens as there are players (tokens go into bowl 1).
 <li> 4th dwelling produces no worker income.
