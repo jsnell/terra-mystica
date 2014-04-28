@@ -152,9 +152,10 @@ EOF
                  $i);
         # Different indexing, sigh
         ++$i;
-        $dbh->do("insert into game_role (game, email, faction, action_required) values (?, lower(?), ?, false)",
+        $dbh->do("insert into game_role (game, email, faction_player, faction, action_required) values (?, lower(?), ?, ?, false)",
                  {},
                  $id,
+                 $player->{username},
                  $player->{email},
                  "player".($i));
     }
