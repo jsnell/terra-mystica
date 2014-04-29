@@ -34,6 +34,10 @@ method redirect($where) {
     $self->set_header("Location", $where);
 }
 
+method allow_cross_domain($where) {
+    $self->set_header("Access-Control-Allow-Origin", "*");
+}
+
 method no_cache() {
     $self->set_header("Cache-Control", "no-cache");
 }
