@@ -51,6 +51,7 @@ method handle($q, $path_suffix) {
                                                $q->cookie('session-token') // '');
         $self->open_games($dbh, \%res, $user);
     } elsif ($mode eq 'by-pattern') {
+        $self->allow_cross_domain();
         $res{games} = get_game_list_by_pattern $dbh, $path_suffix;
         $res{error} = [];
     }
