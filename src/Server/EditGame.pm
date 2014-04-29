@@ -67,12 +67,12 @@ method check_user_is_admin($dbh, $read_id, $username) {
 }
 
 method check_user_is_not_deadbeat($dbh, $read_id, $username) {
-    my ($dropped) = $dbh->selectall_arrayref(" select player from game_role join email on email.address=game_role.email where game=? and dropped",
+    my ($dropped) = $dbh->selectall_arrayref("select faction_player from game_role where game=? and dropped",
                                              { Slice => {} },
                                              $read_id);
 
     for my $record (@{$dropped}) {
-        if ($username eq $record->{player}) {
+        if ($username eq $record->{faction_player}) {
             die "Sorry, you're no longer allowed to admin this game\n"
         }
     }

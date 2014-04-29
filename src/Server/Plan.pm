@@ -54,7 +54,7 @@ sub handle {
         }
 
         my $faction_player = $dbh->selectrow_array(
-            "select email.player from game_role left join email on game_role.email=email.address where game_role.game=? and faction=?",
+            "select faction_player from game_role where game=? and faction=?",
             {},
             $id,
             $faction_name);
