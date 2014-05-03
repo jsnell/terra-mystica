@@ -39,7 +39,7 @@ sub drop_factions_from_game {
 
     my ($prefix_content, $new_content) = get_game_content $dbh, $read_id, $write_id;
     for my $faction (@factions) {
-        $new_content .= "drop-faction $faction"
+        $new_content .= "\ndrop-faction $faction"
     }
 
     my $res = terra_mystica::evaluate_game {
