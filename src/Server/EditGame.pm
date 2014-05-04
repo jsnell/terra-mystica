@@ -38,7 +38,7 @@ method handle($q) {
     my $write_id = $q->param('game');
     $write_id =~ s{.*/}{};
     $write_id =~ s{[^A-Za-z0-9_]}{}g;
-    my ($read_id) = $write_id =~ /(.*?)_/g;
+    my ($read_id) = $write_id =~ /(.*)_/g;
 
     eval {
         $self->check_user_is_admin($dbh, $read_id, $username);

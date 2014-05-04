@@ -20,7 +20,7 @@ use tracker;
 sub save {
     my ($dbh, $id, $new_content, $game, $timestamp) = @_;
 
-    my ($read_id) = $id =~ /(.*?)_/g;
+    my ($read_id) = $id =~ /(.*)_/g;
     index_game $dbh, $read_id, $id, $game, $timestamp;
 
     $dbh->do("update game set commands=? where id=?", {},
@@ -109,7 +109,7 @@ sub evaluate_and_save {
 sub create_game {
     my ($dbh, $id, $admin_user, $players, $player_count, @options) = @_;
 
-    die "Invalid game id $id\n" if !$id or $id =~ /[^A-Za-z0-9]/;
+    die "Invalid game id $id\n" if !$id or $id =~ /[^A-Za-z0-9_]/;
 
     my $hash = sha1_hex($id . rand(2**32) . time);
     my $write = "write/${id}_$hash";
@@ -143,7 +143,7 @@ EOF
     my ($admin_email) = $dbh->selectrow_array("select address from email where player = ? and is_primary", {}, $admin_user);
 
     my $i = 0;
-    for my $player (sort { $a->{username} cmp $b->{username} } @{$players}) {
+    for my $player (@{$players}) {
         $dbh->do("insert into game_player (game, player, sort_key, index) values (?, ?, ?, ?)",
                  {},
                  $id,

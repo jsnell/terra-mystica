@@ -19,7 +19,7 @@ method handle($q) {
 
     my $id = $q->param('game');
     $id =~ s{.*/}{};
-    $id =~ s{[^A-Za-z0-9]}{}g;
+    $id =~ s{[^A-Za-z0-9_]}{}g;
     my $max_row = $q->param('max-row');
     my $preview = $q->param('preview');
     my $preview_faction = $q->param('preview-faction');

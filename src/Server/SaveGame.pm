@@ -23,7 +23,7 @@ method handle($q) {
     my $write_id = $q->param('game');
     $write_id =~ s{.*/}{};
     $write_id =~ s{[^A-Za-z0-9_]}{}g;
-    my ($read_id) = $write_id =~ /(.*?)_/g;
+    my ($read_id) = $write_id =~ /(.*)_/g;
 
     my $orig_hash = $q->param('orig-hash');
     my $new_content = $q->param('content');
