@@ -211,6 +211,8 @@ function renderSidebar(id) {
     insertLink("/changes/", "Changes");
     insertLink("/about/", "About");
     insertLink("/usage/", "Help");
+    p.insert(new Element("br"));
+    insertLink("http://tmtour.org/", "League");
 
     $(id).insert(p);
 }
