@@ -804,9 +804,16 @@ sub command_randomize_v1 {
         handle_row_internal "", "delete ".(shift @bon);
     }
 
-    my @players = mt_shuffle $rand, sort {
-        lc $a->{name} cmp lc $b->{name} or $a->{index} <=> $b->{index}
-    } @{$game{acting}->players()};
+    my @players;
+    if ($game{options}{'maintain-player-order'}) {
+        @players = sort {
+            $a->{index} <=> $b->{index}
+        } @{$game{acting}->players()};
+    } else {
+        @players = mt_shuffle $rand, sort {
+            lc $a->{name} cmp lc $b->{name} or $a->{index} <=> $b->{index}
+        } @{$game{acting}->players()};
+    }
 
     my $i = 1;
     for (@players) {
@@ -986,6 +993,7 @@ sub command {
             mini-expansion-1
             shipping-bonus
             email-notify
+            maintain-player-order
             strict-leech
             strict-chaosmagician-sh
             strict-darkling-sh);
