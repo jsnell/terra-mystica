@@ -23,6 +23,7 @@ use Server::ViewGame;
 
 use CGI::PSGI;
 use JSON;
+use Util::Watchdog;
 
 my %paths = (
     '/alias/request/' => sub {
@@ -133,8 +134,10 @@ sub route {
         }
         if ($handler) {
             my $app = $handler->();
-            $app->handle($q, $suffix);
-            $ret = $app->output_psgi();
+            with_watchdog 15, sub {
+                $app->handle($q, $suffix);
+                $ret = $app->output_psgi();
+            };
         } else {
             die "Unknown module '$path_info'";
         }
