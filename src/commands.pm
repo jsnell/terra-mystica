@@ -1000,6 +1000,11 @@ sub command {
         if (!$valid_options{$opt}) {
             die "Unknown option $opt\n";
         }
+        if ($opt eq 'maintain-player-order') {
+            my $wanted_count = $game{player_count};
+            die "maintain-player-order option can only be used for private games\n" if $wanted_count;
+        }
+
         $game{options}{$opt} = 1;
         $game{ledger}->add_comment("option $opt");
     } elsif ($command =~ /^player (\S+)(?: email (\S*))?(?: username (\S+))?$/i) {

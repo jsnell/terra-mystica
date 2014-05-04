@@ -21,6 +21,7 @@ the letters A-Z and a-z and the digits 0-9.
         <input name="game-options" type="checkbox" id="option-mini-expansion-1" value="mini-expansion-1"></input><label for="option-mini-expansion-1">Mini Expansion #1 (town tiles)</label><br>
         <input name="game-options" type="checkbox" id="option-shipping-bonus" value="shipping-bonus"></input><label for="option-shipping-bonus">Shipping bonus tile (Spielbox 6/2013)</label><br>
         <input name="game-options" type="checkbox" id="option-email-notify" value="email-notify" onchange="javascript:newGameValidate()" checked></input><label id="option-email-notify-label" for="option-email-notify">Automatic email notifications</label><br>
+        <input name="game-options" type="checkbox" id="option-maintain-player-order" value="maintain-player-order" onchange="javascript:newGameValidate()"></input><label id="option-maintain-player-order-label" for="option-maintain-player-order">Don't randomize player order (private games only)</label><br>
         <p>
 The options are described in more detail in the
 <a href="/usage.html#options">manual.</a>

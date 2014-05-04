@@ -6,6 +6,7 @@ function newGameValidate() {
     var badColor = "#faa";
     var validateHighlights = {
         "option-email-notify-label": okColor,
+        "option-maintain-player-order-label": okColor,
         "player-count": okColor,
         "players": okColor,
         "gameid": okColor,
@@ -29,6 +30,10 @@ function newGameValidate() {
         if (!$("option-email-notify").checked) {
             disabled = true;
             validateHighlights["option-email-notify-label"] = badColor;
+        }
+        if ($("option-maintain-player-order").checked) {
+            disabled = true;
+            validateHighlights["option-maintain-player-order-label"] = badColor;
         }
         if ($("player-count").value == "-") {
             disabled = true;
