@@ -102,7 +102,7 @@ sub handle_game {
 }
 
 sub read_rating_data {
-    my ($dbh) = @_;
+    my ($dbh, $filter) = @_;
     my @output = ();
     my %players = ();
     my %factions = ();
@@ -112,6 +112,8 @@ sub read_rating_data {
     my %faction_count = ();
 
     for (@{$results{results}}) {
+        next if $filter and !$filter->($_);
+
         $games{$_->{game}}{factions}{$_->{faction}} = $_;
         $games{$_->{game}}{id} = $_->{game};
         $games{$_->{game}}{last_update} = $_->{last_update};
