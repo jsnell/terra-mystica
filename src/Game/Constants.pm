@@ -62,7 +62,7 @@ Readonly our %actions => (
               subaction => { dig => 1, 'transform' => 1, 'build' => 1 } },
     ACT6 => { cost => { PW => 6 }, gain => { SPADE => 2 },
               subaction => { dig => 1, 'transform' => 2, 'build' => 1} },
-    ACTA => { cost => {}, gain => { CULT => 2} },
+    ACTA => { cost => {}, gain => { CULT => 2 , CULTS_ON_SAME_TRACK => 1 } },
     ACTG => { cost => {}, gain => { SPADE => 2},
               subaction => { dig => 1, 'transform' => 1, 'build' => 1 } },
     ACTS => { cost => {}, gain => { FREE_TP => 1 },

@@ -52,6 +52,7 @@ sub setup_pool {
         TOWN_SIZE => 10000,
         LOSE_PW_TOKEN => 10000,
         PRIEST_CULT_BONUS => 10000,
+        CULTS_ON_SAME_TRACK => 10000,
         carpet_range => 3,
     };
 

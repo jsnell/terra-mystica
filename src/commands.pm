@@ -42,11 +42,13 @@ sub command_adjust_resources {
                 $faction->{LOSE_CULT} -= $loss;
                 $checked = 1;
             }
-        } elsif ($faction->{CULT} > $delta) {
+        } elsif ($faction->{CULT} > $delta and
+                 $faction->{CULTS_ON_SAME_TRACK}) {
             die "All cult advances must be used on the same cult track\n";
         } else {
             $faction->{CULT} -= $delta;
             $checked = 1;
+            delete $faction->{CULTS_ON_SAME_TRACK};
         }
     }
 
