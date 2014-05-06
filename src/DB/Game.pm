@@ -177,8 +177,6 @@ sub get_finished_game_results {
 
     $dbh->do('commit');
 
-    $dbh->disconnect();
-
     %res;
 }
 
