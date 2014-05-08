@@ -2119,6 +2119,7 @@ function addFactionInput(parent, record, index) {
         var already_added = {};
 
         $H(state.map).sortBy(naturalSortKey).each(function(elem) {
+            var coord = elem.key;
             var hex = elem.value;
 
             if (!faction.BRIDGE_COUNT) {
@@ -2139,14 +2140,25 @@ function addFactionInput(parent, record, index) {
 
             var menu = {};
             $H(hex.bridgable).each(function(to) {
-                menu["To " + to.key] = {
-                    "fun": function (loc) {
-                        appendCommand("Bridge " + elem.key + ":" + to.key);
-                    },
-                    "label": ""
-                };
+                var ok = true;
+                state.bridges.each(function(bridge) {
+                    if ((bridge.to == coord || bridge.from == coord) &&
+                        (bridge.to == to.key || bridge.from == to.key)) {
+                        ok = false;
+                    }
+                });
+                if (ok) {
+                    menu["To " + to.key] = {
+                        "fun": function (loc) {
+                            appendCommand("Bridge " + elem.key + ":" + to.key);
+                        },
+                        "label": ""
+                    };
+                }
             });
-            addMapClickHandler("Bridge", elem.key, menu);
+            if ($H(menu).size() > 0) {
+                addMapClickHandler("Bridge", elem.key, menu);
+            }
         });
 
         if (faction.BRIDGE > 0) {
@@ -2250,7 +2262,7 @@ function updateMovePicker() {
     }
 
     var undo = addUndoToMovePicker(picker, faction);
-    if (!faction.can_leech) {
+    if (!faction.can_leech && !faction.BRIDGE) {
         var pass = addPassToMovePicker(picker, faction);
         var action = addActionToMovePicker(picker, faction);
         var build = addBuildToMovePicker(picker, faction);
