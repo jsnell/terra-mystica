@@ -1068,6 +1068,19 @@ sub command {
         } else {
             die "Unknown final scoring type: $1\n";
         }
+    } elsif ($command =~ /^drop-faction player(\d+)$/i) {
+        my $player = $game{acting}->players()->[$1 - 1];
+        die "Invalid player index: $1\n" if !$player;
+        my $dummy_faction = {
+            username => $player->{username},
+            player => $player->{displayname},
+            dropped => 1,
+            name => "nofaction$1",
+            display => 'No Faction',
+            dummy => 1,
+            start_player => ($game{acting}->faction_count() ? 0 : 1),
+        };
+        $game{acting}->register_faction($dummy_faction);
     } elsif ($command =~ /^drop-faction (\w+)$/i) {
         die "Players can only be dropped from admin view\n" if $faction_name;
         my $f = lc $1;
@@ -1083,6 +1096,10 @@ sub command {
         if ($discard) {
             adjust_resource $faction, $discard, -1;
         }
+        $game{acting}->setup_order(
+            [ grep { $_->[0] ne $f } @{$game{acting}->setup_order()} ]
+            );
+
         $game{acting}->maybe_advance_to_next_player($faction);
         $game{ledger}->add_comment("$f dropped from the game");
     } else {

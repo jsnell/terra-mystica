@@ -81,10 +81,12 @@ sub finalize {
     }
 
     for my $faction ($game{acting}->factions_in_order()) {
-        $faction->{income} = (faction_income $faction)->{total};
         if ($delete_email) {
             delete $faction->{email};
         }
+        next if $faction->{dummy};
+
+        $faction->{income} = (faction_income $faction)->{total};
         if ($game{round} == 6 and !$game{finished}) {
             $faction->{vp_projection} = { faction_vps $faction };
         }

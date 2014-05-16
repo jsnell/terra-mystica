@@ -108,15 +108,23 @@ method register_faction($faction) {
     $self->factions()->{$faction->{name}} = $faction;
     $self->push_faction($faction);
 
-    my @order = map { $_->{name} } $self->factions_in_order();
-    my @setup_order = grep { $_ ne 'chaosmagicians' } @order;
+    my @order = map {
+        $_->{name}
+    } grep {
+        !$_->{dropped}
+    } $self->factions_in_order();
+    my @setup_order = map {
+        [ $_, 'dwelling' ];
+    } grep {
+        $_ ne 'chaosmagicians';
+    } @order;
     push @setup_order, reverse @setup_order;
-    push @setup_order, 'nomads' if $self->factions()->{nomads};
+    push @setup_order, ['nomads', 'dwelling'] if $self->factions()->{nomads};
 
     if ($self->factions()->{chaosmagicians}) {
-        push @setup_order, 'chaosmagicians';
+        push @setup_order, ['chaosmagicians', 'dwelling'];
     }
-    push @setup_order, reverse @order;
+    push @setup_order, map { [ $_, 'bonus'] } reverse @order;
 
     $self->setup_order([@setup_order]);
 }
@@ -133,6 +141,7 @@ method factions_in_turn_order() {
 
 method factions_in_order_from($faction) {
     my @f = $self->factions_in_order();
+
     while ($f[-1] != $faction) {
         push @f, shift @f;
     }
@@ -332,9 +341,11 @@ method in_select_factions() {
         }
     }
 
-    if ($self->player_count() != $self->faction_count()) {
-        my $player = $self->players->[$self->faction_count()];
-        my $player_index = "player".(1+$self->faction_count());
+    my $faction_count = $self->faction_count();
+
+    if ($self->player_count() != $faction_count) {
+        my $player = $self->players->[$faction_count];
+        my $player_index = "player".(1+$faction_count);
         $self->replace_all_actions({
             type => 'faction',
             player => ($player->{displayname} // $player->{name}),
@@ -361,10 +372,12 @@ method in_post_setup() {
 }
 
 method in_initial_dwellings() {
-    if ($self->setup_order_count() <= $self->faction_count()) {
+    my $record = $self->setup_order()->[0];
+
+    if ($record->[1] eq 'bonus') {
         $self->state('initial-bonus');
     } else {
-        my $faction_name = $self->setup_order()->[0];
+        my $faction_name = $record->[0];
         $self->replace_all_actions(
             {
                 type => 'dwelling',
@@ -375,8 +388,10 @@ method in_initial_dwellings() {
 }
 
 method in_initial_bonus() {
+    my $record = $self->setup_order()->[0];
+
     if ($self->setup_order_count()) {
-        my $faction_name = $self->setup_order()->[0];
+        my $faction_name = $record->[0];
         $self->replace_all_actions(
             {
                 type => 'bonus',

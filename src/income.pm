@@ -19,6 +19,8 @@ sub faction_income {
     my %total_bonus_income = %total_income;
     my %total_scoring_income = %total_income;
 
+    return if $faction->{dummy};
+
     my %buildings = %{$faction->{buildings}};
 
     for my $building (values %buildings) {

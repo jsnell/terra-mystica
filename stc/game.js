@@ -1027,6 +1027,8 @@ function drawRealFaction(faction, board) {
     var info = new Element('div', {'class': 'faction-info' });
     board.insert(info);
 
+    if (faction.dummy) { return }
+
     var vp_id = faction.name + "/vp";
     if (faction.vp_source) {
         var vp_breakdown = new Element('table', {'id': vp_id,
