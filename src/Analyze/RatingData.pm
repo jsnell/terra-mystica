@@ -122,10 +122,12 @@ sub read_rating_data {
 
     for (values %games) {
         my $ok = 1;
-        for (keys %{$_->{factions}}) {
-            # Don't include games with new factions in ratings until there's
-            # at least a bit of data.
-            $ok = 0 if $faction_count{$_} < 20;
+        if (!$filter) {
+            for (keys %{$_->{factions}}) {
+                # Don't include games with new factions in ratings
+                # until there's at least a bit of data.
+                $ok = 0 if $faction_count{$_} < 20;
+            }
         }
 
         if ($ok) {
