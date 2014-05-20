@@ -286,6 +286,9 @@ sub find_building_cliques {
     my ($range, $ship);
     my %clique = ();
 
+    # Dropped before faction selection
+    return if !$faction->{locations};
+
     my @locations = @{$faction->{locations}};
 
     if ($faction->{teleport}) {
