@@ -34,4 +34,13 @@ __DATA__
 <h4>Games</h4>
 <table id="games-played" class="gamelist"></table>
 
+<h4>Faction Info</h4>
+
+<p>
+    Deviation from expected score, based on performance of other
+    players, and adjusted for estimated player skill.
+</p>
+
+<table id="faction-info" class="gamelist"></table>
+
 <script>showMap();</script>

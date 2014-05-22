@@ -152,7 +152,7 @@ sub get_finished_game_results {
     $dbh->do("update game set exclude_from_stats=true where admin_user in (select player from blacklist) and not exclude_from_stats");
 
     my $rows = $dbh->selectall_arrayref(
-        "select game, faction, vp, rank, start_order, email.player, email, game.player_count, game.last_update, game.non_standard from game_role left join game on game=game.id left join email on email=email.address where game.finished and game.round=6 and not game.aborted and not game.exclude_from_stats and game.id like ?",
+        "select game, faction, vp, rank, start_order, email.player, email, game.player_count, game.last_update, game.non_standard, game.base_map from game_role left join game on game=game.id left join email on email=email.address where game.finished and game.round=6 and not game.aborted and not game.exclude_from_stats and game.id like ?",
         {},
         $id_pattern || '%');
 
@@ -170,7 +170,8 @@ sub get_finished_game_results {
                 id_hash => ($_->[6] ? sha1_hex($_->[6] . $secret) : undef),
                 player_count => $_->[7],
                 last_update => $_->[8],
-                non_standard => $_->[9]
+                non_standard => $_->[9],
+                base_map => $_->[10]
             }
         }
     }

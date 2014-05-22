@@ -343,7 +343,7 @@ sub compute_network_size {
 
     my %clique = find_building_cliques $faction, 1;
     my %clusters = find_building_cliques $faction, 0;
-
+    
     {
         # Find the clique with the most members.
         my %clique_sizes = ();

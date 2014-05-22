@@ -90,6 +90,8 @@ sub deploy_cgi {
                   buildings.pm
                   commands.pm
                   cults.pm
+                  Analyze/EloVpPredictor.pm
+                  Analyze/RatingData.pm
                   DB/Connection.pm
                   DB/EditLink.pm
                   DB/Game.pm

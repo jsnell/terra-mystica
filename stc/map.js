@@ -18,7 +18,12 @@ function viewMap(mapid) {
                 updateMapId(state.mapid, true);
                 drawMap();
                 drawGamesPlayed();
+                drawFactionInfo();
                 $("map-data").value = state.mapdata;
+
+                // Hack around keyboard / wheel scrolling in Chrome
+                // 34+ not working after page load.
+                window.scrollTo(0, 50);
             }
         }
     });
@@ -130,4 +135,29 @@ function drawGamesPlayed() {
         });
         table.insert(tr);
     });    
+}
+
+function drawFactionInfo() {
+    var table = $("faction-info");
+
+    var header = new Element("tr");
+    header.insert(new Element("td").updateText("Faction"));
+    header.insert(new Element("td").updateText("Games"));
+    header.insert(new Element("td", { colspan: 3 }).updateText("VP delta"));
+    table.insert(header);
+    $H(state.vpstats).sortBy(function (data) {
+        return data[1].mean;
+    }).each(function (elem) {
+        var faction = elem.key;
+        var stats = elem.value;
+
+        var tr = new Element("tr");
+        tr.insert(factionTableCell(faction));
+        tr.insert(new Element("td").updateText(stats.count));
+        tr.insert(new Element("td", { style: "text-align: right" } ).updateText(Math.round(stats.mean)));
+        tr.insert(new Element("td").updateText("\u00B1"));
+        tr.insert(new Element("td").updateText(Math.round(stats.sterr)));
+
+        table.insert(tr);
+    });
 }

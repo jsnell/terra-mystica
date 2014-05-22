@@ -8,6 +8,7 @@ use Method::Signatures::Simple;
 
 extends 'Server::Server';
 
+use Analyze::EloVpPredictor;
 use DB::Connection qw(get_db_connection);
 use DB::Game;
 use map;
@@ -142,6 +143,8 @@ func view($dbh, $id, $res) {
                                             $id);
 
     $res->{'games'} = $game_ids;
+
+    $res->{'vpstats'} = faction_vp_error_by_map $dbh, $id;
 }
 
 1;

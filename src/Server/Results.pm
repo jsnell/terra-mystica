@@ -16,6 +16,10 @@ method handle($q) {
     my $dbh = get_db_connection;
     my ($secret, $iv) = get_secret $dbh;
     my $results = { get_finished_game_results $dbh, $secret };
+
+    for (@{$results->{results}}) {
+        delete $_->{base_map};
+    }
     
     $self->output_json($results);
 }
