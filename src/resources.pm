@@ -323,8 +323,9 @@ sub note_leech {
     my $leech_id = ++$game{leech_id};
 
     # Note -- the exact turn order matters when the cultists are in play.
-    for my $faction ($game{acting}->factions_in_order_from($from_faction)) {
+    for my $faction ($game{acting}->factions_in_order_from($from_faction, 1)) {
         my $color = $faction->{color}; 
+        
         next if !$this_leech{$color};
         my $amount = $this_leech{$color};
         my $actual = min $this_leech{$color}, $faction->{P1} * 2 + $faction->{P2};

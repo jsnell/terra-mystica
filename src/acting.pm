@@ -31,7 +31,7 @@ has 'factions_in_order' => (is => '',
                             handles => {
                                 faction_count => 'count',
                                 push_faction => 'push',
-                                factions_in_order => 'elements',
+                                all_factions_in_order => 'elements',
                             });
 
 # What's to be done during the setup
@@ -129,9 +129,17 @@ method register_faction($faction) {
     $self->setup_order([@setup_order]);
 }
 
-method factions_in_turn_order() {
-    my ($start_player) = grep { $_->{start_player} } $self->factions_in_order();
-    my @order = $self->factions_in_order_from($start_player);
+method factions_in_order($no_dummy) {
+    if ($no_dummy) {
+        grep { !$_->{dropped} } $self->all_factions_in_order();
+    } else {
+        $self->all_factions_in_order();
+    }
+}
+
+method factions_in_turn_order($no_dummy) {
+    my ($start_player) = grep { $_->{start_player} } $self->factions_in_order($no_dummy);
+    my @order = $self->factions_in_order_from($start_player, $no_dummy);
     my $a = pop @order;
     unshift @order, $a;
 
@@ -139,8 +147,8 @@ method factions_in_turn_order() {
 }
 
 
-method factions_in_order_from($faction) {
-    my @f = $self->factions_in_order();
+method factions_in_order_from($faction, $no_dummy) {
+    my @f = $self->factions_in_order($no_dummy);
 
     while ($f[-1] != $faction) {
         push @f, shift @f;
@@ -373,6 +381,8 @@ method in_post_setup() {
 
 method in_initial_dwellings() {
     my $record = $self->setup_order()->[0];
+
+    return if !$record;
 
     if ($record->[1] eq 'bonus') {
         $self->state('initial-bonus');

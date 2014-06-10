@@ -449,7 +449,7 @@ sub compute_leech {
         if ($type and $map_color ne $color) {
             my ($to_faction) = grep {
                 $_->{color} eq $map_color;
-            } $game{acting}->factions_in_order();
+            } $game{acting}->factions_in_order(1);
             my $str = $to_faction->{building_strength}{$type} // $building_strength{$type};
             $this_leech{$map_color} += $str;
             $this_leech{$map_color} = $this_leech{$map_color};

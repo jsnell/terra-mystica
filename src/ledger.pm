@@ -82,9 +82,15 @@ method finish_row {
 
     # Compute the delta
     my %end_resources = map { $_, $faction->{$_} } @data_fields;
-    my %pretty_delta = terra_mystica::pretty_resource_delta($self->start_resources(),
-                                                            \%end_resources);
+    my %pretty_delta = ();
 
+    if ($faction->{dummy}) {
+        %pretty_delta = map { ($_, 0) } @data_fields;
+    } else {
+        %pretty_delta = terra_mystica::pretty_resource_delta($self->start_resources(),
+                                                             \%end_resources);
+    }
+    
     my $info = { faction => $faction->{name},
                  leech => $self->leech(),
                  warning => $self->first_warning() // "",

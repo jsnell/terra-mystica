@@ -118,7 +118,7 @@ func setup_faction($game, $faction_name, $player, $email) {
 
     $faction->{email} = $email;
 
-    for my $other_faction ($acting->factions_in_order()) {
+    for my $other_faction ($acting->factions_in_order(1)) {
         if ($other_faction->{color} eq $faction->{color}) {
             die "Can't add $faction_name, $other_faction->{name} already in use\n";
         }

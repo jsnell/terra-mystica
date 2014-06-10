@@ -96,6 +96,8 @@ sub score_final_resources_for_faction {
     my $faction = shift;
     my $faction_name = $faction->{name};
 
+    return if $faction->{dummy};
+
     my $b = int($faction->{P2} / 2);
     if ($b) {
         command $faction_name, "burn $b";
