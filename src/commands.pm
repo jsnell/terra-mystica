@@ -29,7 +29,15 @@ sub command_adjust_resources {
 
     if (grep { $_ eq $type } @cults) {
         if ($faction->{CULT} < $delta) {
-            # die "Advancing $delta steps on $type cult not allowed\n";
+            if ($faction->{$type} == 10) {
+                $checked = 1;
+            } elsif ($faction->{cult_blocked} and
+                       $faction->{cult_blocked}{$type} and
+                       $faction->{KEY}) {
+                $checked = 1;
+            } else {
+                # die "Advancing $delta steps on $type cult not allowed\n";
+            }
         } elsif ($delta < 0) {
             if ($faction->{LOSE_CULT}) {
                 my $loss = -$delta;
@@ -78,8 +86,12 @@ sub command_adjust_resources {
         $checked = 1;
     }
 
-    if (!$checked) {
-        $ledger->warn("dodgy resource manipulation ($delta $type)");
+    if (!$checked and $delta > 0) {
+        if ($game{options}{'strict-adjust-resource'}) {
+            die "Not allowed to gain $delta x $type";
+        } else {
+            $ledger->warn("dodgy resource manipulation ($delta $type)");
+        }
     }
 
     adjust_resource $faction, $type, $delta, $source;
@@ -996,7 +1008,9 @@ sub command {
             mini-expansion-1
             shipping-bonus
             email-notify
+            loose-adjust-resource
             maintain-player-order
+            manual-fav5
             strict-leech
             strict-chaosmagician-sh
             strict-darkling-sh);

@@ -167,6 +167,7 @@ method start_full_move($faction) {
     $faction->{allowed_sub_actions} = {};
     $faction->{allowed_build_locations} = {};
     delete $faction->{TELEPORT_TO};
+    delete $faction->{cult_blocked};
 }
 
 # Signal an intent by a faction to take a sub-action. Either it needs to

@@ -167,6 +167,9 @@ sub maybe_gain_power_from_cult {
     if ($old_value <= 9 && $new_value > 9) {
         if ($faction->{KEY} < 1) {
             $faction->{$cult} = 9;
+            if ($game{options}{'auto-fav5'}) {
+                $faction->{cult_blocked}{$cult} = 1;
+            }
             return;
         }
 
@@ -282,8 +285,9 @@ sub adjust_resource {
 
             # Hack
             if ($type eq 'FAV5') {
+                my $tw_count = 0;
                 for my $loc (@{$faction->{locations}}) {
-                    detect_towns_from $faction, $loc;
+                    $tw_count += detect_towns_from $faction, $loc;
                 }
             }
         }
@@ -291,6 +295,16 @@ sub adjust_resource {
         if ($type =~ /^TW/) {
             for (1..$delta) {
                 gain $faction, $tiles{$type}{gain}, 'TW';
+            }
+        }
+
+        if ($type eq 'KEY') {
+            if ($faction->{cult_blocked} and
+                $faction->{KEY} >= keys %{$faction->{cult_blocked}}) {
+                for my $cult (keys %{$faction->{cult_blocked}}) {
+                    gain $faction, { $cult => 1 };
+                }
+                delete $faction->{cult_blocked};
             }
         }
 

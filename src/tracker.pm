@@ -108,6 +108,10 @@ sub finalize {
             delete $faction->{special}{mode};
         }
         delete $faction->{building_strength};
+
+        for my $cult (@cults) {
+            delete $faction->{cult_blocked};
+        }
     }
 
     for my $hex (values %map) {
