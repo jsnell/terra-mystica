@@ -167,7 +167,7 @@ sub maybe_gain_power_from_cult {
     if ($old_value <= 9 && $new_value > 9) {
         if ($faction->{KEY} < 1) {
             $faction->{$cult} = 9;
-            if ($game{options}{'auto-fav5'}) {
+            if (!$game{options}{'manual-fav5'}) {
                 $faction->{cult_blocked}{$cult} = 1;
             }
             return;
