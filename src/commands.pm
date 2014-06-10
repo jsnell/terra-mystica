@@ -885,14 +885,15 @@ sub command {
         my ($sign, $count) = (($1 eq '+' ? 1 : -1),
                               ($2 eq '' ? 1 : $2));        
         my $delta = $sign * $count;
-        my $type = uc $3;
+        my $type = uc ($3 // '');
+        my $source = lc ($4 // '');
 
         if (!$game{round} and $type =~ /BON/) {
             handle_row_internal $faction_name, "pass $type";
             return 0;
         }
 
-        command_adjust_resources $assert_faction->(), $delta, $type, lc $4;
+        command_adjust_resources $assert_faction->(), $delta, $type, $source;
     } elsif ($command =~ /^build (\w+)$/i) {
         $game{acting}->advance_state('initial-dwellings');
         command_build $assert_active_faction->(), uc $1;
@@ -915,10 +916,10 @@ sub command {
         adjust_resource $faction, 'P2', -2*$1;
         adjust_resource $faction, 'P3', $1;
     } elsif ($command =~ /^leech (\d+)(?: from (\w+))?$/i) {
-        command_leech $assert_faction->(), $1, lc $2;
+        command_leech $assert_faction->(), $1, lc($2 // '');
         $ledger->force_finish_row(1);
     } elsif ($command =~ /^decline(?: (\d+) from (\w+))?$/i) { 
-        command_decline $assert_faction->(), $1, lc $2;
+        command_decline $assert_faction->(), $1, lc($2 // '');
         $ledger->force_finish_row(1);
     } elsif ($command =~ /^transform (\w+)(?: to (\w+))?$/i) {
         command_transform $assert_faction->(), uc $1, lc ($2 // '');
@@ -927,7 +928,7 @@ sub command {
     } elsif ($command =~ /^bridge (\w+):(\w+)( allow_illegal)?$/i) {
         command_bridge $assert_active_faction->(), uc $1, uc $2, $3;
     } elsif ($command =~ /^connect (\w+):(\w+)(?::(\w+))?$/i) {
-        command_connect $assert_active_faction->(), uc $1, uc $2, uc $3;
+        command_connect $assert_active_faction->(), uc $1, uc $2, uc($3 // '');
     } elsif ($command =~ /^connect (r\d+)?$/i) {
         my $river = lc $1;
         my @neighbors = keys %{$map{$river}{adjacent}};
