@@ -87,10 +87,11 @@ sub command_adjust_resources {
     }
 
     if (!$checked and $delta > 0) {
-        if ($game{options}{'loose-adjust-resource'}) {
+        if ($game{options}{'loose-adjust-resource'} or
+            $faction->{planning}) {
             $ledger->warn("dodgy resource manipulation ($delta $type)");
         } else {
-            die "Not allowed to gain $delta x $type";
+            die "Not allowed to gain $delta x $type\n";
         }
     }
 
