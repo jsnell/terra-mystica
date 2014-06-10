@@ -155,7 +155,9 @@ sub evaluate_game {
         aborted => 0,
         finished => 0,
         admin_email => undef,
-        options => {},
+        options => {
+            map { ($_, 1) } @{$metadata->{game_options}}
+        },
         leech_id => 0,
         bonus_coins => {},
         pool => undef,
