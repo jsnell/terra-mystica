@@ -3,9 +3,14 @@ var stored_exception = null;
 function handleException (e) {
     stored_exception = e;
     var p = document.getElementById("error");
-    p.innerHTML += e;
-    if (console && console.trace) {
-        console.trace(e);
+    p.updateText(e);
+
+    if (e.stack) {
+        console.error(e.stack);
+        p.insert(new Element("div",
+                             {"class": "error-details"}).updateText(e.stack));
+    } else {
+        console.error(e.stack);
     }
 }
 

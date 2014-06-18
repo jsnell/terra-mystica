@@ -142,6 +142,13 @@ div#error {
     margin: 20px; 
 }
 
+div.error-details {
+    padding: 20px; 
+    white-space: preserve;
+    background-color: #e33;
+    font-weight: normal;
+}
+
 div#action_required {
     background-color: #eee;
     margin-top: 10px;
