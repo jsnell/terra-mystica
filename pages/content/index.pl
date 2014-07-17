@@ -8,11 +8,10 @@
 
 __DATA__
 
-<div class="motd" style="display: none">
-    The 4 player Terra Mystica online league will start in
-    early May. See the
-    <a href="http://boardgamegeek.com/thread/1159490/signup-thread-for-online-league">BGG thread</a>
-    for more information or to sign up.
+<div class="motd" style="display: block">
+    Season 2 of the Terra Mystica tournament will start on August 1st.
+    See the <a href="http://boardgamegeek.com/thread/1198844/terra-mystica-tournament-season-2">BGG thread</a> for more information, or sign up on the
+    <a href="http://tmtour.org">league website</a>.
 </div>
 
 <h4>Your Active / Recently Finished Games</h4>
