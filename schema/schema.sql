@@ -32,6 +32,7 @@ create table game (
     player_count integer,
     wanted_player_count integer,
     round integer,
+    turn integer,
     commands text,
     description text,
     game_options text array default '{}',

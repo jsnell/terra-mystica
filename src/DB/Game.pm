@@ -272,7 +272,7 @@ sub get_game_list_by_pattern {
     my ($dbh, $ids) = @_;
 
     my $res = $dbh->selectall_arrayref(
-        "select id, finished, aborted, round, array_agg(game_role.faction) as factions, array_agg(game_role.faction_player) as usernames, array_agg(game_role.rank) as ranks, array_agg(game_role.vp) as vps, (extract(epoch from now() - game.last_update)) as seconds_since_update from game join game_role on game.id=game_role.game where id like ? group by id, finished, aborted, last_update, round limit 200",
+        "select id, finished, aborted, round, turn, array_agg(game_role.faction) as factions, array_agg(game_role.faction_player) as usernames, array_agg(game_role.rank) as ranks, array_agg(game_role.vp) as vps, (extract(epoch from now() - game.last_update)) as seconds_since_update from game join game_role on game.id=game_role.game where id like ? group by id, finished, aborted, last_update, round limit 500",
         { Slice => {} },
         $ids);
 

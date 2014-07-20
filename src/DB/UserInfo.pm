@@ -20,7 +20,7 @@ sub fetch_user_metadata {
                                  { Slice => {} },
                                  $username);
 
-    my $metadata = $metadata->[0];
+    $metadata = $metadata->[0];
 
     my %handled = ();
     for my $game (@{$games}) {
