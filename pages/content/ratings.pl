@@ -30,7 +30,7 @@ __DATA__
 
 <h5>How does the ratings system work?</h5>
 <p>
-  The rating system is loosely based on the ELO system.
+  The rating system is loosely based on the Elo system.
   After each game the scores are adjusted based on the
   initial rankings of the players and how well the players
   did. The adjustment is such that you'll make big gains
@@ -38,8 +38,8 @@ __DATA__
   than you and small gains when winning against players with
   a lower ranking. Losses are handled in a similar fashion.
 <p>
-  There are three differences to a basic ELO system. First,
-  the ELO system is for two player games while Terra Mystica
+  There are three differences to a basic Elo system. First,
+  the Elo system is for two player games while Terra Mystica
   is a multiplayer game. This is dealt with by considering each
   N player match as consisting of N!/2 separate two player
   matches between each pair of players.
@@ -50,7 +50,7 @@ __DATA__
   "strong" one and win. Likewise the rating of the faction
   will be adjusted based on the results.
 <p>
-  Third, unlike in basic ELO, the ranking computation is an
+  Third, unlike in basic Elo, the ranking computation is an
   iterative process. First, all matches are processed in the
   order in which the games finished. The all matches are
   processed again, but with a smaller weight. This is done
@@ -77,7 +77,7 @@ __DATA__
 
 <h5>What does the rating number actually mean?</h5>
 <p>
-  That's a good question. In the original ELO system a 200
+  That's a good question. In the original Elo system a 200
   point difference in rating between two players should
   result in the higher rated player winning over the lower
   rated one 75% of the time. However, it's very likely that
