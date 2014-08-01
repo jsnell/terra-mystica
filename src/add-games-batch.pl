@@ -37,7 +37,7 @@ sub validate {
 
     for my $player (keys %count) {
         if ($count{$player} != $desc->{'games-per-player'}) {
-            die "$player playing in $count{$player} matches\n"
+            die "$player playing in $count{$player} matches (wanted $desc->{'games-per-player'})\n"
         }
         check_username_is_registered $dbh, $player;
     }
@@ -114,5 +114,13 @@ sub make_games {
     my $desc = decode_json join '', <>;
 
     validate $dbh, $desc;
-    make_games $dbh, $desc;
+    print "Validation passed. Really create games [yn]?\n";
+    my $query = <STDIN>;
+    chomp $query;
+    if ($query eq 'y') {
+        make_games $dbh, $desc;
+    } else {
+        print "Canceling\n";
+        exit 1;
+    }
 }
