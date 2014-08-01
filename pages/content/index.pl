@@ -8,7 +8,7 @@
 
 __DATA__
 
-<div class="motd" style="display: block">
+<div class="motd" style="display: none">
     Season 2 of the Terra Mystica tournament will start on August 1st.
     See the <a href="http://boardgamegeek.com/thread/1198844/terra-mystica-tournament-season-2">BGG thread</a> for more information, or sign up on the
     <a href="http://tmtour.org">league website</a>.
