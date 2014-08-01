@@ -1,9 +1,12 @@
 use strict;
+no indirect;
 
 package Server::AppendGame;
 
+use JSON;
 use Moose;
 use Method::Signatures::Simple;
+use POSIX qw(strftime);
 use Server::Server;
 
 extends 'Server::Server';
@@ -36,6 +39,18 @@ method verify_key($dbh, $read_id, $faction_name, $faction_key) {
     return "${read_id}_$game_secret";
 };
 
+sub log_game_event {
+    my $entry = shift;
+
+    my @time = gmtime;
+    my $datestamp = strftime "%Y-%m-%d", @time;
+    $entry->{timestamp_utc} = strftime "%Y-%m-%d %T", @time;
+
+    open my $fh, ">>", "../../data/log/events-$datestamp" or die "$!";
+    my $row = encode_json($entry)."\n";
+    syswrite $fh, $row;
+    close $fh;
+};
 
 method handle($q) {
     $self->no_cache();
@@ -104,6 +119,20 @@ method handle($q) {
             $res->{error} = [ $@ ]
         }
     };
+
+    eval {
+        log_game_event {
+            event => 'append',
+            username => $username,
+            faction => $faction_name,
+            game => $read_id,
+            commands => $preview,
+            round => $res->{round},
+            turn => $res->{turn},
+        };
+    }; if ($@) {
+        print STDERR "error writing game log: $@\n";
+    }
 
     finish_game_transaction $dbh;
 
