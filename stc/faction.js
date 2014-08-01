@@ -59,7 +59,7 @@ function previewOrSave(save, preview_data, prefix_data) {
         spin();
     }
     new Ajax.Request(target, {
-        method: "get",
+        method: "post",
         parameters: {
             // Thanks, Chrome on Android. I'm sure that randomly
             // ignoring cache control headers is *just* the right
@@ -185,7 +185,7 @@ function loadOrSavePlan(save) {
     }
 
     new Ajax.Request(target, {
-        method: "get",
+        method: "post",
         parameters: form_params,
         onSuccess: function(transport){
             var notes = transport.responseText.evalJSON();
@@ -235,7 +235,7 @@ function loadOrSendChat(send) {
     }
 
     new Ajax.Request(target, {
-        method: "get",
+        method: "post",
         parameters: form_params,
         onSuccess: function(transport){
             var messages = transport.responseText.evalJSON();

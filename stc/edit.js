@@ -184,7 +184,7 @@ function load() {
             "game": id,
             "cache-token": new Date() - Math.random()
         },
-        method:"get",
+        method:"post",
         onFailure: function(transport) {
             $("error").innerHTML = "Error opening game."
             $("save-button").disable();             
