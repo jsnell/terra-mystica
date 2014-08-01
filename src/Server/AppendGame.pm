@@ -107,28 +107,6 @@ method handle($q) {
 
     finish_game_transaction $dbh;
 
-    my @email = ();
-
-    my %whitelist_old_email = map { ($_, 1) } qw(
- UnknownSchurken15
- Schurken17
- Schurken18
- UnknownSchurken16
- MorelikeFUNlough
- FunWithSteve1
- Morphus93
- Morphus85
- Morphus83
- Morphus88
- Morphus96
- Morphus82
- Morphus90
- Morphus95
- Morphus91
- Morphus80
- FunWithSteve
-);
-
     if (!@{$res->{error}}) {
         if ($res->{options}{'email-notify'}) {
             my $factions = $dbh->selectall_arrayref(
@@ -150,23 +128,6 @@ method handle($q) {
                 action_required => $res->{action_required},
             };
             notify_after_move $dbh, $write_id, $game, $faction_name, $append;
-        } elsif ($whitelist_old_email{$read_id}) {
-            # Automatic notifications are off, allow for manual emailing.
-            if ($terra_mystica::email) {
-                push @email, $terra_mystica::email;
-            }
-
-            for my $faction (values %{$res->{factions}}) {
-                if ($faction->{name} ne $faction_name and $faction->{email}) {
-                    push @email, $faction->{email}
-                }
-            }
-
-            for (@{$res->{players}}) {
-                if ($_->{email}) {
-                    push @email, $_->{email}
-                }
-            }
         }
     }
 
@@ -174,7 +135,6 @@ method handle($q) {
 
     my $out = {
         error => $res->{error},
-        email => (join ",", @email),
         action_required => $res->{action_required},
         round => $res->{round},
         turn => $res->{turn},
