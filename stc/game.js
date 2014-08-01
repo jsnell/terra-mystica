@@ -1091,10 +1091,11 @@ function drawRealFaction(faction, board) {
             levels.insertTextSpan(", ");
         }
         levels.insertTextSpan("ship level " + faction.ship.level);
-        levels.insertTextSpan("/" + faction.ship.max_level,
-                                   'faction-info-unimportant');
+        levels.insertTextSpan("/" + faction.ship.max_level + " ",
+                              'faction-info-unimportant');
         if (faction.BON4 > 0) {
-            levels.insertTextSpan(" (+1)");
+            levels.insertTextSpan("(+1)",
+                                  faction.passed ? 'faction-info-not-applicable' : '');
         }
     }
 

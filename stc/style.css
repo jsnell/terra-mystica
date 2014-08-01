@@ -228,6 +228,10 @@ span.faction-info-income-overflow {
     color: #f00;
 }
 
+span.faction-info-not-applicable {
+    text-decoration: line-through;
+}
+
 table#ledger {
     border-spacing: 0px;
     padding-bottom: 40px;
