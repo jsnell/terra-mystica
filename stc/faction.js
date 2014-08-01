@@ -91,6 +91,7 @@ function previewOrSave(save, preview_data, prefix_data) {
                     if (state.new_faction_key) {
                         parseParamsFromPathname(state.new_faction_key);
                         document.location.hash = state.new_faction_key;
+                        currentFaction = params.faction;
                     }
                     fetchGames($("user-info"), "user", "running",
                                showActiveGames);
