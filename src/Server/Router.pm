@@ -26,17 +26,9 @@ use JSON;
 use Util::Watchdog;
 
 my %paths = (
-    '/alias/request/' => sub {
-        Server::Alias->new({ mode => 'request' })
-    },
-    '/alias/validate/' => sub {
-        Server::Alias->new({ mode => 'validate' })
-    },
+    # Operations on single games. To be renamed
     '/append-game/' => sub {
         Server::AppendGame->new()
-    },
-    '/chat/' => sub {
-        Server::Chat->new()
     },
     '/edit-game/' => sub {
         Server::EditGame->new({ mode => 'content' })
@@ -44,21 +36,30 @@ my %paths = (
     '/set-game-status/' => sub {
         Server::EditGame->new({ mode => 'status' })
     },
+    '/view-game/' => sub {
+        Server::ViewGame->new()
+    },
     '/join-game/' => sub {
         Server::JoinGame->new()
     },
-    '/list-games/by-pattern/' => sub {
-        Server::ListGames->new( mode => 'by-pattern')
+    '/new-game/' => sub {
+        Server::NewGame->new()
     },
+    '/save-game/' => sub {
+        Server::SaveGame->new()
+    },
+    '/chat/' => sub {
+        Server::Chat->new()
+    },
+    '/plan/' => sub {
+        Server::Plan->new()
+    },
+
     '/list-games/' => sub {
         Server::ListGames->new( mode => '')
     },
-    '/login/' => sub {
-        Server::Login->new()
-    },
-    '/logout/' => sub {
-        Server::Logout->new()
-    },
+
+    # Map editor
     '/map/preview/' => sub {
         Server::Map->new({ mode => 'preview' })
     },
@@ -68,11 +69,19 @@ my %paths = (
     '/map/view/' => sub {
         Server::Map->new({ mode => 'view' })
     },
-    '/new-game/' => sub {
-        Server::NewGame->new()
+
+    # Account management
+    '/alias/request/' => sub {
+        Server::Alias->new({ mode => 'request' })
     },
-    '/plan/' => sub {
-        Server::Plan->new()
+    '/alias/validate/' => sub {
+        Server::Alias->new({ mode => 'validate' })
+    },
+    '/login/' => sub {
+        Server::Login->new()
+    },
+    '/logout/' => sub {
+        Server::Logout->new()
     },
     '/register/request/' => sub {
         Server::Register->new({ mode => 'request' })
@@ -86,18 +95,11 @@ my %paths = (
     '/reset/validate/' => sub {
         Server::PasswordReset->new({ mode => 'validate' })
     },
-    '/results/' => sub {
-        Server::Results->new()
-    },
-    '/template/' => sub {
-        Server::Template->new()
-    },
-    '/save-game/' => sub {
-        Server::SaveGame->new()
-    },
     '/settings/' => sub {
         Server::Settings->new()
     },
+
+    # User information
     '/user/metadata/' => sub {
         Server::UserInfo->new({mode => 'metadata'})
     },
@@ -107,8 +109,18 @@ my %paths = (
     '/user/stats/' => sub {
         Server::UserInfo->new({mode => 'stats'})
     },
-    '/view-game/' => sub {
-        Server::ViewGame->new()
+
+    # Content rendering
+    '/template/' => sub {
+        Server::Template->new()
+    },
+
+    # External APIs
+    '/results/' => sub {
+        Server::Results->new()
+    },
+    '/list-games/by-pattern/' => sub {
+        Server::ListGames->new( mode => 'by-pattern')
     },
 );
 

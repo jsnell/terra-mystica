@@ -176,6 +176,8 @@ method handle($q) {
          $out->{chat_unread_message_count}) = get_chat_count($dbh, $read_id, $username);
     };
 
+    $out->{metadata} = get_game_metadata $dbh, $read_id;
+
     $self->output_json($out);
 }
 

@@ -1678,10 +1678,17 @@ function drawActionRequired() {
             chat_button.updateText(label);
             $("data_entry_tabs").insert(chat_button);
         }
+
+        if (state.metadata) {
+            $("data_entry_tabs").insert("<button onclick='updateInfoTab(); dataEntrySelect(\"info\")' id='data_entry_tab_info' class='tab'>Info</button>");
+            
+        }
+
         $("data_entry").insert("<div id='move_entry' class='tab_content'></div>");
         $("data_entry").insert("<div id='planning_entry' class='tab_content'></div>");
         $("data_entry").insert("<div id='recent_entry' class='tab_content'></div>");
         $("data_entry").insert("<div id='chat_entry' class='tab_content'></div>");
+        $("data_entry").insert("<div id='info_entry' class='tab_content'></div>");
         dataEntrySelect("move");
     }
 
@@ -3264,6 +3271,49 @@ function addConnectToMovePicker(picker, faction) {
     }
 
     return row;
+}
+
+function updateInfoTab() {
+    var tab = $('info_entry');
+    var metadata = state.metadata;
+
+    var table = new Element("table", { "class": "settings-table" });
+    var addRow = function(label, data) {
+        var row = new Element("tr");
+        row.insert(new Element("td").updateText(label));
+        if (data instanceof String) {
+            row.insert(new Element("td").updateText(data));
+        } else {
+            row.insert(new Element("td").update(data));
+        }
+        table.insert(row);
+    };
+
+    {
+        var status = "Running, last update " + seconds_to_pretty_time(state.metadata.time_since_update) + " ago";
+        if (metadata.aborted) {
+            status = "Aborted";
+        } else if (metadata.finished) {
+        status = "Finished";
+        } else if (metadata.wanted_player_count &&
+                   metadata.player_count != metadata.wanted_player_count) {
+            status = "Waiting for players";
+        }
+        addRow("Status", status);
+    }
+
+    addRow("Description", state.metadata.description || "[no description]");
+
+    // Options
+    if (metadata.game_options) {
+        var list = new Element("ul");
+        metadata.game_options.each(function (elem) {
+            list.insert(new Element("li").updateText(elem));        
+        });
+        addRow("Options", list);
+    }
+
+    tab.update(table);
 }
 
 function draw(n) {
