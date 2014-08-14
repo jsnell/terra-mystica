@@ -298,6 +298,13 @@ sub command_convert {
         delete $faction->{CONVERT_W_TO_P};
     }
 
+    if ($to_type eq 'BRIDGE' and !$game{options}{'loose-engineer-bridge'}) {
+        $game{acting}->require_subaction($faction, 'action',
+                                         {
+                                             bridge => 1
+                                         });
+    }
+
     die "Can't convert from $from_type to $to_type\n"
         if !$exchange_rates{$from_type}{$to_type};
 
@@ -1021,6 +1028,7 @@ sub command {
             shipping-bonus
             email-notify
             loose-adjust-resource
+            loose-engineer-bridge
             loose-multi-spade
             maintain-player-order
             manual-fav5
@@ -1250,7 +1258,14 @@ sub rewrite_stream {
         if (!$this->[0] and $this->[1] =~ /^player-count (\d+)$/i) {
             $game{player_count} = 1*$1;
             $this->[1] = '';
-        }        
+        }
+
+        if (($this->[0] and $next->[0] and $this->[0] eq $next->[0]) and
+            $this->[1] =~ /^convert 2W to 1?BRIDGE$/i and
+            $next->[1] =~ /^-BRIDGE$/i) {
+            $this->[1] = '';
+            $next->[1] = '';
+        }
     }
 
     grep { $_->[1] } @command_stream;
