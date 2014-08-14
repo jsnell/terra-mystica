@@ -1554,7 +1554,9 @@ function drawActionRequired() {
             }
             state.factions[record.faction].can_leech = true;            
         } else if (record.type == 'transform') {
-            if (record.amount == 1) {
+            if (state.factions[record.faction]) {
+                pretty_text = 'may not use any more spades, due to not transforming previous space to home terrain'.interpolate(record);
+            } else if (record.amount == 1) {
                 pretty_text = 'may use a spade (click on map to transform)'.interpolate(record);
             } else if (record.amount == null) {
                 pretty_text = 'may transform a space (click on map)'.interpolate(record);
@@ -1878,6 +1880,10 @@ function addFactionInput(parent, record, index) {
         if (faction.FREE_TF > 0) {
             addDeclineButton(parent, index, "FREE_TF", faction.FREE_TF);
         }
+        if (faction.force_dismiss_spades) {
+            return;
+        }
+
         $H(faction.reachable_tf_locations).each(function (elem) {
             var hex = elem.key;
             var menu = {};

@@ -495,9 +495,20 @@ sub command_transform {
         }
     }
 
+    delete $faction->{force_dismiss_spades};
+
     if (!$faction->{SPADE}) {
         $game{acting}->dismiss_action($faction, 'transform');
         delete $faction->{allowed_sub_actions}{transform};
+    } else {
+        if ($color ne $faction->{color}) {
+            if ($game{options}{'loose-multi-spade'}) {
+                $game{ledger}->warn("Spades left over after transforming $where to non-home terrain\n");
+            } elsif ($faction->{allowed_sub_actions}{transform}) {
+                $faction->{allowed_sub_actions}{transform} = 0;
+                $faction->{force_dismiss_spades} = 1;
+            }
+        }
     }
 
     if ($color eq $faction->{color}) {

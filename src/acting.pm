@@ -166,6 +166,7 @@ method start_full_move($faction) {
     $faction->{allowed_actions} = 1;
     $faction->{allowed_sub_actions} = {};
     $faction->{allowed_build_locations} = {};
+    delete $faction->{force_dismiss_spades};
     delete $faction->{TELEPORT_TO};
     delete $faction->{cult_blocked};
 }
