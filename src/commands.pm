@@ -1010,6 +1010,7 @@ sub command {
             shipping-bonus
             email-notify
             loose-adjust-resource
+            loose-multi-spade
             maintain-player-order
             manual-fav5
             strict-leech
