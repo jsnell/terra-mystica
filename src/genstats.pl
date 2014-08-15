@@ -152,6 +152,8 @@ my %results = get_finished_game_results $dbh, '', $ARGV[0];
 my %games = ();
 
 for (@{$results{results}}) {
+    next if $_->{dropped};
+
     $games{$_->{game}}{factions}{$_->{faction}} = $_;
     $games{$_->{game}}{id} = $_->{game};
     $games{$_->{game}}{non_standard} = $_->{non_standard};
