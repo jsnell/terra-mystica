@@ -642,6 +642,8 @@ sub update_reachable_tf_locations {
                 for my $color (@colors) {
                     next if !$color;
 
+                    next if $faction->{require_home_terrain_tf} and $color ne $faction->{color};
+
                     my $cost = {};
                     my $gain = {};
                     my $color_diff = 0;

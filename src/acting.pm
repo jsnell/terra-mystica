@@ -90,6 +90,13 @@ method dismiss_action($faction, $type) {
     ]);
 }
 
+method find_actions($faction, $type) {
+    grep {
+        ($faction->{name} // '') eq ($_->{faction} // '') and
+            (!defined $type or $type eq ($_->{type} // ''))
+    } $self->action_required_elements()
+}
+
 method replace_all_actions(@actions) {
     $self->action_required([@actions]);
 }
@@ -166,7 +173,7 @@ method start_full_move($faction) {
     $faction->{allowed_actions} = 1;
     $faction->{allowed_sub_actions} = {};
     $faction->{allowed_build_locations} = {};
-    delete $faction->{force_dismiss_spades};
+    delete $faction->{require_home_terrain_tf};
     delete $faction->{TELEPORT_TO};
     delete $faction->{cult_blocked};
 }

@@ -481,11 +481,18 @@ sub command_transform {
         die "Can't transform $where to $color, already contains a building\n"
     }
 
-    if ($color_difference and !$faction->{passed}) {
-        $game{acting}->require_subaction($faction, 'transform', {
-            transform => ($faction->{allowed_sub_actions}{transform} // 1) - 1,
-            build => $faction->{allowed_sub_actions}{build} // 0,
-        });
+    if ($color_difference) {
+        if (!$faction->{passed}) {
+            $game{acting}->require_subaction($faction, 'transform', {
+                transform => ($faction->{allowed_sub_actions}{transform} // 1) - 1,
+                build => $faction->{allowed_sub_actions}{build} // 0,
+            });
+        }
+        if (!$game{options}{'loose-multi-spade'} and
+            $faction->{require_home_terrain_tf} and
+            $color ne $faction->{color}) {
+            die "Can't transform more than one hex to non-home color in one action\n";
+        }
     }
 
     if ($teleport) {
@@ -502,19 +509,18 @@ sub command_transform {
         }
     }
 
-    delete $faction->{force_dismiss_spades};
+    delete $faction->{require_home_terrain_tf};
 
     if (!$faction->{SPADE}) {
         $game{acting}->dismiss_action($faction, 'transform');
         delete $faction->{allowed_sub_actions}{transform};
+        delete $faction->{require_home_terrain_tf};
     } else {
+        for my $record ($game{acting}->find_actions($faction, 'transform')) {
+            $record->{amount} = $faction->{SPADE};
+        }
         if ($color ne $faction->{color}) {
-            if ($game{options}{'loose-multi-spade'}) {
-                $game{ledger}->warn("Spades left over after transforming $where to non-home terrain\n");
-            } elsif ($faction->{allowed_sub_actions}{transform}) {
-                $faction->{allowed_sub_actions}{transform} = 0;
-                $faction->{force_dismiss_spades} = 1;
-            }
+            $faction->{require_home_terrain_tf} = 1;
         }
     }
 
