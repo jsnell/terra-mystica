@@ -141,7 +141,7 @@ sub get_chat_count {
 }
 
 sub get_finished_game_results {
-    my ($dbh, $secret, $id_pattern) = @_;
+    my ($dbh, $secret, %params) = @_;
 
     my %res = ( error => '', results => [] );
 
@@ -151,10 +151,27 @@ sub get_finished_game_results {
     # distorting the stats with ridiculous games.
     $dbh->do("update game set exclude_from_stats=true where admin_user in (select player from blacklist) and not exclude_from_stats");
 
+    $params{id_pattern} ||= '%';
+    if ($params{year} and $params{month}) {
+        if ($params{day}) {
+            $params{range_end} = '1 day';
+        } else {
+            $params{day} = '01';
+            $params{range_end} = '1 month';
+        }
+        $params{range_start} = "$params{year}-$params{month}-$params{day}";
+    } else {
+        $params{range_start} = "1970-01-01";
+        $params{range_end} = "100 years";
+    }
+
     my $rows = $dbh->selectall_arrayref(
-        "select game, faction, vp, rank, start_order, email.player, email, game.player_count, game.last_update, game.non_standard, game.base_map, game_role.dropped from game_role left join game on game=game.id left join email on email=email.address where game.finished and game.round=6 and not game.aborted and not game.exclude_from_stats and game.id like ?",
+        "select game, faction, vp, rank, start_order, email.player, email, game.player_count, game.last_update, game.non_standard, game.base_map, game_role.dropped from game_role left join game on game=game.id left join email on email=email.address where game.finished and game.round=6 and not game.aborted and not game.exclude_from_stats and game.id like ? and game.last_update between ? and date(?) + ?::interval",
         {},
-        $id_pattern || '%');
+        $params{id_pattern},
+        $params{range_start},
+        $params{range_start},
+        $params{range_end});
 
     if (!$rows) {
         $res{error} = "db error";
