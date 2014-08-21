@@ -214,6 +214,7 @@ sub adjust_resource {
 
     if ($type eq 'VP') {
         $faction->{vp_source}{$source || 'unknown'} += $delta;
+        $game{events}->faction_event($faction, "vp", $delta);
     }
 
     if ($type =~ 'GAIN_(TELEPORT|SHIP)') {
@@ -290,12 +291,18 @@ sub adjust_resource {
                     $tw_count += detect_towns_from $faction, $loc;
                 }
             }
+
+            $game{events}->faction_event($faction, "favor:$type", 1);
+            $game{events}->faction_event($faction, "favor:any", 1);
         }
 
         if ($type =~ /^TW/) {
             for (1..$delta) {
                 gain $faction, $tiles{$type}{gain}, 'TW';
             }
+
+            $game{events}->faction_event($faction, "town:$type", 1);
+            $game{events}->faction_event($faction, "town:any", 1);
         }
 
         if ($type eq 'KEY') {

@@ -114,3 +114,10 @@ create table player_ratings (
     rating integer,
     primary key (player)
 );
+
+create table game_events (
+    game text references game (id),
+    events text,
+    primary key (game)
+);
+

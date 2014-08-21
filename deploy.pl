@@ -104,6 +104,7 @@ sub deploy_cgi {
                   Email/Notify.pm
                   Game/Constants.pm
                   Game/Factions.pm
+                  Game/Events.pm
                   income.pm
                   ledger.pm
                   map.pm

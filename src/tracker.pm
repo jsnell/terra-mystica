@@ -8,6 +8,7 @@ use List::Util qw(sum max min);
 use vars qw(%game);
 
 use Game::Constants;
+use Game::Events;
 
 use acting;
 use commands;
@@ -175,6 +176,8 @@ sub evaluate_game {
             game => \%game,
             players => $data->{players},
         });
+    $game{events} = Game::Events->new({game => \%game});
+
 
     local %map = ();
 
@@ -252,6 +255,7 @@ sub evaluate_game {
         final_scoring_help => $game{final_scoring_help},
         faction_variant_help => $game{faction_variant_help},
         non_standard => $game{non_standard},
+        events => $game{events}->data(),
         available_factions => {
             map({ ($_, 1) }
                 keys %faction_setups,

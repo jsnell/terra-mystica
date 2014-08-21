@@ -181,6 +181,8 @@ sub command_build {
     push @{$faction->{locations}}, $where;
 
     detect_towns_from $faction, $where;
+
+    $game{events}->faction_event($faction, 'build:D', 1);
 }
 
 sub command_upgrade {
@@ -234,6 +236,8 @@ sub command_upgrade {
     $map{$where}{building} = $type;
 
     detect_towns_from $faction, $where;
+
+    $game{events}->faction_event($faction, "upgrade:$type", 1);
 }
 
 sub command_send {
@@ -345,6 +349,7 @@ sub command_leech {
             $game{acting}->require_action($from_faction,
                                           { type => 'cult',
                                             amount => 1 });
+            $game{events}->faction_event($faction, 'cultist:cult', 1);
         }
 
         if ($_->{leech_tainted}) {
@@ -387,6 +392,11 @@ sub command_leech {
             $record->{actual} = min $record->{actual}, $can_gain;
         }
     }
+
+    if ($actual_pw) {
+        $game{events}->faction_event($faction, 'leech:pw', $actual_pw);
+        $game{events}->faction_event($faction, 'leech:count', 1);
+    }
 }
 
 sub command_decline {
@@ -411,6 +421,10 @@ sub command_decline {
                 my $leech_id = $_->{leech_id};
                 $from_faction->{leech_rejected}{$leech_id}++;
                 cultist_maybe_gain_power($_);
+                if ($_->{actual} > 0) {
+                    $game{events}->faction_event($faction, 'decline:count', 1);
+                    $game{events}->faction_event($faction, 'decline:pw', $_->{actual});
+                }
                 $_ = '';
                 $declined = 1;
                 last;
@@ -453,6 +467,8 @@ sub cultist_maybe_gain_power {
         commands => "[+1pw, all opponents declined power]",
         map { $_, $pretty_delta{$_} } @data_fields
     });
+
+    $game{events}->faction_event($faction, 'cultist:pw', 1);
 }
 
 sub command_transform {
@@ -551,6 +567,8 @@ sub command_dig {
     }
     pay $faction, $cost for 1..$amount;
     gain $faction, $gain, 'faction' for 1..$amount;
+
+    $game{events}->faction_event($faction, 'dig', $amount);
 }
 
 sub command_bridge {        
@@ -584,6 +602,8 @@ sub command_bridge {
 
     detect_towns_from $faction, $from;
     detect_towns_from $faction, $to;
+
+    $game{events}->faction_event($faction, 'bridge', 1);
 }
 
 sub find_bonus_to_discard {
@@ -636,6 +656,7 @@ sub command_pass {
             $ledger->warn("Can't take a bonus tile when passing on last round\n");
         } else {
             adjust_resource $faction, $bon, 1;
+            $game{events}->faction_event($faction, "pass:$bon", 1);
         }
     } elsif ($game{round} != 6) {
         die "Must take a bonus tile when passing (except on last round)\n"
@@ -677,6 +698,8 @@ sub command_action {
     gain $faction, $actions{$name}{gain};
 
     $map{$action}{blocked} = 1;
+
+    $game{events}->faction_event($faction, "action:$name", 1);
 }
 
 sub command_start {
@@ -718,6 +741,7 @@ sub command_start {
         last;
     }
 
+    $game{events}->global_event($game{score_tiles}[$game{round} - 1], 1);
 }
 
 sub command_connect {
@@ -759,6 +783,8 @@ sub command_connect {
     $founded += detect_towns_from $faction, $_ for @hexes;
 
     die "Can't found a town by connecting @hexes\n" if !$founded;
+
+    $game{events}->faction_event($faction, 'mermaid:connect', 1);
 }
 
 sub command_advance {
@@ -768,6 +794,8 @@ sub command_advance {
 
     my $track = $faction->{$type};
     advance_track $faction, $type, $track, 0;
+
+    $game{events}->faction_event($faction, "advance:$type", 1);
 }
 
 sub command_finish {
@@ -982,6 +1010,7 @@ sub command {
         maybe_setup_pool;
         $game{acting}->advance_state('select-factions');
         setup_faction \%game, lc $1, $2, $3;
+        $game{events}->global_event("faction-count", 1);
     } elsif ($command =~ /delete (\w+)$/i) {
         my $name = uc $1;
 
@@ -1048,7 +1077,8 @@ sub command {
             my $wanted_count = $game{player_count};
             die "maintain-player-order option can only be used for private games\n" if $wanted_count;
         }
-
+        
+        $game{events}->global_event("option-$opt", 1);
         $game{options}{$opt} = 1;
         $game{ledger}->add_comment("option $opt");
     } elsif ($command =~ /^player (\S+)(?: email (\S*))?(?: username (\S+))?$/i) {
@@ -1131,6 +1161,9 @@ sub command {
         $faction->{dropped} = 1;
         $faction->{allowed_actions} = 0;
         $faction->{allowed_sub_actions} = {};
+
+        $game{events}->faction_event($faction, "drop", 1);
+        $game{events}->global_event("drop-faction", 1);
 
         $game{acting}->dismiss_action($faction, undef);
 
