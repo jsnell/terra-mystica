@@ -392,11 +392,13 @@ sub compute_network_size {
     }
 
     if ($game{final_scoring}{'building-on-edge'}) {
-        my $count = 0;
-        for my $loc (@{$faction->{locations}}) {
-            $count++ if $map{$loc}{edge};
+        my %clique_buildings_on_edge = ();
+        for my $loc (keys %clique) {
+            next if !$map{$loc}{edge};
+            $clique_buildings_on_edge{$clique{$loc}}++;
         }
-        $faction->{'building-on-edge'} = $count;
+        my @counts = values %clique_buildings_on_edge;
+        $faction->{'building-on-edge'} = (max @counts) // 0;
     }
 }
 

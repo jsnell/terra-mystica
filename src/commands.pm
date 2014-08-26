@@ -174,8 +174,10 @@ sub command_build {
 
     advance_track $faction, $type, $faction->{buildings}{$type}, $free;
 
-    maybe_score_favor_tile $faction, $type;
-    maybe_score_current_score_tile $faction, $type, 'build';
+    if ($game{round}) {
+        maybe_score_favor_tile $faction, $type;
+        maybe_score_current_score_tile $faction, $type, 'build';
+    }
 
     $map{$where}{building} = $type;
     push @{$faction->{locations}}, $where;
