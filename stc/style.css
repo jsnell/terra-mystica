@@ -469,3 +469,19 @@ div.motd {
     padding: 5px;
     background-color: #eef;
 }
+
+table.newgame-settings {
+    border-collapse: collapse
+}
+
+table.newgame-settings tr {
+    vertical-align: top;
+}
+
+table.newgame-settings tr td {
+    padding-top: 20px;
+}
+
+table.newgame-settings tr td p {
+    margin-top: 0px;
+}
