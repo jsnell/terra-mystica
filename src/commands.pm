@@ -1009,6 +1009,7 @@ sub command {
         return 0 if full_action_required;
         command_start;
     } elsif ($command =~ /^setup (\w+)(?: for (\S+?))?(?: email (\S+))?$/i) {
+        die "$faction_name can't select another faction\n" if $faction_name;
         maybe_setup_pool;
         $game{acting}->advance_state('select-factions');
         setup_faction \%game, lc $1, $2, $3;
@@ -1037,6 +1038,8 @@ sub command {
     } elsif ($command =~ /^advance (ship|dig)/i) {
         command_advance $assert_faction->(), lc $1;
     } elsif ($command =~ /^score (.*)/i) {
+        die "$faction_name can't trigger a scoring\n" if $faction_name;
+
         my $setup = uc $1;
         my @score_tiles = split /,/, $setup;
         die "Invalid scoring tile setup: $setup\n" if @score_tiles != 6;
@@ -1058,6 +1061,8 @@ sub command {
     } elsif ($command =~ /^admin email (.*)/i) {
         # backwards-compatibility nop
     } elsif ($command =~ /^option (\S+)$/i) {
+        die "$faction_name can't alter game options\n" if $faction_name;
+
         my $opt = lc $1;
         my %valid_options = map { ($_, 1) } qw(
             errata-cultist-power
@@ -1084,6 +1089,7 @@ sub command {
         $game{options}{$opt} = 1;
         $game{ledger}->add_comment("option $opt");
     } elsif ($command =~ /^player (\S+)(?: email (\S*))?(?: username (\S+))?$/i) {
+        die "$faction->{name} can't add new players\n" if $faction;
         $game{acting}->add_player({
             name => $1,
             email => $2,
@@ -1091,6 +1097,7 @@ sub command {
         });
         check_player_count;
     } elsif ($command =~ /^order ([\w,]+)$/i) {
+        die "$faction_name can't force player order\n" if $faction_name;
         my $i = 0;
         my %usernames = map { ($_, $i++) } split /,/, lc $1;
         my @players = sort {
@@ -1099,6 +1106,8 @@ sub command {
         $game{acting}->players([@players]);
         $game{acting}->advance_state('select-factions');
     } elsif ($command =~ /^randomize v1 seed (.*)/i) {
+        die "$faction_name can't randomize game state\n" if $faction_name;
+
         maybe_setup_pool;
         if (!defined $game{player_count}) {
             $game{acting}->advance_state('select-factions');
@@ -1126,15 +1135,18 @@ sub command {
     } elsif ($command =~ /^start_planning$/i) {
         command_start_planning $assert_faction->();
     } elsif ($command =~ /^map (.*)/i) {
+        die "$faction_name can't switch game map\n" if $faction_name;
         if ($1 eq 'original') {
             $game{map_variant} = undef;
         } else {
             $game{map_variant} = $1;
         }
     } elsif ($command =~ /^faction-variant (.*)/i) {
+        die "$faction_name can't set game variant\n" if $faction_name;
         push @{$game{faction_variants}}, $1;
         $game{faction_variant_help} = "/playtestfactions/";
     } elsif ($command =~ /^final-scoring (.*)/i) {
+        die "$faction_name can't trigger final scoring\n" if $faction_name;
         if ($final_scoring{$1}) {
             $game{final_scoring}{$1} = $final_scoring{$1};
             $game{final_scoring_help} = "/playtestscoring/";
@@ -1143,6 +1155,7 @@ sub command {
             die "Unknown final scoring type: $1\n";
         }
     } elsif ($command =~ /^drop-faction player(\d+)$/i) {
+        die "Players can only be dropped from admin view\n" if $faction_name;
         my $player = $game{acting}->players()->[$1 - 1];
         die "Invalid player index: $1\n" if !$player;
         my $dummy_faction = {
