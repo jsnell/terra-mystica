@@ -1,4 +1,5 @@
 use strict;
+no indirect;
 
 package Server::NewGame;
 
@@ -11,6 +12,7 @@ extends 'Server::Server';
 use DB::Connection;
 use DB::Game;
 use DB::SaveGame;
+use DB::UserInfo;
 use DB::UserValidate;
 use Email::Notify;
 use Server::Session;
@@ -85,6 +87,32 @@ method make_game($dbh, $q, $username) {
         error "Invalid game type '$game_type'";
     }
 
+    my $deadline_hours = $q->param('deadline-hours');
+    if (!defined $deadline_hours or
+        $deadline_hours =~ /\D/ or
+        $deadline_hours < 12 or
+        $deadline_hours > 24*14) {
+        error "Invalid value for the move timer (expected between 12 hours and 2 weeks)";
+    }
+
+    my %rating = ();
+    for my $field (qw(min-rating max-rating)) {
+        my $value = $q->param($field);
+        if (defined $value and $value ne '') {
+            if ($value =~ /\D/) {
+                error "Invalid $field: expected an integer\n";
+            }
+            $rating{$field} = $value;
+        }
+    }
+
+    my $user_metadata = fetch_user_metadata $dbh, $username;
+    my $user_rating = ($user_metadata->{rating} // 0);
+    if ($user_rating < ($rating{'min-rating'} // 0) or
+        $user_rating > ($rating{'max-rating'} // 1e6)) {
+        error "Can't create a game that you could not join (your rating is $user_rating)\n";
+    }
+
     begin_game_transaction $dbh, $gameid;
 
     eval {
@@ -121,6 +149,14 @@ method make_game($dbh, $q, $username) {
                      $gameid);
         }
 
+        $dbh->do("insert into game_options (game, description, minimum_rating, maximum_rating, deadline_hours) values (?, ?, ?, ?, ?)",
+                 {},
+                 $gameid,
+                 $description,
+                 $rating{'min-rating'},
+                 $rating{'max-rating'},
+                 $deadline_hours);
+        
         if ($game_type eq 'private') {
             notify_game_started $dbh, {
                 name => $gameid,

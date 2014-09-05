@@ -1,3 +1,4 @@
+# -*- mode: html -*-
 {
     layout => 'sidebar',
     scripts => [ "/stc/common.js",
@@ -15,6 +16,7 @@ __DATA__
         <p>The id of the game should be unique, and only contain
 the letters A-Z and a-z and the digits 0-9.
     </tr>
+
     <tr style="vertical-align: top">
       <td>Options
       <td>
@@ -26,6 +28,7 @@ the letters A-Z and a-z and the digits 0-9.
 The options are described in more detail in the
 <a href="/usage.html#options">manual.</a>
     </tr>
+
     <tr style="vertical-align: top" >
       <td>Game type
       <td>
@@ -38,6 +41,7 @@ The options are described in more detail in the
 Private games are created with a predetermined set of players.
 Public games can be joined by any player on the site.
     </tr>
+
     <tr style="vertical-align: top" id="players-row" style="display: none">
       <td>Players<td><textarea name="players" id="players" style="width: 40ex; height: 6em;" oninput="javascript:newGameValidate()" placeholder="usernames or email addresses"></textarea>
         <p>
@@ -50,6 +54,7 @@ after creating the game.</b>
 Please do not add players to games if they aren't
 expecting it.
     </tr>
+
     <tr style="vertical-align: top" id="player-count-row" style="display: none">
       <td>Player count
       <td><select name="player-count" id="player-count" onchange="javascript:newGameValidate()">
@@ -63,6 +68,42 @@ expecting it.
 The game will start automatically once this many
 players have joined.
     </tr>
+
+    <tr style="vertical-align: top" id="rating-row" style="display: none">
+      <td>Rating restriction
+      <td>
+        Minimum: <input name=min-rating id=min-rating type=text style="width: 5ex"></input>
+        Maximum: <input name=max-rating id=max-rating type=text style="width: 5ex"></input>
+        <p>
+          Only players in this rating range can join the game. Leave
+          one or both fields empty if you don't want any restrictions.
+          Players who are still unranked will be considered to have a
+          rating of 0; they can join games with a maximum rating but
+          not games with a minimum rating.
+        <p>
+          You can't start a game if you'd be outside the rating range
+          yourself.
+    </tr>
+
+    </tr>
+
+    <tr style="vertical-align: top" id="deadline-row">
+      <td>Move timer
+      <td><select name="deadline-hours" id="deadline-hours">
+<option value="12">12 hours</option>
+<option value="24">1 day</option>
+<option value="72">3 days</option>
+<option value="120">5 days</option>
+<option selected=true value="168">1 week</option>
+<option value="336">2 weeks</option>
+</select>
+        
+        <p>
+          Players will be kicked out of the game after this period of
+          inactivity. The game admin can reinstate a kicked out player, but
+          will lose his admin privileges when kicked out.
+    </tr>
+
     <tr style="vertical-align: top" id="description-row" style="display: none">
       <td>Description<td><textarea name="description" id="description" style="width: 40ex; height: 6em;" style="display: none"></textarea>
         <p>
@@ -71,6 +112,7 @@ will be shown in the list of open games. Use this
 to for example find players of a certain
 experience level or living in a certain timezone.
     </tr>
+
     <tr><td><td>
         <input id="submit" type="button" value="New Game" onclick="javascript:newGame()"></input>
         <p id="new-game-disabled">

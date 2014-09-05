@@ -23,10 +23,12 @@ function newGameValidate() {
         $("players-row").hide();
         $("description-row").hide();
         $("player-count-row").hide();
+        $("rating-row").hide();
     } else if ($("game-type").value == "public") {
         $("players-row").hide();
         $("description-row").show();
         $("player-count-row").show();
+        $("rating-row").show();
         if (!$("option-email-notify").checked) {
             disabled = true;
             validateHighlights["option-email-notify-label"] = badColor;
@@ -43,6 +45,7 @@ function newGameValidate() {
         $("players-row").show();
         $("description-row").hide();
         $("player-count-row").hide();
+        $("rating-row").hide();
         var players = $("players").value.gsub(/^\s+|\s+$/, '').split(/\n/);
         
         if (players.size() < 2) {

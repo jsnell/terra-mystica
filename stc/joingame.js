@@ -62,6 +62,28 @@ function showOpenGames(games) {
         row.insert(new Element("td").updateText(game.description));
         {
             var cell = new Element("td");
+
+            {
+                var hours = game.deadline_hours || 168;
+                var style = "";
+                if (hours <= 1*24) {
+                    style = "color: #f00; font-weight: bold";
+                } else if (hours <= 3*24) {
+                    style = "color: #f00";
+                }
+                cell.insert(new Element("div", {style: style}).updateText(
+                    "move timer " + seconds_to_pretty_time((hours) * 3600)));
+            }
+
+            if (game.minimum_rating) {
+                cell.insert(new Element("div").updateText(
+                    "minimum rating " + game.minimum_rating));
+            }
+            if (game.maximum_rating) {
+                cell.insert(new Element("div").updateText(
+                    "minimum rating " + game.maximum_rating));
+            }
+
             if (game.game_options) {
                 game.game_options.each(function (elem) {
                     if (elem == "strict-leech" ||
@@ -73,6 +95,7 @@ function showOpenGames(games) {
                     cell.insert(new Element("div").updateText(elem));        
                 });
             }
+
             row.insert(cell);
         }
         var join = new Element("button").updateText("Join");

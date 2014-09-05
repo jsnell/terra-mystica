@@ -34,6 +34,7 @@ create table game (
     round integer,
     turn integer,
     commands text,
+    -- TODO: remove
     description text,
     game_options text array default '{}',
     base_map text references map_variant (id),
@@ -121,3 +122,12 @@ create table game_events (
     primary key (game)
 );
 
+-- Non-rules game options
+create table game_options (
+    game text references game (id),
+    minimum_rating integer,
+    maximum_rating integer,
+    description text,
+    deadline_hours integer default 168,
+    primary key (game)
+);

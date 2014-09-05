@@ -14,5 +14,7 @@ $dbh->do("begin");
 my $count = $dbh->do("update game set aborted=true, finished=true where last_update < now() - interval '2 weeks' and not finished",
                      {},
                      ());
-print STDERR "Aborting $count games\n";
+if ($count > 0) {
+    print STDERR "Aborting $count games\n";
+}
 $dbh->do("commit");

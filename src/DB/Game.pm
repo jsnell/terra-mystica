@@ -203,7 +203,7 @@ sub get_open_game_list {
     my ($dbh) = @_;
 
     my $games = $dbh->selectall_arrayref(
-        "select game.id, game.player_count, game.wanted_player_count, game.description, array(select player from game_player where game_player.game=game.id) as players, game_options from game where game.wanted_player_count is not null and game.player_count != game.wanted_player_count and not game.finished",
+        "select game.id, game.player_count, game.wanted_player_count, game.description, array(select player from game_player where game_player.game=game.id) as players, game.game_options, game_options.minimum_rating, game_options.maximum_rating, game_options.deadline_hours from game left join game_options on game.id=game_options.game where game.wanted_player_count is not null and game.player_count != game.wanted_player_count and not game.finished",
         { Slice => {} }
         );
 

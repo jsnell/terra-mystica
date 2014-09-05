@@ -1,4 +1,5 @@
 use strict;
+no indirect;
 
 package Server::JoinGame;
 
@@ -12,6 +13,7 @@ use DB::Connection;
 use DB::Game;
 use DB::IndexGame;
 use DB::SaveGame;
+use DB::UserInfo;
 use Email::Notify;
 use Server::Session;
 use tracker;
@@ -20,8 +22,9 @@ sub joingame {
     my ($dbh, $read_id, $username)  = @_;
     begin_game_transaction $dbh, $read_id;
 
-    my ($wanted_player_count, $current_count, $already_playing) =
-        $dbh->selectrow_array("select wanted_player_count, (select count(*) from game_player where game=game.id), (select count(*) from game_player where game=game.id and player=?) from game where id=?",
+    my ($wanted_player_count, $current_count, $already_playing,
+        $minimum_rating, $maximum_rating) =
+        $dbh->selectrow_array("select wanted_player_count, (select count(*) from game_player where game=game.id), (select count(*) from game_player where game=game.id and player=?), game_options.minimum_rating, game_options.maximum_rating from game left join game_options on game.id=game_options.game where id=?",
                               {},
                               $username,
                               $read_id);
@@ -34,6 +37,17 @@ sub joingame {
     }
     if ($wanted_player_count <= $current_count) {
         die "Game is already full\n";
+    }
+
+    {
+        my $user_metadata = fetch_user_metadata $dbh, $username;
+        my $user_rating = ($user_metadata->{rating} // 0);
+        if ($user_rating < ($minimum_rating // 0)) {
+            die "Your rating ($user_rating) is too low to join\n";
+        }
+        if ($user_rating > ($maximum_rating // 1e6)) {
+            die "Your rating ($user_rating) is too high to join\n";
+        }
     }
 
     $dbh->do("insert into game_player (game, player, sort_key, index) values (?, ?, ?, ?)",

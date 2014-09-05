@@ -17,7 +17,7 @@ my $dbh = get_db_connection;
 
 my $id_pattern = '%';
 
-my $idle_players = $dbh->selectall_arrayref("select game, array_agg(faction) as factions from game_role where game in (select id from game where not finished and not aborted and last_update < now() - interval '1 weeks') and (action_required or leech_required) and game like ? group by game",
+my $idle_players = $dbh->selectall_arrayref("select game, array_agg(faction) as factions from game_role where game in (select id from game left join game_options on game_options.game=game.id where not finished and not aborted and last_update < now() - coalesce(game_options.deadline_hours, 24*7) * interval '1 hour') and (action_required or leech_required) and game like ? group by game"
                                             { Slice => {} },
                                             $id_pattern);
 

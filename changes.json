@@ -1,5 +1,13 @@
 {
     "changes": [
+        { "date": "2014-09-05",
+          "title": "Configurable move timers",
+          "description": "The move timer, after which idle players are kicked from the game, can now be set at game creation time. Possible values range from 12 hours to 2 weeks. This option is available for both private and public games, but can not be changed after the game is created."
+        },
+        { "date": "2014-09-05",
+          "title": "Rating limits for public games",
+          "description": "It's now possible to create public games that can only be joined by players within a certain rating range."
+        },
         { "date": "2014-04-27",
           "title": "Idle players dropped from games",
           "description": "Players who don't make their moves for a week are now automatically <a href='/usage.html#drop'>dropped from the game</a>."
