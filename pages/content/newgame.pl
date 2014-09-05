@@ -102,9 +102,9 @@ players have joined.
 </select>
       <td>        
         <p>
-          Players will be kicked out of the game after this period of
-          inactivity. The game admin can reinstate a kicked out player, but
-          will lose his admin privileges when kicked out.
+          Players will be dropped from the game after this period of
+          inactivity. The game admin can reinstate a dropped player, but
+          will lose admin privileges for the game if dropped out themselves.
     </tr>
 
     <tr style="vertical-align: top" id="description-row" style="display: none">
