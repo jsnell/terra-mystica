@@ -13,7 +13,8 @@ function newGameValidate() {
         "game-type": okColor,
     }
 
-    if ($("gameid").value == "") {
+    if ($("gameid").value == "" ||
+        $("gameid").value.length > 32) {
         disabled = true;
         validateHighlights["gameid"] = badColor;
     }

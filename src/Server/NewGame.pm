@@ -60,6 +60,10 @@ method make_game($dbh, $q, $username) {
         error "Invalid character in game id '$1'";
     }
 
+    if (length $gameid > 32) {
+        error "game id '$gameid' too long";
+    }
+
     my $game_type = $q->param("game-type");
     my @players = ();
     my $player_count = undef;
