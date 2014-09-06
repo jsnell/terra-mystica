@@ -81,7 +81,7 @@ function showOpenGames(games) {
             }
             if (game.maximum_rating) {
                 cell.insert(new Element("div").updateText(
-                    "minimum rating " + game.maximum_rating));
+                    "maximum rating " + game.maximum_rating));
             }
 
             if (game.game_options) {
