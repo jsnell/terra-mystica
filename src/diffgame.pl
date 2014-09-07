@@ -93,7 +93,7 @@ for (@{$games}) {
     }
 
     if ($count % 40 == 0) {
-        print "\n";
+        print " [", $count, "/", (scalar @{$games}), "]\n";
         if ($time eq 'total') {
             for my $dir ($dir1, $dir2) {
                 printf "%s: %5.2f\n", $dir, $time{$dir};
