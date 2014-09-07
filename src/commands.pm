@@ -557,12 +557,14 @@ sub command_dig {
     my $cost = $faction->{dig}{cost}[$faction->{dig}{level}];
     my $gain = $faction->{dig}{gain}[$faction->{dig}{level}];
 
-    if (!$faction->{allowed_sub_actions}{transform}) {
+    if (!$game{options}{'loose-dig'} or
+        !$faction->{allowed_sub_actions}{transform}) {
         $game{acting}->require_subaction($faction, 'dig', {
             transform => 1,
-            build => 1
-        });
-    };
+            build => 1,
+            dig => 1,
+       });
+    }
 
     if (!$gain) {
         adjust_resource $faction, 'SPADE', $amount;
@@ -1070,6 +1072,7 @@ sub command {
             shipping-bonus
             email-notify
             loose-adjust-resource
+            loose-dig
             loose-engineer-bridge
             loose-multi-spade
             maintain-player-order
