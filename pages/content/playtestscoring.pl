@@ -18,7 +18,7 @@ to be in the game in the start. The remaining three are not used.
 <li>Number of separate clusters in one network of connected buildings. (Where a cluster is a group of directly connected buildings). All fragments of a mermaid town that crosses a river are part of the same cluster.
 <li>Largest distance between two buildings in one network of connected buildings
 <li>Largest distance between a stronghold and sanctuary, which are in the same network of connected buildings
-<li>Number of buildings on the edge of the map
+<li>Number of buildings on the edge of the map which are in the same network of connected buildings
 </ul>
 
 <p>

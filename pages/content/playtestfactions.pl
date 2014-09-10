@@ -67,7 +67,7 @@ to another terrain type.
 
 <ul>
 <li> Start with 6/6/0 power, 0/1/0/1 on cults
-<li> Start with a favor tile (taken immediately on faction selection)
+<li> Start with a favor tile (taken immediately on faction selection). FAV11 scores no points for initial dwellings.
 <li> Advancing on the digging track requires just 5c+1p, no workers
 <li> SH produces 4pw, +3vp per temple when passing
 <li> The 8th dwelling produces a worker
@@ -89,7 +89,7 @@ to another terrain type.
 
 <ul>
 <li> Start with 6/6/0 power, 3/3/3/3 on cults
-<li> Start with 1 extra worker, but produce one worker less.
+<li> Start with 1 extra worker, but produce one worker less. (<b>v3</b>: don't start with extra worker)
 <li> Pay cult steps to transform. 4 steps on a single cult if transforming from another player's home terrain to a volcano, 3 steps if transforming from some other color. (The ice factions do not have a home terrain).
 <li> SH produces 2pw, and gives the Acolytes one extra cult step for each priest sent to the cult tracks
 <li> <b>v2</b>: 4th dwelling produces no worker income.
