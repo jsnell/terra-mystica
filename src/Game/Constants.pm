@@ -981,7 +981,7 @@ Readonly our %faction_setups_extra => (
             FIRE => 3, WATER => 3, EARTH => 3, AIR => 3,
             color => 'volcano',
             secondary_color => undef,
-            display => "Acolytes (v2)",
+            display => "Acolytes (v3)",
             faction_board_id => undef,
             post_setup => {
                 PICK_COLOR => 1,
