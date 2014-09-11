@@ -72,8 +72,12 @@ function previewOrSave(save, preview_data, prefix_data) {
             "max-row": params['max-row']
         },
         onFailure: function(transport){
-            state = transport.responseText.evalJSON();
+            var data = transport.responseText.evalJSON();
+            if (data && data.error) {
+                state.error = data.error;
+            }
             failed();
+            dataEntrySetStatus(false);
         },
         onSuccess: function(transport){
             state = transport.responseText.evalJSON();

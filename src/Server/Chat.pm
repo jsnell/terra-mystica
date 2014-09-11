@@ -11,6 +11,7 @@ use Crypt::CBC;
 use DB::Connection;
 use DB::Secret;
 use Email::Notify;
+use Server::Security;
 use Server::Session;
 
 sub verify_key {
@@ -51,7 +52,11 @@ sub handle {
     my %res = ( error => [] );
 
     eval {
-        verify_key $dbh, $id, $faction_key, $faction_name;
+        if ($faction_key eq '') {
+            get_write_id_for_user $dbh, $username, $id, $faction_name;
+        } else {
+            verify_key $dbh, $id, $faction_key, $faction_name;
+        }
         if (defined $add_message) {
             $dbh->do('begin');
             $dbh->do(

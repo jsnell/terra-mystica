@@ -10,6 +10,7 @@ extends 'Server::Server';
 use Crypt::CBC;
 use DB::Connection;
 use DB::Secret;
+use Server::Security;
 use Server::Session;
 
 sub verify_key {
@@ -53,17 +54,22 @@ sub handle {
             die "Not logged in\n";
         }
 
-        my $faction_player = $dbh->selectrow_array(
-            "select faction_player from game_role where game=? and faction=?",
-            {},
-            $id,
-            $faction_name);
+        if ($faction_key eq '') {
+            get_write_id_for_user $dbh, $username, $id, $faction_name;
+        } else {
+            verify_key $dbh, $id, $faction_key, $faction_name;
 
-        if ($username ne $faction_player) {
-            die "Trying to read another player's notes?\n";
+            my $faction_player = $dbh->selectrow_array(
+                "select faction_player from game_role where game=? and faction=?",
+                {},
+                $id,
+                $faction_name);
+
+            if ($username ne $faction_player) {
+                die "Trying to read another player's notes?\n";
+            }
         }
 
-        verify_key $dbh, $id, $faction_key, $faction_name;
         if (defined $set_note) {
             $res{note} = $set_note;
 

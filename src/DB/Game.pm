@@ -225,7 +225,8 @@ sub role_link {
     if ($record->{faction} eq 'admin') {
         "/edit/$record->{write_id}";
     } else {
-        edit_link_for_faction $dbh, $record->{write_id}, $record->{faction};
+        "/faction/$record->{game}/$record->{faction}/"
+        # edit_link_for_faction $dbh, $record->{write_id}, $record->{faction};
     }
 }
 

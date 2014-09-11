@@ -72,8 +72,13 @@ method handle($q) {
 
     begin_game_transaction $dbh, $read_id;
 
-    my $write_id = $self->verify_key($dbh,
-                                     $read_id, $faction_name, $faction_key);
+    my $write_id;
+    if ($faction_key eq '') {
+        $write_id = get_write_id_for_user $dbh, $username, $read_id, $faction_name;
+    } else {
+        $write_id = $self->verify_key($dbh,
+                                      $read_id, $faction_name, $faction_key);
+    }
 
     if ($faction_name =~ /^player/) {
         $preview =~ s/\r//g;
