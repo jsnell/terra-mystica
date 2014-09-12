@@ -485,3 +485,24 @@ table.newgame-settings tr td {
 table.newgame-settings tr td p {
     margin-top: 0px;
 }
+
+/* Mobile overrides */
+@media only screen and (max-device-width: 480px) {
+    /* Eat flames and die, mobile WebKit and your "font boosting" that never
+       works. */
+    div#game-root * {
+        max-height: 1000000px;
+    }
+
+    div#action_required, pre#preview_commands, div#preview_status {
+        font-size: 200%;
+    }
+
+    div#header a {
+        font-size: 200%;
+    }
+
+    div#data_entry button, input, textarea {
+        font-size: 200%;
+    }
+}
