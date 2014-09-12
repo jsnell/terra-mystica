@@ -629,6 +629,11 @@ sub command_pass {
     my $faction_name = $faction->{name};
     my $ledger = $game{ledger};
 
+    if ($game{options}{'strict-chaosmagician-sh'} and
+        $faction->{allowed_actions} > 1) {
+        $faction->{allowed_actions} = 1;
+    }
+
     $game{acting}->require_subaction($faction, 'pass', {});
 
     my $passed_count = grep { $_->{passed} } $game{acting}->factions_in_order();
