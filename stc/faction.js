@@ -65,6 +65,7 @@ function previewOrSave(save, preview_data, prefix_data) {
             // ignoring cache control headers is *just* the right
             // thing.
             "cache-token": new Date() - Math.random(),
+            "csrf-token": getCSRFToken(),
             "game": params.game,
             "preview": prefix_data + preview_data,
             "faction-key": params.key,
@@ -181,6 +182,7 @@ function loadOrSavePlan(save) {
 
     var form_params = {
         "cache-token": new Date() - Math.random(),
+        "csrf-token": getCSRFToken(),
         "game": params.game,
         "faction-key": params.key,
         "preview-faction": currentFaction,
@@ -229,6 +231,7 @@ function loadOrSendChat(send) {
 
     var form_params = {
         "cache-token": new Date() - Math.random(),
+        "csrf-token": getCSRFToken(),
         "game": params.game,
         "faction-key": params.key,
         "faction": currentFaction,
