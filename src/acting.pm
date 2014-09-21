@@ -25,12 +25,13 @@ has 'factions' => (is => 'rw',
                    handles => {
                        get_faction => 'get',
                    });
-has 'factions_in_order' => (is => '',
+has 'raw_factions_in_order' => (is => 'rw',
                             traits => ['Array'],
                             default => sub { [] },
                             handles => {
                                 faction_count => 'count',
                                 push_faction => 'push',
+                                splice => 'splice',
                                 all_factions_in_order => 'elements',
                             });
 

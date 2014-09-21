@@ -640,9 +640,18 @@ sub command_pass {
 
     my $first_to_pass = $passed_count == 0;
 
-    if ($game{round} and $first_to_pass) {
-        $_->{start_player} = 0 for $game{acting}->factions_in_order();
-        $faction->{start_player} = 1;
+    if ($game{round}) {
+        if ($first_to_pass) {
+            $_->{start_player} = 0 for $game{acting}->factions_in_order();
+            $faction->{start_player} = 1;
+        }
+
+        if ($game{options}{'variable-turn-order'}) {
+            my @other_factions = grep {
+                $_->{name} ne $faction->{name}
+            } $game{acting}->factions_in_order(0);
+            $game{acting}->raw_factions_in_order([@other_factions, $faction]);
+        }
     }
 
     if ($game{options}{'strict-chaosmagician-sh'} and $faction->{passed}) {
@@ -1085,7 +1094,8 @@ sub command {
             manual-fav5
             strict-leech
             strict-chaosmagician-sh
-            strict-darkling-sh);
+            strict-darkling-sh
+            variable-turn-order);
         if (!$valid_options{$opt}) {
             die "Unknown option $opt\n";
         }
