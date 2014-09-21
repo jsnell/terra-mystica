@@ -737,6 +737,7 @@ sub command_start {
     my $i = 0;
     for my $faction (@order) {
         $faction->{order} = $i++;
+        $game{events}->faction_event($faction, "order:$i", 1);
     }
 
     for (@order ){
