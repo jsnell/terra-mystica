@@ -860,6 +860,10 @@ function renderColorCycle(faction, parent) {
 
     for (var i = 0; i < 7; ++i) {
         ctx.save()
+        if (i == 0 && secondaryColor && primaryColor != 'ice') {
+            ctx.lineWidth = 3;
+        }
+
         ctx.beginPath();
         ctx.arc(0, -30, 10, Math.PI * 2, 0, false);
 
@@ -884,6 +888,7 @@ function renderColorCycle(faction, parent) {
 
         ctx.fillStyle = bgcolors[primaryColor];
         ctx.fill();
+
         ctx.stroke();
 
         ctx.restore();
