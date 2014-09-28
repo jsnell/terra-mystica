@@ -35,6 +35,10 @@ has 'raw_factions_in_order' => (is => 'rw',
                                 all_factions_in_order => 'elements',
                             });
 
+has 'new_faction_order' => (is => 'rw',
+                            traits => ['Array'],
+                            default => sub { [] });
+
 # What's to be done during the setup
 has 'setup_order' => (is => 'rw',
                       traits => ['Array'],
@@ -662,6 +666,11 @@ method maybe_advance_to_next_player($faction) {
             $self->maybe_advance_turn($faction, $next);
         }
         $faction->{recent_moves} = [];
+    }
+
+    if (@{$self->new_faction_order()}) {
+        $self->raw_factions_in_order($self->new_faction_order());
+        $self->new_faction_order([]);
     }
 
     $self->game()->{ledger}->finish_row();

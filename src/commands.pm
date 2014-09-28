@@ -650,7 +650,7 @@ sub command_pass {
             my @other_factions = grep {
                 $_->{name} ne $faction->{name}
             } $game{acting}->factions_in_order(0);
-            $game{acting}->raw_factions_in_order([@other_factions, $faction]);
+            $game{acting}->new_faction_order([@other_factions, $faction]);
         }
     }
 
