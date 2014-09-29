@@ -498,11 +498,27 @@ table.newgame-settings tr td p {
         font-size: 200%;
     }
 
+    div#action_required button {
+        font-size: 100%;
+    }
+
     div#header a {
         font-size: 200%;
     }
 
-    div#data_entry button, input, textarea {
+    div#data_entry button, input, textarea, select {
         font-size: 200%;
+    }
+
+    table.gamelist {
+        font-size: 125%;
+    }
+
+    div#menu {
+        font-size: 200%;
+    }
+
+    div#menu button {
+        font-size: 100%;
     }
 }
