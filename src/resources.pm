@@ -212,6 +212,10 @@ sub adjust_resource {
 
     $type = alias_resource $type;
 
+    if ($delta eq 'PLAYER_COUNT') {
+        $delta = $game{acting}->player_count();
+    }
+
     if ($type eq 'VP') {
         $faction->{vp_source}{$source || 'unknown'} += $delta;
         $game{events}->faction_event($faction, "vp", $delta);

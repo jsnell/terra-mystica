@@ -879,8 +879,7 @@ Readonly our %faction_setups_extra => (
                 TE => { advance_cost => { W => 2, C => 5 },
                         income => { P => [ 0, 1, 2, 3 ] } },
                 SH => { advance_cost => { W => 4, C => 8 },
-                        # XXX: Actually depends on player count
-                        advance_gain => [ { P1 => 4 } ],
+                        advance_gain => [ { P1 => 'PLAYER_COUNT' } ],
                         income => { PW => [ 0, 2 ] } },
                 SA => { advance_cost => { W => 4, C => 8 },
                         income => { P => [ 0, 1 ] } },
@@ -968,8 +967,7 @@ Readonly our %faction_setups_extra => (
                 TE => { advance_cost => { W => 2, C => 5 },
                         income => { P => [ 0, 1, 2, 3 ] } },
                 SH => { advance_cost => { W => 4, C => 8 },
-                        # XXX: Actually depends on player count
-                        advance_gain => [ { P1 => 4 } ],
+                        advance_gain => [ { P1 => 'PLAYER_COUNT' } ],
                         income => { PW => [ 0, 2 ] } },
                 SA => { advance_cost => { W => 4, C => 6 },
                         income => { P => [ 0, 1 ] } },
@@ -1057,8 +1055,7 @@ Readonly our %faction_setups_extra => (
                 TE => { advance_cost => { W => 2, C => 5 },
                         income => { P => [ 0, 1, 2, 3 ] } },
                 SH => { advance_cost => { W => 4, C => 8 },
-                        # XXX: Actually depends on player count
-                        advance_gain => [ { P1 => 4 } ],
+                        advance_gain => [ { P1 => 'PLAYER_COUNT' } ],
                         income => { PW => [ 0, 2 ] } },
                 SA => { advance_cost => { W => 4, C => 6 },
                         income => { P => [ 0, 1 ] } },
