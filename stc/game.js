@@ -3313,6 +3313,17 @@ function updateInfoTab() {
 
     addRow("Description", state.metadata.description || "[no description]");
 
+    {
+        var hours = state.metadata.deadline_hours || 168;
+        var style = "";
+        if (hours <= 1*24) {
+            style = "color: #f00; font-weight: bold";
+        } else if (hours <= 3*24) {
+            style = "color: #f00";
+        }
+        addRow("Move timer", seconds_to_pretty_time((hours) * 3600));
+    }
+
     // Options
     if (metadata.game_options) {
         var list = new Element("ul");
