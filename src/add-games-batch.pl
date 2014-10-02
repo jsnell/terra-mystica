@@ -97,6 +97,14 @@ sub make_games {
                     $player_count,
                     @{$options});
 
+        $dbh->do("insert into game_options (game, description, minimum_rating, maximum_rating, deadline_hours) values (?, ?, ?, ?, ?)",
+                 {},
+                 $id,
+                 $game_desc->{'description'},
+                 $desc->{'minimum-rating'},
+                 $desc->{'maximum-rating'},
+                 $desc->{'deadline-hours'} // 120);
+
         notify_game_started $dbh, {
             name => $id,
             options => { map { ($_ => 1) } @{$options} },
