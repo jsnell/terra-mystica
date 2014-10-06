@@ -3299,6 +3299,12 @@ function updateInfoTab() {
     };
 
     {
+        var url = "http://terra.snellman.net/game/" + params.game;
+        addRow("Public Link",
+               new Element("a", { href: url }).updateText(url));
+    }
+
+    {
         var status = "Running, last update " + seconds_to_pretty_time(state.metadata.time_since_update) + " ago";
         if (metadata.aborted) {
             status = "Aborted";
