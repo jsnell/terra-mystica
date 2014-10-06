@@ -345,13 +345,18 @@ sub command_leech {
 
         my $from_faction = $game{acting}->get_faction($_->{from_faction});
         if ($_->{from_faction} eq 'cultists' and
-            $_->{actual} > 0 and
-            !$from_faction->{leech_cult_gained}{$_->{leech_id}}++) {
-            $from_faction->{CULT}++;
-            $game{acting}->require_action($from_faction,
-                                          { type => 'cult',
-                                            amount => 1 });
-            $game{events}->faction_event($faction, 'cultist:cult', 1);
+            $_->{actual} > 0) {
+            if (!$from_faction->{leech_cult_gained}{$_->{leech_id}}++) {
+                $from_faction->{CULT}++;
+                $game{acting}->require_action($from_faction,
+                                              { type => 'cult',
+                                                amount => 1 });
+                $game{events}->faction_event($from_faction, 'cultist:cult', 1);
+            }
+            $game{events}->faction_event($faction, 'leech-from-cultist:pw',
+                                         $actual_pw);
+            $game{events}->faction_event($faction, 'leech-from-cultist:count',
+                                         1);
         }
 
         if ($_->{leech_tainted}) {
@@ -426,6 +431,10 @@ sub command_decline {
                 if ($_->{actual} > 0) {
                     $game{events}->faction_event($faction, 'decline:count', 1);
                     $game{events}->faction_event($faction, 'decline:pw', $_->{actual});
+                    if ($from_faction->{name} eq 'cultists') {
+                        $game{events}->faction_event($faction, 'decline-from-cultist:count', 1);
+                        $game{events}->faction_event($faction, 'decline-from-cultist:pw', $_->{actual});                        
+                    }
                 }
                 $_ = '';
                 $declined = 1;
@@ -999,6 +1008,7 @@ sub command {
         $assert_active_faction->();
         adjust_resource $faction, 'P2', -2*$1;
         adjust_resource $faction, 'P3', $1;
+        $game{events}->faction_event($faction, "burn", $1);
     } elsif ($command =~ /^leech (\d+)(?: from (\w+))?$/i) {
         command_leech $assert_faction->(), $1, lc($2 // '');
         $ledger->force_finish_row(1);
