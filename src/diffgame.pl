@@ -60,6 +60,7 @@ sub fetch_result {
     delete $json->{towns};
     delete $json->{score_tiles};
     delete $json->{bonus_tiles};
+    delete $json->{events};
 
     $json;
 #    my $pretty = to_json($json, { pretty => 1 });
