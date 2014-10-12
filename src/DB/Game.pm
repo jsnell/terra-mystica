@@ -234,7 +234,7 @@ sub get_player_game_list {
     my ($dbh, $user, $mode, $status) = @_;
 
     my $roles = $dbh->selectall_arrayref(
-        "select game, faction, game.write_id, game.finished, action_required, (extract(epoch from now() - game.last_update)) as time_since_update, vp, rank, (select faction from game_role as gr2 where gr2.game = gr1.game and action_required limit 1) as waiting_for, leech_required, game.round, (select count(*) from chat_message where game=game.id and posted_at > (select coalesce((select last_read from chat_read where game=chat_message.game and player=?), '2012-01-01'))) as unread_chat, game.aborted, gr1.dropped from game_role as gr1 left join game on game=game.id where faction_player=? and (game.finished = ? or (game.finished and last_update > now() - interval '2 days'))",
+        "select gr1.game, gr1.faction, game.write_id, game.finished, action_required, (extract(epoch from now() - game.last_update)) as time_since_update, vp, rank, (select faction from game_role as gr2 where gr2.game = gr1.game and action_required limit 1) as waiting_for, leech_required, game.round, (select count(*) from chat_message where game=game.id and posted_at > (select coalesce((select last_read from chat_read where game=chat_message.game and player=?), '2012-01-01'))) as unread_chat, game.aborted, gr1.dropped, game_options.deadline_hours from game_role as gr1 left join game on gr1.game=game.id left join game_options on gr1.game=game_options.game where faction_player=? and (game.finished = ? or (game.finished and last_update > now() - interval '2 days'))",
         { Slice => {} },
         $user, $user, $status);
     sorted_user_games (map {
@@ -251,6 +251,7 @@ sub get_player_game_list {
           unread_chat_messages => 1*$_->{unread_chat},
           aborted => $_->{aborted},
           dropped => $_->{dropped},
+          deadline_hours => $_->{deadline_hours},
         } } @{$roles});
 }
 

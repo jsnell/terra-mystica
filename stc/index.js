@@ -35,11 +35,22 @@ function listGames(games, div, mode, status) {
             elem.status = "game-status-action-required";
             elem.status_msg = "your turn";
             action_required_count++;
+
+            if (elem.deadline_hours) {
+                var deadline_seconds = elem.deadline_hours * 3600;
+                if (elem.seconds_since_update >= deadline_seconds * 0.75) {
+                    var dropping_in = seconds_to_pretty_time(deadline_seconds - elem.seconds_since_update);
+
+                    elem.status_msg = "your turn, dropping in " + dropping_in;
+                    elem.status = 'game-status-dropping-soon';
+                }
+            }
         } else if (elem.unread_chat_messages > 0) {
             elem.status = "game-status-action-unread-chat";
             elem.status_msg = "new chat";
             action_required_count++;
         }
+
         if (elem.seconds_since_update) {
             elem.time_since_update = seconds_to_pretty_time(elem.seconds_since_update) + " ago";
         }

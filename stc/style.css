@@ -344,6 +344,10 @@ tr.game-status-dropped td {
     background-color: #f88;
 }
 
+tr.game-status-dropping-soon td {
+    background-color: #f44;
+}
+
 table.gamelist {
     margin-left: 2ex;
     max-width: 80ex;
