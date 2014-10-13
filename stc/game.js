@@ -1821,6 +1821,10 @@ function addDeclineButton(parent, index, resource, amount) {
 function addFactionInput(parent, record, index) {
     var faction = state.factions[currentFaction];
     if (record.type == "leech") {
+        if (faction.leech_record_output) {
+            return;
+        }
+        faction.leech_record_output = true;
         var div = new Element("div", { "id": "leech-" + index,
                                        "style": "padding-left: 2em" });
         var accept = new Element("button").updateText("Accept");
@@ -1830,6 +1834,12 @@ function addFactionInput(parent, record, index) {
         div.insert(accept);
         div.insertTextSpan(" ");
         div.insert(decline);
+        if (index != 0) {
+            var wait = new Element("button").updateText("Wait");
+            wait.onclick = function() { appendCommand("wait"); };
+            div.insertTextSpan(" ");
+            div.insert(wait);
+        }
         parent.insert(div);
     }
     if (record.type == "cult") {
