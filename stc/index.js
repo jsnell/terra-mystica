@@ -33,15 +33,25 @@ function listGames(games, div, mode, status) {
             elem.status_msg = "dropped out";
         } else if (elem.action_required && !elem.aborted) {
             elem.status = "game-status-action-required";
-            elem.status_msg = "your turn";
+            if (mode == "user") {
+                elem.status_msg = "your turn";
+            } else {
+                elem.status_msg = "player's turn";
+            }
+
             action_required_count++;
 
             if (elem.deadline_hours) {
                 var deadline_seconds = elem.deadline_hours * 3600;
                 if (elem.seconds_since_update >= deadline_seconds * 0.75) {
-                    var dropping_in = seconds_to_pretty_time(deadline_seconds - elem.seconds_since_update);
+                    var dropping_in_seconds = deadline_seconds - elem.seconds_since_update
+                    var dropping_in = seconds_to_pretty_time(dropping_in_seconds);
 
-                    elem.status_msg = "your turn, dropping in " + dropping_in;
+                    if (dropping_in_seconds <= 0) {
+                        elem.status_msg += ", drop imminent ";
+                    } else {
+                        elem.status_msg += ", dropping in " + dropping_in;
+                    }
                     elem.status = 'game-status-dropping-soon';
                 }
             }
