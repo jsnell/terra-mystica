@@ -1,5 +1,9 @@
 {
     "changes": [
+        { "date": "2014-10-22",
+          "title": "Fire & Ice expansion maps available",
+          "description": "You can select one of three maps when creating a new game; the original, or one of the two expansion maps.."
+        },
         { "date": "2014-09-05",
           "title": "Configurable move timers",
           "description": "The move timer, after which idle players are kicked from the game, can now be set at game creation time. Possible values range from 12 hours to 2 weeks. This option is available for both private and public games, but can not be changed after the game is created."

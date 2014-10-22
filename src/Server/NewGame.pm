@@ -141,9 +141,10 @@ method make_game($dbh, $q, $username) {
     }
 
     my @options = $q->param('game-options');
+    my $map_variant = $q->param('map-variant') || undef;
 
     eval {
-        my $write_id = create_game $dbh, $gameid, $username, [@players], $player_count, @options;
+        my $write_id = create_game $dbh, $gameid, $username, [@players], $player_count, $map_variant, @options;
 
         my $description = $q->param('description');
         if ($description) {

@@ -3340,6 +3340,16 @@ function updateInfoTab() {
         addRow("Move timer", seconds_to_pretty_time((hours) * 3600));
     }
 
+    if (metadata.map_variant) {
+        var labels = {
+            "95a66999127893f5925a5f591d54f8bcb9a670e6" : "Fire & Ice, Side 1",
+            "be8f6ebf549404d015547152d5f2a1906ae8dd90" : "Fire & Ice, Side 2",
+        };
+        var label = labels[metadata.map_variant] || "Alternate";
+        addRow("Map",
+               new Element("a", {href:"/map/" + metadata.map_variant}).updateText(label));
+    }
+
     // Options
     if (metadata.game_options) {
         var list = new Element("ul");

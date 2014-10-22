@@ -78,6 +78,8 @@ sub make_games {
         }
     }
 
+    my $map_variant = undef;
+
     for my $game_desc (@to_create) {
         $dbh->do("begin");
         my $id = $game_desc->{name};
@@ -95,6 +97,7 @@ sub make_games {
                     $admin,
                     [ @players ],
                     $player_count,
+                    $map_variant,
                     @{$options});
 
         $dbh->do("insert into game_options (game, description, minimum_rating, maximum_rating, deadline_hours) values (?, ?, ?, ?, ?)",

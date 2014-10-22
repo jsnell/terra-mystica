@@ -80,10 +80,18 @@ function saveMap(mapid) {
 }
 
 function allowSave() {
+    if (!$("save")) {
+        return;
+    }
+
     $("save").disabled = false;
 }
 
 function forbidSave() {
+    if (!$("save")) {
+        return;
+    }
+
     $("save").disabled = true;
 }
 
@@ -109,6 +117,10 @@ function showMap() {
 
 function drawGamesPlayed() {
     var table = $("games-played");
+
+    if (!table) {
+        return;
+    }
 
     var header = new Element("tr");
     header.insert(new Element("td").updateText("Game"));
@@ -139,6 +151,10 @@ function drawGamesPlayed() {
 
 function drawFactionInfo() {
     var table = $("faction-info");
+
+    if (!table) {
+        return;
+    }
 
     var header = new Element("tr");
     header.insert(new Element("td").updateText("Faction"));

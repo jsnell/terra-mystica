@@ -45,7 +45,7 @@ method handle($q, $id) {
     } elsif ($self->mode() eq 'save') {
         save($dbh, $q->param('map-data'), $res, $username);
     } elsif ($self->mode() eq 'view') {
-        view($dbh, $id, $res);
+        view($dbh, $id, $res, 1);
     }
 
     $self->output_json($res);
@@ -125,7 +125,7 @@ func save($dbh, $mapdata, $res) {
     $res->{'mapid'} = sha1_hex $map_str;
 }
 
-func view($dbh, $id, $res) {
+func view($dbh, $id, $res, $map_only) {
     my ($map_str) = $dbh->selectrow_array("select terrain from map_variant where id=?", {}, $id);
     my $base_map = [ split /\s+/, $map_str ];
     local %terra_mystica::game = (
@@ -138,13 +138,15 @@ func view($dbh, $id, $res) {
     $res->{'mapdata'} = convert_to_lodev($map_str);
     $res->{'mapid'} = $id;
 
-    my $game_ids = $dbh->selectall_arrayref("select id, round, finished, array (select faction || ' ' || vp from game_role where game=game.id order by vp desc) as factions from game where base_map=? and not aborted order by finished, round, id",
-                                            { Slice => {} },
-                                            $id);
+    unless ($map_only) {
+        my $game_ids = $dbh->selectall_arrayref("select id, round, finished, array (select faction || ' ' || vp from game_role where game=game.id order by vp desc) as factions from game where base_map=? and not aborted order by finished, round, id",
+                                                { Slice => {} },
+                                                $id);
 
-    $res->{'games'} = $game_ids;
+        $res->{'games'} = $game_ids;
 
-    $res->{'vpstats'} = faction_vp_error_by_map $dbh, $id;
+        $res->{'vpstats'} = faction_vp_error_by_map $dbh, $id;
+    }
 }
 
 1;

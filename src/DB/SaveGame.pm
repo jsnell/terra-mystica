@@ -107,7 +107,7 @@ sub evaluate_and_save {
 
 
 sub create_game {
-    my ($dbh, $id, $admin_user, $players, $player_count, @options) = @_;
+    my ($dbh, $id, $admin_user, $players, $player_count, $map_variant, @options) = @_;
 
     die "Invalid game id $id\n" if !$id or $id =~ /[^A-Za-z0-9_]/;
 
@@ -120,6 +120,10 @@ sub create_game {
     }
 
     @options = map { s/\s+//g; "option $_\n" } @options;
+
+    if ($map_variant) {
+        push @options, "map $map_variant\n";
+    }
 
     my $content = <<EOF;
 # Default game options

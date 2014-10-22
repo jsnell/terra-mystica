@@ -25,10 +25,26 @@ the letters A-Z and a-z and the digits 0-9.
         <input name="game-options" type="checkbox" id="option-shipping-bonus" value="shipping-bonus"></input><label for="option-shipping-bonus">Shipping bonus tile (Spielbox 6/2013)</label><br>
         <input name="game-options" type="checkbox" id="option-email-notify" value="email-notify" onchange="javascript:newGameValidate()" checked></input><label id="option-email-notify-label" for="option-email-notify">Automatic email notifications</label><br>
         <input name="game-options" type="checkbox" id="option-maintain-player-order" value="maintain-player-order" onchange="javascript:newGameValidate()"></input><label id="option-maintain-player-order-label" for="option-maintain-player-order">Don't randomize player order (private games only)</label><br>
+        
       <td>
         <p>
 The options are described in more detail in the
 <a href="/usage.html#options">manual.</a>
+    </tr>
+
+    <tr style="vertical-align: top" >
+      <td>Map
+      <td>
+        <select name="map-variant" id="map-variant" onchange="javascript:newGameValidate()">
+<option value="">Original</option>
+<option value="95a66999127893f5925a5f591d54f8bcb9a670e6">Fire & Ice, Side 1</option>
+<option value="be8f6ebf549404d015547152d5f2a1906ae8dd90">Fire & Ice, Side 2</option>
+        </select>
+      <td>
+        <p>
+          <a href="/map/95a66999127893f5925a5f591d54f8bcb9a670e6" target="_blank">Side 1</a><br>
+          <a href="/map/be8f6ebf549404d015547152d5f2a1906ae8dd90" target="_blank">Side 2</a>
+        </p>
     </tr>
 
     <tr style="vertical-align: top" >

@@ -75,6 +75,18 @@ function showOpenGames(games) {
                     "move timer " + seconds_to_pretty_time((hours) * 3600)));
             }
 
+            if (game.map_variant) {
+                var labels = {
+                    "95a66999127893f5925a5f591d54f8bcb9a670e6" : "Fire & Ice, Side 1",
+                    "be8f6ebf549404d015547152d5f2a1906ae8dd90" : "Fire & Ice, Side 2",
+                };
+                var label = labels[game.map_variant] || "Alternate";
+                var div = new Element("div");
+                div.insert(new Element("span").update("map "));
+                div.insert(new Element("a", {href:"/map/" + game.map_variant}).updateText(label));
+                cell.insert(div);
+            }
+
             if (game.minimum_rating) {
                 cell.insert(new Element("div").updateText(
                     "minimum rating " + game.minimum_rating));
