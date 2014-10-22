@@ -189,6 +189,7 @@ sub deploy_data {
                   pages/content/joingame.pl
                   pages/content/login.pl
                   pages/content/map.pl
+                  pages/content/mapedit.pl
                   pages/content/newgame.pl
                   pages/content/player.pl
                   pages/content/playtestfactions.pl
