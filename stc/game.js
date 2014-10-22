@@ -1967,7 +1967,7 @@ function addFactionInput(parent, record, index) {
                        "red": ["giants", "chaosmagicians"],
                        "gray": ["dwarves", "engineers"],
                        "ice": ["icemaidens", "yetis"],
-                       "volcano": ["dragonmasters", "acolytes"],
+                       "volcano": ["dragonlords", "acolytes"],
                      };
 
         $H(state.factions).each(function(used_faction) {

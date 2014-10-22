@@ -1287,6 +1287,8 @@ sub clean_commands {
     # Clean up whitespace
     s/\s+/ /g;
 
+    s/dragonmasters/dragonlords/gi;
+
     # Parse the prefix
     if (s/^(.*?)://) {
         $prefix = lc $1;

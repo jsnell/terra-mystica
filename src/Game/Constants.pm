@@ -926,7 +926,7 @@ Readonly our %faction_setups_extra => (
                 SA => { advance_cost => { W => 4, C => 8 },
                         income => { P => [ 0, 1 ] } },
             }},
-        'dragonmasters' => {
+        'dragonlords' => {
             C => 15, W => 2, P1 => 4, P2 => 4,
             FIRE => 2,
             color => 'volcano',
@@ -1014,7 +1014,7 @@ Readonly our %faction_setups_extra => (
                 SA => { advance_cost => { W => 4, C => 8 },
                         income => { P => [ 0, 1 ] } },
             }},
-        'dragonmasters' => {
+        'dragonlords' => {
             C => 15, W => 3, P1 => 4, P2 => 4,
             FIRE => 2,
             color => 'volcano',
@@ -1102,7 +1102,7 @@ Readonly our %faction_setups_extra => (
                 SA => { advance_cost => { W => 4, C => 8 },
                         income => { P => [ 0, 1 ] } },
             }},
-        'dragonmasters' => {
+        'dragonlords' => {
             C => 15, W => 3, P1 => 4, P2 => 4,
             FIRE => 2,
             color => 'volcano',
@@ -1153,7 +1153,7 @@ Readonly our %faction_setups_extra => (
             FIRE => 3, WATER => 3, EARTH => 3, AIR => 3,
             color => 'volcano',
             secondary_color => undef,
-            display => "Acolytes (v3)",
+            display => "Acolytes",
             faction_board_id => undef,
             post_setup => {
                 PICK_COLOR => 1,
@@ -1190,12 +1190,12 @@ Readonly our %faction_setups_extra => (
                 SA => { advance_cost => { W => 4, C => 8 },
                         income => { P => [ 0, 1 ] } },
             }},
-        'dragonmasters' => {
+        'dragonlords' => {
             C => 15, W => 3, P1 => 4, P2 => 4,
             FIRE => 2,
             color => 'volcano',
             secondary_color=> undef,
-            display => "Dragon Masters (v2)",
+            display => "Dragonlords",
             faction_board_id => undef,
             post_setup => {
                 PICK_COLOR => 1,

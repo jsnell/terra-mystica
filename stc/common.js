@@ -342,6 +342,6 @@ var factionColor = {
     icemaidens: 'ice',
     yetis: 'ice',
     acolytes: 'volcano',
-    dragonmasters: 'volcano',
+    dragonlords: 'volcano',
 };
 
