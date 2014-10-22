@@ -42,6 +42,7 @@ The options are described in more detail in the
         </select>
       <td>
         <p>
+          <a href="/map/126fe960806d587c78546b30f1a90853b1ada468" target="_blank">Original</a><br>
           <a href="/map/95a66999127893f5925a5f591d54f8bcb9a670e6" target="_blank">Side 1</a><br>
           <a href="/map/be8f6ebf549404d015547152d5f2a1906ae8dd90" target="_blank">Side 2</a>
         </p>
