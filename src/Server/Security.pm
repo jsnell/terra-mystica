@@ -4,9 +4,7 @@ use Exporter::Easy (EXPORT => [ 'ensure_user_may_view_game', 'get_write_id_for_u
 sub ensure_user_may_view_game {
     my ($username, $players, $metadata) = @_;
 
-    if (!$metadata->{base_map}) {
-        return 0;
-    }
+    return 0;
 
     if (!$username) {
         die "This is a restricted game. You must log in to view it.\n";
