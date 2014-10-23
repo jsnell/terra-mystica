@@ -917,6 +917,15 @@ sub command_randomize_v1 {
         ++$i;
     }
 
+    if ($game{options}{'fire-and-ice-final-scoring'}) {
+        my @scoring_types = grep {
+            $final_scoring{$_}->{option} eq 'fire-and-ice-final-scoring'
+        } sort { $a cmp $b } keys %final_scoring;
+        mt_shuffle $rand, @scoring_types;
+        my $scoring = shift @scoring_types;
+        $game{final_scoring}{$scoring} = $final_scoring{$scoring};
+    }
+
     $game{acting}->players([@players]);
 }
 
@@ -1087,6 +1096,8 @@ sub command {
         score_final_resources_for_faction $faction;
     } elsif ($command =~ /^admin email (.*)/i) {
         # backwards-compatibility nop
+    } elsif ($command =~ /^dropoption (\S+)$/i) {
+        delete $game{options}{$1};
     } elsif ($command =~ /^option (\S+)$/i) {
         die "$faction_name can't alter game options\n" if $faction_name;
 
@@ -1095,6 +1106,7 @@ sub command {
             errata-cultist-power
             mini-expansion-1
             shipping-bonus
+            fire-and-ice-final-scoring
             email-notify
             loose-adjust-resource
             loose-dig
@@ -1178,7 +1190,6 @@ sub command {
         die "$faction_name can't trigger final scoring\n" if $faction_name;
         if ($final_scoring{$1}) {
             $game{final_scoring}{$1} = $final_scoring{$1};
-            $game{final_scoring_help} = "/playtestscoring/";
             $game{non_standard} = 1;
         } else {
             die "Unknown final scoring type: $1\n";

@@ -1245,21 +1245,25 @@ Readonly our %final_scoring => (
     },
     'connected-distance' => {
         description => "Largest distance between two buildings in one network of connected buildings",
+        option => 'fire-and-ice-final-scoring',
         points => [18, 12, 6],
         label => 'distance',
     },
     'connected-sa-sh-distance' => {
         description => "Largest distance between a stronghold and sanctuary, which are in the same network of connected buildings",
+        option => 'fire-and-ice-final-scoring',
         points => [18, 12, 6],
         label => 'sa-sh-distance',
     },
     'building-on-edge' => {
-        description => "Number of buildings on the edge of the map",
+        description => "Largest number of buildings on the edge of the map and in the same network of connected buildings",
+        option => 'fire-and-ice-final-scoring',
         points => [18, 12, 6],
         label => 'edge',
     },
     'connected-clusters' => {
         description => "Most separate clusters in one network of connected buildings. (Where a cluster is a group of directly connected buildings).",
+        option => 'fire-and-ice-final-scoring',
         points => [18, 12, 6],
         label => 'clusters',
     },

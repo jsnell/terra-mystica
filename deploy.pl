@@ -193,7 +193,6 @@ sub deploy_data {
                   pages/content/newgame.pl
                   pages/content/player.pl
                   pages/content/playtestfactions.pl
-                  pages/content/playtestscoring.pl
                   pages/content/ratings.pl
                   pages/content/register.pl
                   pages/content/reset.pl

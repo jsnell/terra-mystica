@@ -1,8 +1,12 @@
 {
     "changes": [
+        { "date": "2014-10-24",
+          "title": "Fire & Ice final scoring tiles available",
+          "description": "The new final scoring tiles (randomly selected) are now available with the <code>fire-and-ice-final-scoring</code> game option."
+        },
         { "date": "2014-10-22",
           "title": "Fire & Ice expansion maps available",
-          "description": "You can select one of three maps when creating a new game; the original, or one of the two expansion maps.."
+          "description": "You can select one of three maps when creating a new game; the original, or one of the two expansion maps."
         },
         { "date": "2014-09-05",
           "title": "Configurable move timers",
