@@ -877,12 +877,13 @@ sub check_player_count {
     }
 }
 
-sub command_randomize_v1 {
+sub command_randomize {
+    my ($seed, $version) = @_;
+
     if (!$game{acting}->correct_player_count()) {
         return;
     }
 
-    my $seed = shift;
     my $rand = Math::Random::MT->new(unpack "l6", sha1 $seed);
 
     my @score = ();
@@ -921,7 +922,9 @@ sub command_randomize_v1 {
         my @scoring_types = grep {
             $final_scoring{$_}->{option} eq 'fire-and-ice-final-scoring'
         } sort { $a cmp $b } keys %final_scoring;
-        mt_shuffle $rand, @scoring_types;
+        if ($version ne 'v1') {
+            @scoring_types = mt_shuffle $rand, @scoring_types;
+        }
         my $scoring = shift @scoring_types;
         $game{final_scoring}{$scoring} = $final_scoring{$scoring};
     }
@@ -1146,14 +1149,16 @@ sub command {
         } @{$game{acting}->players()};
         $game{acting}->players([@players]);
         $game{acting}->advance_state('select-factions');
-    } elsif ($command =~ /^randomize v1 seed (.*)/i) {
+    } elsif ($command =~ /^randomize (v1|v2) seed (.*)/i) {
+        my $seed = $2;
+        my $version = $1;
         die "$faction_name can't randomize game state\n" if $faction_name;
 
         maybe_setup_pool;
         if (!defined $game{player_count}) {
             $game{acting}->advance_state('select-factions');
         }
-        command_randomize_v1 $1;
+        command_randomize $seed, $version;
     } elsif ($command =~ /^wait$/i) {
         ($assert_faction->())->{waiting} = 1;
     } elsif ($command =~ /^done$/i) {

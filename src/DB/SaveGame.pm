@@ -134,7 +134,7 @@ sub create_game {
 @options
 
 # Randomize setup
-randomize v1 seed $id
+randomize v2 seed $id
 EOF
  
     my $write_id = "${id}_${hash}";
