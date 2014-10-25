@@ -56,6 +56,9 @@ sub joingame {
              $username,
              $current_count,
              $current_count);
+    $dbh->do("update game set last_update = now() where id = ?",
+             {},
+             $read_id);
 
     if ($wanted_player_count == $current_count + 1) {
         my $write_id = $dbh->selectrow_array("select write_id from game where id=?",
