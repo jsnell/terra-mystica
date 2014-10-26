@@ -920,6 +920,7 @@ sub command_randomize {
 
     if ($game{options}{'fire-and-ice-final-scoring'}) {
         my @scoring_types = grep {
+            $final_scoring{$_}->{option} and
             $final_scoring{$_}->{option} eq 'fire-and-ice-final-scoring'
         } sort { $a cmp $b } keys %final_scoring;
         if ($version ne 'v1') {
