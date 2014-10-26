@@ -620,6 +620,15 @@ function renderAction(canvas, name, key, border_color) {
         "ACTW": function() {
             drawText(ctx, "D", center, center, font);
         },
+        "ACTH1": function() {
+            drawText(ctx, "color", center, center, font);
+            drawText(ctx, "-3PW", center, 60, font);
+        },
+        "ACTH2": function() {
+            drawText(ctx, "color", center, center, font);
+            drawText(ctx, "-3 PW", center, 60, font);
+            drawText(ctx, "tokens", center, 70, font);
+        },
         "BON1": function() {
             drawText(ctx, "spd", center, center, font);
         },
@@ -658,7 +667,7 @@ function cultClass(name) {
 
 function insertAction(parent, name, key) {
     parent.insert(new Element('canvas', {
-        'id': 'action/' + key, 'class': 'action', 'width': 50, 'height': 70}));
+        'id': 'action/' + key, 'class': 'action', 'width': 50, 'height': 85}));
     var canvas = parent.childElements().last();
     renderAction(canvas, name, key, '#000');
 }
@@ -1963,6 +1972,7 @@ function addFactionInput(parent, record, index) {
                        "gray": ["dwarves", "engineers"],
                        "ice": ["icemaidens", "yetis"],
                        "volcano": ["dragonlords", "acolytes"],
+                       "variable": ["shapeshifters", "riverwalkers"],
                      };
 
         $H(state.factions).each(function(used_faction) {
@@ -1976,7 +1986,7 @@ function addFactionInput(parent, record, index) {
 
         $H(boards).each(function(board) {
             var cell = cell1;
-            if (board.key == "ice" || board.key == "volcano") {
+            if (board.key == "ice" || board.key == "volcano" || board.key == "variable") {
                 cell = cell2;
             }
             var color_factions = board.value.sort();
@@ -2027,7 +2037,8 @@ function addFactionInput(parent, record, index) {
             if (available[used_faction.color]) {
                 available[used_faction.color] = false;
             }
-            if (used_faction.secondary_color &&
+            if (state.round == 0 &&
+                used_faction.secondary_color &&
                 available[used_faction.secondary_color]) {
                 available[used_faction.secondary_color] = false;
             }
@@ -2537,11 +2548,15 @@ function addActionToMovePicker(picker, faction) {
             var action_canvas = $("action/" + fkey);
             action_canvas.onclick = function() {};
 
-            if (action_not_blocked(key, fkey)) {
+            var cost = state.actions[key].cost;
+            var can_afford = cost ? canAfford(faction, [cost]) : true;
+            console.log(cost, can_afford);
+
+            if (action_not_blocked(key, fkey) && can_afford) {
                 possible_actions.push({
                     "key": key,
                     "name": elem.key,
-                    "cost": "free",
+                    "cost": cost ? effectString([cost], []) : "free",
                     "canvas": action_canvas,
                 });
                 action_count++;
@@ -2705,14 +2720,26 @@ function actionLabel(record) {
     return label;
 }
 
+function prettyResource(type, amount) {
+    if (type == "PW_TOKEN") {
+        if (amount == 1) {
+            return "pw token"
+        } else {
+            return "pw tokens"
+        }
+    } else {
+        return type.toLowerCase()
+    }
+}
+
 function effectString(costs, gains) {
     var non_zero = [];
-    ["C", "W", "P", "PW", "VP"].each(function(type) {
+    ["C", "W", "P", "PW", "PW_TOKEN", "VP"].each(function(type) {
         var delta = 0;
         gains.each(function (gain) { if (gain[type]) { delta += gain[type] } });
         costs.each(function (cost) { if (cost[type]) { delta -= cost[type] } });
         if (!delta) { return; }
-        non_zero.push(delta + type.toLowerCase());
+        non_zero.push(delta + prettyResource(type, delta));
     });
 
     return non_zero.join(", ");
@@ -2721,7 +2748,10 @@ function effectString(costs, gains) {
 function canAfford(faction, costs) {
     var can_afford = true;
     var non_zero = [];
-    ["C", "W", "P", "PW", "VP"].each(function(type) {
+    faction.PW_TOKEN = faction.P1 + faction.P2 + faction.P3;
+    faction.PW = faction.P2 / 2 + faction.P3;
+
+    ["C", "W", "P", "PW", "PW_TOKEN", "VP"].each(function(type) {
         var total_cost = 0;
         costs.each(function (cost) {
             if (cost[type]) {

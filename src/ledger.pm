@@ -116,6 +116,20 @@ method add_comment($comment) {
     $self->trailing_comment(1);
 }
 
+method add_row_for_effect($faction, $command, $fun) {
+    my %old_data = map { $_, $faction->{$_} } @data_fields;
+    $fun->($faction);
+    my %new_data = map { $_, $faction->{$_} } @data_fields;
+    my %pretty_delta = terra_mystica::pretty_resource_delta(\%old_data, \%new_data);
+
+    $self->add_row({
+        faction => $faction->{name},
+        commands => $command,
+        map { $_, $pretty_delta{$_} } @data_fields
+    });
+
+}
+
 method turn($round, $turn) {
     if ($round == $self->last_printed_round() and
         $turn == $self->last_printed_turn()) {
@@ -134,5 +148,6 @@ method flush {
     $self->finish_row();
     $self->rows();
 }
+
 
 1;

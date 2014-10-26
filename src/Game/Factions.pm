@@ -1,7 +1,7 @@
 #!/usr/bin/perl -wl
 
 package Game::Factions;
-use Exporter::Easy (EXPORT => [ 'setup_faction' ]);
+use Exporter::Easy (EXPORT => [ 'setup_faction', 'factions_conflict' ]);
 
 no indirect qw(fatal);
 use strict;
@@ -94,6 +94,22 @@ func initialize_faction($game, $faction_name) {
     return $faction;
 }
 
+func factions_conflict($faction, $other) {
+    my $tags = sub {
+        my $f = shift;
+        map { ($_, 1) } grep { $_ } map { $f->{$_} } qw(color board secondary_color)
+    };
+
+    my %faction_tags = $tags->($faction);
+    my %other_tags = $tags->($other);
+
+    for (keys %faction_tags) {
+        return 1 if $other_tags{$_};
+    }
+
+    return 0;
+}
+
 func setup_faction($game, $faction_name, $player, $email) {
     my $acting = $game->{acting};
 
@@ -119,7 +135,7 @@ func setup_faction($game, $faction_name, $player, $email) {
     $faction->{email} = $email;
 
     for my $other_faction ($acting->factions_in_order(1)) {
-        if ($other_faction->{color} eq $faction->{color}) {
+        if (factions_conflict($faction, $other_faction)) {
             die "Can't add $faction_name, $other_faction->{name} already in use\n";
         }
     }

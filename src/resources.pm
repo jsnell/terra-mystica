@@ -47,6 +47,7 @@ sub setup_pool {
         GAIN_SHIP => 10000,
         GAIN_TW => 10000,
         GAIN_ACTION => 10000,
+        PICK_COLOR => 10000,
         BRIDGE => 10000,
         CONVERT_W_TO_P => 3,
         TOWN_SIZE => 10000,
@@ -221,6 +222,11 @@ sub adjust_resource {
         $game{events}->faction_event($faction, "vp", $delta);
     }
 
+    if ($type eq 'PW_TOKEN' and $delta < 0) {
+        $type = 'LOSE_PW_TOKEN';
+        $delta = -$delta;
+    }
+
     if ($type =~ 'GAIN_(TELEPORT|SHIP)') {
         my $track_name = lc $1;
         for (1..$delta) {
@@ -236,7 +242,7 @@ sub adjust_resource {
         $faction->{allowed_actions} += $delta;
         return;
     } elsif ($type eq 'LOSE_PW_TOKEN') {
-        for (1..$delta) {
+        for (1..abs $delta) {
             if ($faction->{P1}) {
                 $faction->{P1}--;
             } elsif ($faction->{P2}) {
@@ -262,7 +268,7 @@ sub adjust_resource {
 
         # Pseudo-resources not in the pool, but revealed by removing
         # buildings.
-        if ($type !~ /^ACT.$/) {
+        if ($type !~ /^ACT[A-Z]+\d?$/) {
             if (!defined $game{pool}{$type} or $game{pool}{$type} < $delta) {
                 die "Not enough '$type' in pool\n";
             }

@@ -347,7 +347,13 @@ sub command_leech {
         if ($from_faction->{leech_effect} and
             $_->{actual} > 0) {
             if (!$from_faction->{leech_cult_gained}{$_->{leech_id}}++) {
-                gain $from_faction, $from_faction->{leech_effect}{taken};
+                $game{ledger}->add_row_for_effect(
+                    $from_faction,
+                    "[opponent accepted power]",
+                    sub {
+                        gain $from_faction, $from_faction->{leech_effect}{taken};
+                    });
+                
                 # Hack
                 if ($from_faction->{CULT}) {
                     $game{acting}->require_action($from_faction,
@@ -469,18 +475,12 @@ sub cultist_maybe_gain_power {
     # And when playing with the new rule.
     return if !$game{options}{'errata-cultist-power'};
 
-    my @data_fields = qw(VP C W P P1 P2 P3 PW FIRE WATER EARTH AIR CULT);
-
-    my %old_data = map { $_, $faction->{$_} } @data_fields;
-    gain $faction, $faction->{leech_effect}{not_taken};
-    my %new_data = map { $_, $faction->{$_} } @data_fields;
-    my %pretty_delta = pretty_resource_delta(\%old_data, \%new_data);
-
-    $game{ledger}->add_row({
-        faction => $faction->{name},
-        commands => "[+1pw, all opponents declined power]",
-        map { $_, $pretty_delta{$_} } @data_fields
-    });
+    $game{ledger}->add_row_for_effect(
+        $faction,
+        "[all opponents declined power]",
+        sub {
+            gain $faction, $faction->{leech_effect}{not_taken};
+        });
 
     $game{events}->faction_event($faction, 'cultist:pw', 1);
 }
@@ -727,7 +727,7 @@ sub command_action {
     pay $faction, $actions{$name}{cost}, ($faction->{discount} and $faction->{discount}{$name});
     gain $faction, $actions{$name}{gain};
 
-    $map{$action}{blocked} = 1;
+    $map{$action}{blocked} = 1 unless $actions{$name}{dont_block};
 
     $game{events}->faction_event($faction, "action:$name", 1);
 }
@@ -1184,12 +1184,14 @@ sub command {
         my ($wanted_color) = assert_color alias_color $1;
         for my $other ($game{acting}->factions_in_order()) {
             if ($other->{color} eq $wanted_color or
-                ($other->{secondary_color} // '') eq $wanted_color) {
+                ($game{round} == 0 and
+                 ($other->{secondary_color} // '') eq $wanted_color)) {
                 die "$wanted_color is not available\n";
             }
         }
         delete $faction->{PICK_COLOR};
-        $faction->{secondary_color} = $wanted_color;
+        my $field = ($faction->{pick_color_field} // 'secondary_color');
+        $faction->{$field} = $wanted_color;
     } elsif ($command =~ /^start_planning$/i) {
         command_start_planning $assert_faction->();
     } elsif ($command =~ /^map (.*)/i) {
