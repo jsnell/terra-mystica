@@ -687,6 +687,14 @@ Readonly our %faction_setups => (
                                         { VP => 3 },
                                         { VP => 4 } ]
                   },
+                  leech_effect => {
+                      taken => {
+                          CULT => 1,
+                      },
+                      not_taken => {
+                          PW => 1,
+                      },
+                  },
                   dig => {
                       level => 0, max_level => 2,
                       cost => [ { W => 3 }, { W => 2 }, { W => 1 } ],

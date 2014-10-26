@@ -344,13 +344,16 @@ sub command_leech {
         }
 
         my $from_faction = $game{acting}->get_faction($_->{from_faction});
-        if ($_->{from_faction} eq 'cultists' and
+        if ($from_faction->{leech_effect} and
             $_->{actual} > 0) {
             if (!$from_faction->{leech_cult_gained}{$_->{leech_id}}++) {
-                $from_faction->{CULT}++;
-                $game{acting}->require_action($from_faction,
-                                              { type => 'cult',
-                                                amount => 1 });
+                gain $from_faction, $from_faction->{leech_effect}{taken};
+                # Hack
+                if ($from_faction->{CULT}) {
+                    $game{acting}->require_action($from_faction,
+                                                  { type => 'cult',
+                                                    amount => 1 });
+                }
                 $game{events}->faction_event($from_faction, 'cultist:cult', 1);
             }
             $game{events}->faction_event($faction, 'leech-from-cultist:pw',
@@ -431,7 +434,7 @@ sub command_decline {
                 if ($_->{actual} > 0) {
                     $game{events}->faction_event($faction, 'decline:count', 1);
                     $game{events}->faction_event($faction, 'decline:pw', $_->{actual});
-                    if ($from_faction->{name} eq 'cultists') {
+                    if ($from_faction->{leech_effect}) {
                         $game{events}->faction_event($faction, 'decline-from-cultist:count', 1);
                         $game{events}->faction_event($faction, 'decline-from-cultist:pw', $_->{actual});                        
                     }
@@ -461,15 +464,15 @@ sub cultist_maybe_gain_power {
     # opportunity was retroactively converted to have an actual value of 0,
     # due another leech getting resolved.
     return if $faction->{leech_rejected}{$record->{leech_id}} == 0;
-    # Of course all of this only matters for the cultists.
-    return if $record->{from_faction} ne 'cultists';
+    # Of course all of this only matters for the cultists and shapeshifters.
+    return if !$faction->{leech_effect};
     # And when playing with the new rule.
     return if !$game{options}{'errata-cultist-power'};
 
     my @data_fields = qw(VP C W P P1 P2 P3 PW FIRE WATER EARTH AIR CULT);
 
     my %old_data = map { $_, $faction->{$_} } @data_fields;
-    gain_power $faction, 1;
+    gain $faction, $faction->{leech_effect}{not_taken};
     my %new_data = map { $_, $faction->{$_} } @data_fields;
     my %pretty_delta = pretty_resource_delta(\%old_data, \%new_data);
 
