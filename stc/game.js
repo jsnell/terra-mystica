@@ -2550,7 +2550,6 @@ function addActionToMovePicker(picker, faction) {
 
             var cost = state.actions[key].cost;
             var can_afford = cost ? canAfford(faction, [cost]) : true;
-            console.log(cost, can_afford);
 
             if (action_not_blocked(key, fkey) && can_afford) {
                 possible_actions.push({
