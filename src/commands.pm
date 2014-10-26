@@ -1201,8 +1201,8 @@ sub command {
         }
     } elsif ($command =~ /^faction-variant (.*)/i) {
         die "$faction_name can't set game variant\n" if $faction_name;
+        die "Invalid faction variant $1\n" if !$faction_setups_extra{$1};
         push @{$game{faction_variants}}, $1;
-        $game{faction_variant_help} = "/playtestfactions/";
     } elsif ($command =~ /^final-scoring (.*)/i) {
         die "$faction_name can't trigger final scoring\n" if $faction_name;
         if ($final_scoring{$1}) {
