@@ -55,12 +55,14 @@ sub fetch_result {
 
     for my $faction (values %{$json->{factions}}) {
         delete $faction->{recent_moves};
+        delete $faction->{leech_effect};
     }
     delete $json->{actions};
     delete $json->{towns};
     delete $json->{score_tiles};
     delete $json->{bonus_tiles};
     delete $json->{events};
+    delete $json->{pool}{CULT};
 
     $json;
 #    my $pretty = to_json($json, { pretty => 1 });
