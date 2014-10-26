@@ -1052,11 +1052,19 @@ sub command {
         return 0 if full_action_required;
         command_start;
     } elsif ($command =~ /^setup (\w+)(?: for (\S+?))?(?: email (\S+))?$/i) {
+        $game{ledger}->finish_row();
         die "$faction_name can't select another faction\n" if $faction_name;
+
+        my $selected_faction = lc $1;
         maybe_setup_pool;
         $game{acting}->advance_state('select-factions');
-        setup_faction \%game, lc $1, $2, $3;
+        setup_faction \%game, $selected_faction, $2, $3;
         $game{events}->global_event("faction-count", 1);
+
+        my $faction = $game{acting}->get_faction($selected_faction);
+        $ledger->start_new_row($faction);
+        $game{ledger}->add_command("setup");
+        $ledger->finish_row();
     } elsif ($command =~ /delete (\w+)$/i) {
         my $name = uc $1;
 
