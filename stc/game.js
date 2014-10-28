@@ -1982,6 +1982,9 @@ function addFactionInput(parent, record, index) {
             if (boards[used_faction.value.secondary_color]) {
                 boards[used_faction.value.secondary_color] = [];
             }
+            if (boards[used_faction.value.board]) {
+                boards[used_faction.value.board] = [];
+            }
         });
 
         $H(boards).each(function(board) {
