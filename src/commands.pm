@@ -724,6 +724,11 @@ sub command_action {
         die "Action space $action is blocked\n"
     }
 
+    if (exists $faction->{action} and
+        $faction->{action}{$name}{forbid}) {
+        die "$faction->{display} are not allowed to use action $name\n";
+    }
+
     my %subaction = ();
 
     if (exists $faction->{action} and
