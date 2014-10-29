@@ -184,6 +184,7 @@ sub command_build {
     }
 
     $map{$where}{building} = $type;
+
     push @{$faction->{locations}}, $where;
 
     detect_towns_from $faction, $where;

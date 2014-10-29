@@ -868,19 +868,26 @@ function renderColorCycle(faction, parent) {
     if (base < 0) { base = 0; }
 
     for (var i = 0; i < 7; ++i) {
+        var terrain = cycle[(base + i) % 7];
+
         ctx.save()
         if (i == 0 && secondaryColor && primaryColor != 'ice') {
             ctx.lineWidth = 3;
         }
 
-        ctx.beginPath();
-        ctx.arc(0, -30, 10, Math.PI * 2, 0, false);
+        if (!faction.locked_terrain ||
+            !faction.locked_terrain[terrain]) {
+            ctx.beginPath();
+            ctx.arc(0, -30, 10, Math.PI * 2, 0, false);
 
-        ctx.fillStyle = bgcolors[cycle[(base + i) % 7]];
-        ctx.fill();
-    
-        ctx.stroke();
+            ctx.fillStyle = bgcolors[terrain];
+            ctx.fill();
+            
+            ctx.stroke();
+        }
+
         ctx.restore();
+
         ctx.rotate(Math.PI * 2 / 7);
     }
 
