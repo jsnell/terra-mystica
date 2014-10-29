@@ -127,12 +127,16 @@ sub command_build {
         $faction->{FREE_D}--;
     }
 
-    my $tf_needed = $map{$where}{color} ne $color;
+    my $tf_needed = !build_color_ok $faction, $map{$where}{color};
 
     if (!$tf_needed and
         keys %{$faction->{allowed_build_locations}} and
         !$faction->{allowed_build_locations}{$where}) {
         delete $faction->{allowed_sub_actions}{build};
+    }
+
+    if (!$tf_needed) {
+        $map{$where}{color} = $color;
     }
 
     $game{acting}->require_subaction($faction, 'build', {
@@ -1208,6 +1212,51 @@ sub command {
         delete $faction->{PICK_COLOR};
         my $field = ($faction->{pick_color_field} // 'secondary_color');
         $faction->{$field} = $wanted_color;
+
+        if ($faction->{locked_terrain}) {
+            delete $faction->{locked_terrain}{$wanted_color};
+            $faction->{unlocked_terrain}{$wanted_color} = 1;
+        }
+    } elsif ($command =~ /^unlock-terrain (\w+)$/i) {
+        my $faction = $assert_faction->();
+        if (!$faction->{UNLOCK_TERRAIN}) {
+            die "$faction->{name} is not allowed to unlock a new terrain\n";
+        }
+        my ($wanted_color);
+
+        if ($1 eq 'decline') {
+            $wanted_color = $1;
+        } else {
+            ($wanted_color) = assert_color alias_color $1;
+        }
+
+        if (!$faction->{locked_terrain} or
+            !$faction->{locked_terrain}{$wanted_color}) {
+            die "$faction->{name} can't unlock $wanted_color (already unlocked?)\n"
+        }
+
+        my $effect = $faction->{locked_terrain}{$wanted_color};
+
+        {
+            my $save = $faction->{special};
+            delete $faction->{special};
+            gain $faction, $effect->{gain};
+            $faction->{special} = $save;
+        }
+
+        $faction->{unlocked_terrain}{$wanted_color} = 1;
+
+        if (!$effect->{permanent}) {
+            delete $faction->{locked_terrain}{$wanted_color};
+        }
+
+        # XXX really ugly hack to stop unlocking from triggering once 
+        # for riverwalkers once everything has been unlocked.
+        if (0 == grep { $_ ne 'decline' } keys %{$faction->{locked_terrain}}) {
+            delete $faction->{special}{P};
+        }
+
+        $faction->{UNLOCK_TERRAIN}--;
     } elsif ($command =~ /^start_planning$/i) {
         command_start_planning $assert_faction->();
     } elsif ($command =~ /^map (.*)/i) {

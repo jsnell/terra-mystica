@@ -610,6 +610,14 @@ method detect_incomplete_turn($faction) {
         });
     }
 
+    if ($faction->{UNLOCK_TERRAIN}) {
+        $incomplete = 1;
+        $self->require_action($faction, {
+            type => 'unlock-terrain',
+            count => $faction->{UNLOCK_TERRAIN},
+        });
+    }
+
     $incomplete;
 }
 

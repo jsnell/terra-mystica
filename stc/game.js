@@ -1630,7 +1630,13 @@ function drawActionRequired() {
             pretty_text = '#{player} should pick a faction'.interpolate(record);
         } else if (record.type == 'pick-color') {
             pretty_text = 'must pick a color'.interpolate(record);
-        } else if (record.type == 'not-started') {
+         } else if (record.type == 'unlock-terrain') {
+             if (record.count == 1) {
+                 pretty_text = 'may unlock a new terrain type'.interpolate(record);
+             } else {
+                 pretty_text = 'may unlock #{count} new terrain types'.interpolate(record);
+             }
+         } else if (record.type == 'not-started') {
             pretty_text = "Game hasn't started yet, #{player_count}/#{wanted_player_count} players have joined.".interpolate(record);
         } else if (record.type == 'planning') {
             pretty_text = 'are planning';
@@ -2069,6 +2075,28 @@ function addFactionInput(parent, record, index) {
             }
             div.insert(new Element("br"));
         });
+        parent.insert(div);
+    }
+    if (record.type == "unlock-terrain") {
+        var div = new Element("div", { "id": "leech-" + index + "-0",
+                                       "style": "padding-left: 2em" });
+        var locked = faction.locked_terrain;
+
+        $H(locked).each(function(elem) {
+            var color = elem.key;
+            var ok = elem.value;
+            if (ok) {
+                var button = new Element("button").updateText(color);
+                button.onclick = function() {
+                    appendCommand("unlock-terrain " + color + "\n");
+                };
+                button.style.backgroundColor = bgcolors[color];
+                button.style.color = contrastColor[color];
+                div.insert(button);
+                div.insert(new Element("br"));
+            }
+        });
+
         parent.insert(div);
     }
     if (record.type == "dwelling") {

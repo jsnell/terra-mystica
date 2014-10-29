@@ -596,6 +596,15 @@ sub transform_cost {
     ($cost, $gain, $need_teleport, $color_difference, $color)
 }
 
+sub build_color_ok {
+    my ($faction, $color) = @_;
+    
+    return 1 if $faction->{color} eq $color;
+    return 1 if $faction->{unlocked_terrain} and $faction->{unlocked_terrain}{$color};
+
+    return 0;
+}
+
 sub update_reachable_build_locations {
     for my $faction ($game{acting}->factions_in_order()) {
         if ($game{acting}->is_active($faction)) {
@@ -608,8 +617,8 @@ sub update_reachable_build_locations {
                     my $cost = {};
                     my $gain = {};
                     if (exists $map{$loc}{row} and
-                        $map{$loc}{color} eq $faction->{color} and
-                        !$map{$loc}{building}) {
+                        !$map{$loc}{building} and
+                        build_color_ok $faction, $map{$loc}{color}) {
                         eval {
                             ($cost, $gain) = check_reachable $faction, $loc;
                             $ret = 1;

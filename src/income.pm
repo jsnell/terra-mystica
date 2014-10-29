@@ -120,6 +120,12 @@ sub take_income_for_faction {
                                       { type => 'cult',
                                         amount => $faction->{CULT} });
     }
+
+    if ($faction->{UNLOCK_TERRAIN}) {
+        $game{acting}->require_action($faction,
+                                      { type => 'unlock-terrain',
+                                        count => $faction->{UNLOCK_TERRAIN} });
+    }
 }
 
 1;
