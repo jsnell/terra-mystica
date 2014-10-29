@@ -64,6 +64,9 @@ Readonly our %actions => (
     ACT6 => { cost => { PW => 6 }, gain => { SPADE => 2 },
               subaction => { dig => 1, 'transform' => 2, 'build' => 1} },
     ACTA => { cost => {}, gain => { CULT => 2 , CULTS_ON_SAME_TRACK => 1 } },
+    ACTE => { dont_block => 1,
+              cost => { W => 2 }, gain => { BRIDGE => 1 },
+              subaction => { bridge => 1 } },
     ACTG => { cost => {}, gain => { SPADE => 2},
               subaction => { dig => 1, 'transform' => 1, 'build' => 1 } },
     ACTS => { cost => {}, gain => { FREE_TP => 1 },
@@ -521,9 +524,7 @@ Readonly our %faction_setups => (
                        advance_gain => [ { VP => 6 },
                                          { VP => 6 } ]
                    },
-                   exchange_rates => {
-                       W => { BRIDGE => 2 }
-                   },
+                   ACTE => 1,
                    buildings => {
                     D => { advance_cost => { W => 1, C => 1 },
                            income => { W => [ 0, 1, 2, 2, 3, 4, 4, 5, 6 ] } },

@@ -309,13 +309,6 @@ sub command_convert {
         delete $faction->{CONVERT_W_TO_P};
     }
 
-    if ($to_type eq 'BRIDGE' and !$game{options}{'loose-engineer-bridge'}) {
-        $game{acting}->require_subaction($faction, 'action',
-                                         {
-                                             bridge => 1
-                                         });
-    }
-
     die "Can't convert from $from_type to $to_type\n"
         if !$exchange_rates{$from_type}{$to_type};
 
@@ -1393,6 +1386,7 @@ sub clean_commands {
     # Quick backwards compatibility hacks
     if ($prefix eq 'engineers') {
         s/-2w\.\s*bridge/convert 2w to bridge. bridge/i;
+        s/convert 2 *w to 1?bridge/action ACTE/gi;
     }
     s/\s*pass\.\s*\+bon/pass bon/i;
     s/^\s*\+bon/pass BON/i;
