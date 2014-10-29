@@ -566,6 +566,10 @@ sub command_transform {
 sub command_dig {
     my ($faction, $amount) = @_;
 
+    if (!$faction->{dig}) {
+        die "$faction->{display} can't use 'dig'\n";
+    }
+
     my $cost = $faction->{dig}{cost}[$faction->{dig}{level}];
     my $gain = $faction->{dig}{gain}[$faction->{dig}{level}];
 

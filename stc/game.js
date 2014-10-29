@@ -1080,7 +1080,8 @@ function drawRealFaction(faction, board) {
 
     var levels = new Element("div");
 
-    if (faction.dig.max_level > 0) {
+    if (faction.dig &&
+        faction.dig.max_level > 0) {
         if (levels.innerHTML != '') {
             levels.insertTextSpan(", ");
         }
@@ -3117,6 +3118,10 @@ function addConvertToMovePicker(picker, faction) {
 }
 
 function addDigToMovePicker(picker, faction) {
+    if (!faction.dig) {
+        return;
+    }
+
     var validate = function() {
         if (amount.value == '-') {
             button.disable()
@@ -3245,7 +3250,8 @@ function addAdvanceToMovePicker(picker, faction) {
     track.onchange = validate;
 
     ["dig", "ship"].each(function (type) {
-        if (faction[type].level >= faction[type].max_level) {
+        if (!faction[type] ||
+            faction[type].level >= faction[type].max_level) {
             return;
         }
 
