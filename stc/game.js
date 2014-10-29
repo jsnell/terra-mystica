@@ -543,7 +543,7 @@ function renderAction(canvas, name, key, border_color) {
     }
     ctx.strokeStyle = '#000';
 
-    var edge = 13;
+    var edge = 13.5;
     ctx.translate(0.5, 0.5);
     ctx.moveTo(0, 1*edge);
     ctx.lineTo(1*edge, 0);
@@ -580,12 +580,12 @@ function renderAction(canvas, name, key, border_color) {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
-    var center = 19;
+    var center = 20.5;
     var bottom = 60;
 
     var data = {
         "ACT1": function() {
-            drawText(ctx, "br", center, center, font);
+            drawText(ctx, "bridge", center, center, font);
             drawText(ctx, "-3PW", center, 60, font);
         },
         "ACT2": function() {
@@ -610,6 +610,10 @@ function renderAction(canvas, name, key, border_color) {
         },
         "ACTA": function() {
             drawText(ctx, "2cult", center, center, font);
+        },
+        "ACTE": function() {
+            drawText(ctx, "bridge", center, center, font);
+            drawText(ctx, "-2W", center, 60, font);
         },
         "ACTN": function() {
             drawText(ctx, "tf", center, center, font);
