@@ -572,6 +572,7 @@ function renderAction(canvas, name, key, border_color) {
     ctx.restore();
  
     var font = "12px Verdana";
+    var font_small = "11px Verdana";
     if (!name.startsWith("FAV") && !name.startsWith("BON")) {
         drawText(ctx, name, 5, 52, font);
     }
@@ -585,7 +586,7 @@ function renderAction(canvas, name, key, border_color) {
 
     var data = {
         "ACT1": function() {
-            drawText(ctx, "bridge", center, center, font);
+            drawText(ctx, "bridge", center, center, font_small);
             drawText(ctx, "-3PW", center, 60, font);
         },
         "ACT2": function() {
@@ -612,7 +613,7 @@ function renderAction(canvas, name, key, border_color) {
             drawText(ctx, "2cult", center, center, font);
         },
         "ACTE": function() {
-            drawText(ctx, "bridge", center, center, font);
+            drawText(ctx, "bridge", center, center, font_small);
             drawText(ctx, "-2W", center, 60, font);
         },
         "ACTN": function() {
