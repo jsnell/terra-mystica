@@ -46,7 +46,7 @@ func initialize_faction($game, $faction_name) {
     $faction->{VP} = $faction->{vp_source}{initial} = 20;
     $faction->{KEY} = 0;
 
-    $faction->{MAX_P} = 7;
+    $faction->{MAX_P} //= 7;
 
     for (@cults) {
         $faction->{$_} ||= 0;

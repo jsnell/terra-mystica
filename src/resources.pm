@@ -54,6 +54,8 @@ sub setup_pool {
         LOSE_PW_TOKEN => 10000,
         PRIEST_CULT_BONUS => 10000,
         CULTS_ON_SAME_TRACK => 10000,
+        UNLOCK_TERRAIN => 10000,
+        MAX_P => 10000,
         carpet_range => 3,
     };
 
