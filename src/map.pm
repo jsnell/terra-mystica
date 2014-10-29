@@ -143,6 +143,7 @@ sub setup_hex_ranges {
             next if $aux{$hex} != $range - 1;
             next if $river_only and $range != 0 and $hex !~ /^r/;
             for my $adj (keys %{$map{$hex}{adjacent}}) {
+                next if $river_only and $range == 0 and $adj !~ /^r/;
                 if (!exists $aux{$adj}) { 
                     $aux{$adj} = $range;
                 }
