@@ -612,7 +612,9 @@ sub command_bridge {
     if (!$faction->{BRIDGE}) {
         die "Can't build bridge\n";
     }
-    delete $faction->{BRIDGE};
+    if (!--$faction->{BRIDGE}) {
+        delete $faction->{BRIDGE};
+    }
 
     push @{$game{bridges}}, {from => $from, to => $to, color => $faction->{color}};
 
