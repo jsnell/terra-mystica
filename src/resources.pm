@@ -124,8 +124,8 @@ sub gain {
 sub maybe_gain_faction_special {
     my ($faction, $type, $mode) = @_;
 
-    return if !exists $faction->{special}{mode};
-    return if $faction->{special}{mode} ne $mode;
+    return 0 if !exists $faction->{special}{mode};
+    return 0 if $faction->{special}{mode} ne $mode;
 
     my $enable_if = $faction->{special}{enable_if};
     if ($enable_if) {
@@ -134,7 +134,13 @@ sub maybe_gain_faction_special {
         }
     }
 
-    gain $faction, $faction->{special}{$type}, 'faction';
+    my $record = $faction->{special}{$type};
+
+    return 0 if !$record;
+
+    gain $faction, $record, 'faction';
+
+    1;
 }
 
 sub gain_power {
@@ -267,6 +273,14 @@ sub adjust_resource {
         }
     } else {
         my $orig_value = $faction->{$type};
+
+        my $replaced = 0;
+
+        for (1..$delta) {
+            $replaced |= maybe_gain_faction_special $faction, $type, 'replace'
+        }
+
+        return if $replaced;
 
         # Pseudo-resources not in the pool, but revealed by removing
         # buildings.
