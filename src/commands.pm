@@ -945,6 +945,7 @@ sub command_randomize {
         }
         my $scoring = shift @scoring_types;
         $game{final_scoring}{$scoring} = $final_scoring{$scoring};
+        $game{non_standard} = 1;
     }
 
     $game{acting}->players([@players]);
