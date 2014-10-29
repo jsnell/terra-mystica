@@ -222,9 +222,12 @@ sub check_reachable {
 
     # Direct adjancies first (can't use tunneling / carpet flight bonus
     # if it isn't needed).
-    for my $loc (@{$faction->{locations}}) {
-        if ($map{$where}{adjacent}{$loc}) {
-            return ({}, {});
+    if (!exists $faction->{adjacency} or
+        $faction->{adjacency}{direct}) {
+        for my $loc (@{$faction->{locations}}) {
+            if ($map{$where}{adjacent}{$loc}) {
+                return ({}, {});
+            }
         }
     }
 
