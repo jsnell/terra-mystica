@@ -1206,7 +1206,17 @@ sub command {
         }
         delete $faction->{PICK_COLOR};
         my $field = ($faction->{pick_color_field} // 'secondary_color');
+        my $orig = $faction->{$field};
         $faction->{$field} = $wanted_color;
+
+        if ($field eq 'color') {
+            for my $hex (keys %map) {
+                if ($map{$hex}{building} and
+                    $map{$hex}{color} eq $orig) {
+                    $map{$hex}{color} = $wanted_color;
+                }
+            }
+        }
 
         if ($faction->{locked_terrain}) {
             delete $faction->{locked_terrain}{$wanted_color};
