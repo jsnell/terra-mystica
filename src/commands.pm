@@ -718,9 +718,14 @@ sub command_action {
         die "Action space $action is blocked\n"
     }
 
-    my %subaction = exists $actions{$name}{subaction} ?
-        %{$actions{$name}{subaction}} :
-        ();
+    my %subaction = ();
+
+    if (exists $faction->{action} and
+        exists $faction->{action}{$name}{subaction}) {
+        %subaction = %{$faction->{action}{$name}{subaction}};
+    } elsif (exists $actions{$name}{subaction}) {
+        %subaction = %{$actions{$name}{subaction}};
+    }
 
     $game{acting}->require_subaction($faction, 'action', \%subaction);
 

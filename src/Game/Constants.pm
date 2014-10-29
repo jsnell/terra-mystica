@@ -1188,6 +1188,11 @@ Readonly our %faction_setups_extra => (
                 cost => [ { } ],
                 gain => [ { VOLCANO_TF => 1 } ],
             },
+            action => {
+                BON1 => { subaction => { } },
+                ACT5 => { subaction => { } },
+                ACT6 => { subaction => { } },
+            },
             volcano_effect => {
                 not_home => { LOSE_CULT => 3 },
                 home => { LOSE_CULT => 4 },
@@ -1231,6 +1236,11 @@ Readonly our %faction_setups_extra => (
                 level => 0, max_level => 0,
                 cost => [ { } ],
                 gain => [ { VOLCANO_TF => 1 } ],
+            },
+            action => {
+                BON1 => { subaction => { } },
+                ACT5 => { subaction => { } },
+                ACT6 => { subaction => { } },
             },
             volcano_effect => {
                 not_home => { LOSE_PW_TOKEN => 1 },

@@ -56,6 +56,7 @@ sub fetch_result {
     for my $faction (values %{$json->{factions}}) {
         delete $faction->{recent_moves};
         delete $faction->{leech_effect};
+        delete $faction->{action};
     }
     delete $json->{actions};
     delete $json->{towns};
