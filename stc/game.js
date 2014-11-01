@@ -1685,13 +1685,25 @@ function drawActionRequired() {
         return;
     }
 
-    // XXX 
-    if (currentFaction && $("data_entry").innerHTML == "") {
+    if ($("data_entry").innerHTML == "") {
+        var selectTab = null;
+
         $("data_entry").insert("<div id='data_entry_tabs'></div>");
-        $("data_entry_tabs").insert("<button onclick='dataEntrySelect(\"move\"); updateMovePicker();' id='data_entry_tab_move' class='tab' accesskey='m'>Moves</button>");
-        $("data_entry_tabs").insert("<button onclick='initPlanIfNeeded(); dataEntrySelect(\"planning\")' id='data_entry_tab_planning' class='tab' accesskey='p'>Planning</button>");
-        $("data_entry_tabs").insert("<button onclick='dataEntrySelect(\"recent\")' id='data_entry_tab_recent' class='tab' accesskey='r'>Recent Moves</button>");
-        if (state.options["email-notify"]) {
+
+        if (currentFaction) {
+            selectTab = "move";
+            $("data_entry_tabs").insert("<button onclick='dataEntrySelect(\"move\"); updateMovePicker();' id='data_entry_tab_move' class='tab' accesskey='m'>Moves</button>");
+        }
+
+        if (currentFaction) {
+            $("data_entry_tabs").insert("<button onclick='initPlanIfNeeded(); dataEntrySelect(\"planning\")' id='data_entry_tab_planning' class='tab' accesskey='p'>Planning</button>");
+        }
+
+        if (currentFaction) {
+            $("data_entry_tabs").insert("<button onclick='dataEntrySelect(\"recent\")' id='data_entry_tab_recent' class='tab' accesskey='r'>Recent Moves</button>");
+        }
+
+        if (currentFaction && state.options["email-notify"]) {
             var style = "";
             if (newChatMessages()) {
                 style = "color: red"
@@ -1709,7 +1721,6 @@ function drawActionRequired() {
 
         if (state.metadata) {
             $("data_entry_tabs").insert("<button onclick='updateInfoTab(); dataEntrySelect(\"info\")' id='data_entry_tab_info' class='tab'>Info</button>");
-            
         }
 
         $("data_entry").insert("<div id='move_entry' class='tab_content'></div>");
@@ -1717,7 +1728,14 @@ function drawActionRequired() {
         $("data_entry").insert("<div id='recent_entry' class='tab_content'></div>");
         $("data_entry").insert("<div id='chat_entry' class='tab_content'></div>");
         $("data_entry").insert("<div id='info_entry' class='tab_content'></div>");
-        dataEntrySelect("move");
+
+        if (selectTab) {
+            dataEntrySelect(selectTab);
+        } else {
+            $$("#data_entry div.tab_content").each(function(tab) {
+                tab.hide();
+            });
+        }
     }
 
     if ($("planning_entry") && $("planning_entry").innerHTML == "") {
