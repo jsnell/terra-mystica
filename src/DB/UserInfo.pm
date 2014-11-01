@@ -57,7 +57,7 @@ sub fetch_user_opponents {
     my %res = ();
 
     my ($games) =
-        $dbh->selectall_arrayref("select game, array_agg(faction_player) as players, array_agg(rank) as ranks from game_role where game in (select game from game_role where faction_player=? and game in (select id from game where finished and not aborted and not exclude_from_stats)) group by game",
+        $dbh->selectall_arrayref("select game, array_agg(faction_player) as players, array_agg(rank) as ranks from game_role where game in (select game from game_role where faction_player=? and game in (select id from game where finished and not aborted)) group by game",
                                  { Slice => {} },
                                  $username);
 
