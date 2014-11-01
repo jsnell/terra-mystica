@@ -3,6 +3,7 @@
 package terra_mystica;
 
 use strict;
+use 5.010;
 
 use Carp;
 use Clone qw(clone);
@@ -12,9 +13,9 @@ use vars qw(%map);
 
 # Initialize %map, with the correct coordinates, from the above raw data.
 sub setup_base_map {
-    my ($reverse_map) = @_;
+    my ($base_map, $reverse_map) = @_;
     my @row_labels = 'A'..'Z';
-    my $row_count = grep { $_ eq 'E' } @{$game{base_map}};
+    my $row_count = grep { $_ eq 'E' } @{$base_map};
 
     my $i = 0;
     my $ri = 0;
@@ -22,7 +23,7 @@ sub setup_base_map {
     for my $row (@row_labels[0..$row_count - 1]) {
         my $col = 1;
         for my $ci (0..13) {
-            my $color = $game{base_map}[$i++];
+            my $color = $base_map->[$i++];
             last if $color eq 'E';
             if ($color ne 'x') {
                 my $key = "$row$col";
@@ -691,12 +692,29 @@ sub update_tp_upgrade_costs {
     }
 }
 
-sub setup_map {
+sub setup_map_aux {
+    my ($base_map) = @_;
     my $reverse_map = {};
-    setup_base_map $reverse_map;
+    setup_base_map $base_map, $reverse_map;
     setup_direct_adjacencies $reverse_map;
     setup_ranges $reverse_map;
     setup_valid_bridges $reverse_map;
+}
+
+sub setup_map {
+    # A base map -> structured map cache.
+    state $cache = {};
+
+    my ($base_map) = @_;
+    my $key = join ' ', @{$base_map};
+
+    # The map will be mutated during game evaluation, be sure to return a
+    # clone.
+    clone $cache->{$key} ||= do {
+        local %map;
+        setup_map_aux $base_map;
+        \%map;
+    }
 }
 
 1;

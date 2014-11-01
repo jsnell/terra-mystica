@@ -179,9 +179,7 @@ sub evaluate_game {
     $game{events} = Game::Events->new({game => \%game});
 
 
-    local %map = ();
-
-    setup_map;
+    local %map = %{setup_map $game{base_map}};
 
     my $row = 1;
     my @error = ();
