@@ -45,7 +45,7 @@ method handle($q, $id) {
     } elsif ($self->mode() eq 'save') {
         save($dbh, $q->param('map-data'), $res, $username);
     } elsif ($self->mode() eq 'view') {
-        view($dbh, $id, $res, 1);
+        view($dbh, $id, $res, $q->param('map-only') // 1);
     }
 
     $self->output_json($res);
@@ -138,7 +138,7 @@ func view($dbh, $id, $res, $map_only) {
     $res->{'mapdata'} = convert_to_lodev($map_str);
     $res->{'mapid'} = $id;
 
-    unless ($map_only) {
+    if (!$map_only) {
         my $game_ids = $dbh->selectall_arrayref("select id, round, finished, array (select faction || ' ' || vp from game_role where game=game.id order by vp desc) as factions from game where base_map=? and not aborted order by finished, round, id",
                                                 { Slice => {} },
                                                 $id);

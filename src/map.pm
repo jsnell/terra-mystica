@@ -554,6 +554,9 @@ sub transform_cost {
         $cost->{VOLCANO_TF} += 1;
         my $hex_type = 'not_home';
         for my $other_faction ($game{acting}->factions_in_order()) {
+            # The "color" of a faction with unlockable terrain is only the
+            # color of the pieces, not actual home terrain.
+            next if $other_faction->{locked_terrain};
             if ($other_faction->{color} eq $map{$where}{color}) {
                 $hex_type = 'home';
             }

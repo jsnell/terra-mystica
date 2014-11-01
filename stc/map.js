@@ -6,6 +6,7 @@ function viewMap(mapid) {
         method: "post",
         parameters: {
             "cache-token": new Date() - Math.random(),            
+            "map-only": document.location.pathname.match(/\/mapedit\//) != null ? 0 : 1,
         },
         onSuccess: function(transport) {
             state = transport.responseText.evalJSON();
@@ -73,7 +74,7 @@ function saveMap(mapid) {
             if (state.error.length) {
                 $("error").innerHTML = state.error.join("<br>");
             } else {
-                document.location = "/map/" + state.mapid;
+                document.location = "/mapedit/" + state.mapid;
             }
         }
     });
@@ -99,7 +100,7 @@ function updateMapId(id, saved) {
     var elem = null;
 
     if (saved) {
-        elem = new Element("a", { "href": "/map/" + id}).updateText(id);
+        elem = new Element("a", { "href": "/mapedit/" + id}).updateText(id);
     } else {
         elem = new Element("span").updateText(id);
     }
@@ -109,7 +110,7 @@ function updateMapId(id, saved) {
 }
 
 function showMap() {
-    var mapid = document.location.pathname.sub(/\/map\//, '');
+    var mapid = document.location.pathname.sub(/\/map(edit)?\//, '');
     if (mapid) {
         viewMap(mapid);
     }
