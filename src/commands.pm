@@ -129,10 +129,30 @@ sub command_build {
 
     my $tf_needed = !build_color_ok $faction, $map{$where}{color};
 
-    if (!$tf_needed and
-        keys %{$faction->{allowed_build_locations}} and
-        !$faction->{allowed_build_locations}{$where}) {
-        delete $faction->{allowed_sub_actions}{build};
+    # Check that we haven't transformed one location, and are trying to
+    # build on another.
+    my $check_if_build_location_allowed_after_tf = !$tf_needed;
+
+    # We've already done all the allowed transforms (2 if using a bare act6
+    # with no added digs, 3 otherwise). We need to check that the build
+    # is happening in one of the transformed spaces, if the build is to happen
+    # on the same action.
+    if (!$game{options}->{'loose-build-after-dig'} and
+        !$faction->{allowed_sub_actions}{transform}) {
+        $check_if_build_location_allowed_after_tf = 1;
+    }
+
+    if ($check_if_build_location_allowed_after_tf) {
+        # Only allow building in this location if:
+        #   - The user has a full new action available (achieved by
+        #     deleting any available build subaction).
+        #   - They're doing a build rather than tranform and build
+        #     (the first subexpression takes care of that).
+        #   - They already transformed this specific location
+        if (keys %{$faction->{allowed_build_locations}} and
+            !$faction->{allowed_build_locations}{$where}) {
+            delete $faction->{allowed_sub_actions}{build};
+        }
     }
 
     if (!$tf_needed) {
@@ -577,7 +597,7 @@ sub command_dig {
             transform => 1,
             build => 1,
             dig => 1,
-       });
+        });
     }
 
     if (!$gain) {
