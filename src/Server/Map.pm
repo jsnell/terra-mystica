@@ -91,15 +91,11 @@ func convert_from_lodev($base_map) {
 func preview($dbh, $mapdata, $res) {
     my $map_str = convert_from_lodev($mapdata);
     my $base_map = [ split /\s+/, $map_str ];
-    local %terra_mystica::game = (
-        base_map => $base_map
-    );
-    local %terra_mystica::map = ();
-    terra_mystica::setup_map;
+    my $map = terra_mystica::setup_map $base_map;
 
     my $id = sha1_hex $map_str;
 
-    $res->{'map'} = \%terra_mystica::map;
+    $res->{'map'} = $map;
     $res->{'mapdata'} = $mapdata;
     $res->{'mapid'} = $id;
     $res->{'saved'} = map_exists($dbh, $id);
@@ -128,13 +124,9 @@ func save($dbh, $mapdata, $res) {
 func view($dbh, $id, $res, $map_only) {
     my ($map_str) = $dbh->selectrow_array("select terrain from map_variant where id=?", {}, $id);
     my $base_map = [ split /\s+/, $map_str ];
-    local %terra_mystica::game = (
-        base_map => $base_map
-    );
-    local %terra_mystica::map = ();
-    terra_mystica::setup_map;
+    my $map = terra_mystica::setup_map $base_map;
 
-    $res->{'map'} = \%terra_mystica::map;
+    $res->{'map'} = $map;
     $res->{'mapdata'} = convert_to_lodev($map_str);
     $res->{'mapid'} = $id;
 

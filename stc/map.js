@@ -20,7 +20,9 @@ function viewMap(mapid) {
                 drawMap();
                 drawGamesPlayed();
                 drawFactionInfo();
-                $("map-data").value = state.mapdata;
+                if ($("map-data")) {
+                    $("map-data").value = state.mapdata;
+                }
 
                 // Hack around keyboard / wheel scrolling in Chrome
                 // 34+ not working after page load.
