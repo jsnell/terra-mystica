@@ -1983,9 +1983,11 @@ function addFactionInput(parent, record, index) {
         for (var i = 1; i <= record.amount && i <= faction[record.from]; ++i) {
             var button = new Element("button").updateText("Convert " + i);
             var cmd = "convert " + i + record.from + " to " + i + record.to;
-            button.onclick = function() {
-                appendAndPreview(cmd);
-            };
+            button.onclick = function(cmd) {
+                return function() {
+                    appendAndPreview(cmd);
+                };
+            }(cmd);
             div.insert(button);
         }
 
