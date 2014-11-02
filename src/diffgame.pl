@@ -127,15 +127,15 @@ for (@{$games}) {
         }
 
         if ($key eq 'ledger') {
-            # $aa = convert_ledger $aa;
-            # $bb = convert_ledger $bb;
-            # my $aj = join "\n", map { to_json($_) } @{$aa};
-            # my $bj = join "\n", map { to_json($_) } @{$bb};
-            # if ($aj ne $bj) {
-            #     print "\nDiff in $id" if !$header_printed++;
-            #     # print "Ledger diffs";
-            #     print diff \$aj, \$bj;
-            # }
+            $aa = convert_ledger $aa;
+            $bb = convert_ledger $bb;
+            my $aj = join "\n", map { to_json($_) } @{$aa};
+            my $bj = join "\n", map { to_json($_) } @{$bb};
+            if ($aj ne $bj) {
+                print "\nDiff in $id" if !$header_printed++;
+                # print "Ledger diffs";
+                print diff \$aj, \$bj;
+            }
         } else {
             my $aj = to_json($aa, { pretty => 1, canonical => 1 });
             my $bj = to_json($bb, { pretty => 1, canonical => 1 });
