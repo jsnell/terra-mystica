@@ -914,6 +914,18 @@ sub check_player_count {
     }
 }
 
+sub add_final_scoring {
+    my ($scoring) = @_;
+
+    if ($final_scoring{$scoring}) {
+        $game{final_scoring}{$scoring} = $final_scoring{$scoring};
+        $game{non_standard} = 1;
+    } else {
+        die "Unknown final scoring type: $scoring\n";
+    }
+    $game{ledger}->add_comment("Added final scoring tile: $scoring");
+}
+
 sub command_randomize {
     my ($seed, $version) = @_;
 
@@ -964,8 +976,7 @@ sub command_randomize {
             @scoring_types = mt_shuffle $rand, @scoring_types;
         }
         my $scoring = shift @scoring_types;
-        $game{final_scoring}{$scoring} = $final_scoring{$scoring};
-        $game{non_standard} = 1;
+        add_final_scoring $scoring;
     }
 
     $game{acting}->players([@players]);
@@ -1291,18 +1302,14 @@ sub command {
         } else {
             $game{map_variant} = $1;
         }
+        $game{ledger}->add_comment("map $1");
     } elsif ($command =~ /^faction-variant (.*)/i) {
         die "$faction_name can't set game variant\n" if $faction_name;
         die "Invalid faction variant $1\n" if !$faction_setups_extra{$1};
         push @{$game{faction_variants}}, $1;
     } elsif ($command =~ /^final-scoring (.*)/i) {
         die "$faction_name can't trigger final scoring\n" if $faction_name;
-        if ($final_scoring{$1}) {
-            $game{final_scoring}{$1} = $final_scoring{$1};
-            $game{non_standard} = 1;
-        } else {
-            die "Unknown final scoring type: $1\n";
-        }
+        add_final_scoring $1;
     } elsif ($command =~ /^drop-faction player(\d+)$/i) {
         die "Players can only be dropped from admin view\n" if $faction_name;
         my $player = $game{acting}->players()->[$1 - 1];
