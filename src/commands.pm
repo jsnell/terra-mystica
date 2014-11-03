@@ -1247,6 +1247,19 @@ sub command {
                     $map{$hex}{color} = $wanted_color;
                 }
             }
+            for my $bridge (@{$game{bridges}}) {
+                if ($bridge->{color} eq $orig) {
+                    $bridge->{color} = $wanted_color;
+                }
+            }
+            for my $cult (@cults) {
+                for my $where (1..4) {
+                    my $spot = "$cult$where";
+                    if ($game{cults}{$spot}{color} eq $orig) {
+                        $game{cults}{$spot}{color} = $wanted_color;
+                    }
+                }
+            }
         }
 
         if ($faction->{locked_terrain}) {
