@@ -1305,7 +1305,9 @@ sub command {
             delete $faction->{special}{P};
         }
 
-        $faction->{UNLOCK_TERRAIN}--;
+        if (!--$faction->{UNLOCK_TERRAIN}) {
+            $game{acting}->dismiss_action($faction, 'unlock-terrain');
+        }
     } elsif ($command =~ /^start_planning$/i) {
         command_start_planning $assert_faction->();
     } elsif ($command =~ /^map (.*)/i) {
