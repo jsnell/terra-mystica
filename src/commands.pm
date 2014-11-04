@@ -759,7 +759,7 @@ sub command_action {
     $game{acting}->require_subaction($faction, 'action', \%subaction);
 
     pay $faction, $actions{$name}{cost}, ($faction->{discount} and $faction->{discount}{$name});
-    gain $faction, $actions{$name}{gain};
+    gain $faction, $actions{$name}{gain}, $name;
 
     $map{$action}{blocked} = 1 unless $actions{$name}{dont_block};
 
