@@ -1322,7 +1322,7 @@ Readonly our %faction_setups_extra => (
                 level => 1, max_level => 1,
             },
             locked_terrain => {
-                decline => { gain => { P => 1 }, permanent => 1 },
+                'gain-priest' => { gain => { P => 1 }, permanent => 1 },
                 map { 
                     ($_, { gain => { MAX_P => 1 } })
                 } qw(yellow brown black blue green gray red),

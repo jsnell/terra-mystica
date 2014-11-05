@@ -1267,16 +1267,16 @@ sub command {
             delete $faction->{locked_terrain}{$wanted_color};
             $faction->{unlocked_terrain}{$wanted_color} = 1;
         }
-    } elsif ($command =~ /^unlock-terrain (\w+)$/i) {
+    } elsif ($command =~ /^unlock-terrain ([-\w]+)$/i) {
         my $faction = $assert_faction->();
         if (!$faction->{UNLOCK_TERRAIN}) {
             die "$faction->{name} is not allowed to unlock a new terrain\n";
         }
-        my ($wanted_color);
+        my ($wanted_color) = $1;
 
-        if ($1 eq 'decline') {
-            $wanted_color = $1;
-        } else {
+        my $special_unlock = ($wanted_color =~ /^gain-.*$/);
+
+        if (!$special_unlock) {
             ($wanted_color) = assert_color alias_color $1;
         }
 
@@ -1302,7 +1302,7 @@ sub command {
 
         # XXX really ugly hack to stop unlocking from triggering once 
         # for riverwalkers once everything has been unlocked.
-        if (0 == grep { $_ ne 'decline' } keys %{$faction->{locked_terrain}}) {
+        if (0 == grep { $_ !~ $special_unlock } keys %{$faction->{locked_terrain}}) {
             delete $faction->{special}{P};
         }
 
