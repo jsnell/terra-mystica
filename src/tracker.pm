@@ -44,7 +44,8 @@ sub finalize {
     # sequencing right during income phase).
     my $spade_seen = 0;
     for (@{$game{acting}->action_required()}) {
-        if ($_->{type} eq 'transform') {
+        if ($_->{type} eq 'transform' or
+            $_->{type} eq 'unlock-terrain') {
             $_ = '' if $spade_seen++;
         }
     }
