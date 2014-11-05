@@ -1255,7 +1255,8 @@ sub command {
             for my $cult (@cults) {
                 for my $where (1..4) {
                     my $spot = "$cult$where";
-                    if ($game{cults}{$spot}{color} eq $orig) {
+                    if ($game{cults}{$spot}{color} and
+                        $game{cults}{$spot}{color} eq $orig) {
                         $game{cults}{$spot}{color} = $wanted_color;
                     }
                 }
