@@ -987,7 +987,9 @@ sub command_start_planning {
 
     $faction->{planning} = 1;
     if ($faction->{passed}) {
-        command_income;
+        if (!$faction->{income_taken}) {
+            command_income;
+        }
         command_start;
     }
 
