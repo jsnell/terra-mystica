@@ -53,6 +53,10 @@ sub save_user_settings {
                  {},
                  $username,
                  $primary_email);
+        $dbh->do("update game_role set email=? where faction_player=?",
+                 {},
+                 $primary_email,
+                 $username);
     }
 
     $dbh->do("commit");
