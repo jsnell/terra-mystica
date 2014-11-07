@@ -612,7 +612,13 @@ sub command_dig {
 sub command_bridge {        
     my ($faction, $from, $to, $allow_illegal) = @_;
 
-    $game{acting}->require_subaction($faction, 'bridge', {});
+    if (!$faction->{BRIDGE}) {
+        die "Can't build bridge\n";
+    }
+
+    $game{acting}->require_subaction($faction, 'bridge', {
+        bridge => $faction->{BRIDGE} - 1,
+    });
 
     if (!$allow_illegal) {
         if ($faction->{BRIDGE_COUNT} == 0) {
@@ -631,9 +637,6 @@ sub command_bridge {
     $map{$from}{bridge}{$to} = 1;
     $map{$to}{bridge}{$from} = 1;
 
-    if (!$faction->{BRIDGE}) {
-        die "Can't build bridge\n";
-    }
     if (!--$faction->{BRIDGE}) {
         delete $faction->{BRIDGE};
     }
