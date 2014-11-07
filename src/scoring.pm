@@ -150,7 +150,8 @@ sub do_pass_vp {
         }
     }
 
-    for my $building (values %{$faction->{buildings}}) {
+    for my $key (keys %{$faction->{buildings}}) {
+        my $building = $faction->{buildings}{$key};
         my $pass_vps = $building->{pass_vp};
         next if !defined $pass_vps;
         my $pass_vp = $pass_vps->[$building->{level}];
@@ -158,7 +159,7 @@ sub do_pass_vp {
         for my $type (keys %{$pass_vp}) {
             my $level = $faction->{buildings}{$type}{level} //
                 $faction->{$type}{level};
-            $fun->($pass_vp->{$type}[$level], $_);
+            $fun->($pass_vp->{$type}[$level], $key);
         }
     }
 
