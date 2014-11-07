@@ -1887,6 +1887,10 @@ function addFactionInput(parent, record, index) {
         var amount = record.amount;
         var div = new Element("div", { "id": "leech-" + index + "-0",
                                        "style": "padding-left: 2em" });
+        // If the cult steps can be split, take them one at a time.
+        if (!faction.CULTS_ON_SAME_TRACK && amount > 1) {
+            amount = 1;
+        }
         cults.each(function(cult) {
             var button = new Element("button",
                                      {"style": cultStyle(cult)}).
