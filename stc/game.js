@@ -2415,6 +2415,17 @@ function insertOrClearPickerRow(picker, id) {
 
 function addUndoToMovePicker(picker, faction) {
     var validate = function() {
+        if (state.action_required[0] &&
+            state.action_required[0].faction != faction.name &&
+            !faction.waiting &&
+            state.action_required.some(function (record) {
+                record.faction == faction.name;
+            })) {
+            wait.enable();
+        } else {
+            wait.disable();
+        }
+
         if ($("move_entry_input").value == "") {
             undo.disable();
             done.disable();
@@ -2456,6 +2467,9 @@ function addUndoToMovePicker(picker, faction) {
     var execute_done = function() {
         appendAndPreview("done");
     }
+    var execute_wait = function() {
+        appendAndPreview("wait");
+    }
         
     var row = insertOrClearPickerRow(picker, "move_picker_undo");
     var undo = new Element("button").updateText("Undo");
@@ -2466,10 +2480,16 @@ function addUndoToMovePicker(picker, faction) {
     done.onclick = execute_done;
     done.disable();
 
+    var wait = new Element("button").updateText("Wait");
+    wait.onclick = execute_wait;
+    wait.disable();
+
     row.insert(undo);
     row.insertTextSpan(" /  ");
     row.insert(done);
-    
+    row.insertTextSpan(" /  ");
+    row.insert(wait);
+
     validate();
     row.show();
 
