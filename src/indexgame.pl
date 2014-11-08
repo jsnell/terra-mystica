@@ -7,35 +7,34 @@ use File::Basename;
 
 BEGIN { push @INC, dirname $0 }
 
-use db;
-use game;
-use indexgame;
+use DB::Connection;
+use DB::Game;
+use DB::SaveGame;
 use tracker;
 
 my $dbh = get_db_connection;
 
 sub evaluate_and_index_game {
-    my ($id, $write_id, $timestamp) = @_;
+    my ($read_id, $write_id, $timestamp) = @_;
 
-    print "$id\n";
+    print "$read_id\n";
 
-    begin_game_transaction $dbh, $id;
+    begin_game_transaction $dbh, $read_id;
 
-    my @rows = get_game_commands $dbh, $id, $write_id;
+    my ($prefix_content, $orig_content) =
+        get_game_content $dbh, $read_id, $write_id;
 
-    my $game = terra_mystica::evaluate_game {
-        rows => [ @rows ],
-        delete_email => 0
-    };
-
-    index_game $dbh, $id, $write_id, $game, $timestamp;
+    my $res = evaluate_and_save $dbh, $read_id, $write_id, $prefix_content, $orig_content;
 
     finish_game_transaction $dbh;
 }
 
+my $pattern = shift;
+die "Usage: $0 pattern\n" if !$pattern;
+
 my $games = $dbh->selectall_arrayref("select id, write_id, extract(epoch from last_update) from game where id like ?",
                                      {},
-                                     shift || '%');
+                                     $pattern);
 
 for (@{$games}) {
     evaluate_and_index_game @{$_};
