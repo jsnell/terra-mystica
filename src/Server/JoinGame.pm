@@ -98,6 +98,7 @@ method handle($q) {
             joingame $dbh, $read_id, $username;
         }; if ($@) {
             $res->{error} = [ $@ ];
+            print STDERR "Error in joingame: $@\n"
         }
     }
 
