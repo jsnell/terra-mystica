@@ -46,6 +46,16 @@ sub save_user_settings {
              $username);
 
     if ($primary_email) {
+        my ($exists) = $dbh->selectrow_array(
+            "select count(*) from email where player = ? and address=lower(?)",
+            { },
+            $username,
+            $primary_email);
+
+        if (!$exists) {
+            die "'$primary_email' is not a registered email address for this account\n";
+        }
+        
         $dbh->do("update email set is_primary=false where player=?",
                  {},
                  $username);
