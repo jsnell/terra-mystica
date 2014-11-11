@@ -134,6 +134,7 @@ method handle($q) {
             commands => $preview,
             round => $res->{round},
             turn => $res->{turn},
+            ip => $q->remote_addr(),
         };
     }; if ($@) {
         print STDERR "error writing game log: $@\n";
