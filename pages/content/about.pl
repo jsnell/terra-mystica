@@ -20,7 +20,7 @@ __DATA__
 
 <p>
   The site was created
-  by <a href="http://jsnell.iki.fi/blog/">Juho
+  by <a href="https://www.snellman.net/">Juho
   Snellman</a>. The source code is available on
   <a href="https://github.com/jsnell/terra-mystica/">github</a>.
 </p>
