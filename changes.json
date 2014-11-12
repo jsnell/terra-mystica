@@ -18,7 +18,7 @@
         },
         { "date": "2014-04-27",
           "title": "Idle players dropped from games",
-          "description": "Players who don't make their moves for a week are now automatically <a href='/usage.html#drop'>dropped from the game</a>."
+          "description": "Players who don't make their moves for a week are now automatically <a href='/usage/#drop'>dropped from the game</a>."
         },
         { "date": "2014-04-04",
           "title": "Detailed player statistics",
@@ -70,7 +70,7 @@
         },
         { "date": "2013-11-12",
           "title": "More keyboard shortcuts",
-          "description": "There are now keyboard shortcuts for switching between tabs in the game view. See the manual for the <a href='/usage.html#keyboard-shortcuts'>list of keyboard shortcuts</a>."
+          "description": "There are now keyboard shortcuts for switching between tabs in the game view. See the manual for the <a href='/usage/#keyboard-shortcuts'>list of keyboard shortcuts</a>."
         },
         { "date": "2013-11-11",
           "title": "In-game chat",

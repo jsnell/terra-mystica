@@ -30,7 +30,7 @@ the letters A-Z and a-z and the digits 0-9.
       <td>
         <p>
 The options are described in more detail in the
-<a href="/usage.html#options">manual.</a>
+<a href="/usage/#options">manual.</a>
     </tr>
 
     <tr style="vertical-align: top" >
