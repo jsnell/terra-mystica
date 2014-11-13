@@ -95,4 +95,7 @@ A note on <b>home terrain</b>: The concept of home terrain only applies to the o
 <li> SA costs 6c+4w.
 </ul>
 
+<div style="height: 1000px">
+</div>
+
 </body>
