@@ -23,7 +23,7 @@ A note on <b>home terrain</b>: The concept of home terrain only applies to the o
 
 <h3>Factions</h3>
 
-<h4>Ice Maidens</h4>
+<h4 id="icemaidens">Ice Maidens</h4>
 
 <ul>
 <li> Start with 6/6/0 power, 0/1/0/1 on cults.
@@ -34,7 +34,7 @@ A note on <b>home terrain</b>: The concept of home terrain only applies to the o
 <li> The 8th dwelling produces a worker.
 </ul>
 
-<h4>Yetis</h4>
+<h4 id="yetis">Yetis</h4>
 
 <ul>
 <li> Start with 0/12/0 power, 0/0/1/1 on cults.
@@ -47,7 +47,7 @@ A note on <b>home terrain</b>: The concept of home terrain only applies to the o
 <li> The 8th dwelling produces a worker.
 </ul>
 
-<h4>Acolytes</h4>
+<h4 id=acolytes>Acolytes</h4>
 
 <ul>
 <li> Start with 6/6/0 power, 3/3/3/3 on cults
@@ -59,7 +59,7 @@ A note on <b>home terrain</b>: The concept of home terrain only applies to the o
 <li> The Acolytes do not gain power from the cult track thresholds when going down on a cult, but do gain the power every time they pass the threshold when going up. If they leave the 10 space on a cult, it's free to be taken again by either the Acolytes or another faction.
 </ul>
 
-<h4>Dragonlords</h4>
+<h4 id=dragonlords>Dragonlords</h4>
 
 <ul>
 <li> Start with 4/4/0 power, 2/0/0/0 on cults
@@ -70,7 +70,7 @@ A note on <b>home terrain</b>: The concept of home terrain only applies to the o
 <li> If the Dragon Masters gain a spade from somewhere, they'll gain a power token into bowl 1 instead.
 </ul>
 
-<h4>Riverwalkers</h4>
+<h4 id=riverwalkers>Riverwalkers</h4>
 
 <ul>
 <li> Start with 10/2/0 power, 1/0/0/1 on cults
@@ -84,7 +84,7 @@ A note on <b>home terrain</b>: The concept of home terrain only applies to the o
 <li> SA costs 6c+4w.
 </ul>
 
-<h4>Shapeshifters</h4>
+<h4 id=shapeshifters>Shapeshifters</h4>
 
 <ul>
 <li> Start with 4/4/0 power, 1/1/0/0 on cults
