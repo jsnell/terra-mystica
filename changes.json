@@ -1,5 +1,9 @@
 {
     "changes": [
+        { "date": "2014-11-25",
+          "title": "Fire & Ice factions",
+          "description": "The new factions from the Fire & Ice expansion are now available, and can be toggled on/off on a per-faction board basis during game creation."
+        },
         { "date": "2014-10-24",
           "title": "Fire & Ice final scoring tiles available",
           "description": "The new final scoring tiles (randomly selected) are now available with the <code>fire-and-ice-final-scoring</code> game option."
