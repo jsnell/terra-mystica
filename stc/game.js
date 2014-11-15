@@ -538,6 +538,8 @@ function renderAction(canvas, name, key, border_color) {
 
     if (state.map[key] && state.map[key].blocked) {
         ctx.fillStyle = '#ccc';
+    } else if (state.actions[name] && state.actions[name].dont_block) {
+        ctx.fillStyle = '#df0'
     } else {
         ctx.fillStyle = colors.orange;
     }
