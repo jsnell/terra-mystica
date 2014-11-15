@@ -197,7 +197,8 @@ sub deploy_data {
                   pages/content/register.pl
                   pages/content/reset.pl
                   pages/content/stats.pl
-                  pages/content/settings.pl),
+                  pages/content/settings.pl
+                  pages/content/usage.pl),
                qw(pages/layout/sidebar.html
                   pages/layout/topbar.html)) {
         my $to = "$target/$f";
