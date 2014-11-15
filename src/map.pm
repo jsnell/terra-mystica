@@ -209,7 +209,9 @@ sub setup_valid_bridges {
 sub check_reachable {
     my ($faction, $where) = @_;
 
-    return ({}, {}) if $game{round} == 0;
+    if ($game{round} == 0) {
+        return ({}, {}) 
+    }
 
     my $range = $faction->{ship}{level};
     if ($faction->{ship}{max_level}) {

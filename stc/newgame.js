@@ -55,6 +55,11 @@ function newGameValidate() {
         }
     }
 
+    ['ice', 'variable', 'volcano'].each(function (type) {
+        $("option-fire-and-ice-factions/" + type).disabled =
+            !$("option-fire-and-ice-factions").checked;
+    });
+
     $H(validateHighlights).each(function (elem) {
         $(elem.key).style.backgroundColor = elem.value;
     });

@@ -359,8 +359,9 @@ faction selection. The following options are available:
 - =mini-expansion-1=: First mini-expansion, 4 town tiles
 - =shipping-bonus=: Additional bonus tile from Spielbox 6/2013, http://boardgamegeek.com/image/1843355/terra-mystica-navigation-round-bonus-tile
 - =fire-and-ice-final-scoring=: One more final scoring category will be randomly selected from the 4 alternatives included in the Fire & Ice expansion.
+- =fire-and-ice-faction/xxx=: Where xxx is one of "ice", "variable" or "volcano". Makes the two factions of that type from the Fire & Ice expansion available
+in the game.
 - =email-notify=: Automatically send email notifications after moves (players can configure exactly which emails they want to see). Can't be used in games with unregistered players.
-- =strict-leech=: Validate that any 'leech' commands by a single player happen in the correct order. This option is on by default for new games. Turning it off is not recommended.
 - =maintain-player-order=: Don't randomize the player order, but use the order in which players were added to the game. Can only be used for private games.
 
 
@@ -416,11 +417,6 @@ It's possible for Giants to receive a single spade from a cult scoring
 bonus, and be unable to spend it (due to always needing exactly
 two spades for any transforming). To advance, throw away the spade with
 =-SPADE=.
-
-** Engineers
-
-To build a bridge with the engineer special ability, use the =convert=
-command: =convert 2w to bridge. bridge h6:i9=
 
 * Known issues and workarounds
 

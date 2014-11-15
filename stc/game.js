@@ -3470,7 +3470,7 @@ function updateInfoTab() {
     // Options
     if (metadata.game_options) {
         var list = new Element("ul");
-        metadata.game_options.each(function (elem) {
+        metadata.game_options.sort().each(function (elem) {
             list.insert(new Element("li").updateText(elem));        
         });
         addRow("Options", list);

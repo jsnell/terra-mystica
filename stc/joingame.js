@@ -97,7 +97,7 @@ function showOpenGames(games) {
             }
 
             if (game.game_options) {
-                game.game_options.each(function (elem) {
+                game.game_options.sort().each(function (elem) {
                     if (elem == "email-notify" ||
                         elem == "strict-leech" ||
                         elem == "strict-darkling-sh" ||

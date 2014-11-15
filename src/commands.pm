@@ -127,6 +127,11 @@ sub command_build {
         $faction->{FREE_D}--;
     }
 
+    if ($game{round} == 0 and $faction->{name} eq 'riverwalkers' and
+        keys %{$map{$where}{range}{1}} <= 1) {
+        die "Can't place initial dwelling inland for $faction->{name}.\n";
+    }
+
     my $tf_needed = !build_color_ok $faction, $map{$where}{color};
 
     # Check that we haven't transformed one location, and are trying to
@@ -929,6 +934,13 @@ sub add_final_scoring {
     $game{ledger}->add_comment("Added final scoring tile: $scoring");
 }
 
+sub add_faction_variant {
+    my ($variant) = @_;
+    die "Invalid faction variant $variant\n" if !$faction_setups_extra{$variant};
+
+    push @{$game{faction_variants}}, $variant;
+}
+
 sub command_randomize {
     my ($seed, $version) = @_;
 
@@ -1015,6 +1027,16 @@ sub non_leech_action_required {
 
 sub full_action_required {
     return scalar grep { $_->{type} eq 'full' } $game{acting}->action_required_elements()
+}
+
+sub finalize_setup {
+    maybe_setup_pool;
+
+    for my $type (qw(ice volcano variable)) {
+        if ($game{options}{"fire-and-ice-factions/$type"}) {
+            add_faction_variant "final_$type";
+        }
+    }
 }
 
 sub command {
@@ -1107,7 +1129,7 @@ sub command {
         die "$faction_name can't select another faction\n" if $faction_name;
 
         my $selected_faction = lc $1;
-        maybe_setup_pool;
+        finalize_setup;
         $game{acting}->advance_state('select-factions');
         setup_faction \%game, $selected_faction, $2, $3;
         $game{events}->global_event("faction-count", 1);
@@ -1119,7 +1141,7 @@ sub command {
     } elsif ($command =~ /delete (\w+)$/i) {
         my $name = uc $1;
 
-        maybe_setup_pool;
+        finalize_setup;
         my $x = ($faction ? $faction : $game{pool});
 
         $game{ledger}->add_comment("Removing tile $name");
@@ -1173,6 +1195,10 @@ sub command {
             mini-expansion-1
             shipping-bonus
             fire-and-ice-final-scoring
+            fire-and-ice-factions
+            fire-and-ice-factions/ice
+            fire-and-ice-factions/variable
+            fire-and-ice-factions/volcano
             email-notify
             loose-adjust-resource
             loose-dig
@@ -1217,7 +1243,7 @@ sub command {
         my $version = $1;
         die "$faction_name can't randomize game state\n" if $faction_name;
 
-        maybe_setup_pool;
+        finalize_setup;
         if (!defined $game{player_count}) {
             $game{acting}->advance_state('select-factions');
         }
@@ -1326,8 +1352,7 @@ sub command {
         $game{ledger}->add_comment("map $1");
     } elsif ($command =~ /^faction-variant (.*)/i) {
         die "$faction_name can't set game variant\n" if $faction_name;
-        die "Invalid faction variant $1\n" if !$faction_setups_extra{$1};
-        push @{$game{faction_variants}}, $1;
+        add_faction_variant lc $1;
     } elsif ($command =~ /^final-scoring (.*)/i) {
         die "$faction_name can't trigger final scoring\n" if $faction_name;
         add_final_scoring $1;
