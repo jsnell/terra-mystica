@@ -429,9 +429,25 @@ div.menu div.menu-item {
     white-space: nowrap;
 }
 
+/* Sidebar */
+
+table.layout-sidebar {
+    border-collapse: separate;
+    border-spacing: 2ex 0;
+}
+
 td#sidebar {
     white-space: nowrap;
-    padding-right: 2ex;
+    width: 12ex;
+}
+
+div.sidebar-section {
+}
+
+h4.sidebar-section-header {
+    margin-bottom: 0px;
+    margin-left: -1ex;
+    color: #004;
 }
 
 textarea#fallback-editor {

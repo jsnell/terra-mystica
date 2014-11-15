@@ -3,7 +3,7 @@
     scripts => [ "/stc/common.js",
                  "/stc/index.js",
                  "/stc/player.js" ],
-    title => 'Player Information',
+    title => 'Player Profile',
     content => read_then_close(*DATA)
 }
 

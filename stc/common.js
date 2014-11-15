@@ -183,43 +183,63 @@ function seconds_to_pretty_time(seconds) {
 }
 
 function loggedIn() {
-    return /session-username=([A-Za-z0-9]+)/.match(document.cookie)
+    return document.cookie.match(/session-username=([A-Za-z0-9]+)/);
 }
 
 function renderSidebar(id) {
-    var p = new Element("p");
-    var insertLink = function(link, text, accesskey) {
-        if (document.location.pathname == link) {
-            p.insert(new Element("span", { "class": "navi-selected" }).update(text));
-        } else {
-            p.insert(new Element("a", {"class": "navi",
-                                       "href": link,
-                                       "accesskey": accesskey}).update(text));
-        }
-        p.insert(new Element("br"));
-    };
+    var sidebarSection = function(title, renderer) {
+        var sec = new Element("div", {"class": "sidebar-section"});
 
-    insertLink("/", "Home", "h");
-    if (!loggedIn()) {
-        insertLink("/login/", "Login");
-        insertLink("/register/request/", "Register");
-        p.insert(new Element("br"));
-    } else {
-        insertLink("/joingame/", "Join Game");
-        insertLink("/newgame/", "New Game");
-        insertLink("/settings/", "Settings");
-        insertLink("/app/logout/", "Logout");
+        sec.insert(new Element("h4", {"class": "sidebar-section-header"}).updateText(title));                 
+
+        renderer(function(link, text, accesskey) {
+            var p = new Element("div");
+            if (document.location.pathname == link) {
+                p.insert(new Element("span", { "class": "navi-selected" }).update(text));
+            } else {
+                p.insert(new Element("a", {"class": "navi",
+                                           "href": link,
+                                           "accesskey": accesskey}).update(text));
+            }
+            sec.insert(p);
+        });
+
+        $(id).insert(sec);
     }
-    p.insert(new Element("br"));
-    insertLink("/stats/", "Statistics");
-    insertLink("/ratings/", "Ratings");
-    insertLink("/changes/", "Changes");
-    insertLink("/about/", "About");
-    insertLink("/usage/", "Help");
-    p.insert(new Element("br"));
-    insertLink("http://tmtour.org/", "League");
 
-    $(id).insert(p);
+    if (!loggedIn()) {
+        sidebarSection("Your Account", function (insertLink) {
+            insertLink("/", "Home", "h");
+            insertLink("/login/", "Login");
+            insertLink("/register/request/", "Register");
+        });
+    } else {
+        var username = loggedIn()[1];
+
+        sidebarSection("Your Account", function (insertLink) {
+            insertLink("/", "Home", "h");
+            insertLink("/settings/", "Settings");
+            insertLink("/player/" + username, "Profile");
+            insertLink("/app/logout/", "Logout");
+        });
+
+        sidebarSection("Games", function (insertLink) {
+            insertLink("/joingame/", "Join Game");
+            insertLink("/newgame/", "New Game");
+        });
+    }
+
+    sidebarSection("Site Info", function(insertLink) {
+        insertLink("/about/", "About");
+        insertLink("/usage/", "Help");
+        insertLink("/stats/", "Statistics");
+        insertLink("/ratings/", "Ratings");
+        insertLink("/changes/", "Changes");
+    });
+
+    sidebarSection("Related", function (insertLink) {    
+        insertLink("http://tmtour.org/", "TM League");
+    });
 }
 
 function makeTextSpan(content, klass) {
