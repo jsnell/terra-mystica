@@ -511,6 +511,10 @@ table.newgame-settings tr td p {
 
 /* Mobile overrides */
 @media only screen and (max-device-width: 480px) {
+    body {
+        padding: 0ex;
+    }
+
     /* Eat flames and die, mobile WebKit and your "font boosting" that never
        works. */
     div#game-root * {
