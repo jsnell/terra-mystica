@@ -145,7 +145,7 @@ Readonly our %tiles => init_tiles (
 
     SCORE1 => { vp => { SPADE => 2 },
                 vp_display => 'SPADE >> 2',
-                vp_mode => 'spend',
+                vp_mode => 'gain',
                 cult => 'EARTH',
                 req => 1, 
                 income => { C => 1 } },
