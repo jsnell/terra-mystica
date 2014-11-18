@@ -510,7 +510,8 @@ function drawCultMarker(ctx, color, name, hex) {
     ctx.textAlign = 'center';
     var l = name[0].toUpperCase();
     if (name == 'cultists') { l  = 'c' }
-    drawText(ctx, l, -2, 14,
+    if (name == 'dragonlords') { l  = 'd' }
+    drawText(ctx, l, -1, 14,
              "bold 10px Verdana");
     ctx.restore();
 }
@@ -1432,6 +1433,35 @@ function drawScoringTiles() {
         });
         container.insert(tile);
     }
+}
+
+function drawTurnOrder() {
+    if (!state.options['variable-turn-order']) {
+        return;
+    }
+
+    var container = $('turn-order');
+    var passed = new Element("div", {'class': 'turn-order-block'}).insert(new Element("b").updateText("Passed"));
+    var active = new Element("div", {'class': 'turn-order-block'}).insert(new Element("b").updateText("Active"));
+
+    state.order.each(function (faction_name) {
+        var faction = state.factions[faction_name];
+        var parent = faction.passed ? passed : active;
+
+        parent.insert(new Element('canvas', { 'width': 30, 'height': 30}));
+        var canvas = parent.childElements().last();
+        if (canvas.getContext) {
+            canvas.width = canvas.width;
+            var ctx = canvas.getContext("2d");
+            ctx.translate(15, 0);
+            ctx.scale(1.5, 1.5);
+            drawCultMarker(ctx, faction.color, faction.name, false);
+        }
+    });
+
+    container.innerHTML = '';
+    container.insert(active);
+    container.insert(passed);
 }
 
 function coloredFactionSpan(faction_name) {
@@ -3498,6 +3528,7 @@ function draw(n) {
     // Draw this after factions, so that we can manipulate the DOM of
     // the action markers.
     drawActionRequired();
+    drawTurnOrder();
     // Draw the full ledger right from the start when in history view.
     recent_moves = drawLedger(state.history_view);
     drawRecentMoves(recent_moves);
@@ -3543,7 +3574,10 @@ function init(root) {
           </div> \
       <tr> \
         <td colspan=2> \
-          <div id="shared-actions"></div> \
+          <div style="display: inline-block; vertical-align: top"> \
+            <div id="shared-actions"></div> \
+            <div id="turn-order"></div> \
+          </div> \
           <div id="scoring"></div> \
     </table> \
     <div id="menu" class="menu" style="display: none"></div> \

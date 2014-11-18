@@ -35,9 +35,19 @@ div.faction-info {
     white-space: nowrap;
 }
 
-div.shared-actions {
-    font: 14px Verdana;
-    float: left;
+div#shared-actions {
+    height: 70px;
+}
+
+div.turn-order-block {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 2ex;
+}
+
+div.turn-order-block b {
+    margin-right: 1ex;
+    vertical-align: top;
 }
 
 div.pool {
@@ -79,7 +89,7 @@ div.favor {
 }
 
 div#scoring {
-    float: right;
+    display: inline-block;
 }
 
 div.scoring {
@@ -134,7 +144,7 @@ canvas.action {
 
 canvas.colorcycle {
     float: left;
-    margin: 2px;
+    margin: 0px;
     padding: 6px;
 }
 
@@ -476,7 +486,6 @@ div.final-scoring {
     margin: 2px;
     width: 90px;
     height: 90px;
-    background-color: #fff;
     float: left;
 }
 
