@@ -167,7 +167,7 @@ for my $faction (values %{$stats{factions}}) {
     # Remove stats if there haven't been at least 20 games with a given
     # faction + player count.
     %{$faction} = map {
-        $faction->{$_}{count} > 50 ? ($_, $faction->{$_}) : ()
+        $faction->{$_}{count} > 0 ? ($_, $faction->{$_}) : ()
     } keys %{$faction};
     for my $stat (values %{$faction}) {
         $stat->{win_rate} = int(100 * $stat->{wins} / $stat->{count});
