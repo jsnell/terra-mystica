@@ -92,7 +92,7 @@ sub get_game_metadata {
     my ($dbh, $id) = @_;
 
     my ($rows) =
-        $dbh->selectall_arrayref("select extract(epoch from now() - last_update) as time_since_update, game.description, finished, aborted, game_options, player_count, wanted_player_count, base_map as map_variant, game_options.deadline_hours  from game left join game_options on game.id=game_options.game where id=?",
+        $dbh->selectall_arrayref("select extract(epoch from now() - last_update) as time_since_update, game.description, finished, aborted, game_options, player_count, wanted_player_count, base_map as map_variant, game_options.deadline_hours, admin_user from game left join game_options on game.id=game_options.game where id=?",
                                  { Slice => {} },
                                  $id);
 

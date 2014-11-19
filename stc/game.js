@@ -3476,6 +3476,16 @@ function updateInfoTab() {
         addRow("Status", status);
     }
 
+    {
+        var admin = state.metadata.admin_user;
+        if (admin) {
+            var url = '/player/' + admin;
+            var link = new Element("a", { style: 'color: inherit',
+                                          href: url }).updateText(admin);
+            addRow("Admin", link);
+        }
+    }
+
     addRow("Description", state.metadata.description || "[no description]");
 
     {
