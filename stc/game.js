@@ -509,8 +509,12 @@ function drawCultMarker(ctx, color, name, hex) {
     ctx.strokeStyle = contrastColor[color];
     ctx.textAlign = 'center';
     var l = name[0].toUpperCase();
-    if (name == 'cultists') { l  = 'c' }
-    if (name == 'dragonlords') { l  = 'd' }
+    if (name == 'cultists' || 
+        name == 'dragonlords' ||
+        name == 'shapeshifters' ||
+        name == 'acolytes') {
+        l = l.toLowerCase();
+    }
     drawText(ctx, l, -1, 14,
              "bold 10px Verdana");
     ctx.restore();
