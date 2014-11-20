@@ -879,6 +879,19 @@ function renderColorCycle(faction, parent) {
     var base = cycle.indexOf(startColor);
     if (base < 0) { base = 0; }
 
+    var homeColor = {}
+    $H(state.factions).each(function (elem) {
+        var f = elem.value;
+
+        if (f == faction) {
+            return;
+        }
+        if (f.locked_terrain) {
+            return;
+        }
+        homeColor[f.color] = 1;
+    });
+
     for (var i = 0; i < 7; ++i) {
         var terrain = cycle[(base + i) % 7];
 
@@ -887,10 +900,18 @@ function renderColorCycle(faction, parent) {
             ctx.lineWidth = 3;
         }
 
+        var size = 10;
+        if ((faction.name == "dragonlords" ||
+             faction.name == "acolytes" ||
+             faction.name == "shapeshifters") &&
+            homeColor[terrain]) {
+            size = 7.5;
+        }            
+
         if (!faction.locked_terrain ||
             !faction.locked_terrain[terrain]) {
             ctx.beginPath();
-            ctx.arc(0, -30, 10, Math.PI * 2, 0, false);
+            ctx.arc(0, -29, size, Math.PI * 2, 0, false);
 
             ctx.fillStyle = bgcolors[terrain];
             ctx.fill();
@@ -912,7 +933,7 @@ function renderColorCycle(faction, parent) {
         }
 
         ctx.beginPath();
-        ctx.arc(0, -30, 10, Math.PI * 2, 0, false);
+        ctx.arc(0, -29, 10, Math.PI * 2, 0, false);
 
         ctx.fillStyle = bgcolors[primaryColor];
         ctx.fill();
