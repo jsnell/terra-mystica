@@ -138,7 +138,7 @@ your email settings at $domain/settings/
 sub fetch_email_settings {
     my ($dbh, $email) = @_;
     my $settings = $dbh->selectrow_hashref(
-        "select email_notify_turn, email_notify_all_moves, email_notify_chat from player where username=(select player from email where address=lower(?))",
+        "select email_notify_turn, email_notify_all_moves, email_notify_chat, email_notify_game_status from player where username=(select player from email where address=lower(?))",
         {},
         $email);
 
@@ -192,10 +192,16 @@ sub notify_after_move {
              ($acting ?
               notification_text_for_active $dbh, $write_id, $game, $email, $faction, $who_moved_pretty, $moves :
               notification_text_for_observer $game, $who_moved_pretty, $moves));
+        my $send = 0;
 
-        if ($game->{finished} or
-            ($acting and $settings->{email_notify_turn}) or
-            $settings->{email_notify_all_moves}) {
+        if ($game->{finished}) {
+            $send = $settings->{email_notify_game_status};
+        } elsif (($acting and $settings->{email_notify_turn}) or
+                 ($settings->{email_notify_all_moves})) {
+            $send = 1;
+        }
+
+        if ($send) {
             notify_by_email $game, $email, $subject, $body;
         }
     }
@@ -233,6 +239,7 @@ sub notify_game_started {
             notification_text_for_game_start $game;
 
         next if !$settings;
+        next if !$settings->{email_notify_game_status};
 
         notify_by_email $game, $email, $subject, $body;
     }

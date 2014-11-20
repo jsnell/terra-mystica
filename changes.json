@@ -1,5 +1,9 @@
 {
     "changes": [
+        { "date": "2014-11-20",
+          "title": "Email setting for game status changes",
+          "description": "A new email setting can be used to turn off email notifications for games starting or ending."
+        },
         { "date": "2014-11-15",
           "title": "Fire & Ice factions",
           "description": "The new factions from the Fire & Ice expansion are now available, and can be toggled on/off on a per-faction board basis during game creation."

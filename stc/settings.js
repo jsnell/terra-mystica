@@ -12,6 +12,7 @@ function loadOrSaveSettings(save) {
         form_params['email_notify_turn'] = $("email_notify_turn").checked;
         form_params['email_notify_all_moves'] = $("email_notify_all_moves").checked;
         form_params['email_notify_chat'] = $("email_notify_chat").checked;
+        form_params['email_notify_game_status'] = $("email_notify_game_status").checked;
         try {
             form_params['primary_email'] = $("primary_email").value;
         } catch (e) {
@@ -72,6 +73,7 @@ function renderSettings(state) {
     $("email_notify_turn").checked = state.email_notify_turn;
     $("email_notify_all_moves").checked = state.email_notify_all_moves;
     $("email_notify_chat").checked = state.email_notify_chat;
+    $("email_notify_game_status").checked = state.email_notify_game_status;
 
     $("email").update(newEmailList);
     $("primary-email-container").update(primarySelect);

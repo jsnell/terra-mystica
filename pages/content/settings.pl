@@ -39,6 +39,10 @@ email for the following events:
     <input id="email_notify_chat" type="checkbox" enabled="false">
     <label for="email_notify_chat">Chat messages</label>
   </div>
+  <div>
+    <input id="email_notify_game_status" type="checkbox" enabled="false">
+    <label for="email_notify_game_status">Game status changes (e.g. game start or end)</label>
+  </div>
 </tr>
         </table>
     </tr>

@@ -10,7 +10,7 @@ sub fetch_user_settings {
     my %res = ();
 
     my $player = $dbh->selectrow_hashref(
-        "select username, displayname, email_notify_turn, email_notify_all_moves, email_notify_chat from player where username = ?",
+        "select username, displayname, email_notify_turn, email_notify_all_moves, email_notify_chat, email_notify_game_status from player where username = ?",
         {},
         $username);
     $res{$_} = $player->{$_} for keys %{$player};
@@ -37,12 +37,13 @@ sub save_user_settings {
 
     $dbh->do("begin");
 
-    $dbh->do("update player set displayname=?, email_notify_turn=?, email_notify_all_moves=?, email_notify_chat=? where username=?",
+    $dbh->do("update player set displayname=?, email_notify_turn=?, email_notify_all_moves=?, email_notify_chat=?, email_notify_game_status=? where username=?",
              {},
              $displayname,
              $q->param('email_notify_turn'),
              $q->param('email_notify_all_moves'),
              $q->param('email_notify_chat'),
+             $q->param('email_notify_game_status'),
              $username);
 
     if ($primary_email) {
