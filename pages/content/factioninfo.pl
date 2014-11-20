@@ -80,7 +80,7 @@ A note on <b>home terrain</b>: The concept of home terrain only applies to the o
 <li> Have no spade conversion ability, can never gain or use spades, nor transform terrain in any other way.
 <li> Can only start from areas next to a river space, can only build dwellings into areas reachable through river movement.
 <li> When gaining priests through any means, can either unlock new terrain types or get a priest into the treasury.
-<li> SH costs 6c+4w, produces 4pw and allows the Riverwalkers to immediately place 2 bridges.
+<li> SH costs 6c+4w, produces 2pw and allows the Riverwalkers to immediately place 2 bridges.
 <li> SA costs 6c+4w.
 </ul>
 
