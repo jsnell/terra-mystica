@@ -1797,7 +1797,7 @@ function drawActionRequired() {
 
     if ($("planning_entry") && $("planning_entry").innerHTML == "") {
         var input = new Element("textarea", {"id": "planning_entry_input",
-                                             "style": "font-family: monospace; width: 60ex; height: 12em;" } );
+                                             "style": "font-family: monospace; width: 70ex; height: 12em;" } );
         $("planning_entry").insert(input);
         $("planning_entry").insert("<div style='padding-left: 2em'><button id='planning_entry_action' onclick='javascript:previewPlan()'>Show Result</button><button id='planning_entry_action' onclick='javascript:savePlan()'>Save Plan</button><br><div id='planning_entry_explanation'>Use this entry box to leave notes for yourself, or to plan your coming moves using the same input format as for normal play. View the effects of the plan with 'show result' or save the plan / notes for later with 'save plan'.</div></div>");
     }
