@@ -18,6 +18,10 @@ p {
     max-width: 60ex;
 }
 
+ul li {
+    max-width: 70ex;
+}
+
 h5 {
     font-family: Verdana;
     font-size: 90%;
