@@ -17,13 +17,21 @@
     <meta name=viewport content="width=device-width, initial-scale=1">
   </head>
   <body>
-    <table class="layout-sidebar">
-      <tr>
-        <td valign="top" id="sidebar">
-          <script>renderSidebar($("sidebar"));</script>
-        <td valign="top">
-          <h4 id="heading">{$title}</h4>
-          {$content}
-    </table>
+    <div class="layout-sidebar">
+      <div id="sidebar">
+        <div class="sidebar-top"></div>
+        <script>renderSidebar($("sidebar"));</script>
+      </div>
+      <div class="sidebar-content">
+        <div class="sidebar-top">
+          <h3 id="heading">{$title}</h3>
+        </div>
+        {$content}
+      </div>
+    </div>
+
+    <div class="footer">
+      Terra Mystica is a trademark of <a href='http://www.feuerland-spiele.de/en/'>Feuerland Spiele</a>. This site was created by <a href="https://www.snellman.net/">Juho Snellman</a>.
+    </div>
   </body>
 </html>

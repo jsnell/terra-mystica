@@ -1,15 +1,21 @@
+html {
+    min-height: 100%;
+    height: 100%;
+}
+
 body {
     font-family: Verdana;
     font-size: 90%;
-    padding: 5ex;
+    height: 100%;
+    margin: 0px;
 }
 
 body.gameview {
-    padding: 0ex;
+    padding: 1ex;
 }
 
 p {
-    max-width: 50ex;
+    max-width: 60ex;
 }
 
 h5 {
@@ -441,20 +447,37 @@ div.menu div.menu-item {
 
 /* Sidebar */
 
-table.layout-sidebar {
-    border-collapse: separate;
-    border-spacing: 2ex 0;
+div.layout-sidebar {
+    padding-left: 5ex;
+    padding-top: 4ex;
+    min-height: 90%;
 }
 
-td#sidebar {
+div#sidebar {
     white-space: nowrap;
     width: 12ex;
+    float: left;
+}
+
+div.sidebar-top {
+    height: 4ex;
+}
+
+div.sidebar-top h3 {
+    margin-top: 0ex;
+}
+
+div.sidebar-content {
+    margin-left: 14ex;
+    height: 100%;
 }
 
 div.sidebar-section {
+    margin-bottom: 2ex;
 }
 
 h4.sidebar-section-header {
+    margin-top: 1em;
     margin-bottom: 0px;
     margin-left: -1ex;
     color: #004;
@@ -499,6 +522,7 @@ div.motd {
     border-style: solid;
     border-width: 1px;
     padding: 5px;
+    margin-top: 1em;
     background-color: #eef;
 }
 
@@ -518,6 +542,12 @@ table.newgame-settings tr td p {
     margin-top: 0px;
 }
 
+div.footer {
+   font-size: 80%;
+   padding: 10px;
+   text-align: center;
+}
+
 /* Mobile overrides */
 @media only screen and (max-device-width: 480px) {
     body {
@@ -530,6 +560,27 @@ table.newgame-settings tr td p {
         max-height: 1000000px;
     }
 
+    /* Sidebar layout should be a top bar layout on mobile. */
+    div.layout-sidebar {
+        padding: 0.5ex;
+    }
+
+    div#sidebar {
+        float: none;
+        padding: 1ex;
+    }
+
+    div#sidebar div.sidebar-section{
+        display: inline-block;
+        min-width: 13ex;
+        vertical-align: top;
+    }
+
+    div.sidebar-content {
+        margin-left: 1ex;
+    }
+
+    /* Enlarge the action area in game view (roughly factor of 2). */
     div#action_required, pre#preview_commands, div#preview_status {
         font-size: 200%;
     }
