@@ -58,13 +58,6 @@ sub mangle_with_mode {
     my ($mode, $from, $to, $mangle) = @_;
     my $data = $mangle->(scalar slurp "$from");
 
-    if ($devel) {
-        if (!-l $to) {
-            symlink "$ENV{PWD}/$from", $to;
-        }
-        return;
-    }
-
     my ($fh, $filename) = tempfile("tmpfileXXXXXXX",
                                    DIR=>"$target");
     print $fh $data;
@@ -74,9 +67,14 @@ sub mangle_with_mode {
 }
 
 sub deploy_docs {
-    return if $devel;
     system "emacs --batch --file=usage.org --funcall org-export-as-html-batch";
-    rename "usage.html", "$target/usage.html"
+
+    mangle_with_mode 0444, "usage.html", "$target/usage.html", sub {
+        my $contents = shift;
+        $contents =~ s{.*<body>}{}ms;
+        $contents =~ s{</body>.*}{}ms;
+        $contents;
+    };
 }
 
 sub deploy_cgi {
