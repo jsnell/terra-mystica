@@ -558,7 +558,7 @@ div#postamble {
     display: none;
 }
 
-pre {
+pre.example {
     border: 1pt solid #AEBDCC;
     background-color: #F3F5F7;
     padding: 5pt;
