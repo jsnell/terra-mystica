@@ -222,7 +222,9 @@ sub adjust_resource {
     $type = alias_resource $type;
 
     if ($delta eq 'PLAYER_COUNT') {
-        $delta = $game{acting}->player_count();
+        $delta = scalar grep {
+            !$_->{dummy}
+        } $game{acting}->factions_in_order();
     }
 
     if ($type eq 'VP') {
