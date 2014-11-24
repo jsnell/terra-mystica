@@ -199,6 +199,8 @@ method require_subaction($faction, $type, $followup) {
         $faction->{allowed_sub_actions} = {%{$followup}} if $followup;
         # Taking an action is an implicit "decline"
         terra_mystica::command_decline($faction, undef, undef);
+    } elsif ($self->game()->{round} == 0) {
+        die "Can't take arbitrary actions during setup.\n";
     } else {
         my @unpassed = grep { !$_->{passed} and !$_->{dropped} } $self->factions_in_order();
         if (@unpassed == 1 or $faction->{planning}) {
