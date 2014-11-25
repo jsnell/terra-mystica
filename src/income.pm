@@ -98,9 +98,11 @@ sub take_income_for_faction {
     die "Taking income twice for $faction->{name}\n" if
         $faction->{income_taken};
 
-    for my $f ($game{acting}->factions_in_turn_order()) {
-        die "Can't take income for $faction->{name} ($f->{name} still active)\n" if
-            !($f->{passed} or $f->{dropped} or $f->{dummy});
+    if (!$game{planning}) {
+        for my $f ($game{acting}->factions_in_turn_order()) {
+            die "Can't take income for $faction->{name} ($f->{name} still active)\n" if
+                !($f->{passed} or $f->{dropped} or $f->{dummy});
+        }
     }
 
     if ($game{round} == 0) {

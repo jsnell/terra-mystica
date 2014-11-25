@@ -999,7 +999,8 @@ sub command_randomize {
 
 sub command_start_planning {
     my $faction = shift;
-
+    
+    $game{planning} = 1;
     $faction->{planning} = 1;
     if ($faction->{passed}) {
         if (!$faction->{income_taken}) {
