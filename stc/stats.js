@@ -2,70 +2,170 @@ var state = null;
 var id = document.location.pathname;
 
 function showStats() {
+    if (state == null) {
+        return;
+    }
+
+    var displaySettings = {
+        player_count: $("settings-player-count").value,
+        final_scoring: $("settings-final-scoring").value,
+        map: $("settings-map").value,
+    }
+
     var count = 0;
 
-    ["all", "3", "4", "5"].each(function(faction_count) {
-        $H(state.factions[faction_count]).sortBy(function (a) { return -a.value.win_rate } ).each(function(elem) {
-            renderFactionStats("-" + faction_count, elem);
-        });
-        var label = (faction_count == "all") ? "All" : faction_count + " players";
-        var selector = 
-            new Element("button", { "id": "faction-stats-selector-" + faction_count}).updateText(label);
-        selector.onclick = function() { selectFactionStats(faction_count) } ;
-        $("faction-stats-selector").insert(selector);
-    });
-    selectFactionStats("all");
+    var faction_aggregate = {
+    };
 
-    $H(state.factions.all).sortBy(function (a) { return -a.value.win_rate } ).each(function(elem) {
-        renderHighScoresForFaction(elem.key);
-        count += elem.value.wins;
-    });
-    ["standard", "non-standard"].each(function (label) {
-        var selector = 
-            new Element("button", { "id": "high-scores-selector-" + label}).updateText(label);
-        selector.onclick = function() { selectHighScoreTable(label) } ;
-        $("high-scores-selector").insert(selector);
-    });
-    selectHighScoreTable("standard");
+    var highscore_aggregate = {
+    };
 
-    ["-3p", "-4p", "-5p"].each(function(count) {
-        $H(state["positions" + count]).sortBy(function (a) { return -a.value.win_rate } ).each(function(elem) {
-            $("position-stats" + count).insert("<tr><td>#{key}<td>#{value.wins}<td>#{value.count}<td>#{value.win_rate}<td>#{value.average_position}<td>#{value.average_vp}<td>#{value.average_loss_vp}</tr>"
-                                               .interpolate(elem));
-        });
+    var position_aggregate = {
+    };
+
+    state.each(function (record) {
+        var bucket_key = record[0];
+        var data = record[1];
+
+        if (bucket_key.player_count.toString() != displaySettings.player_count &&
+            displaySettings.player_count != "any") {
+            return;
+        }
+
+        if (bucket_key.final_scoring != displaySettings.final_scoring &&
+            displaySettings.final_scoring != "any") {
+            return;
+        }
+
+        if (bucket_key.map != displaySettings.map &&
+            displaySettings.map != "any") {
+            return;
+        }
+            
+        var aggregate_record = faction_aggregate[bucket_key.faction];
+        if (!aggregate_record) {
+            aggregate_record = faction_aggregate[bucket_key.faction] =
+                initAggregate();
+        }
+        addToAggregate(aggregate_record, data);
+            
+        aggregate_record = position_aggregate[bucket_key.start_position];
+        if (!aggregate_record) {
+            aggregate_record = position_aggregate[bucket_key.start_position] =
+                initAggregate();
+        }
+        addToAggregate(aggregate_record, data);
+
+        // High scores
+
+        var faction_hs = highscore_aggregate[bucket_key.faction];
+        if (!faction_hs) {
+            faction_hs = highscore_aggregate[bucket_key.faction] = {
+            };
+        }
+
+        var hs_aggregate_record = faction_hs[bucket_key.player_count];
+        if (!hs_aggregate_record) {
+            hs_aggregate_record = faction_hs[bucket_key.player_count] = {
+                vp: 0
+            };
+        }
+
+        if (data.high_score.vp > hs_aggregate_record.vp) {
+            faction_hs[bucket_key.player_count] = data.high_score;
+        }
+
+        count += data.count / bucket_key.player_count;
     });
 
-    $("timestamp").innerHTML = "Last updated: " + state.timestamp;
+    finalizeAggregates(faction_aggregate);
+    finalizeAggregates(position_aggregate);
+
+    renderFactionStats(faction_aggregate);
+    renderHighScores(displaySettings, faction_aggregate, highscore_aggregate);
+    renderPositionStats(displaySettings, position_aggregate);
+
+    // $("timestamp").innerHTML = "Last updated: " + state.timestamp;
     $("count").innerHTML = Math.round(count);
 }
 
-function renderFactionStats(count, elem) {
-    var faction = elem.key;
-    elem.value.game_links = "";
-    (elem.value.games_won || []).each(function (id) {
-        elem.value.game_links += ("<a href='/game/" + id + "'>" + id + "</a> ");
-    });
-    elem.game_link_id_attr = "\"\"".interpolate(elem);
-
-    var tr = new Element("tr");
-    tr.insert(factionTableCell(elem.key));
-    tr.insert("<td>#{value.wins}<td>#{value.count}<td>#{value.win_rate}<td>#{value.average_position}<td>#{value.average_vp}<td>#{value.average_loss_vp}<td><span id=#{key}-links style='display: none'>#{value.game_links}</span><a href='javascript:showLinks(\"#{key}\")' id=#{key}-show-link>[show]</a>".interpolate(elem));
-
-    $("faction-stats" + count).insert(tr);
+function initAggregate() {
+    return {
+        count: 0,
+        wins: 0,
+        average_vp: 0,
+        average_winner_vp: 0,
+        average_position: 0,
+    };
 }
 
-function renderHighScoresForFaction(faction) {
-    ['standard', 'non-standard'].each(function(standard) {
+function addToAggregate(aggregate_record, data) {
+    aggregate_record.count += data.count;
+    aggregate_record.wins += data.wins;
+    aggregate_record.average_vp += data.average_vp;
+    aggregate_record.average_winner_vp += data.average_winner_vp;
+    aggregate_record.average_position += data.average_position;
+}
+
+function finalizeAggregates(aggregate) {
+    $H(aggregate).each(function (elem) {
+        var record = elem[1];
+        var count = record.count;
+        record.win_rate = (100 * record.wins / count).toFixed(2);
+        record.wins = (record.wins).toFixed(2);
+
+        record.average_position = (record.average_position / count).toFixed(2);
+        record.average_loss_vp = ((record.average_winner_vp - record.average_vp) / count).toFixed(2);
+        record.average_vp = (record.average_vp / count).toFixed(2);
+        delete record.average_winner_vp;
+    });
+}
+
+function renderFactionStats(faction_aggregate) {
+    var div = $("faction-stats");
+    var table = new Element("table", {"class": "building-table"});
+
+    div.innerHTML = "";
+    table.insert("<tr><td>Faction<td>Wins<td>Games<td>Win %<td>Average position<td>Average score<td>Average loss");
+
+    $H(faction_aggregate).sortBy(function (a) { return -a.value.win_rate } ).each(function(elem) {
+        var faction = elem.key;
+        var tr = new Element("tr");
+        tr.insert(factionTableCell(elem.key));
+        tr.insert("<td>#{value.wins}<td>#{value.count}<td>#{value.win_rate}<td>#{value.average_position}<td>#{value.average_vp}<td>#{value.average_loss_vp}".interpolate(elem));
+
+        table.insert(tr);
+    });
+
+    div.insert(table);
+}
+
+function renderHighScores(displaySettings, faction_aggregate, highscore_aggregate) {
+    var div = $("high-scores");
+    div.innerHTML = "";
+
+    var table = new Element("table", {"class": "building-table"});
+    var header = new Element("tr");
+    header.insert(new Element("td").updateText("Faction"));
+
+    var cols = displaySettings.player_count == "any" ? [3, 4, 5] : [ displaySettings.player_count ];
+    cols.each(function (count) {
+        header.insert(new Element("td").updateText(count + "p"));        
+    });
+    table.insert(header);
+
+    $H(faction_aggregate).sortBy(function (a) { return -a.value.win_rate } ).each(function(elem) {
+        var faction = elem.key;
         var row = new Element("tr");
         row.insert(factionTableCell(faction));
-        for (var i = 3; i <= 5; ++i) {
-            var faction_record = state.factions[i][faction];
-            var high_score;
-            if (!faction_record ||
-                !(high_score = faction_record.high_score[standard])) {
+
+        cols.each(function(count) {
+            var high_score = highscore_aggregate[faction][count];
+            if (!high_score) {
                 row.insert(new Element("td"));
-                continue;
+                return;
             }
+
             var score = high_score.vp;
             var game = high_score.game;
             var player = high_score.player;
@@ -77,9 +177,50 @@ function renderHighScoresForFaction(faction) {
             }
             row.insert(new Element("td").insert(gamelink).
                        insertTextSpan(" ").insert(playerlink));
-        }
-        $("high-scores-" + standard).insert(row);
+        });
+
+        table.insert(row);
     });
+
+    div.insert(table);
+}
+
+function renderPositionStats(displaySettings, position_aggregate) {
+    var div = $("start-position-stats");
+    div.innerHTML = "";
+    
+    if (displaySettings.player_count == "any") {
+        div.insert(new Element("p").updateText("Start position statistics only available for specific player counts"));
+        return;
+    }
+
+    var table = new Element("table", {"class": "building-table"});
+    var header = new Element("tr");
+    header.insert(new Element("td").updateText("Position"));
+    header.insert(new Element("td").updateText("Wins"));
+    header.insert(new Element("td").updateText("Games"));
+    header.insert(new Element("td").updateText("Win %"));
+    header.insert(new Element("td").updateText("Average position"));
+    header.insert(new Element("td").updateText("Average score"));
+    header.insert(new Element("td").updateText("Average loss"));
+    table.insert(header);
+
+    $H(position_aggregate).each(function (elem) {
+        var position = elem.key;
+        var record = elem.value;
+        var row = new Element("tr");
+
+        row.insert(new Element("td").updateText(position));
+        row.insert(new Element("td").updateText(record.wins));
+        row.insert(new Element("td").updateText(record.count));
+        row.insert(new Element("td").updateText(record.win_rate));
+        row.insert(new Element("td").updateText(record.average_position));
+        row.insert(new Element("td").updateText(record.average_vp));
+        row.insert(new Element("td").updateText(record.average_loss_vp));
+        table.insert(row);
+    });
+
+    div.insert(table);
 }
 
 function showLinks(id) {
@@ -99,21 +240,4 @@ function loadStats() {
             };
         }
     });
-}
-
-function selectHighScoreTable(kind) {
-    $$("#high-scores table").each(function(table) { table.hide() });
-    $$("#high-scores-selector button").each(function(button) { button.style.fontWeight = "normal" });
-
-    $("high-scores-" + kind).show();
-    $("high-scores-selector-" + kind).style.fontWeight = "bold";
-}
-
-function selectFactionStats(count) {
-    var kind = $("faction-stats-selector").value;
-    $$("#faction-stats table").each(function(table) { table.hide() });
-    $$("#faction-stats-selector button").each(function(button) { button.style.fontWeight = "normal" });
-
-    $("faction-stats-" + count).show();
-    $("faction-stats-selector-" + count).style.fontWeight = "bold";
 }

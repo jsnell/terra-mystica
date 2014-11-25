@@ -552,6 +552,11 @@ div.footer {
    text-align: center;
 }
 
+div.stats-settings {
+    display: inline-block;
+    margin-right: 20px;
+}
+
 /* Manual */
 
 div#postamble {

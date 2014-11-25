@@ -21,6 +21,35 @@ sub print_json {
 
 my %stats = ();
 
+sub bucket_key {
+    my ($game, $faction) = @_;
+
+    my $faction_count = scalar keys %{$game->{factions}};
+
+    my $start_position = ($_->{start_order} - 1) / ($faction_count - 1);
+    if ($start_position == 0) {
+        $start_position = 'first';
+    } elsif ($start_position == 1) {
+        $start_position = 'last';
+    } elsif ($start_position == 0.5) {
+        $start_position = 'middle';
+    } elsif ($start_position < 0.5) {
+        $start_position = 'second';
+    } else {
+        $start_position = 'second-to-last';
+    }
+
+    my %key = (
+        player_count => $faction_count,
+        start_position => $start_position,
+        faction => $faction->{faction},
+        final_scoring => ($game->{non_standard} ? 'expansion' : 'original'),
+        map => $game->{base_map}
+    );
+
+    return encode_json \%key;
+}
+
 sub record_stats {
     my ($res, $stat, $pos, $faction_count, $win_vp, $winner_count) = @_;
 
@@ -28,11 +57,9 @@ sub record_stats {
 
     if ($_->{vp} == $win_vp) {
         $stat->{wins} += 1 / $winner_count;
-        push @{$stat->{games_won}}, $res->{id};
     }
-    my $standard = $res->{non_standard} ? 'non-standard' : 'standard';
-    if ($_->{vp} > ($stat->{high_score}{$standard}{vp} // 0)) {
-        $stat->{high_score}{$standard} = {
+    if ($_->{vp} > ($stat->{high_score}{vp} // 0)) {
+        $stat->{high_score} = {
             vp => $_->{vp},
             game => $res->{id},
             player => $_->{username},
@@ -114,36 +141,13 @@ sub handle_game {
             } values %{$res->{factions}};
         }
 
-        my $start_position = ($_->{start_order} - 1) / ($faction_count - 1);
-        if ($start_position == 0) {
-            $start_position = 'first';
-        } elsif ($start_position == 1) {
-            $start_position = 'last';
-        } elsif ($start_position == 0.5) {
-            $start_position = 'middle';
-        } elsif ($start_position < 0.5) {
-            $start_position = 'second';
-        } else {
-            $start_position = 'second-to-last';
-        }
+        my $bucket_key = bucket_key $res, $_;
+        my $stat = $stats{$bucket_key} ||= {
+            wins => 0,
+        };
 
-        my $faction_stat_all = ($stats{factions}{'all'}{$_->{faction}} ||= {
-            wins => 0,
-            games_won => [],
-        });
-        my $faction_stat_count = ($stats{factions}{$faction_count}{$_->{faction}} ||= {
-            wins => 0,
-            games_won => [],
-        });
-        my $position_stat = ($stats{"positions-${faction_count}p"}{$start_position} ||= {
-            wins => 0,
-            games_won => [],
-        });
-
-        for my $stat (($faction_stat_all, $faction_stat_count, $position_stat)) {
-            record_stats($res, $stat, $pos, $faction_count,
-                         $win_vp, $winner_count);
-        }
+        record_stats($res, $stat, $pos, $faction_count,
+                     $win_vp, $winner_count);
     }
 }
 
@@ -157,43 +161,11 @@ for (@{$results{results}}) {
     $games{$_->{game}}{factions}{$_->{faction}} = $_;
     $games{$_->{game}}{id} = $_->{game};
     $games{$_->{game}}{non_standard} = $_->{non_standard};
+    $games{$_->{game}}{base_map} = ($_->{base_map} || '126fe960806d587c78546b30f1a90853b1ada468');
 }
 
 for (values %games) {
     handle_game $_;
 }
 
-for my $faction (values %{$stats{factions}}) {
-    # Remove stats if there haven't been at least 20 games with a given
-    # faction + player count.
-    %{$faction} = map {
-        $faction->{$_}{count} > 0 ? ($_, $faction->{$_}) : ()
-    } keys %{$faction};
-    for my $stat (values %{$faction}) {
-        $stat->{win_rate} = int(100 * $stat->{wins} / $stat->{count});
-        $stat->{expected_win_rate} = int(100 * $stat->{expected_wins} / $stat->{count});
-        $stat->{average_loss_vp} = sprintf "%5.2f", ($stat->{average_winner_vp} - $stat->{average_vp}) / $stat->{count};
-        $stat->{average_vp} = sprintf "%5.2f", $stat->{average_vp} / $stat->{count};
-        $stat->{average_position} = sprintf "%5.2f", $stat->{average_position} / $stat->{count};
-
-        $stat->{wins} = 0 + sprintf "%5.2f", $stat->{wins};
-        delete $stat->{average_winner_vp};
-    }
-}
-
-for (3..5) {
-    for my $stat (values %{$stats{"positions-${_}p"}}) {
-        next if !$stat->{count};
-        $stat->{win_rate} = int(100 * $stat->{wins} / $stat->{count});
-        $stat->{expected_win_rate} = int(100 * $stat->{expected_wins} / $stat->{count});
-        $stat->{average_loss_vp} = sprintf "%5.2f", ($stat->{average_winner_vp} - $stat->{average_vp}) / $stat->{count};
-        $stat->{average_vp} = sprintf "%5.2f", $stat->{average_vp} / $stat->{count};
-        $stat->{average_position} = sprintf "%5.2f", $stat->{average_position} / $stat->{count};
-        
-        delete $stat->{average_winner_vp};
-    }
-}
-
-$stats{timestamp} = POSIX::strftime "%Y-%m-%d %H:%M UTC", gmtime time;
-
-print_json { %stats };
+print_json [ map { [ decode_json($_), $stats{$_} ] } keys %stats ]
