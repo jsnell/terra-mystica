@@ -69,9 +69,12 @@ sub iterate_results {
 
         my ($ap1, $ap2);
 
-        if ($res->{a}{vp} == $res->{b}{vp}) {
+        my $a_vp = $res->{a}{vp};
+        my $b_vp = $res->{b}{vp};
+
+        if ($a_vp == $b_vp) {
             ($ap1, $ap2) = (0.5, 0.5);
-        } elsif ($res->{a}{vp} > $res->{b}{vp}) {
+        } elsif ($a_vp > $b_vp) {
             ($ap1, $ap2) = (1, 0);
         } else {
             ($ap1, $ap2) = (0, 1);
