@@ -358,6 +358,7 @@ faction selection. The following options are available:
 
 - =mini-expansion-1=: First mini-expansion, 4 town tiles
 - =shipping-bonus=: Additional bonus tile from Spielbox 6/2013, http://boardgamegeek.com/image/1843355/terra-mystica-navigation-round-bonus-tile
+- =variable-turn-order=: The order in which players pass determines the turn order for the next round.
 - =fire-and-ice-final-scoring=: One more final scoring category will be randomly selected from the 4 alternatives included in the Fire & Ice expansion.
 - =fire-and-ice-faction/xxx=: Where xxx is one of "ice", "variable" or "volcano". Makes the two factions of that type from the Fire & Ice expansion available
 in the game.

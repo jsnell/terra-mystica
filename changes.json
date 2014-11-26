@@ -1,5 +1,9 @@
 {
     "changes": [
+        { "date": "2014-11-27",
+          "title": "Fire & Ice turn order variant",
+          "description": "The turn order variant from Fire & Ice, where the order of passing determines the new turn order, is now available as a game creation option."
+        },
         { "date": "2014-11-20",
           "title": "Email setting for game status changes",
           "description": "A new email setting can be used to turn off email notifications for games starting or ending."

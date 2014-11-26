@@ -24,6 +24,7 @@ the letters A-Z and a-z and the digits 0-9.
         <input name="game-options" type="checkbox" id="option-mini-expansion-1" value="mini-expansion-1"></input><label for="option-mini-expansion-1">Mini Expansion #1 (town tiles)</label><br>
         <input name="game-options" type="checkbox" id="option-shipping-bonus" value="shipping-bonus"></input><label for="option-shipping-bonus">Shipping bonus tile (Spielbox 6/2013)</label><br>
         <input name="game-options" type="checkbox" id="option-fire-and-ice-final-scoring" value="fire-and-ice-final-scoring"></input><label for="option-fire-and-ice-final-scoring">Extra final scoring tile (Fire &amp; Ice expansion)</label><br>
+        <input name="game-options" type="checkbox" id="option-variable-turn-order" value="variable-turn-order"></input><label for="option-variable-turn-order">Turn order determined by passing order (Fire &amp; Ice expansion)</label><br>
 
         <input type="checkbox" id="option-fire-and-ice-factions" onchange="javascript:newGameValidate()"></input><label for="option-fire-and-ice-factions">Fire &amp; Ice expansion factions</label><br>
         <div style="padding-left: 2em">
