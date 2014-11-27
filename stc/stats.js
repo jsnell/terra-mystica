@@ -27,8 +27,13 @@ function showStats() {
         var bucket_key = record[0];
         var data = record[1];
 
-        if (bucket_key.player_count.toString() != displaySettings.player_count &&
-            displaySettings.player_count != "any") {
+        var player_count = bucket_key.player_count;
+
+        if (displaySettings.player_count != "any") {
+            if (player_count.toString() != displaySettings.player_count) {
+                return;
+            }
+        } else if (player_count < 3) {
             return;
         }
 

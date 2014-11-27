@@ -15,6 +15,7 @@ __DATA__
   Player count<br>
   <select id="settings-player-count" onchange="showStats()">
     <option value="any" selected="true">3-5p
+    <option value="2">2p
     <option value="3">3p
     <option value="4">4p
     <option value="5">5p

@@ -79,7 +79,7 @@ sub handle_game {
     my $winner_count = 0;
     my $faction_count = keys %{$res->{factions}};
 
-    return if $faction_count < 3;
+    return if $faction_count < 2;
 
     my %player_ids = ();
 
