@@ -178,6 +178,7 @@ sub deploy_data {
 
     for my $f (qw(pages/content/about.pl
                   pages/content/alias.pl
+                  pages/content/blog.pl
                   pages/content/changes.pl
                   pages/content/edit.pl
                   pages/content/game.pl

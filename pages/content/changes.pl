@@ -16,6 +16,6 @@ __DATA__
 
 <script language="javascript">
   fetchChangelog(function(data) {
-      showChangelog(data, $("changes"), "Changes", 365 * 86400)
+      showChangelog(data, $("changes"), "Changes", {"change": true})
   });
 </script>

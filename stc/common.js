@@ -115,7 +115,7 @@ function fetchChangelog(handler) {
             try {
                 var resp = transport.responseText.evalJSON();
                 if (!resp.error) {
-                    handler(resp.changes);
+                    handler(resp.news);
                 }
             } catch (e) {
                 handleException(e);
@@ -124,10 +124,12 @@ function fetchChangelog(handler) {
     });
 }
 
-function showChangelog(data, div, heading, max_age) {
-    data = data.select(function (record) {
-        return (new Date() - new Date(record.date)) / 1000 < max_age;
-    });
+function showChangelog(data, div, heading, types, max_age) {
+    if (max_age) {
+        data = data.select(function (record) {
+            return (new Date() - new Date(record.date)) / 1000 < max_age;
+        });
+    }
 
     if (data.size() > 0)  {
         div.insert(new Element("h4").update(heading));
@@ -135,9 +137,26 @@ function showChangelog(data, div, heading, max_age) {
 
     data.each(function (record) {
         var e = new Element("div", {"class": "changelog-entry"});
-        e.insert(new Element("b").update("#{date} - #{title}".interpolate(record)));
-        e.insert(new Element("p").update(record.description));
         div.insert(e);
+        
+        if (!types[record.type || "change"]) {
+            return;
+        }
+
+        var header = new Element("b");
+
+        var title = record.title;
+        if (record.link) {
+            var link = new Element("a", {"href": record.link});
+            link.insert(title);
+            title = link;
+        }
+
+        header.insert(record.date + " - ");
+        header.insert(title);
+
+        e.insert(header);
+        e.insert(new Element("p").update(record.description));
     });
 }
 
@@ -235,6 +254,7 @@ function renderSidebar(id) {
         insertLink("/stats/", "Statistics");
         insertLink("/ratings/", "Ratings");
         insertLink("/changes/", "Changes");
+        insertLink("/blog/", "Blog");
     });
 
     sidebarSection("Related", function (insertLink) {    
