@@ -1,4 +1,4 @@
-#+TITLE: User's Guide for Online Terra Mystica
+#+TITLE:
 #+AUTHOR: Juho Snellman
 #+EMAIL: jsnell@iki.fi
 #+STYLE: <link rel="stylesheet" type="text/css" href="/stc/org.css" />

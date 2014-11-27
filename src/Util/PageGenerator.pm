@@ -31,6 +31,12 @@ sub generate_page {
 
     $name =~ s/[^a-z]//g;
     my $data = get_page_data $dir, $name;
+
+    if ($data->{title} and $data->{title} !~ /Terra Mystica/) {
+        $data->{head_title} = "$data->{title} - Terra Mystica";
+    } else {
+        $data->{head_title} = $data->{title};
+    }
     
     my $layout = "$dir/layout/$data->{layout}.html";
     my $template = Text::Template->new(TYPE => 'FILE',

@@ -22,6 +22,14 @@ ul li {
     max-width: 70ex;
 }
 
+h1 {
+    font-size: 1.2em;
+}
+
+h2 {
+    font-size: 1.2em;
+}
+
 h5 {
     font-family: Verdana;
     font-size: 90%;
