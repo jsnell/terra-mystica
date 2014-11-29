@@ -22,16 +22,6 @@ method handle($q, $id) {
     $self->no_cache();
 
     my $dbh = get_db_connection;
-    my $username = username_from_session_token(
-        $dbh,
-        $q->cookie('session-token') // '');
-
-    if (!defined $username) {
-        $self->output_json({
-            error => [ "Not logged in\n" ]
-        });
-        return;
-    }
 
     my $base_map = $q->param('base_map');
 
@@ -40,12 +30,25 @@ method handle($q, $id) {
         bridges => [],
     };
 
-    if ($self->mode() eq 'preview') {
-        preview($dbh, $q->param('map-data'), $res);
-    } elsif ($self->mode() eq 'save') {
-        save($dbh, $q->param('map-data'), $res, $username);
-    } elsif ($self->mode() eq 'view') {
+    if ($self->mode() eq 'view') {
         view($dbh, $id, $res, $q->param('map-only') // 1);
+    } else {
+        my $username = username_from_session_token(
+            $dbh,
+            $q->cookie('session-token') // '');
+
+        if (!defined $username) {
+            $self->output_json({
+                error => [ "Not logged in\n" ]
+                               });
+            return;
+        }
+
+        if ($self->mode() eq 'preview') {
+            preview($dbh, $q->param('map-data'), $res);
+        } elsif ($self->mode() eq 'save') {
+            save($dbh, $q->param('map-data'), $res, $username);
+        }
     }
 
     $self->output_json($res);
