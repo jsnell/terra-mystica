@@ -202,7 +202,7 @@ function seconds_to_pretty_time(seconds) {
 }
 
 function loggedIn() {
-    return document.cookie.match(/session-username=([A-Za-z0-9]+)/);
+    return document.cookie.match(/session-username=([A-Za-z0-9._-]+)/);
 }
 
 function renderSidebar(id) {
