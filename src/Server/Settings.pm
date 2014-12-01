@@ -41,6 +41,7 @@ method handle($q) {
         $res = fetch_user_settings $dbh, $username;
         $res->{error} = [];
     }; if ($@) {
+        print STDERR "Settings error: $@\n";
         $res = { error => [ $@ ] };
     }
 

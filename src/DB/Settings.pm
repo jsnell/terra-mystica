@@ -54,7 +54,7 @@ sub save_user_settings {
             $primary_email);
 
         if (!$exists) {
-            die "'$primary_email' is not a registered email address for this account\n";
+            die "'$primary_email' is not a registered email address for '$username'\n";
         }
         
         $dbh->do("update email set is_primary=false where player=?",
