@@ -1348,7 +1348,7 @@ Readonly our %faction_setups_extra => (
                                     PW => [ 0, 1, 2, 4, 6 ] } },
                 TE => { advance_cost => { W => 2, C => 5 },
                         income => { P => [ 0, 1, 1, 2 ],
-                                    PW => [ 0, 0, 5, 0 ] } },
+                                    PW => [ 0, 0, 5, 5 ] } },
                 SH => { advance_cost => { W => 4, C => 6 },
                         advance_gain => [ { BRIDGE => 2 } ],
                         subactions => {
