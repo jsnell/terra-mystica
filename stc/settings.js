@@ -55,7 +55,7 @@ function renderSettings(state) {
     var primarySelect = new Element("select", {"id": "primary_email"});
     $H(state.email).each(function (elem) {
         var row = new Element("li");
-        var option = new Element("option").update(elem.key);
+        var option = new Element("option", {"value": elem.key}).update(elem.key);
         
         if (first || elem.value.is_primary) {
             option.selected = true;
