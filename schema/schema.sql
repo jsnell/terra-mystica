@@ -51,6 +51,14 @@ create table game_player (
     primary key (game, player, index)
 );
 
+create table game_active_time (
+    game text references game (id),
+    player text references player (username),
+    active_seconds integer default 0,
+    active_after_soft_deadline_seconds integer default 0,
+    primary key (game, player)
+);
+
 create table game_role (
     game text references game (id),
     faction_player text references player (username),
@@ -68,6 +76,8 @@ create table game_role (
 create index game_role_faction_player_idx on game_role (faction_player);
 create index game_role_email_idx on game_role (email);
 create index game_role_game_idx on game_role (game);
+create index game_role_action_required_idx on game_role (action_required);
+create index game_role_leech_required_idx on game_role (leech_required);
 
 create table blacklist (
        email text references email (address)
