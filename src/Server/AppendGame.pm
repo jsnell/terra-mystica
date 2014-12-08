@@ -125,22 +125,26 @@ method handle($q) {
         }
     };
 
-    eval {
-        log_game_event {
-            event => 'append',
-            username => $username,
-            faction => $faction_name,
-            game => $read_id,
-            commands => $preview,
-            round => $res->{round},
-            turn => $res->{turn},
-            ip => $q->remote_addr(),
-        };
-    }; if ($@) {
-        print STDERR "error writing game log: $@\n";
-    }
+    if (@{$res->{error}}) {
+        $dbh->do("rollback");
+    } else {
+        eval {
+            log_game_event {
+                event => 'append',
+                username => $username,
+                faction => $faction_name,
+                game => $read_id,
+                commands => $preview,
+                round => $res->{round},
+                turn => $res->{turn},
+                ip => $q->remote_addr(),
+            };
+        }; if ($@) {
+            print STDERR "error writing game log: $@\n";
+        }
 
-    finish_game_transaction $dbh;
+        finish_game_transaction $dbh;
+    }
 
     if (!@{$res->{error}}) {
         if ($res->{options}{'email-notify'}) {
