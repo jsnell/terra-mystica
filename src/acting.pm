@@ -292,6 +292,10 @@ method what_next() {
         $self->in_use_income_spades();
     }
 
+    if ($self->state() eq 'income-terrain-unlock') {
+        $self->in_income_terrain_unlock();
+    }
+
     if ($self->state() eq 'play') {
         $self->in_play();
     }
@@ -449,6 +453,22 @@ method in_income() {
 }
 
 method in_use_income_spades() {
+    if ($self->action_required_count()) {
+        return;
+    }
+
+    $self->state('income-terrain-unlock');
+}
+
+method in_income_terrain_unlock() {
+    for my $faction ($self->factions_in_order()) {
+        if ($faction->{UNLOCK_TERRAIN}) {
+            $self->require_action($faction,
+                                  { type => 'unlock-terrain',
+                                    count => $faction->{UNLOCK_TERRAIN} });
+        }
+    }
+
     if ($self->action_required_count()) {
         return;
     }

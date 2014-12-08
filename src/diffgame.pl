@@ -91,6 +91,8 @@ my $games = $dbh->selectall_arrayref("select id, write_id, extract(epoch from la
                                      {},
                                      shift || '%');
 
+# and 1 = (select count(*) from game_role where game.id=game_role.game and faction='riverwalkers')
+
 my $count = 0;
 for (@{$games}) {
     my $id = $_->[0];
