@@ -1,5 +1,11 @@
 {
     "news": [
+        { "date": "2014-12-08",
+          "title": "Command languages as game UIs",
+          "description": "A blog post looking at the implications (feature set, usability, social effects and development issues) of using a command language as the canonical data representation both for the backend and the UI of this site.",
+          "type": "blog",
+          "link": "https://www.snellman.net/blog/archive/2014-12-08-command-languages-as-game-ui/"
+        },
         { "date": "2014-11-27",
           "title": "A brief history of Online Terra Mystica",
           "description": "A development history of the site.",
