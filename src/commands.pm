@@ -178,6 +178,7 @@ sub command_build {
                 $map{$where}{color} eq $faction->{secondary_color}) {
                 $map{$where}{color} = $color;
             } else {
+                
                 command $faction_name, "transform $where to $color";
             }
         } else {
@@ -1372,8 +1373,9 @@ sub command {
         };
         $game{acting}->register_faction($dummy_faction);
     } elsif ($command =~ /^drop-faction (\w+)$/i) {
-        die "Players can only be dropped from admin view\n" if $faction_name;
         my $f = lc $1;
+        die "Players can only be dropped from admin view\n" if $faction_name and $faction_name ne $f;
+
         my $faction = $game{acting}->get_faction($f);
         die "Faction $f is not in the game" if !$faction;
         $faction->{dropped} = 1;
@@ -1431,7 +1433,7 @@ sub do_command {
     }
 
     command $faction_name, $commands[0];
-    if ($faction) {
+    if ($faction && !$faction->{dropped}) {
         $game{ledger}->add_command($commands[0]);
     }
 
@@ -1460,6 +1462,8 @@ sub clean_commands {
 
     # Clean up whitespace
     s/\s+/ /g;
+    s/^\s+//;
+    s/\s+$//;
 
     s/dragonmasters/dragonlords/gi;
 
@@ -1502,9 +1506,9 @@ sub clean_commands {
 sub rewrite_stream {
     my @command_stream = @_;
 
-    for (my $i = 0; $i < @command_stream-1; ++$i) {
+    for (my $i = 0; $i < @command_stream; ++$i) {
         my $this = $command_stream[$i];
-        my $next = $command_stream[$i+1];
+        my $next = $command_stream[$i+1] // ['', ''];
 
         # If you have two manipulations of the same resource after one
         # another, merge. (Needed for Auren SH validation).
@@ -1518,6 +1522,10 @@ sub rewrite_stream {
         if (!$this->[0] and $this->[1] =~ /^player-count (\d+)$/i) {
             $game{player_count} = 1*$1;
             $this->[1] = '';
+        }
+
+        if ($this->[0] and $this->[1] =~ /^\s*resign\s*$/i) {
+            $this->[1] = "drop-faction $this->[0]";
         }
 
         if (($this->[0] and $next->[0] and $this->[0] eq $next->[0]) and

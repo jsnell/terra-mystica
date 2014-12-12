@@ -1,5 +1,10 @@
 {
     "news": [
+        { "date": "2014-12-12",
+          "title": "'resign' command added",
+          "description": "You can now resign from games using the 'resign' command. Note that the functionality is currently not available during faction selection. Use the feature with caution: you will be marked as having dropped out from the game on your profile page, and if the game finishes normally, might lose rating points based on your final position in the game.",
+          "type": "change"
+        },
         { "date": "2014-12-11",
           "title": "Time tracking",
           "description": "The time spent waiting for each player is now tracked in roughly 10 minute intervals. It does not matter whether the game is waiting on a full action or for a power leeching decision, nor whether there are otherplayers who should be entering moves at the moment. As a rule of thumb, if the game currently shows up as green or red on your game list, the clock is ticking. The timing information is displayed under the 'info' tab of each game.",
