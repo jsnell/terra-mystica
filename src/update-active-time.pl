@@ -54,7 +54,7 @@ sub handle {
                  $row->{faction_player});
 
     if ($count == 0) {
-        $dbh->do("insert into game_active_time (active_seconds, active_seconds_4h, active_seconds_8h, active_seconds_12h, active_seconds_24h, active_seconds_72h, active_seconds_48h, game, player) values (?, ?, ?, ?)",
+        $dbh->do("insert into game_active_time (active_seconds, active_seconds_4h, active_seconds_8h, active_seconds_12h, active_seconds_24h, active_seconds_72h, active_seconds_48h, game, player) values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                  {},
                  $delta,
                  @delta,
