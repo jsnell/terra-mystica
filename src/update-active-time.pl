@@ -22,6 +22,10 @@ sub handle {
     my $delta = $interval;
     my $after_soft_deadline_delta = 0;
 
+    if ($row->{seconds_since_update} < $interval) {
+        return;
+    }
+
     if ($row->{seconds_since_update} > 86400) {
         $after_soft_deadline_delta = $interval;
     }
