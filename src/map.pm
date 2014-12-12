@@ -490,14 +490,21 @@ sub transform_colors_on_cycle {
     }
 }
 
-sub transform_colors {
+sub validate_transform_color {
     my ($faction, $where) = @_;
     my $current_color = $map{$where}{color};
 
     if ($current_color eq 'ice' or
         $current_color eq 'volcano') {
-        confess "Can't transform $current_color\n";
+        die "Can't transform $current_color\n";
     }
+}
+
+sub transform_colors {
+    my ($faction, $where) = @_;
+    my $current_color = $map{$where}{color};
+
+    validate_transform_color $faction, $where;
 
     if ($faction->{FREE_TF} or
         $faction->{color} eq 'volcano' or
@@ -530,6 +537,8 @@ sub transform_cost {
 
     if (!$color) {
         ($color) = transform_colors $faction, $where;
+    } else {
+        validate_transform_color $faction, $where;
     }
 
     my ($cost, $gain, $need_teleport) = check_reachable $faction, $where;
