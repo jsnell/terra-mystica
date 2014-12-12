@@ -1,5 +1,10 @@
 {
     "news": [
+        { "date": "2014-12-11",
+          "title": "Time tracking",
+          "description": "The time spent waiting for each player is now tracked in roughly 10 minute intervals. It does not matter whether the game is waiting on a full action or for a power leeching decision, nor whether there are otherplayers who should be entering moves at the moment. As a rule of thumb, if the game currently shows up as green or red on your game list, the clock is ticking. The timing information is displayed under the 'info' tab of each game.",
+          "type": "change"
+        },
         { "date": "2014-12-08",
           "title": "Command languages as game UIs",
           "description": "A blog post looking at the implications (feature set, usability, social effects and development issues) of using a command language as the canonical data representation both for the backend and the UI of this site.",

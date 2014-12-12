@@ -1514,15 +1514,19 @@ function coloredFactionSpan(faction_name) {
     return new Element("span", { style: style }).insert(record.display);
 }
 
+function playerLink(player) {
+    var url = '/player/' + player;
+    var link = new Element("a", { style: 'color: inherit',
+                                  href: url });
+    link.updateText(player);
+    return link;
+}
+
 function factionDisplayName(faction, fg) {
     var res = new Element("span");
     res.insertTextSpan(faction.display + " ");
     if (faction.registered) {
-        var url = '/player/#{username}'.interpolate(faction);
-        var link = new Element("a", { style: 'color: inherit',
-                                      href: url });
-        link.updateText("(" + faction.player + ")");
-        res.insert(link);                
+        res.insert(playerLink(faction.player).updateText("(" + faction.player + ")"));                
     } else {
         res.insertTextSpan(faction.player);
     }
@@ -3504,9 +3508,7 @@ function updateInfoTab() {
     {
         var admin = state.metadata.admin_user;
         if (admin) {
-            var url = '/player/' + admin;
-            var link = new Element("a", { style: 'color: inherit',
-                                          href: url }).updateText(admin);
+            var link = playerLink(admin);
             addRow("Admin", link);
         }
     }
@@ -3522,6 +3524,25 @@ function updateInfoTab() {
             style = "color: #f00";
         }
         addRow("Move timer", seconds_to_pretty_time((hours) * 3600));
+    }
+
+    // Time taken by each player
+    if (metadata.active_times &&
+        metadata.active_times[0] &&
+        metadata.active_times[0][0]) {
+        var list = new Element("table");
+        var players = metadata.active_times[0];
+        var times = metadata.active_times[1];
+        players.each(function (player, index) {
+            var time = times[index];
+            var row = new Element("tr");
+            var pretty_time = seconds_to_pretty_time(time, 'minute');
+            var link = playerLink(player);
+            row.insert(new Element("td").insert(link));
+            row.insert(new Element("td").updateText(pretty_time));
+            list.insert(row);
+        });
+        addRow("Time taken", list);
     }
 
     if (metadata.map_variant) {

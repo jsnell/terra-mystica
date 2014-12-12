@@ -42,6 +42,7 @@ create table game (
     nonstandard boolean default false,
     admin_user text references player (username),
 );
+create index game_finished_idx on game (finished);
 
 create table game_player (
     game text references game (id),

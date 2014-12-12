@@ -160,7 +160,7 @@ function showChangelog(data, div, heading, types, max_age) {
     });
 }
 
-function seconds_to_pretty_time(seconds) {
+function seconds_to_pretty_time(seconds, remainder_unit) {
     var subamount = '';
     var amount;
     var unit;
@@ -187,9 +187,26 @@ function seconds_to_pretty_time(seconds) {
     } else if (seconds >= day) {
         amount = Math.floor(seconds / day);
         unit = "day";
+        if (remainder_unit == "hour") {
+            var remainder = seconds - amount * day;
+            if (remainder >= hour) {
+                subamount = ' ' + seconds_to_pretty_time(remainder);
+            }
+        } else if (remainder_unit == "minute") {
+            var remainder = seconds - amount * day;
+            if (remainder >= 60) {
+                subamount = ' ' + seconds_to_pretty_time(remainder);
+            }
+        }
     } else if (seconds >= hour) {
         amount = Math.floor(seconds / hour);
         unit = "hour";
+        if (remainder_unit == "minute") {
+            var remainder = seconds - amount * hour;
+            if (remainder >= 60) {
+                subamount = ' ' + seconds_to_pretty_time(remainder);
+            }
+        }
     } else if (seconds > 60) {
         amount = Math.floor(seconds / 60);
         unit = "minute";
