@@ -20,28 +20,44 @@ sub handle {
     my ($row) = @_;
 
     my $delta = $interval;
-    my $after_soft_deadline_delta = 0;
+    my @delta = (0, 0, 0, 0, 0, 0);
 
     if ($row->{seconds_since_update} < $interval) {
         return;
     }
 
-    if ($row->{seconds_since_update} > 86400) {
-        $after_soft_deadline_delta = $interval;
+    if ($row->{seconds_since_update} > 4*3600) {
+        $delta[0] = $interval;
+    }
+    if ($row->{seconds_since_update} > 8*3600) {
+        $delta[1] = $interval;
+    }
+    if ($row->{seconds_since_update} > 12*3600) {
+        $delta[2] = $interval;
+    }
+    if ($row->{seconds_since_update} > 24*3600) {
+        $delta[3] = $interval;
+    }
+    if ($row->{seconds_since_update} > 48*3600) {
+        $delta[4] = $interval;
+    }
+    if ($row->{seconds_since_update} > 72*3600) {
+        $delta[5] = $interval;
     }
 
     my $count =
-        $dbh->do("update game_active_time set active_seconds=active_seconds + ?, active_after_soft_deadline_seconds=active_after_soft_deadline_seconds + ? where game=? and player=?",
+        $dbh->do("update game_active_time set active_seconds=active_seconds + ?, active_seconds_4h=active_seconds_4h+?, active_seconds_8h=active_seconds_8h+?, active_seconds_12h=active_seconds_12h+?, active_seconds_24h=active_seconds_24h+?,active_seconds_48h=active_seconds_48h+?, active_seconds_72h=active_seconds_72h+? where game=? and player=?",
                  {},
                  $delta,
-                 $after_soft_deadline_delta,
+                 @delta,
                  $row->{id},
                  $row->{faction_player});
+
     if ($count == 0) {
-        $dbh->do("insert into game_active_time (active_seconds, active_after_soft_deadline_seconds, game, player) values (?, ?, ?, ?)",
+        $dbh->do("insert into game_active_time (active_seconds, active_seconds_4h, active_seconds_8h, active_seconds_12h, active_seconds_24h, active_seconds_72h, active_seconds_48h, game, player) values (?, ?, ?, ?)",
                  {},
                  $delta,
-                 $after_soft_deadline_delta,
+                 @delta,
                  $row->{id},
                  $row->{faction_player});
     }

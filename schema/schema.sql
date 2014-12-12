@@ -56,6 +56,12 @@ create table game_active_time (
     game text references game (id),
     player text references player (username),
     active_seconds integer default 0,
+    active_seconds_4h integer default 0,
+    active_seconds_8h integer default 0,
+    active_seconds_12h integer default 0,
+    active_seconds_24h integer default 0,
+    active_seconds_48h integer default 0,
+    active_seconds_72h integer default 0,
     active_after_soft_deadline_seconds integer default 0,
     primary key (game, player)
 );
