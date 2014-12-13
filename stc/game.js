@@ -1514,11 +1514,11 @@ function coloredFactionSpan(faction_name) {
     return new Element("span", { style: style }).insert(record.display);
 }
 
-function playerLink(player) {
+function playerLink(player, display) {
     var url = '/player/' + player;
     var link = new Element("a", { style: 'color: inherit',
                                   href: url });
-    link.updateText(player);
+    link.updateText(display);
     return link;
 }
 
@@ -1526,7 +1526,8 @@ function factionDisplayName(faction, fg) {
     var res = new Element("span");
     res.insertTextSpan(faction.display + " ");
     if (faction.registered) {
-        res.insert(playerLink(faction.player).updateText("(" + faction.player + ")"));                
+        res.insert(playerLink(faction.username,
+                              "(" + faction.player + ")"));                
     } else {
         res.insertTextSpan(faction.player);
     }
@@ -3508,7 +3509,7 @@ function updateInfoTab() {
     {
         var admin = state.metadata.admin_user;
         if (admin) {
-            var link = playerLink(admin);
+            var link = playerLink(admin, admin);
             addRow("Admin", link);
         }
     }
@@ -3537,7 +3538,7 @@ function updateInfoTab() {
             var time = times[index];
             var row = new Element("tr");
             var pretty_time = seconds_to_pretty_time(time, 'minute');
-            var link = playerLink(player);
+            var link = playerLink(player, player);
             row.insert(new Element("td").insert(link));
             row.insert(new Element("td").updateText(pretty_time));
             list.insert(row);
