@@ -64,8 +64,13 @@ method handle($q) {
     } else {
         finish_game_transaction $dbh;
 
-        if ($orig_content ne $new_content) {
-            my $diff = diff \$orig_content, \$new_content, { CONTEXT => 1 };
+        my $a = $orig_content;
+        my $b = $new_content;
+        $a =~ s/\r//g;
+        $b =~ s/\r//g;
+
+        if ($a ne $b) {
+            my $diff = diff \$a, \$b, { CONTEXT => 1 };
 
             insert_chat_message($dbh, $read_id,
                                 'admin',
