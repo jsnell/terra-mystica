@@ -64,12 +64,14 @@ method handle($q) {
     } else {
         finish_game_transaction $dbh;
 
-        my $diff = diff \$orig_content, \$new_content, { CONTEXT => 1 };
+        if ($orig_content ne $new_content) {
+            my $diff = diff \$orig_content, \$new_content, { CONTEXT => 1 };
 
-        insert_chat_message($dbh, $read_id,
-                            'admin',
-                            "Game was edited by $username:\n$diff",
-                            "round $res->{round}, turn $res->{turn}");
+            insert_chat_message($dbh, $read_id,
+                                'admin',
+                                "Game was edited by $username:\n$diff",
+                                "round $res->{round}, turn $res->{turn}");
+        }
     }
 
     my $out = {
