@@ -64,10 +64,12 @@ method handle($q) {
     } else {
         finish_game_transaction $dbh;
 
-        my $a = $orig_content;
-        my $b = $new_content;
+        my $a = "$orig_content\n";
+        my $b = "$new_content\n";
         $a =~ s/\r//g;
         $b =~ s/\r//g;
+        $a =~ s/\n+/\n/g;
+        $b =~ s/\n+/\n/g;
 
         if ($a ne $b) {
             my $diff = diff \$a, \$b, { CONTEXT => 1 };
