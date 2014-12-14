@@ -8,6 +8,7 @@ use Server::Server;
 extends 'Server::Server';
 
 use Crypt::CBC;
+use DB::Chat;
 use DB::Connection;
 use DB::Secret;
 use Email::Notify;
@@ -57,15 +58,9 @@ sub handle {
         } else {
             verify_key $dbh, $id, $faction_key, $faction_name;
         }
-        if (defined $add_message) {
+        if (defined $add_message && $add_message =~ /\S/) {
             $dbh->do('begin');
-            $dbh->do(
-                "insert into chat_message (faction, game, message, posted_on_turn) values (?, ?, ?, ?)",
-                {},
-                $faction_name,
-                $id,
-                $add_message,
-                $turn);
+            insert_chat_message($dbh, $id, $faction_name, $add_message, $turn);
             $dbh->do('commit');
 
             my $factions = $dbh->selectall_arrayref(
@@ -73,10 +68,16 @@ sub handle {
                 { Slice => {} },
                 $id);
 
-            notify_new_chat $dbh, {
-                name => $id,
-                factions => { map { ($_->{name}, $_) } @{$factions} }
-            }, $faction_name, $add_message;
+            my $game_options = $dbh->selectrow_array(
+                "select game_options from game where id=?", {}, $id);
+            for my $option (@{$game_options}) {
+                if ($option eq 'email-notify') {
+                    notify_new_chat $dbh, {
+                        name => $id,
+                        factions => { map { ($_->{name}, $_) } @{$factions} }
+                    }, $faction_name, $add_message;
+                }
+            }
         }
 
         my $rows = $dbh->selectall_arrayref(

@@ -1765,7 +1765,7 @@ function drawActionRequired() {
             $("data_entry_tabs").insert("<button onclick='dataEntrySelect(\"recent\")' id='data_entry_tab_recent' class='tab' accesskey='r'>Recent Moves</button>");
         }
 
-        if (currentFaction && state.options["email-notify"]) {
+        if (currentFaction) {
             var style = "";
             if (newChatMessages()) {
                 style = "color: red"
@@ -1812,8 +1812,7 @@ function drawActionRequired() {
         $("recent_entry").insert(recent);
     }
 
-    if (state.options["email-notify"] &&
-        $("chat_entry") && $("chat_entry").innerHTML == "") {
+    if ($("chat_entry") && $("chat_entry").innerHTML == "") {
         $("chat_entry").insert(new Element("table", {"id": "chat_messages" }));
         var input = new Element("textarea", {"id": "chat_entry_input",
                                              "style": "font-family: monospace; width: 60ex; height: 5em;" } );

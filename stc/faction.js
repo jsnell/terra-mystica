@@ -281,12 +281,15 @@ function loadOrSendChat(send) {
 
                 row.insert(new Element("td", {"style": "white-space:nowrap"}).insert(from));
 
-                var message_div = new Element("div", {"style": "max-width: 60ex"});
+                var message_div = new Element("div", {"style": "max-width: 60ex; white-space: pre-wrap"});
                 // Normalize
                 var message_text = entry.message.sub(/\n$/, "");
                 message_text.split(/\n/).each(function (message_row) {
                     message_div.insert(new Element("div").updateText(message_row).insert(makeTextSpan("\u00a0")));
                 });
+                if (entry.faction == "admin") {
+                    message_div.style.fontFamily = "monospace";
+                }
 
                 var posted_on_div = new Element("div", {"style": "color: #888; font-size: 75%;"});
                 posted_on_div.updateText(seconds_to_pretty_time(entry.message_age) + " ago");

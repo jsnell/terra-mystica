@@ -90,6 +90,7 @@ sub deploy_cgi {
                   cults.pm
                   Analyze/EloVpPredictor.pm
                   Analyze/RatingData.pm
+                  DB/Chat.pm
                   DB/Connection.pm
                   DB/EditLink.pm
                   DB/Game.pm

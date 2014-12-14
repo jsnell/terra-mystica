@@ -11,6 +11,7 @@ extends 'Server::Server';
 
 use Digest::SHA1 qw(sha1_hex);
 
+use DB::Chat;
 use DB::Connection;
 use DB::EditLink;
 use DB::Game;
@@ -51,7 +52,7 @@ method handle($q) {
     if ($self->mode() eq 'content') {
         $self->edit_content($dbh, $q, $read_id, $write_id, $username);
     } elsif ($self->mode() eq 'status') {
-        $self->edit_status($dbh, $q, $write_id);
+        $self->edit_status($dbh, $q, $read_id, $write_id, $username);
     }
 }
 
@@ -70,9 +71,9 @@ method check_user_is_not_deadbeat($dbh, $read_id, $username) {
     my ($dropped) = $dbh->selectall_arrayref("select faction_player from game_role where game=? and dropped",
                                              { Slice => {} },
                                              $read_id);
-
     for my $record (@{$dropped}) {
-        if ($username eq $record->{faction_player}) {
+        if ($record->{faction_player} &&
+            $username eq $record->{faction_player}) {
             die "Sorry, you're no longer allowed to admin this game\n"
         }
     }
@@ -110,7 +111,7 @@ method edit_content($dbh, $q, $read_id, $write_id, $username) {
     $self->output_json($out);
 }
 
-method edit_status($dbh, $q, $write_id) {
+method edit_status($dbh, $q, $read_id, $write_id, $username) {
     my $action = $q->param('action');
     my $res = {
         error => [],
@@ -119,9 +120,17 @@ method edit_status($dbh, $q, $write_id) {
     if ($action eq 'abort') {
         $res->{status} = 'aborted';
         abort_game $dbh, $write_id;
+        insert_chat_message($dbh, $read_id,
+                            'admin',
+                            "Game was aborted by $username",
+                            '');
     } elsif ($action eq 'unabort') {
         $res->{status} = 'restarted';
         unabort_game $dbh, $write_id;
+        insert_chat_message($dbh, $read_id,
+                            'admin',
+                            "Game was restarted by $username",
+                            '');
     } else {
         $res->{status} = 'error';
         $res->{error} = [ "Invalid action '$action'" ];

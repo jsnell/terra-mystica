@@ -10,15 +10,30 @@ extends 'Server::Server';
 
 use Digest::SHA1 qw(sha1_hex);
 
+use DB::Chat;
 use DB::Connection;
 use DB::Game;
 use DB::SaveGame;
 use DB::UserValidate;
+use Text::Diff qw(diff);
 use Server::Session;
 use tracker;
 
 method handle($q) {
     $self->no_cache();
+
+    my $dbh = get_db_connection;
+
+    my $username = username_from_session_token($dbh,
+                                               $q->cookie('session-token') // '');
+    if (!defined $username) {
+        my $out = {
+                error => ["Not logged in"],
+                location => "/login/",
+        };
+        $self->output_json($out);
+        return;
+    }    
 
     my $write_id = $q->param('game');
     $write_id =~ s{.*/}{};
@@ -27,8 +42,6 @@ method handle($q) {
 
     my $orig_hash = $q->param('orig-hash');
     my $new_content = $q->param('content');
-
-    my $dbh = get_db_connection;
 
     begin_game_transaction $dbh, $read_id;
 
@@ -50,6 +63,13 @@ method handle($q) {
         $dbh->do("rollback");
     } else {
         finish_game_transaction $dbh;
+
+        my $diff = diff \$orig_content, \$new_content, { CONTEXT => 1 };
+
+        insert_chat_message($dbh, $read_id,
+                            'admin',
+                            "Game was edited by $username:\n$diff",
+                            "round $res->{round}, turn $res->{turn}");
     }
 
     my $out = {
