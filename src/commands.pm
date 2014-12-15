@@ -316,6 +316,11 @@ sub command_convert {
 
     my %exchange_rates = ();
 
+    if (!$game{options}->{'loose-convert-phase'} and
+        $game{acting}->state() ne 'play') {
+        die "Can't convert resources outside of actions\n";
+    }
+
     # Have to leech before converting resources
     my @records = leech_decisions_required($faction);
     for (@records) {
