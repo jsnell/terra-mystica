@@ -94,6 +94,8 @@ my $games = $dbh->selectall_arrayref("select id, write_id, extract(epoch from la
 # and 1 = (select count(*) from game_role where game.id=game_role.game and faction='riverwalkers')
 
 my $count = 0;
+my $diffcount = 0;
+
 for (@{$games}) {
     my $id = $_->[0];
     ++$count;
@@ -104,7 +106,7 @@ for (@{$games}) {
     }
 
     if ($count % 40 == 0) {
-        print " [", $count, "/", (scalar @{$games}), "]\n";
+        print " [", $count, "/", (scalar @{$games}), " -> $diffcount diffs]\n";
         if ($time eq 'total') {
             for my $dir ($dir1, $dir2) {
                 printf "%s: %5.2f\n", $dir, $time{$dir};
@@ -146,5 +148,9 @@ for (@{$games}) {
                 print diff \$aj, \$bj;
             }
         }
+    }
+    
+    if ($header_printed) {
+        $diffcount++;
     }
 }
