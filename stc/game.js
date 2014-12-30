@@ -2480,7 +2480,7 @@ function addUndoToMovePicker(picker, faction) {
             state.action_required[0].faction != faction.name &&
             !faction.waiting &&
             state.action_required.some(function (record) {
-                record.faction == faction.name;
+                return record.faction == faction.name;
             })) {
             wait.enable();
         } else {
