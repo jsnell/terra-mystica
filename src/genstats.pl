@@ -157,6 +157,7 @@ my %games = ();
 
 for (@{$results{results}}) {
     next if $_->{dropped};
+    next if !defined $_->{vp};
 
     $games{$_->{game}}{factions}{$_->{faction}} = $_;
     $games{$_->{game}}{id} = $_->{game};

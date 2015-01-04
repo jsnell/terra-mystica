@@ -115,7 +115,7 @@ sub read_rating_data {
     for (@{$results{results}}) {
         next if $filter and !$filter->($_);
 
-        next if $_->{faction} =~ /nofaction/;
+        next if $_->{faction} =~ /^(nofaction|player)/;
 
         $games{$_->{game}}{factions}{$_->{faction}} = $_;
         $games{$_->{game}}{id} = $_->{game};
