@@ -82,7 +82,7 @@ sub set_game_roles {
         my $leech_required = 0;
 
         if (!$faction->{username}) {
-            print STDERR "$game->{id}: faction without username:\n", JSON::encode_json $faction;
+            print STDERR "$id: faction without username:\n", JSON::encode_json $faction;
         }
 
         for my $action (@{$game->{action_required}}) {
