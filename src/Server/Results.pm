@@ -38,9 +38,6 @@ method handle($q, $params) {
         version => $version,
         get_finished_game_results $dbh, $secret, %params
     };
-    for (@{$results->{results}}) {
-        delete $_->{base_map};
-    }
 
     if ($version > 1) {
         $results->{games} = {};
@@ -48,13 +45,15 @@ method handle($q, $params) {
 
         for (@{$results->{results}}) {
             my $game = ($results->{games}{$_->{game}} //= {
-                non_standard => $_->{non_standard},
+                expansion_scoring => $_->{non_standard},
                 player_count => $_->{player_count},
+                base_map => ($_->{base_map} || '126fe960806d587c78546b30f1a90853b1ada468'),
                 last_update => $_->{last_update},
             });
             delete $_->{non_standard};
             delete $_->{player_count};   
             delete $_->{last_update};
+            delete $_->{base_map};
 
             $results->{players}{$_->{id_hash}} //= {
                 username => $_->{username}
