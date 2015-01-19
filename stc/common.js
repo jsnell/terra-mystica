@@ -275,7 +275,8 @@ function renderSidebar(id) {
     });
 
     sidebarSection("Related", function (insertLink) {    
-        insertLink("http://tmtour.org/", "TM League");
+        insertLink("http://tmtour.org/", "Tournament");
+        insertLink("http://lodev.org/tmai/", "TM AI");
     });
 }
 
