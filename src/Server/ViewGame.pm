@@ -17,7 +17,7 @@ use tracker;
 method handle($q) {
     $self->no_cache();
 
-    my $id = $q->param('game');
+    my $id = $q->param_or_die('game');
     $id =~ s{.*/}{};
     $id =~ s{[^A-Za-z0-9_]}{}g;
     my $max_row = $q->param('max-row');

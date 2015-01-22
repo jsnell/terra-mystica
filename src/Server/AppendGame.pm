@@ -55,15 +55,15 @@ sub log_game_event {
 method handle($q) {
     $self->no_cache();
 
-    my $read_id = $q->param('game');
+    my $read_id = $q->param_or_die('game');
     $read_id =~ s{.*/}{};
     $read_id =~ s{[^A-Za-z0-9_]}{}g;
 
-    my $faction_name = $q->param('preview-faction');
-    my $faction_key = $q->param('faction-key');
+    my $faction_name = $q->param_or_die('preview-faction');
+    my $faction_key = $q->param_or_die('faction-key');
     my $orig_faction_name = $faction_name;
 
-    my $preview = $q->param('preview');
+    my $preview = $q->param_or_die('preview');
     my $append = '';
 
     my $dbh = get_db_connection;

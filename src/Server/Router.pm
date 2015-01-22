@@ -23,6 +23,7 @@ use Server::ViewGame;
 
 use CGI::PSGI;
 use JSON;
+use POSIX;
 use Util::Watchdog;
 
 my %paths = (
@@ -128,6 +129,11 @@ sub route {
     my $env = shift;
     my $q = CGI::PSGI->new($env);
 
+    local *CGI::PSGI::param_or_die = sub {
+        my ($q, $param) = @_;
+        $q->param($param) // die "Required parameter '$param' undefined\n";
+    };
+
     my $path_info = $q->path_info();
     my $ret;
 
@@ -154,7 +160,21 @@ sub route {
             die "Unknown module '$path_info'";
         }
     }; if ($@) {
-        print STDERR "ERROR: $@\n", '-'x60, "\n";
+        my $error = $@;
+        chomp $error;
+
+        my $timestamp = asctime localtime;
+        chomp $timestamp;
+
+        my $ip = $q->remote_host();
+        my $username = $q->cookie('session-username') // '<none>';
+        my $params = eval {
+            my @vars = grep { !/password/ } $q->param;
+            my %params = map { ($_ => $q->param($_)) } @vars;
+            encode_json \%params
+        };
+
+        print STDERR "[$timestamp] ip=$ip path=$path_info username=$username\nparams=$params\nERROR: $error\n", '-'x60, "\n";
         $ret = [500,
                 ["Content-Type", "application/json"],
                 [encode_json { error => [ $@ ] }]];
