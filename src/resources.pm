@@ -56,6 +56,7 @@ sub setup_pool {
         CULTS_ON_SAME_TRACK => 10000,
         UNLOCK_TERRAIN => 10000,
         MAX_P => 10000,
+        ALLOW_SHAPESHIFT => 100,
         carpet_range => 3,
     };
 

@@ -103,6 +103,26 @@ sub deploy_cgi {
                   Email/Notify.pm
                   Game/Constants.pm
                   Game/Factions.pm
+                  Game/Factions/Acolytes.pm
+                  Game/Factions/Alchemists.pm
+                  Game/Factions/Auren.pm
+                  Game/Factions/Chaosmagicians.pm
+                  Game/Factions/Cultists.pm
+                  Game/Factions/Darklings.pm
+                  Game/Factions/Dragonlords.pm
+                  Game/Factions/Dwarves.pm
+                  Game/Factions/Engineers.pm
+                  Game/Factions/Fakirs.pm
+                  Game/Factions/Giants.pm
+                  Game/Factions/Halflings.pm
+                  Game/Factions/Icemaidens.pm
+                  Game/Factions/Mermaids.pm
+                  Game/Factions/Nomads.pm
+                  Game/Factions/Riverwalkers.pm
+                  Game/Factions/Shapeshifters.pm
+                  Game/Factions/Swarmlings.pm
+                  Game/Factions/Witches.pm
+                  Game/Factions/Yetis.pm
                   Game/Events.pm
                   income.pm
                   ledger.pm

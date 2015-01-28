@@ -59,6 +59,7 @@ sub fetch_result {
         delete $faction->{action};
         delete $faction->{ACTE};
         delete $faction->{exchange_rates};
+        delete $faction->{ALLOW_SHAPESHIFT};
     }
     delete $json->{actions};
     delete $json->{towns};
@@ -68,6 +69,7 @@ sub fetch_result {
     delete $json->{pool}{CULT};
     delete $json->{pool}{UNLOCK_TERRAIN};
     delete $json->{pool}{MAX_P};
+    delete $json->{pool}{ALLOW_SHAPESHIFT};
     delete $json->{map}{ACTE};
 
     $json;

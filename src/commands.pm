@@ -1213,6 +1213,7 @@ sub command {
             loose-multi-spade
             maintain-player-order
             manual-fav5
+            shapeshifter-fix-playtest-v1
             strict-leech
             strict-chaosmagician-sh
             strict-darkling-sh
