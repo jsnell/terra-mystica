@@ -581,7 +581,6 @@ method detect_incomplete_turn($faction) {
 
     if ($faction->{CULT}) {
         $incomplete = 1;
-        $ledger->warn("Unused cult advance for $faction_name\n");
         $self->require_action($faction, {
             type => 'cult',
             amount => $faction->{CULT}, 
