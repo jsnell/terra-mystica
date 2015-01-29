@@ -631,6 +631,15 @@ method detect_incomplete_turn($faction) {
         });
     }
 
+    if ($faction->{GAIN_P3_FOR_VP}) {
+        $self->require_action($faction, {
+            type => 'gain-token',
+            amount => $faction->{GAIN_P3_FOR_VP},
+            from => 'VP',
+            to => 'P3',
+        });
+    }
+
     if ($faction->{UNLOCK_TERRAIN}) {
         $incomplete = 1;
         $self->require_action($faction, {

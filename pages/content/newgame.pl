@@ -28,9 +28,10 @@ the letters A-Z and a-z and the digits 0-9.
 
         <input type="checkbox" id="option-fire-and-ice-factions" onchange="javascript:newGameValidate()"></input><label for="option-fire-and-ice-factions">Fire &amp; Ice expansion factions</label><br>
         <div style="padding-left: 2em">
-          <input name="game-options" type="checkbox" id="option-fire-and-ice-factions/ice" value="fire-and-ice-factions/ice" checked></input><label for="option-fire-and-ice-factions/ice">Ice factions</label><br>
-          <input name="game-options" type="checkbox" id="option-fire-and-ice-factions/variable" value="fire-and-ice-factions/variable" checked></input><label for="option-fire-and-ice-factions/variable">Variable factions</label><br>
-          <input name="game-options" type="checkbox" id="option-fire-and-ice-factions/volcano" value="fire-and-ice-factions/volcano" checked></input><label for="option-fire-and-ice-factions/volcano">Volcano factions</label><br>
+          <input name="game-options" type="checkbox" id="option-fire-and-ice-factions/ice" onchange="javascript:newGameValidate()" value="fire-and-ice-factions/ice" checked></input><label for="option-fire-and-ice-factions/ice">Ice factions</label><br>
+          <input name="game-options" type="checkbox" id="option-fire-and-ice-factions/variable" onchange="javascript:newGameValidate()" value="fire-and-ice-factions/variable"></input><label for="option-fire-and-ice-factions/variable" id="label-option-fire-and-ice-factions/variable">Variable factions (original)</label><br>
+          <input name="game-options" type="checkbox" id="option-fire-and-ice-factions/variable_v2" onchange="javascript:newGameValidate()" value="fire-and-ice-factions/variable_v2" checked></input><label for="option-fire-and-ice-factions/variable_v2">Variable factions (<a href='http://boardgamegeek.com/article/18027661#18027661'>playtest</a>)</label><br>
+          <input name="game-options" type="checkbox" id="option-fire-and-ice-factions/volcano" onchange="javascript:newGameValidate()" value="fire-and-ice-factions/volcano" checked></input><label for="option-fire-and-ice-factions/volcano">Volcano factions</label><br>
         </div>
 
         <br>

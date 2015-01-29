@@ -678,10 +678,12 @@ function cultClass(name) {
 }
 
 function insertAction(parent, name, key) {
-    parent.insert(new Element('canvas', {
-        'id': 'action/' + key, 'class': 'action', 'width': 50, 'height': 85}));
+    var container = new Element('canvas', {
+        'id': 'action/' + key, 'class': 'action', 'width': 50, 'height': 85});
+    parent.insert(container);
     var canvas = parent.childElements().last();
     renderAction(canvas, name, key, '#000');
+    return container;
 }
 
 function renderTile(tile, name, record, faction, count) {
@@ -801,7 +803,12 @@ function renderTreasuryTile(board, faction, name, count) {
     }
 
     if (name.startsWith("ACT")) {
-        insertAction(board, name, name);
+        var elem = insertAction(board, name, name);
+        if (state.actions[name] &&
+            state.actions[name].show_if &&
+            !state.factions[faction][state.actions[name].show_if]) {
+            elem.hide();
+        }
         return;
     } else if (name.startsWith("BON")) {
         board.insert(new Element('div', {
@@ -1152,6 +1159,14 @@ function drawRealFaction(faction, board) {
             levels.insertTextSpan("(+1)",
                                   faction.passed ? 'faction-info-not-applicable' : '');
         }
+    }
+
+    if (faction.ALLOW_SHAPESHIFT != null &&
+        faction.ALLOW_SHAPESHIFT < 10) {
+        if (levels.innerHTML != '') {
+            levels.insertTextSpan(", ");
+        }
+        levels.insertTextSpan("shapeshifts " + faction.ALLOW_SHAPESHIFT);
     }
 
     info.insert(levels);
@@ -1663,7 +1678,9 @@ function drawActionRequired() {
             } else {
                 pretty_text = 'must lose #{amount} steps on a cult track'.interpolate(record);
             }
-        } else if (record.type == 'town') {
+        } else if (record.type == 'gain-token') {
+            pretty_text = 'may gain 1 power token for 1 #{from}'.interpolate(record);
+        }else if (record.type == 'town') {
             if (record.amount == 1) {
                 pretty_text = 'may form a town'.interpolate(record);
             } else {
@@ -2055,6 +2072,24 @@ function addFactionInput(parent, record, index) {
             }(cmd);
             div.insert(button);
         }
+
+        div.insert(makeDeclineButton(action,
+                                     faction[action]));
+        parent.insert(div);
+    }
+    if (record.type == "gain-token") {
+        var div = new Element("div", { "id": "leech-" + index + "-0",
+                                       "style": "padding-left: 2em" });
+        var action = "GAIN_#{to}_FOR_#{from}".interpolate(record);
+
+        var button = new Element("button").updateText("Gain token");
+        var cmd = "gain #{to} for #{from}".interpolate(record);
+        button.onclick = function(cmd) {
+            return function() {
+                appendAndPreview(cmd);
+            };
+        }(cmd);
+        div.insert(button);
 
         div.insert(makeDeclineButton(action,
                                      faction[action]));

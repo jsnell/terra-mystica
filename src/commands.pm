@@ -107,6 +107,10 @@ sub command_adjust_resources {
     if ($type eq 'SPADE' and $faction->{SPADE} < 1) {
         $game{acting}->dismiss_action($faction, 'transform');
     }
+
+    if ($type =~ /^GAIN_/) {
+        $game{acting}->dismiss_action($faction, 'gain-token');
+    }
 }
 
 sub command_build {
@@ -352,6 +356,24 @@ sub command_convert {
     adjust_resource $faction, $to_type, $to_count, "convert";
 }
 
+sub command_gain {
+    my ($faction,
+        $to_type,
+        $from_type) = @_;
+    my $field = "GAIN_${to_type}_FOR_${from_type}";
+
+    if (!$faction->{$field}) {
+        die "Can't gain ${to_type} for ${from_type}\n";
+    }
+
+    adjust_resource $faction, $from_type, -1, "convert";
+    adjust_resource $faction, $to_type, 1, "convert";
+
+    --$faction->{$field};
+
+    $game{acting}->dismiss_action($faction, 'gain-token');    
+}
+
 sub command_leech {
     my ($faction, $pw, $from) = @_;
     my $faction_name = $faction->{name};
@@ -361,6 +383,8 @@ sub command_leech {
     my $vp = $actual_pw - 1;
 
     my $found_leech_record = 0;
+    my @detect_incomplete_turn_for = ();
+
     for (@{$game{acting}->action_required()}) {
         next if $_->{faction} ne $faction_name;
         next if $_->{type} ne 'leech';
@@ -383,12 +407,7 @@ sub command_leech {
                         gain $from_faction, $from_faction->{leech_effect}{taken};
                     });
                 
-                # Hack
-                if ($from_faction->{CULT}) {
-                    $game{acting}->require_action($from_faction,
-                                                  { type => 'cult',
-                                                    amount => 1 });
-                }
+                push @detect_incomplete_turn_for, [ $from_faction, $from_faction->{leech_effect}{taken} ];
                 $game{events}->faction_event($from_faction, 'cultist:cult', 1);
             }
             $game{events}->faction_event($faction, 'leech-from-cultist:pw',
@@ -441,6 +460,10 @@ sub command_leech {
     if ($actual_pw) {
         $game{events}->faction_event($faction, 'leech:pw', $actual_pw);
         $game{events}->faction_event($faction, 'leech:count', 1);
+    }
+
+    for my $record (@detect_incomplete_turn_for) {
+        $game{acting}->detect_incomplete_turn($record->[0]);
     }
 }
 
@@ -1039,7 +1062,7 @@ sub full_action_required {
 sub finalize_setup {
     maybe_setup_pool;
 
-    for my $type (qw(ice volcano variable)) {
+    for my $type (qw(ice volcano variable variable_v2)) {
         if ($game{options}{"fire-and-ice-factions/$type"}) {
             add_faction_variant "final_$type";
         }
@@ -1100,6 +1123,11 @@ sub command {
         command_convert($assert_active_faction->(),
                         $from_count, $from_type,
                         $to_count, $to_type);
+    } elsif ($command =~ /^gain (\w+) for (\w+)$/i) {
+        my $to_type = alias_resource uc $1;
+        my $from_type = alias_resource uc $2;
+
+        command_gain($assert_faction->(), $to_type, $from_type);
     } elsif ($command =~ /^burn (\d+)$/i) {
         $assert_active_faction->();
         adjust_resource $faction, 'P2', -2*$1;
@@ -1205,6 +1233,7 @@ sub command {
             fire-and-ice-factions
             fire-and-ice-factions/ice
             fire-and-ice-factions/variable
+            fire-and-ice-factions/variable_v2
             fire-and-ice-factions/volcano
             email-notify
             loose-adjust-resource

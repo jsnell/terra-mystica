@@ -77,10 +77,12 @@ Readonly our %actions => (
               subaction => { 'build' => 1 } },
     ACTC => { cost => {}, gain => { GAIN_ACTION => 2 } },
     ACTH1 => { dont_block => 1,
+               show_if => 'ALLOW_SHAPESHIFT',
                cost => { PW => 3, ALLOW_SHAPESHIFT => 1 },
                gain => { PICK_COLOR => 1, 
                          VP => 2 } },
     ACTH2 => { dont_block => 1,
+               show_if => 'ALLOW_SHAPESHIFT',
                cost => { PW_TOKEN => 3, ALLOW_SHAPESHIFT => 1 },
                gain => { PICK_COLOR => 1, 
                          VP => 2 } },
@@ -288,6 +290,10 @@ Readonly our %faction_setups_extra => (
     final_variable => {
         riverwalkers => $Game::Factions::Riverwalkers::riverwalkers,
         shapeshifters => $Game::Factions::Shapeshifters::shapeshifters,
+    },
+    final_variable_v2 => {
+        riverwalkers => $Game::Factions::Riverwalkers::riverwalkers,
+        shapeshifters => $Game::Factions::Shapeshifters::shapeshifters_playtest_fix_v1,
     },
 );
 

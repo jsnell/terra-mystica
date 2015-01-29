@@ -57,6 +57,7 @@ sub setup_pool {
         UNLOCK_TERRAIN => 10000,
         MAX_P => 10000,
         ALLOW_SHAPESHIFT => 100,
+        GAIN_P3_FOR_VP => 10000,
         carpet_range => 3,
     };
 
