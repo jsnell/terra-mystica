@@ -96,7 +96,19 @@ function showOpenGames(games) {
                     "maximum rating " + game.maximum_rating));
             }
 
+            var pretty_option = {
+                "mini-expansion-1": "Mini Expansion (town tiles)",
+                "shipping-bonus": "Shipping bonus tile (Spielbox 6/2013)",
+                "fire-and-ice-final-scoring": "Extra final scoring tile",
+                "variable-turn-order": "Turn order determined by passing order",
+                "fire-and-ice-factions/ice": "Ice factions",
+                "fire-and-ice-factions/variable": "Variable factions (original)",
+                "fire-and-ice-factions/variable_v2": "Variable factions (<a href='http://boardgamegeek.com/article/18027661#18027661'>playtest</a>)",
+                "fire-and-ice-factions/volcano": "Volcano factions",
+            };
+
             if (game.game_options) {
+                cell.insert(new Element("br"));
                 game.game_options.sort().each(function (elem) {
                     if (elem == "email-notify" ||
                         elem == "strict-leech" ||
@@ -105,7 +117,7 @@ function showOpenGames(games) {
                         elem == "errata-cultist-power") {
                         return;
                     }
-                    cell.insert(new Element("div").updateText(elem));        
+                    cell.insert(new Element("div", {style: "white-space: nowrap;"}).update(pretty_option[elem] || elem));
                 });
             }
 
