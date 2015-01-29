@@ -41,7 +41,7 @@ __DATA__
   There are three differences to a basic Elo system. First,
   the Elo system is for two player games while Terra Mystica
   is a multiplayer game. This is dealt with by considering each
-  N player match as consisting of N!/2 separate two player
+  N player match as consisting of (N/2)*(N-1) separate two player
   matches between each pair of players.
 <p>
   Second, the rating computation is actually done both for
