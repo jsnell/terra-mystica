@@ -8,12 +8,9 @@
 
 __DATA__
 
-<div class="motd" style="display: block">
+<div class="motd" style="display: none">
     Season 5 of the Terra Mystica tournament will start on February 1st.
     Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>.
-
-    <p>
-    Please see the <a href='http://boardgamegeek.com/article/18045072#18045072'>season announcement at BGG</a> for more information, as well as a workaround for possible signup issues.
 </div>
 
 <h4>Your Active / Recently Finished Games</h4>
