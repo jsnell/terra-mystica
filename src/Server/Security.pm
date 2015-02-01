@@ -31,7 +31,7 @@ sub get_write_id_for_user {
                                $read_id,
                                $faction_name,
                                $username)) {
-        die "You don't appear to be the player controlling $faction_name in game $read_id.\n";
+        die "You ($username) don't appear to be the player controlling $faction_name in game $read_id.\n";
     }
     
     return $dbh->selectrow_array("select write_id from game where id=?",
