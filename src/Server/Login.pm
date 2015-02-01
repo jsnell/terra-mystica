@@ -29,7 +29,7 @@ method handle($q) {
     } elsif ($stored_password ne bcrypt($password, $stored_password)) {
         print STDERR "login: invalid password for $form_username\n";
     } else {
-        print STDERR "login: ok\n";
+        print STDERR "login: ok for $form_username\n";
         $match = 1;
     }
 
