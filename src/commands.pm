@@ -931,7 +931,7 @@ sub mt_shuffle {
     map {
         $_->[0]
     } sort {
-        $a->[1] <=> $b->[1]
+        $a->[1] <=> $b->[1] or $a->[0] cmp $b->[0]
     } map {
         [ $_, $rand->rand() ]
     } @data; 
