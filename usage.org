@@ -285,6 +285,15 @@ and want to break the chain of actions at a specific place. For example
 when using Dwarves or Fakirs to first tunnel to a space to terraform it,
 and right afterwards tunnel to the same space to build a dwelling.
 
+*** =resign=
+Example:
+#+BEGIN_EXAMPLE
+resign
+#+END_EXAMPLE
+
+Immediately drop out from the game. Please see the section on [[drop][dropping
+out from a game]] for the exact effects. You can't currently resign
+during faction selection.
 
 *** =setup= /faction/ =for= /player/
 
@@ -374,8 +383,10 @@ only moves made directly by players.
 
 # <<drop>>
 
-Player who become inactive are dropped from the game after a week. Being
-dropped has the following effects on the faction:
+Players who become inactive are dropped from the game after a timeout
+specified during game creation (from 12 hours to two weeks). They can
+also drop out voluntarily using the "resign" command. Dropping out has
+the following effects on the faction:
 
 - They will take no actions
 - They will leech no power (for the purposes of the cultists they can't leech power, rather than decline it)
