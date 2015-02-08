@@ -51,12 +51,20 @@ sub handle {
                                                $q->cookie('session-token') // '');
 
     my %res = ( error => [] );
+    my $prevalidated = 0;
+
+    if ($faction_name eq '' and $username eq 'jsnell') {
+        $faction_name = 'site-admin';
+        $prevalidated = 1;
+    }
 
     eval {
-        if ($faction_key eq '') {
-            get_write_id_for_user $dbh, $username, $id, $faction_name;
-        } else {
-            verify_key $dbh, $id, $faction_key, $faction_name;
+        if (!$prevalidated) {
+            if ($faction_key eq '') {
+                get_write_id_for_user $dbh, $username, $id, $faction_name;
+            } else {
+                verify_key $dbh, $id, $faction_key, $faction_name;
+            }
         }
         if (defined $add_message && $add_message =~ /\S/) {
             $dbh->do('begin');
