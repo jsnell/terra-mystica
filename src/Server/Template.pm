@@ -26,9 +26,6 @@ method handle($q, $suffix) {
     my $params = {
         username => username_from_session_token($dbh,
                                                 $q->cookie('session-token') // '') // '',
-
-        access => username_from_session_token($dbh,
-                                              $q->cookie('access-token') // '') // '',
     };
 
     $self->no_cache();

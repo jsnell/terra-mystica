@@ -52,15 +52,6 @@ method handle($q) {
     my $players = get_game_players($dbh, $id);
     my $metadata = get_game_metadata($dbh, $id);
 
-    my $restricted = ensure_user_may_view_game $username, $players, $metadata;
-
-    if ($restricted) {
-        my $token = session_token $dbh, 'restricted', read_urandom_string_base64 8;
-        my $y = 86400*365;
-        $self->set_header("Set-Cookie",
-                          "access-token=$token; Path=/; HttpOnly; Max-Age=$y");        
-    }
-
     my $res = terra_mystica::evaluate_game {
         rows => \@rows,
         faction_info => get_game_factions($dbh, $id),
