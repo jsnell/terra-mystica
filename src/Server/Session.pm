@@ -15,7 +15,13 @@ sub session_token {
     $seed =~ s{/}{_}g;
     $seed = substr($seed . "0"x8, 0, 8);
 
-    my $secret = get_secret $dbh;
+    my ($secret) =
+        $dbh->selectrow_array("select password from player where username=?",
+                              {},
+                              $username);
+    if (!$secret) {
+        die "Can't create session token for $username\n";
+    }
     my $head = "$seed/$username";
     my $hash = sha1_hex "$head/$secret";
     "$head/$hash"
