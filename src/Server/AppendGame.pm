@@ -106,8 +106,6 @@ method handle($q) {
     my $players = get_game_players($dbh, $read_id);
     my $metadata = get_game_metadata($dbh, $read_id);
 
-    ensure_user_may_view_game $username, $players, $metadata;
-
     my $res = terra_mystica::evaluate_game {
         rows => [ split /\n/, "$prefix_content\n$new_content" ],
         faction_info => get_game_factions($dbh, $read_id),

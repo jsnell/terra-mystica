@@ -14,6 +14,7 @@ use DB::Connection;
 use Server::Session;
 use Util::CryptUtil;
 use Util::PasswordQuality;
+use Util::ServerUtil;
 
 method handle($q) {
     my $form_username = $q->param('username');
@@ -26,11 +27,11 @@ method handle($q) {
     my $match = 0;
 
     if (!$stored_password) {
-        print STDERR "login: invalid username for $form_username\n";    
+        log_with_request $q, "login: invalid username for $form_username";
     } elsif ($stored_password ne bcrypt($password, $stored_password)) {
-        print STDERR "login: invalid password for $form_username\n";
+        log_with_request $q, "login: invalid password for $form_username";
     } else {
-        print STDERR "login: ok for $form_username\n";
+        log_with_request $q, "login: ok for $form_username";
         $match = 1;
     }
 
@@ -41,6 +42,7 @@ method handle($q) {
         $self->set_header("Set-Cookie", "session-username=; Path=/");
         $self->set_header("Set-Cookie", "session-token=; Path=/; HttpOnly");
         $self->redirect("/forcedreset/");
+        log_with_request $q, "login: forced password reset for $form_username"
     } elsif ($match) {
         my $token = session_token $dbh, $username, read_urandom_string_base64 8;
         my $y = 86400*365;

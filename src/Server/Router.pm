@@ -24,6 +24,7 @@ use Server::ViewGame;
 use CGI::PSGI;
 use JSON;
 use POSIX;
+use Util::ServerUtil;
 use Util::Watchdog;
 
 my %paths = (
@@ -160,21 +161,8 @@ sub route {
             die "Unknown module '$path_info'";
         }
     }; if ($@) {
-        my $error = $@;
-        chomp $error;
+        log_with_request $q, "$@";
 
-        my $timestamp = asctime localtime;
-        chomp $timestamp;
-
-        my $ip = $q->remote_host();
-        my $username = $q->cookie('session-username') // '<none>';
-        my $params = eval {
-            my @vars = grep { !/password/ } $q->param;
-            my %params = map { ($_ => $q->param($_)) } @vars;
-            encode_json \%params
-        };
-
-        print STDERR "[$timestamp] ip=$ip path=$path_info username=$username\nparams=$params\nERROR: $error\n", '-'x60, "\n";
         $ret = [500,
                 ["Content-Type", "application/json"],
                 [encode_json { error => [ $@ ] }]];
