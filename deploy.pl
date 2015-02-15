@@ -155,6 +155,7 @@ sub deploy_cgi {
                   Util/NaturalCmp.pm
                   Util/CryptUtil.pm
                   Util/PageGenerator.pm
+                  Util/PasswordQuality.pm
                   Util/Watchdog.pm
                   towns.pm
                   tracker.pm)) {

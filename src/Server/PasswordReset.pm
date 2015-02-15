@@ -13,6 +13,7 @@ use DB::UserValidate;
 use Server::Session;
 use Server::Server;
 use Util::CryptUtil;
+use Util::PasswordQuality;
 
 extends 'Server::Server';
 
@@ -44,6 +45,13 @@ method request_reset($q, $dbh) {
 
         if (!$username) {
             push @error, "The email address is not registered";
+        }
+    }
+
+    if (!@error) {
+        my ($reason) = password_too_weak $username, $password;
+        if ($reason) {
+            push @error, "Bad password: $reason\n";
         }
     }
 
