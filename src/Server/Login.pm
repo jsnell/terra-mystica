@@ -25,9 +25,11 @@ method handle($q) {
     my ($stored_password, $username) = $dbh->selectrow_array("select password, username from player where lower(username) = lower(?)", {}, $form_username);
 
     my $match = 0;
+    my $invalid_user = 0;
 
     if (!$stored_password) {
         log_with_request $q, "login: invalid username for $form_username";
+        $invalid_user = 1;
     } elsif ($stored_password ne bcrypt($password, $stored_password)) {
         log_with_request $q, "login: invalid password for $form_username";
     } else {
@@ -56,7 +58,11 @@ method handle($q) {
         $self->set_header("Set-Cookie", "csrf-token=; Path=/");
         $self->set_header("Set-Cookie", "session-username=; Path=/");
         $self->set_header("Set-Cookie", "session-token=; Path=/; HttpOnly");
-        $self->redirect("/login/#failed");
+        if ($invalid_user) {
+            $self->redirect("/login/#invalid-user");
+        } else {
+            $self->redirect("/login/#failed");
+        }
     }
 }
 
