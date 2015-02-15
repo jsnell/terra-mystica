@@ -205,6 +205,7 @@ sub deploy_data {
                   pages/content/edit.pl
                   pages/content/game.pl
                   pages/content/faction.pl
+                  pages/content/forcedreset.pl
                   pages/content/index.pl
                   pages/content/login.pl
                   pages/content/joingame.pl

@@ -13,6 +13,7 @@ use Crypt::Eksblowfish::Bcrypt qw(bcrypt en_base64);
 use DB::Connection;
 use Server::Session;
 use Util::CryptUtil;
+use Util::PasswordQuality;
 
 method handle($q) {
     my $form_username = $q->param('username');
@@ -35,7 +36,12 @@ method handle($q) {
 
     $self->no_cache();
 
-    if ($match) {
+    if ($match && password_too_weak $username, $password) {
+        $self->set_header("Set-Cookie", "csrf-token=; Path=/");
+        $self->set_header("Set-Cookie", "session-username=; Path=/");
+        $self->set_header("Set-Cookie", "session-token=; Path=/; HttpOnly");
+        $self->redirect("/forcedreset/");
+    } elsif ($match) {
         my $token = session_token $dbh, $username, read_urandom_string_base64 8;
         my $y = 86400*365;
         ensure_csrf_cookie $q, $self;
