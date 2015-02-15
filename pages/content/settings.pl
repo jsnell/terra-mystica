@@ -11,6 +11,7 @@ __DATA__
 <div id="settings">
   <table class="settings-table">
     <tr><td>Username<td><span id="username" enabled="false"></span></tr>
+    <tr><td>Password<td><a href='/reset/'>Change password</a></tr>
     <tr><td>Display Name<td><input id="displayname" enabled="false"></input></tr>
     <tr><td>Email Addresses<td>
         The following validated email addresses are associated with
