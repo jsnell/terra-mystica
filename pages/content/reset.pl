@@ -12,6 +12,7 @@ __DATA__
       <table>
         <tr><td>Email Address<td><input name="email" id="email"></input>
         <tr><td>New Password<td><input name="password" type="password" id="password"></input>
+        <tr><td>New Password (again)<td><input name="password_again" type="password" id="password_again"></input>
         <tr><td><td><input type="button" value="Reset Password" onclick="javascript:resetPassword()"></input>
       </table>
     </form>

@@ -38,7 +38,14 @@ method request_reset($q, $dbh) {
 
     my $email = $q->param('email');
     my $password = $q->param('password');
+    my $password_again = $q->param('password_again');
     my $username;
+
+    if (!@error) {
+        if ($password ne $password_again) {
+            push @error, "The two passwords you've entered are different. Please try again."
+        }
+    }
 
     if (!@error) {
         $username = $dbh->selectrow_array("select player from email where address = lower(?)", {}, $email);
