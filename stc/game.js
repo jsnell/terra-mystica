@@ -1782,7 +1782,8 @@ function drawActionRequired() {
             $("data_entry_tabs").insert("<button onclick='dataEntrySelect(\"recent\")' id='data_entry_tab_recent' class='tab' accesskey='r'>Recent Moves</button>");
         }
 
-        if (currentFaction || loggedIn()[1] == "jsnell") {
+        if (currentFaction ||
+            (loggedIn() && loggedIn()[1] == "jsnell")) {
             var style = "";
             if (newChatMessages()) {
                 style = "color: red"
