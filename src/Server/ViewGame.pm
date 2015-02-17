@@ -1,4 +1,5 @@
 use strict;
+no indirect;
 
 package Server::ViewGame;
 
@@ -12,6 +13,7 @@ use DB::Game;
 use Server::Security;
 use Server::Session;
 use Util::CryptUtil;
+use Util::ServerUtil;
 use tracker;
 
 method handle($q) {
