@@ -1297,6 +1297,7 @@ sub command {
         }
         my ($wanted_color) = assert_color alias_color $1;
         for my $other ($game{acting}->factions_in_order()) {
+            next if !defined $other->{color};
             if ($other->{color} eq $wanted_color or
                 ($game{round} == 0 and
                  ($other->{secondary_color} // '') eq $wanted_color)) {

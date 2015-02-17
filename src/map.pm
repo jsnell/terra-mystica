@@ -569,6 +569,7 @@ sub transform_cost {
             # The "color" of a faction with unlockable terrain is only the
             # color of the pieces, not actual home terrain.
             next if $other_faction->{locked_terrain};
+            next if !defined $other_faction->{color};
             if ($other_faction->{color} eq $map{$where}{color}) {
                 $hex_type = 'home';
             }
