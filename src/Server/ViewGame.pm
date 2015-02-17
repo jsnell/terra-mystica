@@ -32,6 +32,7 @@ method handle($q) {
     if (!game_exists($dbh, $id)) {
         $self->status(404);
         $self->output_json({ error => [ "Unknown game: $id" ] });
+        log_with_request $q, "Unknown game: $id";
         return;
     }
 
