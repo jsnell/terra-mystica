@@ -87,12 +87,7 @@ function previewOrSave(save, preview_data, prefix_data) {
                     failed();
                 } else {
                     $("preview_status").innerHTML = "Executed the following commands for " + currentFaction;
-                    if (state.email) {
-                        $("move_entry").insert(new Element("br"));
-                        $("move_entry").insert(new Element("a", {"href": makeMailToLink()}).updateText("Send email"));
-                    } else {
-                        $("move_entry").innerHTML = "";
-                    }
+                    $("move_entry").innerHTML = "";
                     if (state.new_faction_key) {
                         parseParamsFromPathname(state.new_faction_key);
                         document.location.hash = state.new_faction_key;
@@ -128,24 +123,6 @@ function preview() {
 function save() {
     var preview_data = $("move_entry_input").value;
     previewOrSave(true, preview_data, "");
-}
-
-function makeMailToLink() {
-    var newline = "%0D%0A";
-    var status = $("preview_status").innerHTML;
-    var moves = $("preview_commands").textContent.split(/\n/).map(function (x) {
-        return "  " + encodeURIComponent(x);
-    }).join(newline);
-    var actions = $("action_required").childElements().map(function (x) {
-        return "  " + encodeURIComponent(x.textContent);
-    }).join(newline)
-    var footer = "Round #{round}, turn #{turn}".interpolate(state);
-
-    var moves = status + ":" + newline + moves + newline + newline + "Actions required:" + newline + actions + newline + newline + footer;
-
-    var link = "mailto:" + encodeURIComponent(state.email) + "?subject=Re: Terra Mystica PBEM (" + params.game + ")&body=" + moves;
-
-    return link;
 }
 
 function showActiveGames(games, div, mode, status) {
