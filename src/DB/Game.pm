@@ -70,7 +70,7 @@ sub get_game_factions {
     my ($dbh, $id) = @_;
 
     my ($rows) =
-        $dbh->selectall_hashref("select game_role.faction, player.username, game_role.email, player.displayname from email inner join game_role on game_role.email=email.address inner join player on player.username=email.player where game_role.game=?",
+        $dbh->selectall_hashref("select game_role.faction, player.username, email.address as email, player.displayname from game_role inner join email on email.player=game_role.faction_player inner join player on player.username=game_role.faction_player where game_role.game=?",
                                 'faction',
                                  { Slice => {} },
                                  $id);
