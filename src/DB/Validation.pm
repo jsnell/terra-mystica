@@ -33,6 +33,10 @@ sub fetch_validate_payload {
         die "Invalid validation token\n";
     }
 
+    $dbh->do("update to_validate set executed=true where token=?",
+             {},
+             $token);
+
     decode_json $payload[0];
 }
 
