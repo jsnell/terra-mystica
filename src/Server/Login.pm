@@ -11,6 +11,7 @@ extends 'Server::Server';
 use Crypt::Eksblowfish::Bcrypt qw(bcrypt en_base64);
 
 use DB::Connection;
+use DB::UserValidate;
 use Server::Session;
 use Util::CryptUtil;
 use Util::PasswordQuality;
@@ -21,6 +22,12 @@ method handle($q) {
     my $password = $q->param('password');
 
     my $dbh = get_db_connection;
+
+    if ($form_username =~ /\@/) {
+        eval {
+            $form_username = check_email_is_registered $dbh, $form_username;
+        }
+    }
 
     my ($stored_password, $username) = $dbh->selectrow_array("select password, username from player where lower(username) = lower(?)", {}, $form_username);
 
