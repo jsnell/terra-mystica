@@ -15,6 +15,7 @@ use DB::Connection;
 use DB::Secret;
 use Server::Session;
 use Util::CryptUtil;
+use Util::PasswordQuality;
 
 has 'mode' => (is => 'ro', required => 1);
 
@@ -53,6 +54,13 @@ method request_registration($q, $dbh) {
         
         if ($email_in_use) {
             push @error, "The email address is already registered";
+        }
+    }
+
+    if (!@error) {
+        my ($reason) = password_too_weak $username, $password;
+        if ($reason) {
+            push @error, "Bad password: $reason\n";
         }
     }
 
