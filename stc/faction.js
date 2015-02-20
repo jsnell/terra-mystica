@@ -58,6 +58,7 @@ function previewOrSave(save, preview_data, prefix_data) {
     if (!save) {
         spin();
     }
+
     new Ajax.Request(target, {
         method: "post",
         parameters: {
@@ -72,10 +73,10 @@ function previewOrSave(save, preview_data, prefix_data) {
             "preview-faction": currentFaction,
             "max-row": TM.params['max-row']
         },
-        onFailure: function(transport){
+        onFailure: function (transport) {
             var data = transport.responseText.evalJSON();
             if (data && data.error) {
-                state.error = data.error;
+                state = { error: data.error };
             }
             failed();
             dataEntrySetStatus(false);
