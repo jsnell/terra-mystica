@@ -27,27 +27,6 @@ sub save {
              $new_content, $read_id);
 }
 
-sub verify_email_notification_settings {
-    my ($dbh, $game) = @_;
-
-    return if !$game->{options}{'email-notify'};
-
-    for my $faction (values %{$game->{factions}}) {
-        if (!$faction->{email}) {
-            die "When option email-notify is on, all players must have an email address defined ('$faction->{player}' does not)\n"
-        }
-
-        my ($email_valid) =
-            $dbh->selectrow_array("select count(*) from email where address=lower(?) and validated=true",
-                                  {},
-                                  $faction->{email});
-
-        if (!$email_valid) {
-            die "When option email-notify is on, all players must be registered ('$faction->{player}' is not)\n"
-        }                              
-    }
-}
-
 sub verify_and_save {
     my ($dbh, $read_id, $write_id, $new_content, $game, $timestamp) = @_;
 
@@ -69,8 +48,6 @@ sub verify_and_save {
                 check_username_is_registered $dbh, $player->{username};
         }
     }
-
-    verify_email_notification_settings $dbh, $game;
 
     save $dbh, $write_id, $new_content, $game, $timestamp;
 }
