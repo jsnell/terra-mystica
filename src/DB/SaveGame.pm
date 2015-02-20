@@ -144,8 +144,6 @@ EOF
         {},
         $id, $write_id, length @{$players}, $player_count, $admin_user);
 
-    my ($admin_email) = $dbh->selectrow_array("select address from email where player = ? and is_primary", {}, $admin_user);
-
     my $i = 0;
     for my $player (@{$players}) {
         $dbh->do("insert into game_player (game, player, sort_key, index) values (?, ?, ?, ?)",

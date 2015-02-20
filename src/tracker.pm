@@ -156,7 +156,6 @@ sub evaluate_game {
         turn => 0,
         aborted => 0,
         finished => 0,
-        admin_email => undef,
         options => {
             map { ($_, 1) } @{$metadata->{game_options}}
         },
@@ -248,7 +247,6 @@ sub evaluate_game {
         players => $game{acting}->players(),
         player_count => $game{player_count},
         options => $game{options},
-        admin => $data->{delete_email} ? '' : $game{admin_email},
         map_variant => $game{map_variant},
         final_scoring => $game{final_scoring},
         final_scoring_help => $game{final_scoring_help},
