@@ -1,3 +1,7 @@
+var TM = TM || {
+    params: null,
+};
+
 var stored_exception = null;
 
 function handleException (e) {
@@ -14,7 +18,6 @@ function handleException (e) {
     }
 }
 
-var params = null;
 var moveRequired = false;
 var updateTitle = true;
 var updateFavicon = true;
@@ -34,12 +37,12 @@ function enableDescendants(parent) {
 function setTitle() {
     try {
         var title = "TM";
-        if (params) {
-            if (params.game) {
-                title += " - " + params.game;
+        if (TM.params) {
+            if (TM.params.game) {
+                title += " - " + TM.params.game;
             }
-            if (params.faction) {
-                title += " / " + params.faction;
+            if (TM.params.faction) {
+                title += " / " + TM.params.faction;
             }
         }
         if (moveRequired) {

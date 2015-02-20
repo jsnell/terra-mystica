@@ -1417,7 +1417,7 @@ function drawRecentMoves(recent_moves) {
 function showHistory(row) {
     var loc = document.location.href;
     loc = loc.replace(/\/max-row=.*/, '');
-    return "/game/" + params.game + "/max-row=" + row;
+    return "/game/" + TM.params.game + "/max-row=" + row;
 }
 
 function drawScoringTiles() {
@@ -3523,7 +3523,7 @@ function updateInfoTab() {
     };
 
     {
-        var url = "http://terra.snellman.net/game/" + params.game;
+        var url = "http://terra.snellman.net/game/" + TM.params.game;
         addRow("Public Link",
                new Element("a", { href: url }).updateText(url));
     }

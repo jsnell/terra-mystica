@@ -5,13 +5,13 @@ var backendDomain = null;
 function parseParamsFromPathname (pathname) {
     var path = pathname.sub(/\/(faction|game)\//, "").split("/");
     var expected = ["game", "faction", "key"];
-    params = {};
+    TM.params = {};
     path.each(function(elem) {
         var match = elem.match(/(.*)=(.*)/); 
         if (match) {
-            params[match[1]] = match[2]; 
+            TM.params[match[1]] = match[2]; 
         } else {
-            params[expected.shift()] = elem;
+            TM.params[expected.shift()] = elem;
         }
     });
 }
@@ -29,7 +29,7 @@ function loadGame (domain, pathname) {
 
     setTitle();
     if ($("header-gamename")) {
-        $("header-gamename").innerHTML = params["game"];
+        $("header-gamename").innerHTML = TM.params.game;
     }
     
     
@@ -41,7 +41,7 @@ function loadGame (domain, pathname) {
         $("preview_commands").innerHTML = '';
     }
 
-    currentFaction = params.faction;
+    currentFaction = TM.params.faction;
     preview();
 }
 
@@ -66,11 +66,11 @@ function previewOrSave(save, preview_data, prefix_data) {
             // thing.
             "cache-token": new Date() - Math.random(),
             "csrf-token": getCSRFToken(),
-            "game": params.game,
+            "game": TM.params.game,
             "preview": prefix_data + preview_data,
-            "faction-key": params.key,
+            "faction-key": TM.params.key,
             "preview-faction": currentFaction,
-            "max-row": params['max-row']
+            "max-row": TM.params['max-row']
         },
         onFailure: function(transport){
             var data = transport.responseText.evalJSON();
@@ -91,7 +91,7 @@ function previewOrSave(save, preview_data, prefix_data) {
                     if (state.new_faction_key) {
                         parseParamsFromPathname(state.new_faction_key);
                         document.location.hash = state.new_faction_key;
-                        currentFaction = params.faction;
+                        currentFaction = TM.params.faction;
                     }
                     fetchGames($("user-info"), "user", "running",
                                showActiveGames);
@@ -160,8 +160,8 @@ function loadOrSavePlan(save) {
     var form_params = {
         "cache-token": new Date() - Math.random(),
         "csrf-token": getCSRFToken(),
-        "game": params.game,
-        "faction-key": params.key,
+        "game": TM.params.game,
+        "faction-key": TM.params.key,
         "preview-faction": currentFaction,
     };
     if (save) {
@@ -209,8 +209,8 @@ function loadOrSendChat(send) {
     var form_params = {
         "cache-token": new Date() - Math.random(),
         "csrf-token": getCSRFToken(),
-        "game": params.game,
-        "faction-key": params.key,
+        "game": TM.params.game,
+        "faction-key": TM.params.key,
         "faction": currentFaction,
         "turn": "round #{round}, turn #{turn}".interpolate(state)
     };
