@@ -166,8 +166,8 @@ sub get_finished_game_results {
     }
 
     my $rows = $dbh->selectall_arrayref(
-        "select game, faction, vp, rank, start_order, email.player, email, game.player_count, game.last_update, game.non_standard, game.base_map, game_role.dropped, game.game_options from game_role left join game on game=game.id left join email on email=email.address where game.finished and game.round=6 and not game.aborted and not game.exclude_from_stats and game.id like ? and game.last_update between ? and date(?) + ?::interval",
-        {},
+        "select game, faction, vp, rank, start_order, faction_player as username, game.player_count, game.last_update, game.non_standard, game.base_map, game_role.dropped, game.game_options as options from game_role left join game on game=game.id where game.finished and game.round=6 and not game.aborted and not game.exclude_from_stats and game.id like ? and game.last_update between ? and date(?) + ?::interval",
+        { Slice => {} },
         $params{id_pattern},
         $params{range_start},
         $params{range_start},
@@ -176,22 +176,9 @@ sub get_finished_game_results {
     if (!$rows) {
         $res{error} = "db error";
     } else {
-        for (@{$rows}) {
-            push @{$res{results}}, {
-                game => $_->[0],
-                faction => $_->[1],
-                vp => $_->[2],
-                rank => $_->[3],
-                start_order => $_->[4],
-                username => $_->[5],
-                id_hash => ($_->[6] ? sha1_hex($_->[6] . $secret) : undef),
-                player_count => $_->[7],
-                last_update => $_->[8],
-                non_standard => $_->[9],
-                base_map => $_->[10],
-                dropped => $_->[11],
-                options => $_->[12],
-            }
+        for my $row (@{$rows}) {
+            $row->{id_hash} = ($row->{username} ? sha1_hex($row->{username} . $secret) : undef);
+            push @{$res{results}}, $row;
         }
     }
 

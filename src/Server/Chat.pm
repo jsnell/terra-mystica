@@ -72,7 +72,7 @@ sub handle {
             $dbh->do('commit');
 
             my $factions = $dbh->selectall_arrayref(
-                "select game_role.faction as name, email, player.displayname from game_role left join email on email.address = game_role.email left join player on email.player = player.username where game = ? and email is not null",
+                "select game_role.faction as name, email.address as email, player.displayname from game_role left join email on email.player = game_role.faction_player left join player on player.username = game_role.faction_player where game = ? and email.is_primary",
                 { Slice => {} },
                 $id);
 
