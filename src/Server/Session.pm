@@ -66,15 +66,15 @@ sub verify_csrf_cookie_or_die {
         $cookie_token ne $param_token) {
         $cookie_token //= 'undefined';
         $param_token //= 'undefined';
-        print STDERR "CSRF verification failure [$cookie_token] [$param_token]\n";
-        print STDERR ("  User: ", $q->cookie('session-username'),
-                      "\n    UA: ", $q->user_agent(),
-                      "\n  Path: $0\n");
+        # print STDERR "CSRF verification failure [$cookie_token] [$param_token]\n";
+        # print STDERR ("  User: ", $q->cookie('session-username'),
+        #               "\n    UA: ", $q->user_agent(),
+        #               "\n  Path: $0\n");
         $server->status(403);
         if ($cookie_token eq 'undefined') {
             ensure_csrf_cookie $q, $server;
         }
-        die "Error";
+        die "CSRF token validation error";
     }
 }
 
