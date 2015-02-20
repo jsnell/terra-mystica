@@ -12,6 +12,7 @@ use Net::SMTP;
 
 use DB::Connection;
 use DB::Secret;
+use DB::Validation;
 use Server::Session;
 use Util::CryptUtil;
 
@@ -53,9 +54,12 @@ method request_alias($q, $dbh) {
     }
 
     if (!@error) {
-        my $secret = get_secret $dbh;
+        my $data = {
+            username => $username,
+            email => $email,
+        };
+        my $token = insert_to_validate $dbh, $data;
 
-        my $token = encrypt_validation_token $secret, ($username, $email);
         my $url = sprintf "http://terra.snellman.net/app/alias/validate/%s", $token;
 
         my $smtp = Net::SMTP->new('localhost', ( Debug => 0 ));
@@ -85,7 +89,19 @@ method validate_alias($q, $dbh, $suffix) {
 
     my ($secret, $iv) = get_secret;
     eval {
-        $self->add_alias($dbh, decrypt_validation_token $secret, $token);
+        my @data = ();
+        # FIXME: Remove the non-DB fallback in a few weeks, once such
+        # tokens should no longer be in circulation.
+        eval {
+            my $payload = fetch_validate_payload $dbh, $token;
+            @data = ($payload->{username}, $payload->{email});
+        }; if ($@) {
+            my ($secret, $iv) = get_secret;
+            @data = decrypt_validation_token $secret, $token; 
+            print STDERR "Used fallback validation token mode for $token\n";
+        }
+
+        $self->add_alias($dbh, @data);
         $self->output_html("<h3>Email alias registered</h3>");
     }; if ($@) {
         print STDERR "token: $token\n";

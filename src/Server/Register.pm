@@ -11,8 +11,10 @@ extends 'Server::Server';
 use Crypt::Eksblowfish::Bcrypt qw(bcrypt en_base64);
 use Net::SMTP;
 
+use Bytes::Random::Secure qw(random_bytes);
 use DB::Connection;
 use DB::Secret;
+use DB::Validation;
 use Server::Session;
 use Util::CryptUtil;
 use Util::PasswordQuality;
@@ -65,12 +67,17 @@ method request_registration($q, $dbh) {
     }
 
     if (!@error) {
-        my $secret = get_secret $dbh;
-
-        my $salt = en_base64 (join '', map { chr int rand 256} 1..16);
+        my $salt = en_base64 random_bytes 16;
         my $hashed_password = bcrypt($password, 
                                      '$2a$08$'.$salt);
-        my $token = encrypt_validation_token $secret, $username, $email, $hashed_password;
+
+        my $data = {
+            username => $username,
+            email => $email,
+            hashed_password => $hashed_password
+        };
+        my $token = insert_to_validate $dbh, $data;
+
         my $url = sprintf "http://terra.snellman.net/app/register/validate/%s", $token;
 
         my $smtp = Net::SMTP->new('localhost', ( Debug => 0 ));
@@ -98,10 +105,21 @@ method request_registration($q, $dbh) {
 method validate_registration($q, $dbh, $suffix) {
     my $token = $suffix // $q->param('token');
 
-    my ($secret, $iv) = get_secret;
     eval {
-        my $already_done = $self->register(
-            $dbh, decrypt_validation_token $secret, $token);
+        my @data = ();
+        # FIXME: Remove the non-DB fallback in a few weeks, once such
+        # tokens should no longer be in circulation.
+        eval {
+            my $payload = fetch_validate_payload $dbh, $token;
+            @data = ($payload->{username}, $payload->{email},
+                     $payload->{hashed_password});
+        }; if ($@) {
+            my ($secret, $iv) = get_secret;
+            @data = decrypt_validation_token $secret, $token; 
+            print STDERR "Used fallback validation token mode for $token\n";
+        }
+
+        my $already_done = $self->register($dbh, @data);
         if ($already_done) {
             $self->output_html("<h3>Account already exists</h3>");
         } else {

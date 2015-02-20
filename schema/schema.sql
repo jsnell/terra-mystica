@@ -17,6 +17,13 @@ create table email (
 );
 create unique index email_address_lowercase_idx on email(lower(address));
 
+create table to_validate (
+  token text primary key,
+  payload text,
+  created_at timestamp,
+  executed boolean default false
+);
+
 create table map_variant (
     id text primary key,
     terrain text not null
@@ -149,3 +156,4 @@ create table game_options (
     deadline_hours integer default 168,
     primary key (game)
 );
+

@@ -100,6 +100,7 @@ sub deploy_cgi {
                   DB/Settings.pm
                   DB/UserInfo.pm
                   DB/UserValidate.pm
+                  DB/Validation.pm
                   Email/Notify.pm
                   Game/Constants.pm
                   Game/Factions.pm

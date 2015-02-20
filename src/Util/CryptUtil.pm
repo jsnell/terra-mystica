@@ -9,30 +9,6 @@ use Crypt::CBC;
 use Crypt::Eksblowfish::Bcrypt qw(en_base64 de_base64);
 use Digest::SHA1 qw(sha1_base64);
 
-sub encrypt_validation_token {
-    my ($secret, @data) = @_;
-    my $data = join "\t", @data;
-    my $token;
-
-    my $csum = sha1_base64 $data;
-    $data .= "\t$csum";
-
-    do {
-        my $iv = Crypt::CBC->random_bytes(8);
-        my $cipher = Crypt::CBC->new(-key => $secret,
-                                     -iv => $iv,
-                                     -blocksize => 8,
-                                     -header => 'randomiv',
-                                     -cipher => 'Blowfish');
-        $token = en_base64 $cipher->encrypt($data);
-        # Continue until the URL ends in a non-special character, to
-        # reduce the chances of the link being mis-interpreted by email
-        # clients.
-    } while ($token !~ /[A-Za-z0-9]$/);
-
-    $token;
-}
-
 sub decrypt_validation_token {
     my ($secret, $token) = @_;
 
