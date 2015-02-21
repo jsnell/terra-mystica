@@ -40,7 +40,7 @@ method handle($q) {
     } elsif ($stored_password ne bcrypt($password, $stored_password)) {
         log_with_request $q, "login: invalid password for $form_username";
     } else {
-        log_with_request $q, "login: ok for $form_username";
+        # log_with_request $q, "login: ok for $form_username";
         $match = 1;
     }
 
