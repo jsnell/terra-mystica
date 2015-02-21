@@ -17,7 +17,9 @@ has 'status' => (is => 'rw',
                  default => 200);
 has 'output' => (is => 'rw',
                  default => '');
-
+has 'cookies' => (is => 'rw',
+                  default => sub { {} });
+                  
 method set_header($header, $value) {
     $self->push_header($header);
     $self->push_header($value);
@@ -43,11 +45,13 @@ method no_cache() {
 }
 
 method output_json($data) {
+    $self->output_cookies();
     $self->set_header("Content-type", "application/json");
     $self->output(encode_json($data));
 }
 
 method output_html($data) {
+    $self->output_cookies();
     $self->set_header("Content-type", "text/html");
     $self->output($data);
 }
@@ -65,5 +69,19 @@ around handle => sub {
         $self->output_json({ error => [ "$@" ] });
     }
 };
+
+method output_cookies() {
+    for my $key (keys %{$self->cookies()}) {
+        my $data = $self->cookies()->{$key};
+        my $value = $data->[0];
+        my @attributes = @{$data->[1]};
+        $self->set_header("Set-Cookie",
+                          join '; ', "$key=$value", @attributes);
+    }
+}
+
+method set_cookie($field, $value, $attributes) {
+    $self->cookies()->{$field} = [$value, $attributes];
+}
 
 1;

@@ -93,13 +93,13 @@ function fetchGames(div, mode, status, handler, args) {
             "csrf-token": getCSRFToken()
         },
         method:"post",
-        onSuccess: function(transport){
+        onComplete: function(transport) {
             var resp = transport.responseText.evalJSON();
             try {
-                if (!resp.error) {
+                if (!resp.error || !resp.error.size()) {
                     handler(resp.games, div, mode, status);
                 } else {
-                    $(div).update(resp.error);
+                    $(div).update(resp.error.join(', '));
                 }
             } catch (e) {
                 handleException(e);

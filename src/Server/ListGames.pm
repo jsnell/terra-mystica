@@ -28,7 +28,7 @@ method handle($q, $path_suffix) {
     my $mode = $q->param('mode') // $self->mode() // 'all';
     my $status = $q->param('status') // 'running';
 
-    my %res = (error => '');
+    my %res = (error => []);
 
     if ($mode eq 'user' or $mode eq 'admin' or $mode eq 'other-user') {
         my $user = username_from_session_token($dbh,
@@ -36,7 +36,12 @@ method handle($q, $path_suffix) {
         if ($mode eq 'other-user') {
             $user = $q->param("args");
         } else {
-            verify_csrf_cookie_or_die $q, $self;
+            eval {
+                verify_csrf_cookie_or_die $q, $self;
+            }; if ($@) {
+                $self->output_json({ error => ["csrf-error"] });
+                return;
+            }
         }
 
         my %status = (finished => 1, running => 0);

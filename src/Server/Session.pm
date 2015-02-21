@@ -49,8 +49,8 @@ sub ensure_csrf_cookie {
     if (!$q->cookie("csrf-token")) {
         my $y = 86400*365;
         my $r = read_urandom_string_base64 8;
-        $server->set_header("Set-Cookie",
-                            "csrf-token=$r; Path=/; Max-Age=$y");
+        $server->set_cookie("csrf-token",
+                            $r, ["Path=/", "Max-Age=$y"]);
     }
 }
 
