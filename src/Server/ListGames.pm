@@ -66,7 +66,7 @@ method handle($q, $path_suffix) {
 
 method open_games($dbh, $res, $user) {
     if (!defined $user) {
-        $res->{error} = "Not logged in <a href='/login/'>(login)</a>";
+        $res->{error} = ["Not logged in <a href='/login/'>(login)</a>"];
     } else {
         $res->{games} = get_open_game_list $dbh;
     }
@@ -74,7 +74,7 @@ method open_games($dbh, $res, $user) {
 
 method user_games($dbh, $res, $user, $mode, $status, $admin) {
     if (!defined $user) {
-        $res->{error} = "Not logged in <a href='/login/'>(login)</a>"
+        $res->{error} = ["Not logged in <a href='/login/'>(login)</a>"]
     } else {
         $res->{games} = get_user_game_list $dbh, $user, $mode, $status, $admin;
     }

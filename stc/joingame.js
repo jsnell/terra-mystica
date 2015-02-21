@@ -145,7 +145,8 @@ function fetchOpenGames() {
         onSuccess: function(transport){
             try {
                 var resp = transport.responseText.evalJSON();
-                if (!resp.error) {
+                console.log(resp);
+                if (!resp.error || !resp.error.size()) {
                     showOpenGames(resp.games);
                 } else {
                     $("error").update(resp.error);
