@@ -132,6 +132,11 @@ sub handle_game {
         }
     }
 
+    my $order = 1;
+    for (sort { $a->{start_order} <=> $b->{start_order} } values %{$res->{factions}}) {
+        $_->{start_order} = $order++;
+    }
+
     for (sort { $b->{vp} <=> $a->{vp} } values %{$res->{factions}}) {
         $pos++;
         if ($pos == 1) {
