@@ -103,7 +103,8 @@ function showOpenGames(games) {
                 "variable-turn-order": "Turn order determined by passing order",
                 "fire-and-ice-factions/ice": "Ice factions",
                 "fire-and-ice-factions/variable": "Variable factions (original)",
-                "fire-and-ice-factions/variable_v2": "Variable factions (<a href='http://boardgamegeek.com/article/18027661#18027661'>playtest</a>)",
+                "fire-and-ice-factions/variable_v2": "Variable factions (<a href='http://boardgamegeek.com/article/18027661#18027661'>playtest</a> v2)",
+                "fire-and-ice-factions/variable_v3": "Variable factions (<a href='http://boardgamegeek.com/article/18027661#18027661'>playtest</a> v3)",
                 "fire-and-ice-factions/volcano": "Volcano factions",
             };
 

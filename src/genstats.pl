@@ -164,9 +164,9 @@ for (@{$results{results}}) {
     next if $_->{dropped};
     next if !defined $_->{vp};
 
-    if (grep /variable_v2/, @{$_->{options}} and
+    if (grep /variable_(v2|v3)/, @{$_->{options}} and
         $_->{faction} eq 'shapeshifters') {
-        $_->{faction} = 'shapeshifters_v2';
+        $_->{faction} = "shapeshifters_$1";
     }
 
     $games{$_->{game}}{factions}{$_->{faction}} = $_;

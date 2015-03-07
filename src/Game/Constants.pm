@@ -293,7 +293,11 @@ Readonly our %faction_setups_extra => (
     },
     final_variable_v2 => {
         riverwalkers => $Game::Factions::Riverwalkers::riverwalkers,
-        shapeshifters => $Game::Factions::Shapeshifters::shapeshifters_playtest_fix_v1,
+        shapeshifters => $Game::Factions::Shapeshifters::shapeshifters_v2,
+    },
+    final_variable_v3 => {
+        riverwalkers => $Game::Factions::Riverwalkers::riverwalkers,
+        shapeshifters => $Game::Factions::Shapeshifters::shapeshifters_v3,
     },
 );
 

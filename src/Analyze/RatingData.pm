@@ -117,9 +117,9 @@ sub read_rating_data {
 
         next if $_->{faction} =~ /^(nofaction|player)/;
 
-        if (grep /variable_v2/, @{$_->{options}} and
+        if (grep /variable_(v2|v3)/, @{$_->{options}} and
             $_->{faction} eq 'shapeshifters') {
-            $_->{faction} = 'shapeshifters_v2';
+            $_->{faction} = "shapeshifters_$1";
         }
 
         $games{$_->{game}}{factions}{$_->{faction}} = $_;
