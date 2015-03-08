@@ -3,6 +3,8 @@
 package terra_mystica;
 
 use strict;
+
+use List::Util qw(sum);
 use JSON;
 use POSIX;
 use File::Basename qw(dirname);
@@ -51,7 +53,7 @@ sub bucket_key {
 }
 
 sub record_stats {
-    my ($res, $stat, $pos, $faction_count, $win_vp, $winner_count) = @_;
+    my ($res, $stat, $pos, $faction_count, $win_vp, $winner_count, $average_vp) = @_;
 
     $stat->{count}++;
 
@@ -67,6 +69,7 @@ sub record_stats {
     }
     $stat->{average_vp} += $_->{vp};
     $stat->{average_winner_vp} += $win_vp;
+    $stat->{average_margin} += ($_->{vp} - $average_vp);
     $stat->{average_position} += $pos;    
     $stat->{expected_wins} += 1/$faction_count;
 }
@@ -137,6 +140,8 @@ sub handle_game {
         $_->{start_order} = $order++;
     }
 
+    my $vp_sum = sum map { $_->{vp} } values %{$res->{factions}};
+
     for (sort { $b->{vp} <=> $a->{vp} } values %{$res->{factions}}) {
         $pos++;
         if ($pos == 1) {
@@ -152,7 +157,7 @@ sub handle_game {
         };
 
         record_stats($res, $stat, $pos, $faction_count,
-                     $win_vp, $winner_count);
+                     $win_vp, $winner_count, $vp_sum / $faction_count);
     }
 }
 
@@ -164,9 +169,9 @@ for (@{$results{results}}) {
     next if $_->{dropped};
     next if !defined $_->{vp};
 
-    if (grep /variable_(v2|v3)/, @{$_->{options}} and
-        $_->{faction} eq 'shapeshifters') {
-        $_->{faction} = "shapeshifters_$1";
+    my @ss_opt = map /variable_(v2|v3)/g, @{$_->{options}};
+    if (@ss_opt and $_->{faction} eq 'shapeshifters') {
+        $_->{faction} = "shapeshifters_@{ss_opt}";
     }
 
     $games{$_->{game}}{factions}{$_->{faction}} = $_;

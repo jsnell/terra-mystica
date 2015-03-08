@@ -101,6 +101,7 @@ function initAggregate() {
         average_vp: 0,
         average_winner_vp: 0,
         average_position: 0,
+        average_margin: 0,
     };
 }
 
@@ -110,6 +111,7 @@ function addToAggregate(aggregate_record, data) {
     aggregate_record.average_vp += data.average_vp;
     aggregate_record.average_winner_vp += data.average_winner_vp;
     aggregate_record.average_position += data.average_position;
+    aggregate_record.average_margin += data.average_margin;
 }
 
 function finalizeAggregates(aggregate) {
@@ -122,6 +124,7 @@ function finalizeAggregates(aggregate) {
         record.average_position = (record.average_position / count).toFixed(2);
         record.average_loss_vp = ((record.average_winner_vp - record.average_vp) / count).toFixed(2);
         record.average_vp = (record.average_vp / count).toFixed(2);
+        record.average_vp_difference = (record.average_margin / count).toFixed(2);
         delete record.average_winner_vp;
     });
 }
@@ -131,13 +134,13 @@ function renderFactionStats(faction_aggregate) {
     var table = new Element("table", {"class": "building-table"});
 
     div.innerHTML = "";
-    table.insert("<tr><td>Faction<td>Wins<td>Games<td>Win %<td>Average position<td>Average score<td>Average loss");
+    table.insert("<tr><td>Faction<td>Wins<td>Games<td>Win %<td>Average position<td>Average score<td>Average score difference");
 
     $H(faction_aggregate).sortBy(function (a) { return -a.value.win_rate } ).each(function(elem) {
         var faction = elem.key;
         var tr = new Element("tr");
         tr.insert(factionTableCell(elem.key));
-        tr.insert("<td>#{value.wins}<td>#{value.count}<td>#{value.win_rate}<td>#{value.average_position}<td>#{value.average_vp}<td>#{value.average_loss_vp}".interpolate(elem));
+        tr.insert("<td>#{value.wins}<td>#{value.count}<td>#{value.win_rate}<td>#{value.average_position}<td>#{value.average_vp}<td>#{value.average_vp_difference}".interpolate(elem));
 
         table.insert(tr);
     });
@@ -221,7 +224,7 @@ function renderPositionStats(displaySettings, position_aggregate) {
         row.insert(new Element("td").updateText(record.win_rate));
         row.insert(new Element("td").updateText(record.average_position));
         row.insert(new Element("td").updateText(record.average_vp));
-        row.insert(new Element("td").updateText(record.average_loss_vp));
+        row.insert(new Element("td").updateText(record.average_vp_difference));
         table.insert(row);
     });
 
