@@ -157,7 +157,9 @@ sub handle_game {
         };
 
         record_stats($res, $stat, $pos, $faction_count,
-                     $win_vp, $winner_count, $vp_sum / $faction_count);
+                     $win_vp, $winner_count,
+                     # Average opponent vp.
+                     ($vp_sum - $_->{vp}) / ($faction_count - 1));
     }
 }
 

@@ -31,6 +31,12 @@ sub index_game {
         $game->{non_standard} || 0,
         $id);
 
+    if ($game->{dodgy_resource_manipulation}) {
+        $dbh->do("update game set exclude_from_stats=true where id = ?",
+                 {},
+                 $id);
+    }
+
     if (!defined $game->{player_count} or
         $player_count >= $game->{player_count}) {
         set_game_roles($dbh, $id, $game);

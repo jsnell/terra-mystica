@@ -251,12 +251,13 @@ sub evaluate_game {
         final_scoring => $game{final_scoring},
         final_scoring_help => $game{final_scoring_help},
         non_standard => $game{non_standard},
+        dodgy_resource_manipulation => $game{dodgy_resource_manipulation},
         events => $game{events}->data(),
         available_factions => {
             map({ ($_, 1) }
                 keys %faction_setups,
                 map { keys %{$faction_setups_extra{$_}} } @{$game{faction_variants}})
-        },
+        },                
     };
 
     %game = ();

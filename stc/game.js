@@ -3538,6 +3538,11 @@ function updateInfoTab() {
                    metadata.player_count != metadata.wanted_player_count) {
             status = "Waiting for players";
         }
+
+        if (metadata.exclude_from_stats) {
+            status += " (excluded from statistics and rankings)";
+        }
+
         addRow("Status", status);
     }
 

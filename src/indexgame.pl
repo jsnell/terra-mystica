@@ -4,6 +4,7 @@ use strict;
 
 use File::Slurp qw(read_file);
 use File::Basename;
+use JSON;
 
 BEGIN { push @INC, dirname $0 }
 
