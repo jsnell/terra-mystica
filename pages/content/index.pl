@@ -8,8 +8,8 @@
 
 __DATA__
 
-<div class="motd" style="display: none">
-    Season 5 of the Terra Mystica tournament will start on February 1st.
+<div class="motd" style="display: block">
+    Season 6 of the Terra Mystica tournament will start on April 1st.
     Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>.
 </div>
 
