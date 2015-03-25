@@ -76,7 +76,9 @@ function showStats() {
             };
         }
 
-        if (data.high_score.vp > hs_aggregate_record.vp) {
+        if (data.high_score.vp > hs_aggregate_record.vp ||
+            (data.high_score.vp == hs_aggregate_record.vp &&
+             data.high_score.time < hs_aggregate_record.time)) {
             faction_hs[bucket_key.player_count] = data.high_score;
         }
 

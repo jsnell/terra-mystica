@@ -65,6 +65,7 @@ sub record_stats {
             vp => $_->{vp},
             game => $res->{id},
             player => $_->{username},
+            time => $_->{last_update},
         }
     }
     $stat->{average_vp} += $_->{vp};
@@ -180,9 +181,10 @@ for (@{$results{results}}) {
     $games{$_->{game}}{id} = $_->{game};
     $games{$_->{game}}{non_standard} = $_->{non_standard};
     $games{$_->{game}}{base_map} = ($_->{base_map} || '126fe960806d587c78546b30f1a90853b1ada468');
+    $games{$_->{game}}{last_update} = $_->{last_update};
 }
 
-for (values %games) {
+for (sort { $a->{last_update} cmp $b->{last_update} } values %games) {
     handle_game $_;
 }
 
