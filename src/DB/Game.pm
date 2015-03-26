@@ -297,7 +297,7 @@ sub abort_game {
 sub unabort_game {
     my ($dbh, $write_id) = @_;
 
-    $dbh->do("update game set aborted=false, finished=false where write_id=?",
+    $dbh->do("update game set aborted=false, finished=false, last_update=now() where write_id=?",
              {},
              $write_id);
 }
