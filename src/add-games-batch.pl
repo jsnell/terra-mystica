@@ -52,7 +52,8 @@ sub validate {
             maintain-player-order
             strict-leech
             strict-chaosmagician-sh
-            strict-darkling-sh);
+            strict-darkling-sh
+            variable-turn-order);
     for my $opt (@{$options}) {
         if (!$valid_options{$opt}) {
             die "Unknown option $opt\n";
