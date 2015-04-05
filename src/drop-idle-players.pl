@@ -11,6 +11,7 @@ BEGIN { push @INC, dirname $0 }
 use DB::Connection;
 use DB::Game;
 use DB::SaveGame;
+use Email::Notify;
 use tracker;
 
 my $dbh = get_db_connection;
@@ -38,9 +39,11 @@ sub drop_factions_from_game {
     my $metadata = get_game_metadata($dbh, $read_id);
 
     my ($prefix_content, $new_content) = get_game_content $dbh, $read_id, $write_id;
+    my $append = '';
     for my $faction (@factions) {
-        $new_content .= "\ndrop-faction $faction"
+        $append .= "\ndrop-faction $faction"
     }
+    $new_content .= $append;
 
     my $res = terra_mystica::evaluate_game {
         rows => [ split /\n/, "$prefix_content\n$new_content" ],
@@ -57,6 +60,28 @@ sub drop_factions_from_game {
     save $dbh, $write_id, $new_content, $res;
 
     finish_game_transaction $dbh;
+
+    if ($res->{options}{'email-notify'}) {
+        my $factions = $dbh->selectall_arrayref(
+            "select game_role.faction as name, email.address as email, player.displayname from game_role left join email on email.player = game_role.faction_player left join player on player.username = game_role.faction_player where game = ? and email.is_primary",
+            { Slice => {} },
+            $read_id);
+        for my $faction (@{$factions}) {
+            my $eval_faction = $res->{factions}{$faction->{name}};
+            if ($eval_faction) {
+                $faction->{recent_moves} = $eval_faction->{recent_moves};
+                $faction->{VP} = $eval_faction->{VP};
+            }
+        }
+        my $game = {
+            name => $read_id,
+            factions => { map { ($_->{name}, $_) } @{$factions} },
+            finished => $res->{finished},
+            options => $res->{options},
+            action_required => $res->{action_required},
+        };
+        notify_after_move $dbh, $write_id, $game, $factions[0], $append;
+    }
 };
 
 for (@{$idle_players}) {
