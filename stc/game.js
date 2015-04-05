@@ -3570,20 +3570,41 @@ function updateInfoTab() {
     // Time taken by each player
     if (metadata.active_times &&
         metadata.active_times[0] &&
-        metadata.active_times[0][0]) {
-        var list = new Element("table");
-        var players = metadata.active_times[0];
-        var times = metadata.active_times[1];
-        players.each(function (player, index) {
-            var time = times[index];
+        metadata.active_times[0].game) {
+        var list = new Element("table", { "class": "time-taken-table"});
+        var grace_period = [0, 12, 24, 72];
+
+        var header = new Element("tr").insert(new Element("td"));
+        list.insert(header);
+        grace_period.each(function (grace) {
+            var label = seconds_to_pretty_time(grace * 3600);
+            if  (!grace) { label = "No grace period"; }
+
+            header.insert(new Element("td").updateText(label));
+        });
+
+        metadata.active_times.each(function (record) {
+            var player = record.player;
             var row = new Element("tr");
-            var pretty_time = seconds_to_pretty_time(time, 'minute');
             var link = playerLink(player, player);
             row.insert(new Element("td").insert(link));
-            row.insert(new Element("td").updateText(pretty_time));
+
+            grace_period.each(function (grace) {
+                var field = "active_seconds_" + grace + "h";
+                if (!grace) { field = "active_seconds" }
+                var value_seconds = record[field];
+                var value_pretty = "";
+                if (value_seconds) {
+                    value_pretty = seconds_to_pretty_time(value_seconds, 'hour');
+                }
+                row.insert(new Element("td").insert(value_pretty));
+            });
+
             list.insert(row);
         });
-        addRow("Time taken", list);
+        var help = new Element("p").updateText("The time taken by each player is tracked both as a raw value (the clock starts running immediately), as well as with different grace periods (the clock starts running only after the indicated period of inactivity).");
+        var div = new Element("div").insert(help).insert(list);
+        addRow("Time taken", div);
     }
 
     if (metadata.map_variant) {

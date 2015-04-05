@@ -247,6 +247,19 @@ table.vp-breakdown {
     font: 14px Verdana;    
 }
 
+table.time-taken-table {
+    border-spacing: 0px;
+}
+
+table.time-taken-table tr td:nth-child(odd) {
+    background-color: #dcdcdc;
+}
+
+table.time-taken-table tr td {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
 span.faction-info-unimportant {
     color: #888;
 }
