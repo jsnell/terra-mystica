@@ -107,17 +107,9 @@ method validate_registration($q, $dbh, $suffix) {
 
     eval {
         my @data = ();
-        # FIXME: Remove the non-DB fallback in a few weeks, once such
-        # tokens should no longer be in circulation.
-        eval {
-            my $payload = fetch_validate_payload $dbh, $token;
-            @data = ($payload->{username}, $payload->{email},
-                     $payload->{hashed_password});
-        }; if ($@) {
-            my ($secret, $iv) = get_secret;
-            @data = decrypt_validation_token $secret, $token; 
-            print STDERR "Used fallback validation token mode for $token\n";
-        }
+        my $payload = fetch_validate_payload $dbh, $token;
+        @data = ($payload->{username}, $payload->{email},
+                 $payload->{hashed_password});
 
         my $already_done = $self->register($dbh, @data);
         if ($already_done) {

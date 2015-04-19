@@ -90,16 +90,8 @@ method validate_alias($q, $dbh, $suffix) {
     my ($secret, $iv) = get_secret;
     eval {
         my @data = ();
-        # FIXME: Remove the non-DB fallback in a few weeks, once such
-        # tokens should no longer be in circulation.
-        eval {
-            my $payload = fetch_validate_payload $dbh, $token;
-            @data = ($payload->{username}, $payload->{email});
-        }; if ($@) {
-            my ($secret, $iv) = get_secret;
-            @data = decrypt_validation_token $secret, $token; 
-            print STDERR "Used fallback validation token mode for $token\n";
-        }
+        my $payload = fetch_validate_payload $dbh, $token;
+        @data = ($payload->{username}, $payload->{email});
 
         $self->add_alias($dbh, @data);
         $self->output_html("<h3>Email alias registered</h3>");
