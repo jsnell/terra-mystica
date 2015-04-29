@@ -1,8 +1,13 @@
 {
     "news": [
+        { "date": "2015-04-28",
+          "title": "Behavior of 'Next game' changed",
+          "description": "The 'Next game' link now cycles through all the games waiting for a move, rather than going to the game that has been waiting the longest. If no games are waiting for a move from the user, the link will instead cycle through all games that are still running.",
+          "type": "change"
+        },
         { "date": "2015-03-07",
           "title": "Shapeshifters v3",
-          "description": "The Shapeshifter playtest rules for new games have been changed to limit the number of SH ability uses to the opponent count, not the player count. (Games already in progress will continue using the previous rules).",
+          "description": "The Shapeshifter playtest rules have been changed to limit the number of SH ability uses to the opponent count, not the player count. (Only applies to new games; games already in progress will continue using the previous rules).",
           "type": "change"
         },
         { "date": "2015-01-29",

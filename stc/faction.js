@@ -146,9 +146,30 @@ function showActiveGames(games, div, mode, status) {
 }
 
 function nextGame(games, div, mode, status) {
-    games.each(function(elem) {
-        if (elem.action_required) { document.location = elem.link; }
+    var active_games = games.filter(function (elem) {
+        return elem.action_required;
     });
+
+    if (active_games.size() == 0) {
+        active_games = games.filter(function (elem) {
+            return !(elem.finished || elem.aborted);
+        });
+    }
+
+    var game = active_games.last();
+
+    for (var i = 0; i < active_games.size(); ++i) {
+        var elem = active_games[i];
+        if (elem.link == document.location.pathname) {
+            break;
+        }
+        game = elem;
+    }
+
+    if (game) {
+        document.location = game.link;
+    }
+
     showActiveGames(games, div, mode, status);
 }
 
