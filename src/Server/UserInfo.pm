@@ -48,6 +48,7 @@ method handle($q, $query_username) {
         } elsif ($self->mode() eq 'opponents') {
             $res->{opponents} = fetch_user_opponents $dbh, $username;
         } elsif ($self->mode() eq 'metadata') {
+            $self->allow_cross_domain();
             $res->{metadata} = fetch_user_metadata $dbh, $username;
         } else {
             die "unknown mode\n";
