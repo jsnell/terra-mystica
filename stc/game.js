@@ -158,6 +158,86 @@ function drawSanctuary(ctx, hex) {
     ctx.restore();
 }
 
+function drawColorSymbol(ctx, color, x, y) {
+    if (!useColorBlindMode()) {
+        return;
+    }
+
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.beginPath();
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = contrastColor[color];
+    ctx.fillStyle = contrastColor[color];
+
+    switch (color) {
+    case 'gray':
+        ctx.translate(0, -3);
+        ctx.rotate(Math.PI * 1.25);
+        ctx.moveTo(0, 0);
+        ctx.lineTo(-6, -2);
+        ctx.moveTo(0, 0);
+        ctx.lineTo(-2, -6);
+        ctx.stroke();
+        break;
+    case 'red':
+        ctx.arc(0, 0, 3, 0.001, Math.PI*2, false);
+        ctx.fill();
+        break;
+    case 'yellow':
+        ctx.moveTo(-3, 0);
+        ctx.lineTo(3, 0);
+        ctx.stroke();
+        break;
+    case 'brown':
+        ctx.rotate(Math.PI);
+        ctx.arc(0, 0, 4, 0.001, Math.PI, false);
+        ctx.stroke();
+        break;
+    case 'black':
+        ctx.rotate(Math.PI);
+        ctx.arc(0, 0, 2, 0.001, Math.PI * 2, false);
+        ctx.fill();
+        break;
+    case 'blue':
+        ctx.arc(-2, 0, 2, 0.001, Math.PI, false);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(2, 0, 2, Math.PI, 0.001, false);
+        ctx.stroke();
+        break;
+    case 'green':
+        ctx.moveTo(-3, -3);
+        ctx.lineTo(3, -3);
+        ctx.moveTo(0, -3);
+        ctx.lineTo(0, 3);
+        ctx.stroke();
+        break;
+
+    case 'ice':
+        ctx.moveTo(-2, 2);
+        ctx.lineTo(2, 2);
+        ctx.lineTo(2, -2);
+        ctx.lineTo(-2, -2);
+        ctx.closePath();
+        ctx.stroke();
+        break;
+
+    case 'volcano':
+        for (var i = 0; i < 4; ++i) {
+            ctx.rotate(Math.PI / 2);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(3, 3);
+            ctx.stroke();
+        }
+        break;
+    };
+    
+    ctx.restore();
+}
+
 function drawHex(ctx, elem) {
     if (elem == null) {
         return;
@@ -229,9 +309,12 @@ function drawHex(ctx, elem) {
 
     ctx.save();
     ctx.strokeStyle = contrastColor[hex.color];
-    drawText(ctx, id, loc[0] - 9, loc[1] + 25,
+    ctx.textAlign = 'center';
+    drawText(ctx, id, loc[0], loc[1] + 25,
              hex.town ? "bold 12px Verdana" : "12px Verdana");
     ctx.restore();
+
+    drawColorSymbol(ctx, hex.color, loc[0] - 22, loc[1] + 12);
 }
 
 function drawBridge(ctx, from, to, color) {
@@ -915,37 +998,40 @@ function renderColorCycle(faction, parent) {
             size = 7.5;
         }            
 
+        var angle = (Math.PI * 2 / 7) * i - Math.PI / 2;
+        ctx.translate(30 * Math.cos(angle), 30 * Math.sin(angle));
+
         if (!faction.locked_terrain ||
             !faction.locked_terrain[terrain]) {
             ctx.beginPath();
-            ctx.arc(0, -29, size, Math.PI * 2, 0, false);
+            ctx.arc(0, 0, size, Math.PI * 2, 0, false);
 
             ctx.fillStyle = bgcolors[terrain];
             ctx.fill();
             
             ctx.stroke();
+
+            drawColorSymbol(ctx, terrain, 0, 0);
         }
 
         ctx.restore();
-
-        ctx.rotate(Math.PI * 2 / 7);
     }
 
     if (secondaryColor) {
         ctx.save();
         if (primaryColor == "ice") {
-            ctx.translate(0, 20);
-        } else {
-            ctx.translate(0, 30);
+            ctx.translate(0, -9);
         }
 
         ctx.beginPath();
-        ctx.arc(0, -29, 10, Math.PI * 2, 0, false);
+        ctx.arc(0, 0, 10, Math.PI * 2, 0, false);
 
         ctx.fillStyle = bgcolors[primaryColor];
         ctx.fill();
 
         ctx.stroke();
+
+        drawColorSymbol(ctx, primaryColor, 0, 0);
 
         ctx.restore();
     }
@@ -3676,6 +3762,27 @@ function spin() {
     $("action_required").insertTextSpan('loading ...');
 }
 
+function useColorBlindMode() {
+    var ls = window.localStorage;
+    if (!ls) {
+        return false;
+    }
+
+    return ls['color-blind-mode'] == "true";
+}
+
+function toggleColorBlindMode() {
+    var ls = window.localStorage;
+    if (!ls) {
+        return false;
+    }
+
+    var cb_mode = ls['color-blind-mode'];
+    ls['color-blind-mode'] = (cb_mode != "true");
+
+    document.location.reload();
+}
+
 function init(root) {
     root.innerHTML += ' \
     <table style="border-style: none" id="main-data"> \
@@ -3692,6 +3799,9 @@ function init(root) {
               Browser not supported. \
             </canvas> \
           </div> \
+      <tr> \
+        <td> \
+          <td> <a style="color: black" href="#" onclick="toggleColorBlindMode()">Toggle color blind mode</a> \
       <tr> \
         <td colspan=2> \
           <div style="display: inline-block; vertical-align: top"> \
