@@ -57,7 +57,9 @@ method handle($q, $path_suffix) {
         $self->open_games($dbh, \%res, $user);
     } elsif ($mode eq 'by-pattern') {
         $self->allow_cross_domain();
-        $res{games} = get_game_list_by_pattern $dbh, $path_suffix;
+        my $pattern = $path_suffix;
+        $pattern =~ s/[*]/%/g;
+        $res{games} = get_game_list_by_pattern $dbh, $pattern;
         $res{error} = [];
     }
 
