@@ -91,7 +91,7 @@ sub convert_ledger {
 
 my $dbh = get_db_connection;
 
-my $games = $dbh->selectall_arrayref("select id, write_id, extract(epoch from last_update) from game where id like ?",
+my $games = $dbh->selectall_arrayref("select id, write_id, extract(epoch from last_update) from game where id like ? order by last_update",
                                      {},
                                      shift || '%');
 
