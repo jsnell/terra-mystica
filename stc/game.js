@@ -3631,7 +3631,9 @@ function updateInfoTab() {
 
 function draw(n) {
     $("error").clearContent();
+    var errors = false;
     state.error.each(function(row) {
+        errors = true;
         $("error").insert(new Element("div").updateText(row));
     });
 
@@ -3648,7 +3650,7 @@ function draw(n) {
     drawActionRequired();
     drawTurnOrder();
     // Draw the full ledger right from the start when in history view.
-    recent_moves = drawLedger(state.history_view);
+    recent_moves = drawLedger(state.history_view || errors);
     drawRecentMoves(recent_moves);
 
     if (state.history_view > 0) {

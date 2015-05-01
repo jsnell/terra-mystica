@@ -20,12 +20,14 @@ use scoring;
 use towns;
 
 sub finalize {
-    my ($delete_email, $faction_info) = @_;
+    my ($delete_email, $faction_info, $errors) = @_;
 
-    update_reachable_build_locations;
-    update_reachable_tf_locations;
-    update_tp_upgrade_costs;
-    update_mermaid_town_connections;
+    if (!$errors) {
+        update_reachable_build_locations;
+        update_reachable_tf_locations;
+        update_tp_upgrade_costs;
+        update_mermaid_town_connections;
+    }
 
     if ($delete_email) {
         for (@{$game{acting}->players()}) {
@@ -220,7 +222,7 @@ sub evaluate_game {
     }
 
     maybe_setup_pool;
-    finalize $data->{delete_email} // 1, $faction_info // {};
+    finalize $data->{delete_email} // 1, $faction_info // {}, scalar @error;
 
     my $ret = {
         order => [ map { $_->{name} } $game{acting}->factions_in_order() ],

@@ -424,10 +424,12 @@ sub assert_color {
 
 sub color_difference {
     my ($a, $b) = assert_color @_;
-    my $diff = abs $color_cycle{$a} - $color_cycle{$b};
+    my $diff = $color_cycle{$b} - $color_cycle{$a};
 
     if ($diff > 3) {
-        $diff = 7 - $diff;
+        $diff -= 7;
+    } elsif ($diff < -3) {
+        $diff += 7;
     }
 
     return $diff;
@@ -482,8 +484,8 @@ sub transform_colors_on_cycle {
         }
     }
 
-    if (color_difference($cw, $home_color) <
-        color_difference($ccw, $home_color)) {
+    if (abs color_difference($home_color, $cw) <
+        abs color_difference($home_color, $ccw)) {
         return ($cw, $ccw);
     } else {
         return ($ccw, $cw);
@@ -541,21 +543,53 @@ sub transform_cost {
         validate_transform_color $faction, $where;
     }
 
+    my $map_color = $map{$where}{color};
     my ($cost, $gain, $need_teleport) = check_reachable $faction, $where;
 
     my $color_difference;
 
     if ($color eq 'ice') {
-        if ($map{$where}{color} eq $faction->{secondary_color}) {
+        if ($map_color eq $faction->{secondary_color}) {
             $color_difference = 1;
         } else {
-            $color_difference = color_difference $map{$where}{color}, $faction->{secondary_color};
+            $color_difference = abs color_difference $map_color, $faction->{secondary_color};
         }
     } elsif ($color eq 'volcano') {
         # Arbitrary, but must be non-zero.
         $color_difference = 7;
     } else {
-        $color_difference = color_difference $map{$where}{color}, $color;
+        my $home_color = $faction->{secondary_color} // $faction->{color};
+        my $color_diff = color_difference $map_color, $color;
+        $color_difference = abs $color_diff;
+
+        if ($game{options}{'loose-dig'}) {
+            # Legacy game, just go the short way around.
+        } elsif ($color eq $home_color or
+                 $map_color eq $home_color) {
+            # Transforming to or from home terrain, select the way
+            # around color cycle that matches the number of remaining
+            # spades.
+            my $other_way = 7 - $color_difference;
+
+            if ($faction->{SPADE} and $faction->{SPADE} == $other_way) {
+                $color_difference = $other_way;
+            }            
+        } else {
+            # Check that we're not crossing the home terrain when going
+            # the short way around.
+            my $home_diff = color_difference $map_color, $home_color;
+
+            if ($home_diff < 0 != $color_diff < 0) {
+                # Home terrain is in different direction from target ->
+                # take the short way round.
+            } elsif (abs $home_diff > abs $color_diff) {
+                # Home terrain is further along the short direction than
+                # target terrain.
+            } else {
+                # Home terrain intervenes, we must take the long way round.
+                $color_difference = 7 - $color_difference;
+            }
+        }
     }
 
     if ($faction->{name} eq 'giants' and $color_difference != 0) {
@@ -570,7 +604,7 @@ sub transform_cost {
             # color of the pieces, not actual home terrain.
             next if $other_faction->{locked_terrain};
             next if !defined $other_faction->{color};
-            if ($other_faction->{color} eq $map{$where}{color}) {
+            if ($other_faction->{color} eq $map_color) {
                 $hex_type = 'home';
             }
         }
