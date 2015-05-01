@@ -83,6 +83,11 @@ sub command_adjust_resources {
     }
 
     if ($type eq 'SPADE' and $delta < 0) {
+        if (!$faction->{passed} and
+            $faction->{disable_spade_decline} and
+            !$game{options}{'loose-dig'}) {
+            die "All spades from 'dig' command must be used, can't be thrown away.\n";
+        }
         $checked = 1;
     }
 
@@ -640,6 +645,8 @@ sub command_dig {
     }
     pay $faction, $cost for 1..$amount;
     gain $faction, $gain, 'faction' for 1..$amount;
+
+    $faction->{disable_spade_decline} = 1;
 
     $game{events}->faction_event($faction, 'dig', $amount);
 }

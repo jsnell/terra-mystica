@@ -181,6 +181,7 @@ method start_full_move($faction) {
     delete $faction->{require_home_terrain_tf};
     delete $faction->{TELEPORT_TO};
     delete $faction->{cult_blocked};
+    delete $faction->{disable_spade_decline};
 }
 
 # Signal an intent by a faction to take a sub-action. Either it needs to

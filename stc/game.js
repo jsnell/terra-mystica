@@ -2011,7 +2011,7 @@ function addFactionInput(parent, record, index) {
         addTakeTileButtons(parent, index, "BON", 0);
     }
     if (record.type == "transform") {
-        if (faction.SPADE > 0) {
+        if (faction.SPADE > 0 && !faction.disable_spade_decline) {
             addDeclineButton(parent, index, "SPADE", faction.SPADE);
         }
         if (faction.FREE_TF > 0) {

@@ -61,6 +61,7 @@ sub fetch_result {
         delete $faction->{exchange_rates};
         delete $faction->{ALLOW_SHAPESHIFT};
         delete $faction->{GAIN_P3_FOR_VP};
+        delete $faction->{disable_spade_decline};
     }
     delete $json->{actions};
     delete $json->{towns};
