@@ -174,7 +174,7 @@ method factions_in_order_from($faction, $no_dummy) {
 # Make a faction become the active one
 method start_full_move($faction) {
     $self->active_faction($faction);
-    
+
     $faction->{allowed_actions} = 1;
     $faction->{allowed_sub_actions} = {};
     $faction->{allowed_build_locations} = {};

@@ -149,7 +149,7 @@ sub command_build {
     my $check_if_build_location_allowed_after_tf = !$tf_needed;
 
     # We've already done all the allowed transforms (2 if using a bare act6
-    # with no added digs, 3 otherwise). We need to check that the build
+    # with no added digs, 1 otherwise). We need to check that the build
     # is happening in one of the transformed spaces, if the build is to happen
     # on the same action.
     if (!$game{options}->{'loose-build-after-dig'} and
@@ -607,8 +607,12 @@ sub command_transform {
         for my $record ($game{acting}->find_actions($faction, 'transform')) {
             $record->{amount} = $faction->{SPADE};
         }
-        if ($color ne $faction->{color}) {
+        if ($color ne $faction->{color} and !$faction->{passed}) {
             $faction->{require_home_terrain_tf} = 1;
+            if (!$faction->{allowed_sub_actions}{transform} and
+                !$game{options}{'loose-dig'}) {
+                die "Must use all available spades when transforming a hex to non-home color using spades from a 'dig' command ($faction->{SPADE} spades remaining)\n";
+            }
         }
     }
 
