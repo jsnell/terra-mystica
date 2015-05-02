@@ -1119,7 +1119,9 @@ sub command {
 
         command_adjust_resources $assert_faction->(), $delta, $type, $source;
     } elsif ($command =~ /^build (\w+)$/i) {
-        $game{acting}->advance_state('initial-dwellings');
+        if (!@{$game{acting}->players()}) {
+            $game{acting}->advance_state('initial-dwellings');
+        }
         command_build $assert_active_faction->(), uc $1;
     } elsif ($command =~ /^upgrade (\w+) to ([\w ]+)$/i) {
         die "Can't upgrade in setup phase\n" if !$game{round};
