@@ -23,6 +23,7 @@ print "Chat messages ", $dbh->do("delete from chat_message where game=?", {}, $i
 print "Game options ", $dbh->do("delete from game_options where game=?", {}, $id);
 print "Game roles ", $dbh->do("delete from game_role where game=?", {}, $id);
 print "Game players ", $dbh->do("delete from game_player where game=?", {}, $id);
+print "Time tracking ", $dbh->do("delete from game_active_time where game=?", {}, $id);
 print "Game ", $dbh->do("delete from game where id=?", {}, $id);
 
 my $response;
