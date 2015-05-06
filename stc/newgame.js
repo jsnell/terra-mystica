@@ -1,5 +1,16 @@
 var state = null;
 
+function copyGameValidate() {
+    var disabled = false;
+
+    if ($("copy-gameid").value == "" ||
+        $("copy-gameid").value.length > 32) {
+        disabled = true;
+    }
+
+    $("copy-submit").disabled = disabled;
+}
+
 function newGameValidate() {
     var disabled = false;
     var okColor = "#fff";
@@ -96,4 +107,69 @@ function newGame() {
             }
         }
     });    
+}
+
+function copyGame() {
+    $("error").innerHTML = "";
+    $("csrf-token").value = getCSRFToken();
+    disableDescendants($("copy-row"));
+
+    var target = "/app/view-game/";
+
+    new Ajax.Request(target, {
+        method: "post",
+        parameters: {
+            "cache-token": new Date() - Math.random(),
+            "csrf-token": getCSRFToken(),
+            "game": $("copy-gameid").value,
+            "template": true,
+        },
+        onFailure: function (transport) {
+            enableDescendants($("copy-row"));
+            var data = transport.responseText.evalJSON();
+            $("error").innerHTML = "Can't use game as template: " + data.error.join("<br>");
+        },
+        onSuccess: function(transport) {
+            try{
+                enableDescendants($("copy-row"));
+                var data = transport.responseText.evalJSON();
+
+                $("game-type").value = "private";
+
+                var players = "";
+                data.players.each(function(elem) {
+                    if (elem.username == null) {
+                        $("error").innerHTML = "Can't use game as template: too old";
+                        return;
+                    }
+                    players += elem.username + "\n";
+                });
+                $("players").value = players;
+
+                var map = data.map_variant || "";
+                $("map-variant").value = map;
+
+                var options = {};
+                data.metadata.game_options.each(function (elem) {
+                    options[elem] = true;
+                    var prefix = elem.sub(/\/.*/, '');
+                    options[prefix] = true;
+                });
+
+                $$('input[name="game-options"]').each(function (input) {
+                    input.checked = (options[input.value] || false);
+                });
+                $('option-fire-and-ice-factions').checked = options['fire-and-ice-factions'];                    
+
+                $("deadline-hours").value = data.metadata.deadline_hours;
+
+                $("gameid").value = data.template_next_game_id;
+
+                newGameValidate();
+            } catch (e) {
+                console.log(e);
+                $("error").innerHTML = "Can't use game as template: " + e;
+            }
+        }
+    });
 }

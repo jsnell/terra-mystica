@@ -11,6 +11,18 @@ __DATA__
 <div id="error"></div>
 <form id="newgame" action="/app/new-game/" onsubmit="return false">
   <table class="newgame-settings">
+    <tr style="vertical-align: top" id="copy-row">
+      <td style="width: 12ex">Template
+      <td>
+        <input name="copy-gameid" id="copy-gameid"
+               oninput="javascript:copyGameValidate()" >
+        <input id="copy-submit" type="button" value="Use Template" onclick="javascript:copyGame()"></input>
+      <td>
+        <p>Use an existing game as a template for this game (fill in the
+          the same settings and the same players). You can still edit
+          the prefilled form data before creating the game.
+    </tr>
+
     <tr style="vertical-align: top">
       <td style="width: 12ex">Game id<td><input name="gameid" id="gameid" oninput="javascript:newGameValidate()">
       <td>
@@ -152,5 +164,5 @@ experience level or living in a certain timezone.
 Please correct the items marked in red before creating the game.
   </table>
   <input type="hidden" id="csrf-token" name="csrf-token"></input>
-  <script language="javascript">newGameValidate();</script>
+  <script language="javascript">newGameValidate(); copyGameValidate();</script>
 </form>

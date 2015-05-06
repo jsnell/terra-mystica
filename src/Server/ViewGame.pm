@@ -13,6 +13,7 @@ use DB::Game;
 use Server::Security;
 use Server::Session;
 use Util::CryptUtil;
+use Util::NaturalCmp;
 use Util::ServerUtil;
 use tracker;
 
@@ -68,7 +69,54 @@ method handle($q) {
     };
     $res->{metadata} = get_game_metadata $dbh, $id;
 
+    if ($q->param('template')) {
+        if (!$username) {
+            die "Not logged in\n";
+        }
+
+        if ($username ne $res->{metadata}{admin_user}) {
+            die "Game is administrated by another player\n";
+        }
+
+        $res->{template_next_game_id} = find_next_game_id($dbh, $id, $username);
+    }
+
     $self->output_json($res);
 };
+
+sub find_next_game_id {
+    my ($dbh, $id, $username) = @_;
+    my $base_id = $id;
+    $base_id =~ s/\d+$//;
+
+    if (length $base_id < 4) {
+        $base_id = $username;
+    }
+
+    $base_id =~ s/[^A-Za-z0-9]//g;
+
+    my @games = ();
+
+    for (@{$dbh->selectall_arrayref(
+               "select id from game where id like ?",
+               { Slice => {} },
+               "$base_id%")}) {
+        my $game_id = $_->{id};
+        if ($game_id !~ /^$base_id[^0-9]/) {
+            push @games, $game_id;
+        }
+    }
+
+    if (@games == 1) {
+        return "${base_id}02";
+    }
+
+    @games = sort { natural_cmp $a, $b } @games;
+    my $last = $games[-1];
+    $last =~ s/^$base_id//;
+    my $next = sprintf "%02d", $last + 1;
+
+    return "${base_id}$next";
+}
 
 1;

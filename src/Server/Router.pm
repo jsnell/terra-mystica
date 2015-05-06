@@ -161,11 +161,12 @@ sub route {
             die "Unknown module '$path_info'";
         }
     }; if ($@) {
-        log_with_request $q, "$@";
+        my $error = $@;
+        log_with_request $q, "$error";
 
         $ret = [500,
                 ["Content-Type", "application/json"],
-                [encode_json { error => [ $@ ] }]];
+                [encode_json { error => [ "$error" ] }]];
     }
 
     $ret;

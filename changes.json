@@ -1,5 +1,10 @@
 {
     "news": [
+        { "date": "2015-05-06",
+          "title": "Template games",
+          "description": "When creating a new game, you can use an existing game as a template. This copies over the settings and the players (creating a private game) and automatically generates a game name, but lets you tweak the settings further if needed.",
+          "type": "change"
+        },
         { "date": "2015-05-01",
           "title": "Color blind mode",
           "description": "The game view now has a mode where a symbol is added to each map tile to indicate the color. You can toggle the mode on or off using the 'toggle color blind mode' link under the map. The setting is per-computer.",
