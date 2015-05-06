@@ -3069,7 +3069,8 @@ function addBuildToMovePicker(picker, faction) {
                 possible_builds.push([loc, cost_str]);
             });
         }
-    } else if (faction.allowed_actions) {
+    } else if (faction.allowed_actions &&
+               faction.reachable_build_locations) {
         location.insert(new Element("option").updateText("-"));
         var resources = ["C", "W", "P"];
         faction.reachable_build_locations.each(function (elem) {
