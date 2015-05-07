@@ -135,6 +135,7 @@ function copyGame() {
                 var data = transport.responseText.evalJSON();
 
                 $("game-type").value = "private";
+                $("gameid").value = data.template_next_game_id;
 
                 var players = "";
                 data.players.each(function(elem) {
@@ -161,9 +162,22 @@ function copyGame() {
                 });
                 $('option-fire-and-ice-factions').checked = options['fire-and-ice-factions'];                    
 
-                $("deadline-hours").value = data.metadata.deadline_hours;
+                if (data.metadata.deadline_hours) {
+                    $("deadline-hours").value = data.metadata.deadline_hours;
+                }
 
-                $("gameid").value = data.template_next_game_id;
+                if (data.metadata.description) {
+                    $("description").value = data.metadata.description;
+                }
+                if (data.metadata.minimum_rating) {
+                    $("min-rating").value = data.metadata.minimum_rating;
+                }
+                if (data.metadata.maximum_rating) {
+                    $("max-rating").value = data.metadata.maximum_rating;
+                }
+                if (data.metadata.wanted_player_count) {                
+                    $("player-count").value = data.metadata.wanted_player_count;
+                }
 
                 newGameValidate();
             } catch (e) {
