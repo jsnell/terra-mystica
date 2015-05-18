@@ -27,7 +27,9 @@ sub drop_factions_from_game {
     my ($read_id, $factions) = @_;
     my @factions = @{$factions};
 
-    print "Dropping @factions from $read_id\n";
+    if (-t STDOUT) {
+        print "Dropping @factions from $read_id\n";
+    }
 
     my ($write_id) = $dbh->selectrow_array("select write_id from game where id=?",
                                            {},
