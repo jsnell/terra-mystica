@@ -8,9 +8,13 @@
 
 __DATA__
 
-<div class="motd" style="display: none">
-    Season 6 of the Terra Mystica tournament will start on April 1st.
+<div class="motd" style="display: block">
+    Season 7 of the Terra Mystica tournament will start on June 1st.
     Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>.
+
+    <p>
+Please note that as of this season, controlling multiple players is
+explicitly forbidden by the tournament rules.
 </div>
 
 <h4>Your Active / Recently Finished Games</h4>
