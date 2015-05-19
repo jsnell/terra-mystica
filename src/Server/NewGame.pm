@@ -140,7 +140,7 @@ method make_game($dbh, $q, $username) {
         error "Game $gameid already exists";
     }
 
-    my @options = $q->param('game-options');
+    my @options = $q->multi_param('game-options');
     my $map_variant = $q->param('map-variant') || undef;
 
     eval {

@@ -40,10 +40,10 @@ sub save_user_settings {
     $dbh->do("update player set displayname=?, email_notify_turn=?, email_notify_all_moves=?, email_notify_chat=?, email_notify_game_status=? where username=?",
              {},
              $displayname,
-             $q->param('email_notify_turn'),
-             $q->param('email_notify_all_moves'),
-             $q->param('email_notify_chat'),
-             $q->param('email_notify_game_status'),
+             scalar $q->param('email_notify_turn'),
+             scalar $q->param('email_notify_all_moves'),
+             scalar $q->param('email_notify_chat'),
+             scalar $q->param('email_notify_game_status'),
              $username);
 
     if ($primary_email) {

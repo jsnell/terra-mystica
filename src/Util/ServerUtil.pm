@@ -17,7 +17,7 @@ sub log_with_request {
     my $username = $q->cookie('session-username') // '<none>';
     my $params = eval {
         my @vars = grep { !/password/ } $q->param;
-        my %params = map { ($_ => $q->param($_)) } @vars;
+        my %params = map { ($_ => scalar $q->param($_)) } @vars;
         encode_json \%params
     };
 
