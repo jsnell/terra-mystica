@@ -119,7 +119,7 @@ EOF
     $dbh->do(
         'insert into game (id, write_id, finished, round, player_count, wanted_player_count, needs_indexing, admin_user) values  (?, ?, false, 0, ?, ?, false, ?)',
         {},
-        $id, $write_id, length @{$players}, $player_count, $admin_user);
+        $id, $write_id, scalar @{$players}, $player_count, $admin_user);
 
     my $i = 0;
     for my $player (@{$players}) {
