@@ -94,7 +94,7 @@ sub handle_game {
                 a => { username => $f1->{username}, id_hash => $f1->{id_hash}, faction => $f1->{faction}, vp => $f1->{vp} },
                 b => { username => $f2->{username}, id_hash => $f2->{id_hash}, faction => $f2->{faction}, vp => $f2->{vp} },
                 last_update => $res->{last_update},
-                base_map => $res->{base_map},
+                base_map => $f1->{base_map},
                 id => $res->{id},
             };
             push @{$output}, $record;
