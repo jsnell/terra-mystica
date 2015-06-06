@@ -14,6 +14,7 @@ use Server::NewGame;
 use Server::PasswordReset;
 use Server::Plan;
 use Server::Register;
+use Server::Request;
 use Server::Results;
 use Server::SaveGame;
 use Server::Settings;
@@ -128,12 +129,7 @@ my %paths = (
 
 sub route {
     my $env = shift;
-    my $q = CGI::PSGI->new($env);
-
-    local *CGI::PSGI::param_or_die = sub {
-        my ($q, $param) = @_;
-        $q->param($param) // die "Required parameter '$param' undefined\n";
-    };
+    my $q = Server::Request->new($env);
 
     my $path_info = $q->path_info();
     my $ret;

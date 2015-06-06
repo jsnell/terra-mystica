@@ -144,6 +144,7 @@ sub deploy_cgi {
                   Server/Plan.pm
                   Server/Router.pm
                   Server/Register.pm
+                  Server/Request.pm
                   Server/Results.pm
                   Server/SaveGame.pm
                   Server/Security.pm
