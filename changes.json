@@ -1,5 +1,10 @@
 {
     "news": [
+        { "date": "2015-07-02",
+          "title": "Changes to list of open games",
+          "description": "The open game list will now only display games that the player viewing the list can join.",
+          "type": "change"
+        },
         { "date": "2015-05-06",
           "title": "Template games",
           "description": "When creating a new game, you can use an existing game as a template. This copies over the settings and the players (creating a private game) and automatically generates a game name, but lets you tweak the settings further if needed.",

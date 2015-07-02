@@ -11,8 +11,9 @@ extends 'Server::Server';
 use CGI qw(:cgi);
 
 use DB::Connection;
-use DB::Game;
 use DB::EditLink;
+use DB::Game;
+use DB::UserInfo;
 use Util::NaturalCmp;
 use Server::Session;
 
@@ -70,7 +71,21 @@ method open_games($dbh, $res, $user) {
     if (!defined $user) {
         $res->{error} = ["Not logged in <a href='/login/'>(login)</a>"];
     } else {
-        $res->{games} = get_open_game_list $dbh;
+        my $user_info = fetch_user_metadata $dbh, $user;
+        my $user_rating = $user_info->{rating} // 0;
+        my $games = get_open_game_list $dbh;
+        for my $game (@{$games}) {
+            if (grep { $_ eq $user } @{$game->{players}}) {
+                next;
+            }
+            if (($game->{minimum_rating} and
+                 $game->{minimum_rating} > $user_rating) or
+                ($game->{maximum_rating} and
+                 $game->{maximum_rating} < $user_rating)) {
+                $game = undef;
+            }
+        }
+        $res->{games} = [ grep { $_ } @{$games} ];
     }
 }
 
