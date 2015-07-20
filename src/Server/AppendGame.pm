@@ -105,10 +105,11 @@ method handle($q) {
 
     my $players = get_game_players($dbh, $read_id);
     my $metadata = get_game_metadata($dbh, $read_id);
+    my $factions = get_game_factions($dbh, $read_id);
 
     my $res = terra_mystica::evaluate_game {
         rows => [ split /\n/, "$prefix_content\n$new_content" ],
-        faction_info => get_game_factions($dbh, $read_id),
+        faction_info => $factions,
         players => $players,
         metadata => $metadata,
         delete_email => 0
@@ -131,11 +132,13 @@ method handle($q) {
                 event => 'append',
                 username => $username,
                 faction => $faction_name,
+                faction_username => $factions->{$faction_name}{username},
                 game => $read_id,
                 commands => $preview,
                 round => $res->{round},
                 turn => $res->{turn},
                 ip => $q->remote_addr(),
+                agent => $q->user_agent(),
             };
         }; if ($@) {
             print STDERR "error writing game log: $@\n";
