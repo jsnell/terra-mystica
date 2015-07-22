@@ -1,5 +1,11 @@
 {
     "news": [
+        { "date": "2015-07-22",
+          "title": "Detecting players using multiple accounts",
+          "description": "A blog post describing the system used for detecting people playing with multiple accounts.",
+          "type": "blog",
+          "link": "https://www.snellman.net/blog/archive/2015-07-22-cheater-detection-in-async-online-game/"
+        },
         { "date": "2015-07-02",
           "title": "Changes to list of open games",
           "description": "The open game list will now only display games that the player viewing the list can join.",
