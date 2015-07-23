@@ -663,11 +663,22 @@ sub command_dig {
     $game{events}->faction_event($faction, 'dig', $amount);
 }
 
+sub faction_has_building_in {
+    my ($faction, $where) = @_;
+    return $map{$where}{building} &&
+        $map{$where}{color} eq $faction->{color};
+}
+
 sub command_bridge {        
     my ($faction, $from, $to, $allow_illegal) = @_;
 
     if (!$faction->{BRIDGE}) {
         die "Can't build bridge\n";
+    }
+    
+    if (!(faction_has_building_in $faction, $from or
+          faction_has_building_in $faction, $to)) {
+        die "Bridge must be adjacent to at least one building\n";
     }
 
     $game{acting}->require_subaction($faction, 'bridge', {
