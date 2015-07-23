@@ -3753,6 +3753,7 @@ function draw(n) {
 
 function failed() {
     $("action_required").clearContent();
+    $("error").clearContent();
     if (state.error) {
         state.error.each(function(row) {
             $("error").insert(new Element("div").updateText(row));

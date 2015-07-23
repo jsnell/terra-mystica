@@ -181,7 +181,6 @@ function copyGame() {
 
                 newGameValidate();
             } catch (e) {
-                console.log(e);
                 $("error").innerHTML = "Can't use game as template: " + e;
             }
         }

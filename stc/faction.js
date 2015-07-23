@@ -74,9 +74,16 @@ function previewOrSave(save, preview_data, prefix_data) {
             "max-row": TM.params['max-row']
         },
         onFailure: function (transport) {
-            var data = transport.responseText.evalJSON();
+            var data;
+            try {
+                data = transport.responseText.evalJSON();
+            } catch (e) {
+                data = {
+                    error: transport.statusText || "Unknown error"
+                };
+            }
             if (data && data.error) {
-                state = { error: data.error };
+                state = { error: [ data.error ] };
             }
             failed();
             dataEntrySetStatus(false);
