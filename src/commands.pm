@@ -1273,6 +1273,7 @@ sub command {
             loose-dig
             loose-engineer-bridge
             loose-multi-spade
+            loose-bridge-adjacency
             maintain-player-order
             manual-fav5
             shapeshifter-fix-playtest-v1
