@@ -331,6 +331,11 @@ sub command_convert {
         die "Can't convert resources outside of actions\n";
     }
 
+    if ($from_type eq 'P' and $to_type eq 'C'
+        and $faction->{P3}) {
+        preview_warn("Converting priest to coins, despite power in bowl 3");
+    }
+
     # Have to leech before converting resources
     my @records = leech_decisions_required($faction);
     for (@records) {
