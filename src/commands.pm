@@ -676,8 +676,9 @@ sub command_bridge {
         die "Can't build bridge\n";
     }
     
-    if (!(faction_has_building_in $faction, $from or
-          faction_has_building_in $faction, $to)) {
+    if (!$game{options}{'loose-bridge-adjacency'} and
+        !(faction_has_building_in $faction, $from or
+          faction_has_building_in $faction, $to)) {        
         die "Bridge must be adjacent to at least one building\n";
     }
 
@@ -1284,7 +1285,7 @@ sub command {
             loose-dig
             loose-engineer-bridge
             loose-multi-spade
-            loose-bridge-adjacency
+            loose-bridge-adjacency 
             maintain-player-order
             manual-fav5
             shapeshifter-fix-playtest-v1
