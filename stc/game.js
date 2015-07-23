@@ -3015,9 +3015,12 @@ function effectString(costs, gains) {
     return non_zero.join(", ");
 }
 
-function canAfford(faction, costs) {
+function canAfford(faction, costs, count) {
     var can_afford = true;
     var non_zero = [];
+    if (count == null) {
+        count = 1;
+    }
     faction.PW_TOKEN = faction.P1 + faction.P2 + faction.P3;
     faction.PW = faction.P2 / 2 + faction.P3;
 
@@ -3025,7 +3028,7 @@ function canAfford(faction, costs) {
         var total_cost = 0;
         costs.each(function (cost) {
             if (cost[type]) {
-                total_cost += cost[type]
+                total_cost += cost[type] * count;
             }
         });
         if (faction[type] < total_cost) {
@@ -3413,8 +3416,11 @@ function addDigToMovePicker(picker, faction) {
     amount.onchange = validate;
 
     var cost = faction.dig.cost[faction.dig.level];
+    if (!cost) {
+        return;
+    }
     for (var i = 1; i <= 7; ++i) {
-        var can_afford = canAfford(faction, [cost]);
+        var can_afford = canAfford(faction, [cost], i);
         if (can_afford) {
             amount_count++;
             amount.insert(new Element("option").updateText(i));
