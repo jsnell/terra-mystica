@@ -475,6 +475,7 @@ sub command_leech {
 
 sub command_decline {
     my ($faction, $amount, $from) = @_;
+    my $declined = 0;
 
     if (!$amount) {
         # Decline all
@@ -482,10 +483,10 @@ sub command_decline {
             $_->{faction} eq $faction->{name} and $_->{type} eq 'leech';
         } @{$game{acting}->action_required()};
         for (@declines) {
-            command_decline($faction, $_->{amount}, $_->{from_faction});
+            $declined +=
+                command_decline($faction, $_->{amount}, $_->{from_faction});
         }
     } else {
-        my $declined = 0;
         for (@{$game{acting}->action_required()}) {
             if ($_->{faction} eq $faction->{name} and
                 $_->{type} eq 'leech' and
@@ -511,6 +512,8 @@ sub command_decline {
         $game{acting}->clear_empty_actions();
         die "Invalid decline ($amount from $from)\n" if !$declined;
     }
+
+    return $declined;
 }
 
 sub cultist_maybe_gain_power {
@@ -768,6 +771,11 @@ sub command_pass {
     if ($discard) {
         adjust_resource $faction, $discard, -1;
     }
+
+    my $income = faction_income $faction;
+    for my $subincome (@{$income->{ordered}}) {
+        warn_if_cant_gain $faction, $subincome, 'income';
+    }
 }
 
 sub command_action {
@@ -808,6 +816,7 @@ sub command_action {
     $game{acting}->require_subaction($faction, 'action', \%subaction);
 
     pay $faction, $actions{$name}{cost}, ($faction->{discount} and $faction->{discount}{$name});
+    warn_if_cant_gain $faction, $actions{$name}{gain}, "action $action";
     gain $faction, $actions{$name}{gain}, $name;
 
     $map{$action}{blocked} = 1 unless $actions{$name}{dont_block};
@@ -1079,6 +1088,10 @@ sub finalize_setup {
             add_faction_variant "final_$type";
         }
     }
+}
+
+sub preview_warn {
+    push @{$game{preview_warnings}}, @_;
 }
 
 sub command {
@@ -1409,6 +1422,9 @@ sub command {
     } elsif ($command =~ /^final-scoring (.*)/i) {
         die "$faction_name can't trigger final scoring\n" if $faction_name;
         add_final_scoring $1;
+    } elsif ($command =~ /^start-preview$/i) {
+        die "$faction_name can't trigger preview mode\n" if $faction_name;
+        $game{in_preview} = 1;
     } elsif ($command =~ /^drop-faction player(\d+)$/i) {
         die "Players can only be dropped from admin view\n" if $faction_name;
         my $player = $game{acting}->players()->[$1 - 1];

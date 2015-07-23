@@ -42,6 +42,7 @@ method handle($q) {
     my @rows = get_game_commands $dbh, $id;
 
     if (defined $preview) {
+        push @rows, 'start-preview';
         if ($preview_faction =~ /^player/) {
             if ($preview =~ s/(setup (\w+))//i) {
                 push @rows, "$1\n";

@@ -2515,14 +2515,22 @@ function moveEntryAfterPreview() {
 
         if ($("move_entry_input").value != "") {
             if ($("error").innerHTML != "") {
-                $("move_entry_explanation").updateText("Can't save yet - input had errors");
+                $("move_entry_explanation").insert(
+                    new Element("div").updateText(
+                        "Can't save yet - input had errors"));
             } else if (!allowSaving) {
-                $("move_entry_explanation").updateText("Can't save yet - it's still your turn to move. (Also see the 'wait' command).");
+                $("move_entry_explanation").insert(
+                    new Element("div").updateText(
+                        "Can't save yet - it's still your turn to move. (Also see the 'wait' command)."));
             } else {
                 $("move_entry_action").updateText("Save");
                 $("move_entry_action").onclick = save;
             }
         }
+        (state.preview_warnings || []).each(function (warning) {
+            $("move_entry_explanation").insert(
+                new Element("div").updateText("Warning: " + warning));
+        });
     }
     if ($("move_entry_input")) {
         $("move_entry_input").oninput = moveEntryInputChanged;
@@ -3420,7 +3428,7 @@ function addDigToMovePicker(picker, faction) {
         return;
     }
     for (var i = 1; i <= 7; ++i) {
-        var can_afford = canAfford(faction, [cost], i);
+        var can_afford = canAfford(faction, [cost], i);        
         if (can_afford) {
             amount_count++;
             amount.insert(new Element("option").updateText(i));

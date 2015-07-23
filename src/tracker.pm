@@ -167,6 +167,7 @@ sub evaluate_game {
         cults => setup_cults,
         bridges => [],
         score_tiles => [],
+        preview_warnings => [],
         base_map => ($metadata->{base_map} or \@base_map),
         map_variant => $metadata->{map_variant},
         faction_variants => [],
@@ -255,6 +256,7 @@ sub evaluate_game {
         non_standard => $game{non_standard},
         dodgy_resource_manipulation => $game{dodgy_resource_manipulation},
         events => $game{events}->data(),
+        preview_warnings => $game{preview_warnings},
         available_factions => {
             map({ ($_, 1) }
                 keys %faction_setups,

@@ -123,6 +123,26 @@ sub gain {
     }
 }
 
+sub warn_if_cant_gain {
+    my ($faction, $gain, $source) = @_;
+    return if !$game{in_preview};
+    for my $resource (keys %{$gain}) {
+        my $amount = $gain->{$resource};
+        my $current = $faction->{"$resource"} // 0;
+        my $max = exists $faction->{"MAX_$resource"} ? $faction->{"MAX_$resource"} : undef;
+        my $current_pretty = $current;
+        if ($resource eq 'PW') {
+            $current = $faction->{P2} + $faction->{P3} * 2;
+            $max = ($faction->{P1} + $faction->{P2} + $faction->{P3}) * 2;
+            $current_pretty = "$faction->{P1}/$faction->{P2}/$faction->{P3}";
+        }
+        if (defined $max and
+            $amount > $max - $current) {
+            preview_warn("Currently at $current_pretty/$max $resource, can't gain $amount more from $source");
+        }
+    }
+}
+
 sub maybe_gain_faction_special {
     my ($faction, $type, $mode) = @_;
 
@@ -334,7 +354,8 @@ sub adjust_resource {
 
         if ($type =~ /^TW/) {
             for (1..$delta) {
-                gain $faction, $tiles{$type}{gain}, 'TW';
+                warn_if_cant_gain $faction, $tiles{$type}{gain}, $type;
+                gain $faction, $tiles{$type}{gain}, 'TW',
             }
 
             $game{events}->faction_event($faction, "town:$type", 1);

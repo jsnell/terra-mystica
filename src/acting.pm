@@ -199,7 +199,9 @@ method require_subaction($faction, $type, $followup) {
         $faction->{allowed_actions}--;
         $faction->{allowed_sub_actions} = {%{$followup}} if $followup;
         # Taking an action is an implicit "decline"
-        terra_mystica::command_decline($faction, undef, undef);
+        if (terra_mystica::command_decline($faction, undef, undef)) {
+            terra_mystica::preview_warn("You did not make a decision on some leeching opportunities, automatically declining all power.");
+        }
     } elsif ($self->game()->{round} == 0) {
         die "Can't take arbitrary actions during setup.\n";
     } else {
