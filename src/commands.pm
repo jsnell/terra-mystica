@@ -1108,7 +1108,9 @@ sub finalize_setup {
 }
 
 sub preview_warn {
-    push @{$game{preview_warnings}}, @_;
+    if ($game{in_preview}) {
+        push @{$game{preview_warnings}}, @_;
+    }
 }
 
 sub command {
@@ -1442,6 +1444,7 @@ sub command {
         add_final_scoring $1;
     } elsif ($command =~ /^start-preview$/i) {
         die "$faction_name can't trigger preview mode\n" if $faction_name;
+        
         $game{in_preview} = 1;
     } elsif ($command =~ /^drop-faction player(\d+)$/i) {
         die "Players can only be dropped from admin view\n" if $faction_name;
