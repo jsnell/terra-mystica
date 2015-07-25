@@ -789,9 +789,11 @@ sub command_pass {
         adjust_resource $faction, $discard, -1;
     }
 
-    my $income = faction_income $faction;
-    for my $subincome (@{$income->{ordered}}) {
-        warn_if_cant_gain $faction, $subincome, 'income';
+    if ($game{round} != 6) {
+        my $income = faction_income $faction;
+        for my $subincome (@{$income->{ordered}}) {
+            warn_if_cant_gain $faction, $subincome, 'income';
+        }
     }
 }
 
