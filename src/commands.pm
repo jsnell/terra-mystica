@@ -49,6 +49,15 @@ sub command_adjust_resources {
                 }
                 $faction->{LOSE_CULT} -= $loss;
                 $checked = 1;
+            } elsif (!$game{options}{'loose-cult-loss'}) {
+                my $old_value = $faction->{$type};
+                my $new_value = $old_value + $delta;
+                # Only allow the kind of adjustment needed to work around the 
+                # TW5 issue.
+                if ($old_value == 10 or
+                    ($new_value < 7)) {
+                    die "Can't voluntarily lose cult steps\n";
+                }
             }
         } elsif ($faction->{CULT} > $delta and
                  $faction->{CULTS_ON_SAME_TRACK}) {
