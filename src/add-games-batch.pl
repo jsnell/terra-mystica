@@ -32,6 +32,7 @@ sub validate {
             }
             $order{$player}{$i} = $id;
             $count{$player}++;
+            die "Someone trying to add a test account\n" if $player eq 'test' or $player eq 'test2' or $player eq 'TestCapital';
         }
     }
 
