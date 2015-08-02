@@ -8,7 +8,7 @@
 
 __DATA__
 
-<div class="motd" style="display: block">
+<div class="motd" style="display: none">
     Season 8 of the Terra Mystica tournament will start on August 1st.
     Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href='https://boardgamegeek.com/thread/1402967/signup-season-8-now-open'>BGG thread</a>.
 </div>
