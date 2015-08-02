@@ -82,7 +82,9 @@ method handle($q) {
 
     if ($faction_name =~ /^player/) {
         $preview =~ s/\r//g;
-        if ($preview =~ s/(setup (\w+))//i) {
+        if ($preview =~ /^(\s*resign\s*)$/) {
+            $append = "drop-faction $faction_name\n";
+        } elsif ($preview =~ s/(setup (\w+))//i) {
             $faction_name = lc $2;
             $append = "$1\n";
             $append .= join "\n", (map { chomp; "$faction_name: $_" } grep { /\S/ } split /\n/, $preview);

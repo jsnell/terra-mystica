@@ -44,7 +44,9 @@ method handle($q) {
     if (defined $preview) {
         push @rows, 'start-preview';
         if ($preview_faction =~ /^player/) {
-            if ($preview =~ s/(setup (\w+))//i) {
+            if ($preview =~ /^(\s*resign\s*)$/) {
+                push @rows, "drop-faction $preview_faction";
+            } elsif ($preview =~ s/(setup (\w+))//i) {
                 push @rows, "$1\n";
                 $preview_faction = lc $2;
                 push @rows, (map { "$preview_faction: $_" } grep { /\S/ } split /\n/, $preview);
