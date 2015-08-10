@@ -130,15 +130,17 @@ sub warn_if_cant_gain {
         my $amount = $gain->{$resource};
         my $current = $faction->{"$resource"} // 0;
         my $max = exists $faction->{"MAX_$resource"} ? $faction->{"MAX_$resource"} : undef;
+        my $pretty_max = $max;
         my $current_pretty = $current;
         if ($resource eq 'PW') {
             $current = $faction->{P2} + $faction->{P3} * 2;
             $max = ($faction->{P1} + $faction->{P2} + $faction->{P3}) * 2;
+            $pretty_max = "0/0/".($max / 2);
             $current_pretty = "$faction->{P1}/$faction->{P2}/$faction->{P3}";
         }
         if (defined $max and
             $amount > $max - $current) {
-            preview_warn("Currently at $current_pretty/$max $resource, can't gain $amount more from $source");
+            preview_warn("Currently at $current_pretty $resource, can't gain $amount more from $source (max $pretty_max)");
         }
     }
 }

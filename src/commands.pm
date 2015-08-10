@@ -1409,7 +1409,6 @@ sub command {
             die "$faction->{name} is not allowed to unlock a new terrain\n";
         }
         my ($wanted_color) = $1;
-
         my $special_unlock = ($wanted_color =~ /^gain-.*$/);
 
         if (!$special_unlock) {
