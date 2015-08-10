@@ -67,13 +67,13 @@ function newGameValidate() {
         }
     }
 
-    ['ice', 'variable', 'variable_v3', 'volcano'].each(function (type) {
+    ['ice', 'variable', 'variable_v4', 'volcano'].each(function (type) {
         $("option-fire-and-ice-factions/" + type).disabled =
             !$("option-fire-and-ice-factions").checked;
     });
 
     if ($("option-fire-and-ice-factions/variable").checked &&
-        $("option-fire-and-ice-factions/variable_v3").checked) {
+        $("option-fire-and-ice-factions/variable_v4").checked) {
         disabled = true;
         validateHighlights["label-option-fire-and-ice-factions/variable"] = badColor;        
     }

@@ -814,7 +814,14 @@ sub command_action {
         die "No $action space available\n"
     }    
     my $name = $action;
-    if (!exists $actions{$name}) {
+    my $ar;
+
+    if (exists $faction->{actions} and
+        exists $faction->{actions}{$name}) {
+        $ar = $faction->{actions}{$name};
+    } elsif (exists $actions{$name}) {
+        $ar = $actions{$name};
+    } else {
         die "Unknown action $name\n";
     }
 
@@ -837,17 +844,17 @@ sub command_action {
     if (exists $faction->{action} and
         exists $faction->{action}{$name}{subaction}) {
         %subaction = %{$faction->{action}{$name}{subaction}};
-    } elsif (exists $actions{$name}{subaction}) {
-        %subaction = %{$actions{$name}{subaction}};
+    } elsif (exists $ar->{subaction}) {
+        %subaction = %{$ar->{subaction}};
     }
 
     $game{acting}->require_subaction($faction, 'action', \%subaction);
 
-    pay $faction, $actions{$name}{cost}, ($faction->{discount} and $faction->{discount}{$name});
-    warn_if_cant_gain $faction, $actions{$name}{gain}, "action $action";
-    gain $faction, $actions{$name}{gain}, $name;
+    pay $faction, $ar->{cost}, ($faction->{discount} and $faction->{discount}{$name});
+    warn_if_cant_gain $faction, $ar->{gain}, "action $action";
+    gain $faction, $ar->{gain}, $name;
 
-    $map{$action}{blocked} = 1 unless $actions{$name}{dont_block};
+    $map{$action}{blocked} = 1 unless $ar->{dont_block};
 
     $game{events}->faction_event($faction, "action:$name", 1);
 }
@@ -1111,7 +1118,7 @@ sub full_action_required {
 sub finalize_setup {
     maybe_setup_pool;
 
-    for my $type (qw(ice volcano variable variable_v2 variable_v3)) {
+    for my $type (qw(ice volcano variable variable_v2 variable_v3 variable_v4)) {
         if ($game{options}{"fire-and-ice-factions/$type"}) {
             add_faction_variant "final_$type";
         }
@@ -1292,6 +1299,7 @@ sub command {
             fire-and-ice-factions/variable
             fire-and-ice-factions/variable_v2
             fire-and-ice-factions/variable_v3
+            fire-and-ice-factions/variable_v4
             fire-and-ice-factions/volcano
             email-notify
             loose-adjust-resource
@@ -1413,12 +1421,19 @@ sub command {
             die "$faction->{name} can't unlock $wanted_color (already unlocked?)\n"
         }
 
-        my $effect = $faction->{locked_terrain}{$wanted_color};
+        my $effect;
+        if ($special_unlock) {
+            $effect = $faction->{locked_terrain}{$wanted_color}{''};
+        } else {
+            my $color_type = color_home_status $wanted_color;
+            $effect = $faction->{locked_terrain}{$wanted_color}{$color_type};
+        }
 
         {
             my $save = $faction->{special};
             delete $faction->{special};
             gain $faction, $effect->{gain};
+            pay $faction, $effect->{cost};
             $faction->{special} = $save;
         }
 
@@ -1428,7 +1443,7 @@ sub command {
             delete $faction->{locked_terrain}{$wanted_color};
         }
 
-        # XXX really ugly hack to stop unlocking from triggering once 
+        # XXX really ugly hack to stop unlocking from triggering
         # for riverwalkers once everything has been unlocked.
         if (0 == grep { $_ !~ $special_unlock } keys %{$faction->{locked_terrain}}) {
             delete $faction->{special}{P};

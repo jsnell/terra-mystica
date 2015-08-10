@@ -534,6 +534,23 @@ sub transform_colors {
     }
 }
 
+sub color_home_status {
+    my ($color) = @_;
+    my $hex_type = 'not_home';
+
+    for my $other_faction ($game{acting}->factions_in_order()) {
+        # The "color" of a faction with unlockable terrain is only the
+        # color of the pieces, not actual home terrain.
+        next if $other_faction->{locked_terrain};
+        next if !defined $other_faction->{color};
+        if ($other_faction->{color} eq $color) {
+            $hex_type = 'home';
+        }
+    }
+
+    $hex_type;
+}
+
 sub transform_cost {
     my ($faction, $where, $color) = @_;
 
@@ -598,16 +615,7 @@ sub transform_cost {
 
     if ($color eq 'volcano') {
         $cost->{VOLCANO_TF} += 1;
-        my $hex_type = 'not_home';
-        for my $other_faction ($game{acting}->factions_in_order()) {
-            # The "color" of a faction with unlockable terrain is only the
-            # color of the pieces, not actual home terrain.
-            next if $other_faction->{locked_terrain};
-            next if !defined $other_faction->{color};
-            if ($other_faction->{color} eq $map_color) {
-                $hex_type = 'home';
-            }
-        }
+        my $hex_type = color_home_status $map_color;
         my $effect = $faction->{volcano_effect}{$hex_type};
         for my $currency (keys %{$effect}) {
             my $amount = $effect->{$currency};

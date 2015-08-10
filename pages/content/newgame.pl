@@ -42,7 +42,7 @@ the letters A-Z and a-z and the digits 0-9.
         <div style="padding-left: 2em">
           <input name="game-options" type="checkbox" id="option-fire-and-ice-factions/ice" onchange="javascript:newGameValidate()" value="fire-and-ice-factions/ice" checked></input><label for="option-fire-and-ice-factions/ice">Ice factions</label><br>
           <input name="game-options" type="checkbox" id="option-fire-and-ice-factions/variable" onchange="javascript:newGameValidate()" value="fire-and-ice-factions/variable"></input><label for="option-fire-and-ice-factions/variable" id="label-option-fire-and-ice-factions/variable">Variable factions (original)</label><br>
-          <input name="game-options" type="checkbox" id="option-fire-and-ice-factions/variable_v3" onchange="javascript:newGameValidate()" value="fire-and-ice-factions/variable_v3" checked></input><label for="option-fire-and-ice-factions/variable_v3">Variable factions (<a href='http://boardgamegeek.com/article/18027661#18027661'>playtest</a> v3)</label><br>
+          <input name="game-options" type="checkbox" id="option-fire-and-ice-factions/variable_v4" onchange="javascript:newGameValidate()" value="fire-and-ice-factions/variable_v4" checked></input><label for="option-fire-and-ice-factions/variable_v4">Variable factions (<a href='/factioninfo/'>playtest</a> v4)</label><br>
           <input name="game-options" type="checkbox" id="option-fire-and-ice-factions/volcano" onchange="javascript:newGameValidate()" value="fire-and-ice-factions/volcano" checked></input><label for="option-fire-and-ice-factions/volcano">Volcano factions</label><br>
         </div>
 

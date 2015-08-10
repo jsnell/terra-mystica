@@ -674,6 +674,8 @@ function renderAction(canvas, name, key, border_color) {
     var center = 20.5;
     var bottom = 60;
 
+    var ss_cost = state.options['fire-and-ice-factions/variable_v4'] ? "-4PW" : "-3PW";
+
     var data = {
         "ACT1": function() {
             drawText(ctx, "bridge", center, center, font_small);
@@ -717,11 +719,20 @@ function renderAction(canvas, name, key, border_color) {
         },
         "ACTH1": function() {
             drawText(ctx, "color", center, center, font);
-            drawText(ctx, "-3PW", center, 60, font);
+            drawText(ctx, ss_cost, center, 60, font);
         },
         "ACTH2": function() {
             drawText(ctx, "color", center, center, font);
-            drawText(ctx, "-3 PW", center, 60, font);
+            drawText(ctx, ss_cost, center, 60, font);
+            drawText(ctx, "tokens", center, 70, font);
+        },
+        "ACTH3": function() {
+            drawText(ctx, "color", center, center, font);
+            drawText(ctx, ss_cost, center, 60, font);
+        },
+        "ACTH4": function() {
+            drawText(ctx, "color", center, center, font);
+            drawText(ctx, ss_cost, center, 60, font);
             drawText(ctx, "tokens", center, 70, font);
         },
         "BON1": function() {

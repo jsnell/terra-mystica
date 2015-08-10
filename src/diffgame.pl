@@ -62,6 +62,7 @@ sub fetch_result {
         delete $faction->{ALLOW_SHAPESHIFT};
         delete $faction->{GAIN_P3_FOR_VP};
         delete $faction->{disable_spade_decline};
+        delete $faction->{locked_terrain};
     }
     delete $json->{actions};
     delete $json->{towns};
