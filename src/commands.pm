@@ -967,16 +967,28 @@ sub command_finish {
 }
 
 sub command_income {
-    my $faction = shift;
+    my ($faction, $type) = @_;
     if ($faction) {
-        take_income_for_faction $faction;
+        my $mask;
+        if (!defined $type or $type eq 'all') {
+            $mask = 15;
+        } elsif ($type eq 'cult') {
+            $mask = 1;
+        } else {
+            $mask = 14;
+        }
+        take_income_for_faction $faction, $mask;
     } else {
         my @order = $game{acting}->factions_in_turn_order();
         if (!$game{ledger}->trailing_comment()) {
             $game{ledger}->add_comment(sprintf "Round %d income", $game{round} + 1);
         }
         for (@order) {
-            handle_row_internal $_->{name}, "income_for_faction";
+            if ($type) {
+                handle_row_internal $_->{name}, "${type}_income_for_faction";
+            } else {
+                handle_row_internal $_->{name}, "income_for_faction";
+            }
         }
     }
 }
@@ -1256,8 +1268,9 @@ sub command {
         for my $faction ($game{acting}->factions_in_order()) {
             command_income $faction if !$faction->{income_taken};
         }
-    } elsif ($command =~ /^income_for_faction$/i) {
-        command_income $assert_faction->();
+    } elsif ($command =~ /^(?:(cult|all|other)_)?income_for_faction$/i) {
+        my $type = $1 // 'all';
+        command_income $assert_faction->(), $type;
     } elsif ($command =~ /^advance (ship|dig)/i) {
         command_advance $assert_faction->(), lc $1;
     } elsif ($command =~ /^score (.*)/i) {
@@ -1360,7 +1373,7 @@ sub command {
     } elsif ($command =~ /^pick-color (\w+)$/i) {
         my $faction = $assert_faction->();
         if (!$faction->{PICK_COLOR}) {
-            die "$faction->{name} is not allowed to pick a color\n";
+            die "$faction->{name} are not allowed to pick a color\n";
         }
         my ($wanted_color) = assert_color alias_color $1;
         for my $other ($game{acting}->factions_in_order()) {
@@ -1406,7 +1419,7 @@ sub command {
     } elsif ($command =~ /^unlock-terrain ([-\w]+)$/i) {
         my $faction = $assert_faction->();
         if (!$faction->{UNLOCK_TERRAIN}) {
-            die "$faction->{name} is not allowed to unlock a new terrain\n";
+            die "$faction->{name} are not allowed to unlock a new terrain\n";
         }
         my ($wanted_color) = $1;
         my $special_unlock = ($wanted_color =~ /^gain-.*$/);
@@ -1479,6 +1492,7 @@ sub command {
             username => $player->{username},
             player => $player->{displayname},
             dropped => 1,
+            income_taken => 0,
             name => "nofaction$1",
             display => 'No Faction',
             dummy => 1,

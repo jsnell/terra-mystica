@@ -63,6 +63,7 @@ sub fetch_result {
         delete $faction->{GAIN_P3_FOR_VP};
         delete $faction->{disable_spade_decline};
         delete $faction->{locked_terrain};
+        delete $faction->{income_taken};
     }
     delete $json->{actions};
     delete $json->{towns};
@@ -97,7 +98,9 @@ my $games = $dbh->selectall_arrayref("select id, write_id, extract(epoch from la
                                      {},
                                      shift || '%');
 
-# and 1 = (select count(*) from game_role where game.id=game_role.game and faction='riverwalkers')
+# my $games = $dbh->selectall_arrayref("select id, write_id, extract(epoch from last_update) from game where id like ? and 0 = (select count(*) from game_role where game.id=game_role.game and faction='riverwalkers') order by last_update",
+#                                      {},
+#                                      shift || '%');
 
 my $count = 0;
 my $diffcount = 0;

@@ -94,9 +94,10 @@ sub faction_income {
 }
 
 sub take_income_for_faction {
-    my $faction = shift;
+    my ($faction, $type) = @_;
+    $type //= 15;
     die "Taking income twice for $faction->{name}\n" if
-        $faction->{income_taken};
+        $faction->{income_taken} & $type;
 
     if (!$game{planning}) {
         for my $f ($game{acting}->factions_in_turn_order()) {
@@ -110,11 +111,15 @@ sub take_income_for_faction {
     }
 
     my $income = faction_income $faction;
+    my $mask = 1;
     for my $subincome (@{$income->{ordered}}) {
-        gain $faction, $subincome;
+        if ($type & $mask) {
+            gain $faction, $subincome;
+        }
+        $mask <<= 1;
     }
-        
-    $faction->{income_taken} = 1;
+
+    $faction->{income_taken} |= $type;
 
     if ($faction->{SPADE}) {
         $game{acting}->require_action($faction,

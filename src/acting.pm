@@ -65,6 +65,12 @@ has 'active_faction' => (is => 'rw');
 has 'state' => (is => 'rw',
                 default => 'wait-for-players');
 
+# We go through the income -> spade -> unlock cycle twice; once for
+# cult income then for normal income, since these are technically
+# separate phases.
+has 'income_state' => (is => 'rw',
+                       default => 'other');
+
 # Main game data structure
 has 'game' => (is => 'rw');
 
@@ -443,13 +449,21 @@ method in_income() {
         return;
     }
 
+    my $mask = 15;
+
+    if ($self->income_state() eq 'cult') {
+        $mask = 1;
+    } elsif ($self->income_state() eq 'other') {
+        $mask = 14;
+    }
+
     my $income_taken = 0;
     for my $faction ($self->factions_in_order()) {
-        $income_taken ||= $faction->{income_taken};
+        $income_taken ||= ($faction->{income_taken} & $mask);
     }
 
     if (!$income_taken) {
-        terra_mystica::command_income('');
+        terra_mystica::command_income('', $self->income_state());
     }
 
     $self->state('use-income-spades');
@@ -476,9 +490,15 @@ method in_income_terrain_unlock() {
         return;
     }
 
-    $self->game()->{ledger}->finish_row();
-    $self->state('play');
-    terra_mystica::command_start();
+    if ($self->income_state() eq 'cult') {
+        $self->income_state('other');
+        $self->state('income');
+        $self->what_next();
+    } else {
+        $self->game()->{ledger}->finish_row();
+        $self->state('play');
+        terra_mystica::command_start();
+    }
 }
 
 method in_play() {
@@ -499,6 +519,11 @@ method in_play() {
         terra_mystica::command_finish();
     } else {
         $self->state('income');
+        if ($self->game()->{options}{'merge-income-phases'}) {
+            $self->income_state('all');
+        } else {
+            $self->income_state('cult');
+        }
         $self->what_next();
     }
 }
