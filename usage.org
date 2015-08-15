@@ -432,15 +432,6 @@ two spades for any transforming). To advance, throw away the spade with
 
 * Known issues and workarounds
 
-** FAV5 tile
-
-Problem: The tracker doesn't correctly account for a situation where:
-taking FAV5 triggers a formation of the town, the player has a fire
-cult level of 8 or 9 before taking the favor tile, and doesn't have
-sufficient keys to advance to the 10 spot. The end result is supposed
-to be that the player may advance to the 10 spot immediately.
-
-Solution: Just add a single =+FIRE= command after taking the town tile.
 
 ** TW5 tile
 
