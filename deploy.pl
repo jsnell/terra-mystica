@@ -67,7 +67,7 @@ sub mangle_with_mode {
 }
 
 sub deploy_docs {
-    system "emacs --batch --file=usage.org --funcall org-export-as-html-batch";
+    system q|emacs --batch --load org --file=usage.org --eval '(setq org-html-postamble nil)' --funcall org-html-export-to-html| and die "Error in org-mode export\n";
 
     mangle_with_mode 0444, "usage.html", "$target/usage.html", sub {
         my $contents = shift;
