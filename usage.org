@@ -482,13 +482,33 @@ view:
 - =c= (chat): Switch to the chat tab
 
 
-* Browser Issues
+* Frequently asked questions 
+
+** Crawling the site
+
+Please don't use any kind of automated process to fetch the data of
+each game one by one. It's possible that doing this will trigger an
+automatic IP ban. Instead use one of the following sources for game or
+result information:
+
+- Just the results for a specific month or day:
+  http://terra.snellman.net/app/results/v2/yyyy/mm or
+  http://terra.snellman.net/app/results/v2/yyyy/mm/dd
+  (replace yyyy/mm/dd with the actual year/month/day you want results
+  for).
+- More detailed per-game data, grouped by month:
+  http://terra.snellman.net/data/events/ with a format that's
+  described here http://terra.snellman.net/data/events/README
+- Latest player / faction ratings:
+  http://terra.snellman.net/data/ratings.json
+
+** Ads
+
+The site does not run any kind of advertisements. If you're seeing
+popup ads, check if your browser has some dodgy extensions installed
+or your computer has some other malware.
 
 ** Internet Explorer 6/7/8
 
-IE8 or earlier are not supported. You'll unfortunately need to do one of:
-
-- Upgrade to IE9
-- Install another browser
-- Install the Chrome Frame plugin from http://www.google.com/chromeframe
-
+IE8 or earlier are not supported. Please install a newer version or another
+browser.
