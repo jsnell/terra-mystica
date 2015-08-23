@@ -4,8 +4,8 @@ create table player (
   displayname text,
   email_notify_turn boolean default true,
   email_notify_all_moves boolean default false,
-  email_notify_chat boolen default true,
-  email_notify_game_status boolean default true,
+  email_notify_chat boolean default true,
+  email_notify_game_status boolean default true
 );
 create unique index player_username_lowercase_idx on player(lower(username));
 
@@ -46,8 +46,8 @@ create table game (
     description text,
     game_options text array default '{}',
     base_map text references map_variant (id),
-    nonstandard boolean default false,
-    admin_user text references player (username),
+    non_standard boolean default false,
+    admin_user text references player (username)
 );
 create index game_finished_idx on game (finished);
 
@@ -78,8 +78,8 @@ create table game_role (
     faction_player text references player (username),
     email text, -- Conceptually references email (address), but not enforced
     faction text,
-    boolean action_required,
-    boolean leech_required,
+    action_required boolean,
+    leech_required boolean,
     vp integer,
     rank integer,
     start_order integer,
@@ -94,7 +94,7 @@ create index game_role_action_required_idx on game_role (action_required);
 create index game_role_leech_required_idx on game_role (leech_required);
 
 create table blacklist (
-       email text references email (address)
+       email text references email (address),
        player text references player (username)
 );
 
@@ -156,4 +156,3 @@ create table game_options (
     deadline_hours integer default 168,
     primary key (game)
 );
-
