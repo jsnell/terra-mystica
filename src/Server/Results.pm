@@ -48,8 +48,10 @@ method handle($q, $params) {
                 expansion_scoring => $_->{non_standard},
                 player_count => $_->{player_count},
                 base_map => ($_->{base_map} || '126fe960806d587c78546b30f1a90853b1ada468'),
+                options => $_->{options},
                 last_update => $_->{last_update},
             });
+            delete $_->{options};
             delete $_->{non_standard};
             delete $_->{player_count};   
             delete $_->{last_update};
