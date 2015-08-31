@@ -1100,7 +1100,9 @@ sub command_start_planning {
     $game{planning} = 1;
     $faction->{planning} = 1;
     if ($faction->{passed}) {
-        if (!$faction->{income_taken}) {
+        if ($faction->{income_taken} == 1) {
+            command_income undef, 'other';
+        } elsif ($faction->{income_taken} == 0) {
             command_income;
         }
         command_start;
