@@ -9,6 +9,7 @@ function showStats() {
     var displaySettings = {
         player_count: $("settings-player-count").value,
         final_scoring: $("settings-final-scoring").value,
+        rating: parseInt($("settings-rating").value),
         map: $("settings-map").value,
     }
 
@@ -47,6 +48,11 @@ function showStats() {
             return;
         }
             
+        if (bucket_key.min_rating <
+            displaySettings.rating) {
+            return;
+        }
+
         var aggregate_record = faction_aggregate[bucket_key.faction];
         if (!aggregate_record) {
             aggregate_record = faction_aggregate[bucket_key.faction] =

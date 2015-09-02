@@ -4,15 +4,19 @@ package terra_mystica;
 
 use strict;
 
-use List::Util qw(sum);
+use List::Util qw(min max sum);
 use JSON;
 use POSIX;
 use File::Basename qw(dirname);
+use File::Slurp;
 
 BEGIN { push @INC, "$ENV{PWD}/src/"; }
 
 use DB::Connection;
 use DB::Game;
+
+my $ratings = decode_json read_file "www-prod/data/ratings.json";
+my $player_ratings = $ratings->{players};
 
 sub print_json {
     my $data = shift;
@@ -46,6 +50,7 @@ sub bucket_key {
         start_position => $start_position,
         faction => $faction->{faction},
         final_scoring => ($game->{non_standard} ? 'expansion' : 'original'),
+        min_rating => $game->{min_rating},
         map => $game->{base_map}
     );
 
@@ -86,14 +91,25 @@ sub handle_game {
     return if $faction_count < 2;
 
     my %player_ids = ();
+    my $min_rating = 10000;
 
     for (values %{$res->{factions}}) {
+        my $r = $player_ratings->{$_->{username} // ''}{score} // 0;
+        $min_rating = min $r, $min_rating;
+
         next if !$_->{id_hash};
         # Filter out games with same player playing multiple factions
         if ($player_ids{$_->{id_hash}}++) {
             return;
         }
-    }
+    }    
+    if ($min_rating >= 1250) {
+        $res->{min_rating} = 1250;
+    } elsif ($min_rating >= 1000) {
+        $res->{min_rating} = 1000;
+    } else {
+        $res->{min_rating} = 0;        
+    } 
 
     # Filter out games with no players with an email address
     if (!keys %player_ids) {

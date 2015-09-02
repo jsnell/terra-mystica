@@ -41,6 +41,15 @@ __DATA__
   </select>
 </div>
 
+<div class="stats-settings">
+  Rating<br>
+  <select id="settings-rating" onchange="showStats()">
+    <option value="0" selected="true">All games
+    <option value="1000">All players rated 1000+
+    <option value="1250">All players rated 1250+
+  </select>
+</div>
+
 <p>
 Statistics computed from <span id="count">?</span> finished games.
 
