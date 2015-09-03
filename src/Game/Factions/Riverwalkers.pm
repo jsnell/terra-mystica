@@ -9,6 +9,7 @@ Readonly our $riverwalkers_v4 => {
     color => 'variable',
     board => 'variable',
     display => "Riverwalkers (playtest v4)",
+    full_name => 'riverwalkers_v4',
     faction_board_id => undef,
     PICK_COLOR => 1,
     pick_color_field => 'color',

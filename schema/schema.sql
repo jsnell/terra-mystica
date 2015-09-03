@@ -78,6 +78,7 @@ create table game_role (
     faction_player text references player (username),
     email text, -- Conceptually references email (address), but not enforced
     faction text,
+    faction_full text,
     action_required boolean,
     leech_required boolean,
     vp integer,
