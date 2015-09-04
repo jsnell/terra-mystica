@@ -29,7 +29,9 @@ method handle($q, $query_username) {
         ($username) = check_username_is_registered $dbh, $query_username;
     };
 
-    if ($@ or !defined $username) {
+    if ($query_username eq 'top50') {
+        $username = $query_username;
+    } elsif ($@ or !defined $username) {
         return $self->output_json(
             {
                 error => [ "No such user: $query_username" ]

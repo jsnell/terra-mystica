@@ -43,11 +43,17 @@ sub fetch_user_metadata {
 
 sub fetch_user_stats {
     my ($dbh, $username) = @_;
+    my $rows;
 
-    my ($rows) =
-        $dbh->selectall_arrayref("select faction, max(vp) as max_vp, sum(vp)/count(*) as mean_vp, count(*), count(case when rank = 1 then true end) as wins, count(case when rank = 1 then true end)*100/count(*) as win_percentage, array_agg(rank) as ranks from game_role where faction_player=? and game in (select id from game where finished and not aborted and not exclude_from_stats) group by faction order by win_percentage desc",
+    if ($username eq 'top50') {
+        $rows = $dbh->selectall_arrayref("select faction_full as faction, max(vp) as max_vp, sum(vp)/count(*) as mean_vp, count(*), count(case when rank = 1 then true end)*100/count(*) as win_percentage, array_agg(rank) as ranks from game_role where faction_player in (select player from player_ratings order by rating desc limit 50) and game in (select id from game where finished and not aborted and not exclude_from_stats) group by faction_full order by win_percentage desc",
+                                 { Slice => {} });
+    } else {
+        $rows = $dbh->selectall_arrayref("select faction_full as faction, max(vp) as max_vp, sum(vp)/count(*) as mean_vp, count(*), count(case when rank = 1 then true end) as wins, count(case when rank = 1 then true end)*100/count(*) as win_percentage, array_agg(rank) as ranks from game_role where faction_player=? and game in (select id from game where finished and not aborted and not exclude_from_stats) group by faction_full order by win_percentage desc",
                                  { Slice => {} },
                                  $username);
+    }
+
     $rows;
 }
 
