@@ -1,0 +1,6 @@
+28 4 * * * (cd /home/jsnell/sites/terra/git && perl src/abort-idle-games.pl)
+25 * * * * (cd /home/jsnell/sites/terra/git && perl src/drop-idle-players.pl)
+30 * * * * (cd /home/jsnell/sites/terra/git && perl src/genstats.pl > www-prod/data/stats.json.new && mv www-prod/data/stats.json.new www-prod/data/stats.json)
+35 * * * * (cd /home/jsnell/sites/terra/git && perl src/genratings.pl > www-prod/data/ratings.json.new && mv www-prod/data/ratings.json.new www-prod/data/ratings.json)
+*/10 * * * * (cd /home/jsnell/sites/terra/git && perl src/update-active-time.pl)
+25 4 * * * psql terra-mystica -c "delete from to_validate where created_at < now() - '2 weeks'::interval;"
