@@ -52,7 +52,7 @@ sub finalize {
         }
     }
     $game{acting}->clear_empty_actions();
-    my %faction_info_usernames = map { $faction_info->{$_}->{username} => $_ } keys $faction_info;
+    my %faction_info_usernames = map { $faction_info->{$_}->{username} => $_ } keys %{$faction_info};
 
     for my $faction ($game{acting}->factions_in_order()) {
         if ($faction->{waiting}) {
@@ -69,7 +69,7 @@ sub finalize {
                 });
         }
         my $faction_count = $game{acting}->faction_count();
-        my $player_index = %faction_info_usernames{$faction->{username}};
+        my $player_index = $faction_info_usernames{$faction->{username}};
         my $info;
         if (exists $faction_info->{$faction->{name}}) {
             $info = $faction_info->{$faction->{name}};
