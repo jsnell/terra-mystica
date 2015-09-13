@@ -127,7 +127,7 @@ func setup_faction($game, $faction_name, $player, $email) {
         }
     }
 
-    if ($player) {
+    if (defined $player) {
         $faction->{player} = "$player";
         $faction->{username} = $player_record->{username};
     }
