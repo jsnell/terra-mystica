@@ -313,6 +313,7 @@ sub command_send {
             $spot->{building} = 'P';
             $spot->{color} = $faction->{color};
             $faction->{MAX_P}--;
+            $faction->{CULT_P}++;
             last;
         }
     }
@@ -1047,10 +1048,11 @@ sub command_randomize {
 
     my $rand = Math::Random::MT->new(unpack "l6", sha1 $seed);
 
+    my @score_tiles = sort { natural_cmp $a, $b } keys %{$game{score_pool}};
     my @score = ();
     do {
-        @score = mt_shuffle $rand, map { "Score$_" } 1..8;
-    } until $score[4] ne "Score1" and $score[5] ne "Score1";
+        @score = mt_shuffle $rand, @score_tiles;
+    } until $score[4] ne "SCORE1" and $score[5] ne "SCORE1";
     handle_row_internal "", "score ".(join ",", @score[0..5]);
 
     my @bon = mt_shuffle $rand, sort grep {
@@ -1308,6 +1310,7 @@ sub command {
             errata-cultist-power
             mini-expansion-1
             shipping-bonus
+            temple-scoring-tile
             fire-and-ice-final-scoring
             fire-and-ice-factions
             fire-and-ice-factions/ice

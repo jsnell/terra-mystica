@@ -1,5 +1,10 @@
 {
     "news": [
+        { "date": "2015-10-12",
+          "title": "New round scoring tile",
+          "description": "The round scoring tile from the new mini expansion is now available as an option. This scoring tile produces 4 points for building a temple on the correct round, and gives a end of round income of 2 coins per priests on the cult track 3/2-spaces.",
+          "type": "change"
+        },
         { "date": "2015-08-10",
           "title": "Shapeshifters / Riverwalkers v4",
           "description": "<p>New playtest versions of Shapeshifters and Riverwalkers.<ul><li><b>Shapeshifters v4</b>: The cost the Shapeshifter SH power has been increased to 4 power / 4 power tokens, and using the power no longer generates any victory points. They also have to pay one VP for every power token they receive using their faction special ability.<li><b>Riverwalkers v4</b>: Riverwalkers have to pay 2 coins when they unlock a new terrain on their wheel (starting terrain is free), 3 coins if it is another player's home terrain.</ul>",

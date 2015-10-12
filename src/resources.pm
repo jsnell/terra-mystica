@@ -75,6 +75,8 @@ sub setup_pool {
             $game{pool}{$_} += $tiles{$_}{count} || 3;
         } elsif (/^TW/) {
             $game{pool}{$_} += $tiles{$_}{count} || 2;
+        } elsif (/^SCORE/) {
+            $game{score_pool}{$_}++;
         }
     }
 }

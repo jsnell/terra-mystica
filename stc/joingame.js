@@ -99,6 +99,7 @@ function showOpenGames(games) {
             var pretty_option = {
                 "mini-expansion-1": "Mini Expansion (town tiles)",
                 "shipping-bonus": "Shipping bonus tile (Spielbox 6/2013)",
+                "temple-scoring-tile": "Temple round scoring tile (2015 mini expansion)",
                 "fire-and-ice-final-scoring": "Extra final scoring tile",
                 "variable-turn-order": "Turn order determined by passing order",
                 "fire-and-ice-factions/ice": "Ice factions",

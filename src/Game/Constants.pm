@@ -198,6 +198,13 @@ Readonly our %tiles => init_tiles (
                 cult => 'AIR',
                 req => 4, 
                 income => { SPADE => 1 } },    
+    SCORE9 => { vp => { TE => 4 },
+                vp_display => 'TE >> 4',
+                vp_mode => 'build',
+                cult => 'CULT_P',
+                req => 1,
+                option => 'temple-scoring-tile',
+                income => { C => 2 } },    
 
     TW1 => { gain => { KEY => 1, VP => 5, C => 6 } },
     TW2 => { gain => { KEY => 1, VP => 7, W => 2 } },

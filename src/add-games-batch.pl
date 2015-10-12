@@ -49,6 +49,7 @@ sub validate {
             errata-cultist-power
             mini-expansion-1
             shipping-bonus
+            temple-scoring-tile
             email-notify
             maintain-player-order
             strict-leech
