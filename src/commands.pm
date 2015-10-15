@@ -337,6 +337,7 @@ sub command_convert {
     my %exchange_rates = ();
 
     if (!$game{options}->{'loose-convert-phase'} and
+        !$faction->{planning} and
         $game{acting}->state() ne 'play') {
         die "Can't convert resources outside of actions\n";
     }
