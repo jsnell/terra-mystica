@@ -111,7 +111,11 @@ func map_exists($dbh, $id) {
     $count ? 1 : 0;
 }
 
-func save($dbh, $mapdata, $res) {
+func save($dbh, $mapdata, $res, $username) {
+    if ($username ne 'jsnell' and $username ne 'nan') {
+        die "Sorry, creating new maps isn't allowed\n"
+    }
+
     my $map_str = convert_from_lodev($mapdata);
     my $id = sha1_hex $map_str;
 
