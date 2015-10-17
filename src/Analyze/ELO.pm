@@ -29,6 +29,11 @@ my %default_settings = (
     # many games.
     min_output_games => 5,
     faction_weigth => 1,
+    # If true, players who drop out of a game are completely ignored in
+    # the rating calculation (rather than being ranked based on the VP
+    # they finished with). Only for running prediction experiments, must
+    # always remain false in production use.
+    ignore_dropped => 0,
 );
 
 sub init_players {
@@ -54,14 +59,18 @@ sub iterate_results {
     } @{$matches};
 
     my $pot = $settings->{pot_size} / $iter ** $settings->{iter_decay_exponent};
-    my $fw = $settings->{faction_weigth};
-
     for my $res (@shuffled) {
         my $p1 = $players->{$res->{a}{id_hash}};
         my $p2 = $players->{$res->{b}{id_hash}};
+        my $fw = $settings->{faction_weigth};
 
-        # next if $p1->{games} < $settings->{min_games};
-        # next if $p2->{games} < $settings->{min_games};
+        if ($res->{a}{dropped} or $res->{b}{dropped}) {
+            if ($settings->{ignore_dropped}) {
+                next;
+            } else {
+                $fw = 0;
+            }
+        }
 
         my $f1 = $factions->{$res->{a}{faction}};
         my $f2 = $factions->{$res->{b}{faction}};
