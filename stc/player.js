@@ -57,6 +57,15 @@ function renderMetadata(table, stats) {
             new Element("td").updateText(label)).insert(
                 new Element("td").updateText(value)));
     });
+
+    if (metadata.tournament) {
+        var row = new Element("tr");
+        table.insert(row);
+        row.insert(new Element("td").updateText("Links"));
+        row.insert(new Element("td").insert(
+            new Element("a", {href:"http://tmtour.org/#/players/" + metadata.username}).updateText("Tournament profile")));
+    }
+    
 }
 
 function renderOpponents(table, stats) {

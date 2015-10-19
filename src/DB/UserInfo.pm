@@ -22,10 +22,15 @@ sub fetch_user_metadata {
 
     $metadata = $metadata->[0];
 
+    $metadata->{tournament} = 0;
     my %handled = ();
     for my $game (@{$games}) {
         next if $handled{$game->{id}}++;
 
+        if ($game->{id} =~ /4pLeague_/) {
+            $metadata->{tournament} = 1;
+        }
+        
         if ($game->{dropped}) {
             $metadata->{dropped}++;
         } elsif ($game->{aborted}) {
