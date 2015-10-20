@@ -1,5 +1,10 @@
 {
     "news": [
+        { "date": "2015-10-19",
+          "title": "Shapeshifter / Riverwalker official rules change",
+          "description": "There is an <a href='https://boardgamegeek.com/thread/1456706/official-change-rules'>official rules change</a> to the Shapeshifters and Riverwalkers The original and playtest versions of these factions are no longer available.",
+          "type": "change"
+        },
         { "date": "2015-10-12",
           "title": "New round scoring tile",
           "description": "The round scoring tile from the new mini expansion is now available as an option. This scoring tile produces 4 points for building a temple on the correct round, and gives a end of round income of 2 coins per priests on the cult track 3/2-spaces.",

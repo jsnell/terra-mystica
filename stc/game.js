@@ -674,7 +674,14 @@ function renderAction(canvas, name, key, border_color) {
     var center = 20.5;
     var bottom = 60;
 
-    var ss_cost = state.options['fire-and-ice-factions/variable_v4'] ? "-4PW" : "-3PW";
+    var ss_cost = "-3PW";
+
+    if (state.options['fire-and-ice-factions/variable_v4']) {
+        ss_cost = "-4PW";
+    }
+    if (state.options['fire-and-ice-factions/variable_v5']) {
+        ss_cost = "-5PW";
+    }
 
     var data = {
         "ACT1": function() {
@@ -726,15 +733,6 @@ function renderAction(canvas, name, key, border_color) {
             drawText(ctx, ss_cost, center, 60, font);
             drawText(ctx, "tokens", center, 70, font);
         },
-        "ACTH3": function() {
-            drawText(ctx, "color", center, center, font);
-            drawText(ctx, ss_cost, center, 60, font);
-        },
-        "ACTH4": function() {
-            drawText(ctx, "color", center, center, font);
-            drawText(ctx, ss_cost, center, 60, font);
-            drawText(ctx, "tokens", center, 70, font);
-        },
         "BON1": function() {
             drawText(ctx, "spd", center, center, font);
         },
@@ -745,6 +743,11 @@ function renderAction(canvas, name, key, border_color) {
             drawText(ctx, "cult", center, center, font);
         }
     };
+
+    data["ACTH3"] = data["ACTH1"];
+    data["ACTH4"] = data["ACTH2"];
+    data["ACTH5"] = data["ACTH1"];
+    data["ACTH6"] = data["ACTH2"];
 
     if (data[name]) {
         data[name]();

@@ -188,12 +188,12 @@ for (@{$results{results}}) {
     next if $_->{dropped};
     next if !defined $_->{vp};
 
-    my @ss_opt = map /variable_(v2|v3|v4)/g, @{$_->{options}};
+    my @ss_opt = map /variable_(v2|v3|v4|v5)/g, @{$_->{options}};
     if (@ss_opt and $_->{faction} eq 'shapeshifters') {
         $_->{faction} = "shapeshifters_@{ss_opt}";
     }
 
-    my @rw_opt = map /variable_(v4)/g, @{$_->{options}};
+    my @rw_opt = map /variable_(v4|v5)/g, @{$_->{options}};
     if (@rw_opt and $_->{faction} eq 'riverwalkers') {
         $_->{faction} = "riverwalkers_@{rw_opt}";
     }

@@ -92,6 +92,12 @@ Readonly our %actions => (
     ACTH4 => { dont_block => 1,
                cost => { PW_TOKEN => 4 },
                gain => { PICK_COLOR => 1 } },
+    ACTH5 => { dont_block => 1,
+               cost => { PW => 5 },
+               gain => { PICK_COLOR => 1 } },
+    ACTH6 => { dont_block => 1,
+               cost => { PW_TOKEN => 5 },
+               gain => { PICK_COLOR => 1 } },
     BON1 => { cost => {}, gain => { SPADE => 1 },
               subaction => { dig => 1, 'transform' => 1, 'build' => 1 } },
     BON2 => { cost => {}, gain => { CULT => 1 } },
@@ -315,6 +321,10 @@ Readonly our %faction_setups_extra => (
     final_variable_v4 => {
         riverwalkers => $Game::Factions::Riverwalkers::riverwalkers_v4,
         shapeshifters => $Game::Factions::Shapeshifters::shapeshifters_v4,
+    },
+    final_variable_v5 => {
+        riverwalkers => $Game::Factions::Riverwalkers::riverwalkers_v5,
+        shapeshifters => $Game::Factions::Shapeshifters::shapeshifters_v5,
     },
 );
 

@@ -1135,7 +1135,7 @@ sub full_action_required {
 sub finalize_setup {
     maybe_setup_pool;
 
-    for my $type (qw(ice volcano variable variable_v2 variable_v3 variable_v4)) {
+    for my $type (qw(ice volcano variable variable_v2 variable_v3 variable_v4 variable_v5)) {
         if ($game{options}{"fire-and-ice-factions/$type"}) {
             add_faction_variant "final_$type";
         }
@@ -1319,6 +1319,7 @@ sub command {
             fire-and-ice-factions/variable_v2
             fire-and-ice-factions/variable_v3
             fire-and-ice-factions/variable_v4
+            fire-and-ice-factions/variable_v5
             fire-and-ice-factions/volcano
             email-notify
             loose-adjust-resource
