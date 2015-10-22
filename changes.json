@@ -1,5 +1,10 @@
 {
     "news": [
+        { "date": "2015-10-22",
+          "title": "Multi-faction planner",
+          "description": "The planner can now be used to simulate moves of all factions (using the <code>!plan</code> planning command). Additionally large blocks can be commented out using <code>!skip</code>, <code>!dontskip</code> and <code>!continue</code> commands. See the <a href='/usage/#planning-commands'>planning commands</a> section of the manual for more information.",
+          "type": "change"
+        },
         { "date": "2015-10-19",
           "title": "Shapeshifter / Riverwalker official rules change",
           "description": "There is an <a href='https://boardgamegeek.com/thread/1456706/official-change-rules'>official rules change</a> to the Shapeshifters and Riverwalkers The original and playtest versions of these factions are no longer available.",

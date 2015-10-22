@@ -45,10 +45,13 @@ function loadGame (domain, pathname) {
     preview();
 }
 
-function previewOrSave(save, preview_data, prefix_data) {
+function previewOrSave(save, preview_data, prefix_data, status_message) {
     dataEntrySetStatus(true);
 
-    if (preview_data) {
+    if (status_message) {
+        $("preview_status").innerHTML = status_message;
+        $("preview_commands").innerHTML = "";
+    } else if (preview_data) {
         $("preview_status").innerHTML = "Previewing the following commands for " + currentFaction;
         $("preview_commands").innerHTML = preview_data;
     }
@@ -118,9 +121,9 @@ function previewOrSave(save, preview_data, prefix_data) {
 }
 
 function previewPlan() {
-    var prefix_data = "start_planning.";
+    var prefix_data = "start_planning.\n\r";
     var preview_data = $("planning_entry_input").value;
-    previewOrSave(false, preview_data, prefix_data);
+    previewOrSave(false, preview_data, prefix_data, " ");
 }
 
 function preview() {

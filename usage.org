@@ -30,7 +30,7 @@ by contacting me directly.
 
 * Playing the Game
 
-# <<join-game>
+<<join-game>>
 ** Joining a Game
 
 To join an open public game, go to [[/joingame/][list of open games]], and click the
@@ -135,7 +135,7 @@ elements in this order:
 Click on =show history= to switch the game view to what it was during
 that point in the game.
 
-#<<gameplay-commands>>
+<<gameplay-commands>>
 ** Gameplay Commands
 
 The following commands are available during gameplay. They can be entered
@@ -315,6 +315,75 @@ Example:
 Ignore the remainder of the line. Useful mostly in the planning tool --
 you can use comments to interleave notes to yourself and actual commands.
 
+<<planning-commands>>
+** Planning commands
+
+Planning commands are used to control the behavior of the planning tool.
+They always start with an exclamation mark (=!=), and must be the only
+command on that row.
+
+*** =!plan= /faction/
+
+Switch to another faction. All later commands in the plan will be
+executed by this faction, until the next =!plan= is encountered and
+switches the faction again.
+
+*** =!skip=, =!dontskip=, =!continue=
+
+Comment out blocks of commands. Can be nested.
+
+Example:
+
+#+BEGIN_EXAMPLE
+!skip
+  this will not be executed
+!continue
+  this will be executed
+#+END_EXAMPLE
+
+If you have multiple separate alternative plans, you can put them all
+in a =!skip= block and activate one of them by changing that to a
+=!dontskip=.
+
+#+BEGIN_EXAMPLE
+!dontskip
+  this will be executed
+!continue
+!skip
+  this will not be executed
+!continue
+#+END_EXAMPLE
+
+=!skip= and =!dontskip= blocks can be nested. In this case every =!continue=
+will be close the most recently opened block that has not yet been closed.
+Commands will be ignored if there is at least one open =!skip= block.
+
+#+BEGIN_EXAMPLE
+!dontskip
+  this will be executed
+  !skip
+    this will not be executed
+  !continue
+  this will be executed
+!continue
+
+!skip
+  none of this is executed
+  !dontskip
+    this isn't executed either
+  !continue
+  none of this is executed
+!continue
+#+END_EXAMPLE
+
+The following is an error, the second =!continue= does not have a matching
+opening =!skip= or =!dontskip=.
+#+BEGIN_EXAMPLE
+!skip
+!continue
+!continue
+#+END_EXAMPLE
+
 * Running Games
 
 ** Making a New Game
@@ -349,12 +418,12 @@ Note that the administrator rights only apply to the game itself. Most
 importantly the admin can't read the planning notes of other players.
 
 
-#<<admin-commands>>
+<<admin-commands>>
 ** Administrative commands
 
 The following commands are available for changing the state of the game.
 
-# <<options>>
+<<options>>
 *** =option= /option/
 
 Example:
@@ -382,7 +451,7 @@ All games will be automatically aborted after 2 weeks of inactivity.
 Changes made in the admin view don't extend the lifespan of the game,
 only moves made directly by players.
 
-# <<drop>>
+<<drop>>
 
 Players who become inactive are dropped from the game after a timeout
 specified during game creation (from 12 hours to two weeks). They can
@@ -445,11 +514,20 @@ the cult tracks he doesn't want to advance to 10 on (for example
 =-WATER=). Note that you should do this adjustment first, doing it
 after taking the town tile will unjustly award 3 power to the player.
 
+** Planner
 
+The planning tool mostly enforces the rules as the normal game. There
+are two major exceptions:
 
+- Mixing BON4 (temporary shipping) and spades received as cult income
+  in phase III. BON4 only has an effect in phase II. The planner does
+  not enforce use of the spade already in the cult income phase, and
+  instead delays it phase II of the following round. As a result, plans
+  that try to use the extra shipping range to transform an otherwise
+  unreachable hex will work in the planner but fail in reality.
+- The payment for Acolyte volcanos is not enforced in the planner.
 
-
-# <<keyboard-shortcuts>>
+<<keyboard-shortcuts>>
 * Keyboard shortcuts
 
 The application has a small number of keyboard shortcuts defined for

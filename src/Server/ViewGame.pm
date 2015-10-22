@@ -52,7 +52,46 @@ method handle($q) {
                 push @rows, (map { "$preview_faction: $_" } grep { /\S/ } split /\n/, $preview);
             }
         } else {
-            push @rows, (map { "$preview_faction: $_" } split /\n/, $preview);
+            my $plan_faction = $preview_faction;
+            my @skip = ();
+            # Start from -1 to account for the hidden start-planning
+            # inserted by JS before posting the request.
+            my $row = -1;
+            eval {
+                for (split /\n\r*/, $preview) {
+                    ++$row;
+                    s/\s*$//;
+                    if (/^!skip$/) {                    
+                        push @skip, 1;
+                    } elsif (/^!dontskip$/) {
+                        # This exists just so that you can easily toggle a
+                        # block between being executed or not.
+                        push @skip, 0;
+                    } elsif (/^!continue$/) {
+                        if (!@skip < 0) {
+                            die "!continue with no matching !skip\n";
+                        }
+                        pop @skip;
+                    } elsif (/^!plan (\w+)$/i) {
+                        $plan_faction = $1;
+                        push @rows, "$plan_faction: start_planning";
+                    } elsif (/^!/) {
+                        die "unknown planning command '$_'\n";
+                    } elsif (grep { $_ } @skip) {
+                        # Inside at least one !skip
+                    } else {
+                        push @rows, "$plan_faction: $_";
+                    }
+                }
+                if (@skip) {
+                    die join '', "At end of input, but still inside a ", ($skip[-1] ? '!skip' : '!dontskip'), "\n";
+                }
+            }; if ($@) {
+                $self->status(400);
+                $self->output_json({
+                    error => [ "Error on line $row: $@" ]});
+                return;
+            }
         }
     }
 
