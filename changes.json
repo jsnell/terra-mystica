@@ -1,8 +1,8 @@
 {
     "news": [
-        { "date": "2015-10-22",
+        { "date": "2015-10-23",
           "title": "Multi-faction planner",
-          "description": "The planner can now be used to simulate moves of all factions (using the <code>!plan</code> planning command). Additionally large blocks can be commented out using <code>!skip</code>, <code>!dontskip</code> and <code>!continue</code> commands. See the <a href='/usage/#planning-commands'>planning commands</a> section of the manual for more information.",
+          "description": "The planner can now be used to simulate moves of all factions in the game, not just your own. This is done using the <code>!plan</code> planning command. Additionally blocks of commands can be activated and deactivated by changing one line, with the <code>!if</code>, <code>!else</code> and <code>!endif</code> commands. See the <a href='/usage/#planning-commands'>planning commands</a> section of the manual for more information.",
           "type": "change"
         },
         { "date": "2015-10-19",

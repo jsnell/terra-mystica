@@ -328,60 +328,42 @@ Switch to another faction. All later commands in the plan will be
 executed by this faction, until the next =!plan= is encountered and
 switches the faction again.
 
-*** =!skip=, =!dontskip=, =!continue=
+*** =!if= /value/, =!elsif= /value/, =!endif=
 
-Comment out blocks of commands. Can be nested.
+Selectively execute the commands between the =!if= and the matching
+=!endif=, depending on whether /value/ is =true= or =false=. The
+contents of a =!elsif= or =!else= will not be executed if one of
+the earlier sibling =!if= or =!elsif= commands was true.
 
 Example:
 
 #+BEGIN_EXAMPLE
-!skip
+!if false
   this will not be executed
-!continue
+  (value was false)
+!elsif true
   this will be executed
+  (value was true)
+!else
+  this will not be executed
+  (already executed an earlier block).
+!endif
 #+END_EXAMPLE
 
-If you have multiple separate alternative plans, you can put them all
-in a =!skip= block and activate one of them by changing that to a
-=!dontskip=.
+=!if= blocks can also be nested:
 
 #+BEGIN_EXAMPLE
-!dontskip
+!if true
   this will be executed
-!continue
-!skip
-  this will not be executed
-!continue
-#+END_EXAMPLE
-
-=!skip= and =!dontskip= blocks can be nested. In this case every =!continue=
-will be close the most recently opened block that has not yet been closed.
-Commands will be ignored if there is at least one open =!skip= block.
-
-#+BEGIN_EXAMPLE
-!dontskip
-  this will be executed
-  !skip
+  !if false
     this will not be executed
-  !continue
+  !else
+    this will be executed
+  !endif
   this will be executed
-!continue
-
-!skip
-  none of this is executed
-  !dontskip
-    this isn't executed either
-  !continue
-  none of this is executed
-!continue
-#+END_EXAMPLE
-
-The following is an error, the second =!continue= does not have a matching
-opening =!skip= or =!dontskip=.
-#+BEGIN_EXAMPLE
-!skip
-!continue
-!continue
+!else
+  this will not be executed
+!endif
 #+END_EXAMPLE
 
 * Running Games
