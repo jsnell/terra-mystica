@@ -181,6 +181,12 @@ method factions_in_order_from($faction, $no_dummy) {
 method start_full_move($faction) {
     $self->active_faction($faction);
 
+    if ($faction->{planning}) {
+        if ($faction->{LOSE_CULT}) {
+            die "Must pay $faction->{LOSE_CULT} cult steps before next move.\n";
+        }
+    }
+
     $faction->{allowed_actions} = 1;
     $faction->{allowed_sub_actions} = {};
     $faction->{allowed_build_locations} = {};
