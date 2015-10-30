@@ -1106,10 +1106,17 @@ sub command_start_planning {
         if ($game{round} == 6) {
             return;
         }
+        $game{ledger}->finish_row();
         if ($faction->{income_taken} == 1) {
+            if ($faction->{SPADE}) {
+                die "Trying to do normal move before spending cult income spades.\n"
+            }
             command_income undef, 'other';
         } elsif ($faction->{income_taken} == 0) {
-            command_income;
+            command_income undef, 'cult';
+            if ($faction->{SPADE}) {
+                return;
+            }
         }
         command_start;
     }
