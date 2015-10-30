@@ -185,6 +185,9 @@ method start_full_move($faction) {
         if ($faction->{LOSE_CULT}) {
             die "Must pay $faction->{LOSE_CULT} cult steps before next move.\n";
         }
+        if ($faction->{UNLOCK_TERRAIN}) {
+            die "Must unlock new terrain before next move.\n";
+        }
     }
 
     $faction->{allowed_actions} = 1;

@@ -1109,14 +1109,22 @@ sub command_start_planning {
         $game{ledger}->finish_row();
         if ($faction->{income_taken} == 1) {
             if ($faction->{SPADE}) {
-                die "Trying to do normal move before spending cult income spades.\n"
+                die "Must spend spades received from cult before next move.\n"
             }
             command_income undef, 'other';
         } elsif ($faction->{income_taken} == 0) {
             command_income undef, 'cult';
-            if ($faction->{SPADE}) {
+            if ($faction->{SPADE} or
+                $faction->{UNLOCK_TERRAIN}) {
                 return;
             }
+
+            command_income undef, 'other';
+        }
+
+        if ($faction->{SPADE} or
+            $faction->{UNLOCK_TERRAIN}) {
+            return;
         }
         command_start;
     }
