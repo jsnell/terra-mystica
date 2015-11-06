@@ -53,6 +53,7 @@ func initialize_faction($game, $faction_name) {
         $faction->{"MAX_$_"} = 10;
     }
     $faction->{'CULT'} ||= 0;
+    $faction->{'CULT_P'} ||= 0;
 
     my $buildings = $faction->{buildings};
     $buildings->{D}{max_level} = 8;
