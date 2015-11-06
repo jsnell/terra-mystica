@@ -100,7 +100,11 @@ sub command_adjust_resources {
         $checked = 1;
     }
 
-    if (!$checked and $delta > 0) {
+    if (!$checked and $delta > 0 or
+        # Having a blacklist doesn't feel right, but it's simpler than a
+        # whitelist. (And is needed since some of these things you can
+        # decline).
+        $type =~ /^(LOSE_|CULTS_ON_SAME_TRACK|TOWN_SIZE|TF_NEED_HEX_ADJACENCY)/) {
         if ($game{options}{'loose-adjust-resource'} or
             $faction->{planning}) {
             $ledger->warn("dodgy resource manipulation ($delta $type)");
