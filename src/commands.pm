@@ -1425,6 +1425,7 @@ sub command {
         my $field = ($faction->{pick_color_field} // 'secondary_color');
         my $orig = $faction->{$field};
         $faction->{$field} = $wanted_color;
+        $game{ledger}->force_finish_row(1);
 
         if ($field eq 'color') {
             for my $hex (keys %map) {
