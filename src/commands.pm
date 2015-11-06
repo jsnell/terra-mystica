@@ -1116,6 +1116,8 @@ sub command_start_planning {
             command_income undef, 'cult';
             if ($faction->{SPADE} or
                 $faction->{UNLOCK_TERRAIN}) {
+                $game{ledger}->finish_row();
+                $game{ledger}->start_new_row($faction);
                 return;
             }
 
