@@ -3104,7 +3104,7 @@ function addBuildToMovePicker(picker, faction) {
             var can_afford_build = canAfford(faction,
                                              [dwelling_costs, loc_cost]);
             var cost_str = effectString([dwelling_costs, loc_cost],
-                                        [gains, elem.extra_gain]);
+                                        gains.concat(elem.extra_gain));
             if (can_afford_build) {
                 possible_builds.push([loc, cost_str]);
             }
