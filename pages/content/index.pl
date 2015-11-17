@@ -8,9 +8,9 @@
 
 __DATA__
 
-<div class="motd" style="display: none">
-    Season 9 of the Terra Mystica tournament will start on October 1st.
-    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/1437711/signup-season-9-now-open">BGG thread</a>.
+<div class="motd" style="display: block">
+    Season 10 of the Terra Mystica tournament will start on December 1st.
+    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/1474705">BGG thread</a>.
 </div>
 
 <h4>Your Active / Recently Finished Games</h4>
