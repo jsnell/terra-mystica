@@ -1185,14 +1185,13 @@ sub command {
 
     my $assert_active_faction = sub {
         $assert_faction->();
+        if ($faction->{planning} && $faction->{passed}) {
+            die "Must make decisions on cult income first\n";
+        }
         if (!$game{acting}->is_active($faction) and
             $game{round} > 0 and
             !$game{finished}) {
-            if ($faction->{planning}) {
-                die "Must make decisions on cult income first\n";
-            } else {
-                die "Command invalid when not active player\n"
-            }
+            die "Command invalid when not active player\n"
         }
         $faction;
     };
