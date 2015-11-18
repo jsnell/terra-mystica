@@ -1,5 +1,11 @@
 {
     "news": [
+        { "date": "2015-11-18",
+          "title": "A rating system for asymmetric multiplayer games",
+          "description": "A detailed look at the rating system used on this site. How does it work, why does it work like that, and could it be better? In fact, what does 'better' even mean when we talk about ratings, and how should rating systems be evaluated?",
+          "type": "blog",
+          "link": "https://www.snellman.net/blog/archive/2015-11-18-rating-system-for-asymmetric-multiplayer-games/"
+        },
         { "date": "2015-10-23",
           "title": "Multi-faction planner",
           "description": "The planner can now be used to simulate moves of all factions in the game, not just your own. This is done using the <code>!plan</code> planning command. Additionally blocks of commands can be activated and deactivated by changing one line, with the <code>!if</code>, <code>!else</code> and <code>!endif</code> commands. See the <a href='/usage/#planning-commands'>planning commands</a> section of the manual for more information.",
