@@ -3643,6 +3643,16 @@ function updateInfoTab() {
                new Element("a", { href: url }).updateText(url));
     }
 
+    var tournament = TM.params.game.match(/4pLeague_S(\d+)_D(\d+)L(\d+)_G(\d+)/);
+    if (tournament) {
+        var s = tournament[1];
+        var d = tournament[2];
+        var l = tournament[3];
+        var url = 'http://tmtour.org/#/seasons/' + s + '/divisions/' + d + '/leagues/' + l;
+        addRow("Tournament page",
+               new Element("a", { href: url }).updateText("Season " + s + ", D" + d + "L" + l));
+    }
+
     {
         var status = "Running, last update " + seconds_to_pretty_time(state.metadata.time_since_update) + " ago";
         if (metadata.aborted) {
