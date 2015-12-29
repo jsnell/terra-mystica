@@ -456,9 +456,7 @@ sub command_leech {
         last;
     }
 
-    if ($found_leech_record) {
-        $game{acting}->clear_empty_actions();
-    } else {
+    if (!$found_leech_record) {
         if (!$from and !$game{options}{'strict-leech'}) {
             $ledger->warn("invalid leech $pw (accepting anyway)");
         } else {
@@ -469,6 +467,11 @@ sub command_leech {
     if ($actual_pw > 0) {
 	adjust_resource $faction, 'VP', -$vp, 'leech';
     }
+
+    for my $record (@detect_incomplete_turn_for) {
+        $game{acting}->detect_incomplete_turn($record->[0]);
+    }
+    $game{acting}->clear_empty_actions();
 
     my $can_gain = min $faction->{P1} * 2 + $faction->{P2};
     for my $record (@{$game{acting}->action_required()}) {
@@ -486,10 +489,6 @@ sub command_leech {
     if ($actual_pw) {
         $game{events}->faction_event($faction, 'leech:pw', $actual_pw);
         $game{events}->faction_event($faction, 'leech:count', 1);
-    }
-
-    for my $record (@detect_incomplete_turn_for) {
-        $game{acting}->detect_incomplete_turn($record->[0]);
     }
 }
 

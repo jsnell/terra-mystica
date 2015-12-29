@@ -88,12 +88,19 @@ method require_action($faction, $action) {
     die "Invalid faction" if !$action or !$faction;
     return if $faction->{dropped};
     $action->{faction} = $faction->{name};
+    for my $old_rec (@{$self->action_required()}) {
+        if ($old_rec eq '') {
+            $old_rec = $action;
+            return;
+        }
+    }
     $self->push_action_required($action);
 }
 
 method dismiss_action($faction, $type) {
     $self->action_required([
         grep {
+            !$_ or
             !(($faction->{name} // '') eq ($_->{faction} // '') and
               (!defined $type or 
                $type eq ($_->{type} // '')))

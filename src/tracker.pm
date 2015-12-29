@@ -42,6 +42,7 @@ sub finalize {
         }
     }
 
+    $game{acting}->clear_empty_actions();
     # Delete all "transform" records except the first one (to get the
     # sequencing right during income phase).
     my $spade_seen = 0;
