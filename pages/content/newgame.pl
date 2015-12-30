@@ -129,23 +129,79 @@ players have joined.
           not games with a minimum rating.
     </tr>
 
+    <tr style="vertical-align: top" id="timelimit-method-row">
+      <td>Time limit</td>
+      <td><select name="timelimit-method" id="timelimit-method" onchange="javascript:newGameValidate()">
+          <option value="">-</option>
+          <option value="deadline">Per-move timer</option>
+          <option value="chess-clock">Chess clock</option>
+          </select>
+      </td>
+      <td>
+        <p>
+          The method used for dropping slow players. Per-move
+          timers limit the amount of time that can be used for each
+          single move. The chess clock allows each player to spend a
+          certain amount of time on all of their moves in the game.
+        </p>
+      </td>
     </tr>
 
     <tr style="vertical-align: top" id="deadline-row">
       <td>Move timer
       <td><select name="deadline-hours" id="deadline-hours">
-<option value="12">12 hours</option>
-<option value="24">1 day</option>
-<option value="72">3 days</option>
-<option value="120">5 days</option>
-<option selected=true value="168">1 week</option>
-<option value="336">2 weeks</option>
-</select>
-      <td>        
+          <option value="12">12 hours</option>
+          <option value="24">1 day</option>
+          <option value="72">3 days</option>
+          <option value="120">5 days</option>
+          <option selected=true value="168">1 week</option>
+          <option value="336">2 weeks</option>
+        </select>
+      </td>
+      <td>
         <p>
           Players will be dropped from the game after this period of
           inactivity. The game admin can reinstate a dropped player, but
           will lose admin privileges for the game if dropped out themselves.
+        </p>
+      </td>
+    </tr>
+
+    <tr style="vertical-align: top" id="chess-clock-row">
+      <td>Chess clock      
+      <td><div class="settings-chessclock-label">Initial time:</div>
+        <select name="chess-clock-hours-initial" id="chess-clock-hours-initial">
+<option value="48">2 days</option>
+<option value="120">5 days</option>
+<option selected=true value="240">10 days</option>
+<option value="360">15 days</option>
+<option value="720">30 days</option>
+</select><br>
+        <div class="settings-chessclock-label">Time per round:</div>
+        <select name="chess-clock-hours-per-round" id="chess-clock-hours-per-round">
+<option value="0">No time</option>
+<option value="24">1 day</option>
+<option selected=true value="48">2 days</option>
+<option value="120">5 days</option>
+</select><br>
+        <div class="settings-chessclock-label">Grace period:</div>
+      <select name="chess-clock-grace-period" id="chess-clock-grace-period">
+<option value="8">8 hours</option>
+<option selected=true value="12">12 hours</option>
+<option value="24">1 day</option>
+</select>
+      <td>        
+        <p>
+          A clock that determines when to drop players from a game for
+          taking too much time. The initial time determines the time
+          each player starts with on their clock. The time per round
+          is the amount of time added on the clock at start of rounds
+          1-6. The grace period is the point after the previous move
+          at which the clock starts ticking.
+        <p>
+          Players who at any point in the game exceed their time
+          allotment will be dropped from the game, and can't be brought
+          back even by the game admin.
     </tr>
 
     <tr style="vertical-align: top" id="description-row" style="display: none">

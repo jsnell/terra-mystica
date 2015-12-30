@@ -22,13 +22,14 @@ sub index_game {
     };
 
     my ($res) = $dbh->do(
-        'update game set needs_indexing=?, write_id=?, finished=?, round=?, turn=?, last_update=?, player_count=?, game_options=?, base_map=?, non_standard=? where id = ?',
+        'update game set needs_indexing=?, write_id=?, finished=?, round=?, turn=?, last_update=?, player_count=?, game_options=?, base_map=?, non_standard=?, current_chess_clock_hours=? where id = ?',
         {},
         0, $write_id, 1*(!!$game->{finished}), $game->{round}, $game->{turn}, $timestamp, 
         $player_count,
         [ grep { $game->{options}{$_} } keys %{$game->{options}} ],
         $game->{map_variant},
         $game->{non_standard} || 0,
+        $game->{current_chess_clock_hours},
         $id);
 
     if ($game->{dodgy_resource_manipulation}) {

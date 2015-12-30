@@ -47,7 +47,8 @@ create table game (
     game_options text array default '{}',
     base_map text references map_variant (id),
     non_standard boolean default false,
-    admin_user text references player (username)
+    admin_user text references player (username),
+    current_chess_clock_hours integer
 );
 create index game_finished_idx on game (finished);
 
@@ -72,6 +73,7 @@ create table game_active_time (
     active_after_soft_deadline_seconds integer default 0,
     primary key (game, player)
 );
+create index game_active_time_game_idx on game_active_time (game);
 
 create table game_role (
     game text references game (id),
@@ -155,5 +157,8 @@ create table game_options (
     maximum_rating integer,
     description text,
     deadline_hours integer default 168,
+    chess_clock_hours_initial integer,
+    chess_clock_hours_per_round integer,
+    chess_clock_grace_period integer default 12,
     primary key (game)
 );

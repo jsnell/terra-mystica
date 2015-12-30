@@ -578,6 +578,12 @@ div.stats-settings {
     margin-right: 20px;
 }
 
+div.settings-chessclock-label {
+    width: 15ex;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
 /* Manual */
 
 div#postamble {

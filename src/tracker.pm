@@ -43,6 +43,13 @@ sub finalize {
     }
 
     $game{acting}->clear_empty_actions();
+    if (defined $game{metadata}{chess_clock_hours_initial} and
+        defined $game{metadata}{chess_clock_hours_per_round}) {
+        $game{current_chess_clock_hours} =
+            $game{metadata}{chess_clock_hours_initial} +
+            $game{metadata}{chess_clock_hours_per_round} * $game{round};
+    }
+
     # Delete all "transform" records except the first one (to get the
     # sequencing right during income phase).
     my $spade_seen = 0;
@@ -174,6 +181,7 @@ sub evaluate_game {
         bridges => [],
         score_tiles => [],
         preview_warnings => [],
+        metadata => $metadata,
         base_map => ($metadata->{base_map} or \@base_map),
         map_variant => $metadata->{map_variant},
         faction_variants => [],
@@ -263,6 +271,7 @@ sub evaluate_game {
         dodgy_resource_manipulation => $game{dodgy_resource_manipulation},
         events => $game{events}->data(),
         preview_warnings => $game{preview_warnings},
+        current_chess_clock_hours => $game{current_chess_clock_hours},
         available_factions => {
             map({ ($_, 1) }
                 keys %faction_setups,

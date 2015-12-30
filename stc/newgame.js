@@ -22,6 +22,7 @@ function newGameValidate() {
         "players": okColor,
         "gameid": okColor,
         "game-type": okColor,
+        "timelimit-method": okColor,
     }
 
     if ($("gameid").value == "" ||
@@ -64,6 +65,21 @@ function newGameValidate() {
             disabled = true;
             validateHighlights["players"] = badColor;
         }
+    }
+
+    if ($("timelimit-method").value == "") {
+        disabled = true;
+        validateHighlights["timelimit-method"] = badColor;
+        $("deadline-row").hide();
+        $("chess-clock-row").hide();
+    }
+    if ($("timelimit-method").value == "deadline") {
+        $("deadline-row").show();
+        $("chess-clock-row").hide();
+    }
+    if ($("timelimit-method").value == "chess-clock") {
+        $("deadline-row").hide();
+        $("chess-clock-row").show();
     }
 
     ['ice', 'variable_v5', 'volcano'].each(function (type) {
@@ -157,6 +173,12 @@ function copyGame() {
 
                 if (data.metadata.deadline_hours) {
                     $("deadline-hours").value = data.metadata.deadline_hours;
+                    $("timelimit-method").value = "deadline";
+                } else {
+                    $("timelimit-method").value = "chess-clock";
+                    $("chess-clock-hours-initial").value = data.metadata.chess_clock_hours_initial;
+                    $("chess-clock-hours-per-round").value = data.metadata.chess_clock_hours_per_round;
+                    $("chess-clock-grace-period").value = data.metadata.chess_clock_grace_period;
                 }
 
                 if (data.metadata.description) {

@@ -12,16 +12,26 @@ use DB::Connection;
 use DB::Game;
 use DB::SaveGame;
 use Email::Notify;
+use JSON;
 use tracker;
 
 my $dbh = get_db_connection;
 
 my $id_pattern = '%';
 
-my $idle_players = $dbh->selectall_arrayref("select game, array_agg(faction) as factions from game_role where game in (select id from game left join game_options on game_options.game=game.id where not finished and not aborted and last_update < now() - coalesce(game_options.deadline_hours, 24*7) * interval '1 hour') and (action_required or leech_required) and game like ? group by game",
+# Old-style games with static move deadline
+my $idle_players = $dbh->selectall_arrayref("select game, array_agg(faction) as factions from game_role where game in (select id from game left join game_options on game_options.game=game.id where not finished and not aborted and game_options.chess_clock_hours_initial is null and last_update < now() - coalesce(game_options.deadline_hours, 24*7) * interval '1 hour') and (action_required or leech_required) and game like ? group by game",
                                             { Slice => {} },
                                             $id_pattern);
 
+# New-style games with chess clock
+for my $x (qw(8 12 24)) {
+    my $players = $dbh->selectall_arrayref("select game.id as game, array_agg(game_role.faction) as factions from game_role left join game on game.id=game_role.game left join game_active_time on game_active_time.game=game.id left join game_options on game.id=game_options.game and game_active_time.player=game_role.faction_player where not game.finished and not game_role.dropped and game.current_chess_clock_hours is not null and (game_active_time.active_seconds_${x}h >= game.current_chess_clock_hours * 3600) and game_options.chess_clock_grace_period=? and game.id like ? group by game.id",
+                                           { Slice => {} },
+                                           $x,
+                                           $id_pattern);
+    push @{$idle_players}, @{$players};
+}
 
 sub drop_factions_from_game {
     my ($read_id, $factions) = @_;

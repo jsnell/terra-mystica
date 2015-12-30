@@ -63,7 +63,16 @@ function showOpenGames(games) {
         {
             var cell = new Element("td");
 
-            {
+            if (game.chess_clock_hours_initial != null) {
+                var style = "";
+                cell.insert(new Element("div", {style: style}).updateText(
+                    "Chess clock " +
+                        seconds_to_pretty_time((game.chess_clock_hours_initial) * 3600) +
+                        " + " +
+                        seconds_to_pretty_time((game.chess_clock_hours_per_round) * 3600) +
+                        " per round, grace period " +
+                        seconds_to_pretty_time((game.chess_clock_grace_period) * 3600)))
+            } else {
                 var hours = game.deadline_hours || 168;
                 var style = "";
                 if (hours <= 1*24) {
@@ -72,7 +81,7 @@ function showOpenGames(games) {
                     style = "color: #f00";
                 }
                 cell.insert(new Element("div", {style: style}).updateText(
-                    "move timer " + seconds_to_pretty_time((hours) * 3600)));
+                    "Move timer " + seconds_to_pretty_time((hours) * 3600)));
             }
 
             if (game.map_variant) {
@@ -89,11 +98,11 @@ function showOpenGames(games) {
 
             if (game.minimum_rating) {
                 cell.insert(new Element("div").updateText(
-                    "minimum rating " + game.minimum_rating));
+                    "Minimum rating " + game.minimum_rating));
             }
             if (game.maximum_rating) {
                 cell.insert(new Element("div").updateText(
-                    "maximum rating " + game.maximum_rating));
+                    "Maximum rating " + game.maximum_rating));
             }
 
             var pretty_option = {

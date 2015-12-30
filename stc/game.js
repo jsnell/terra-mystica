@@ -3681,7 +3681,7 @@ function updateInfoTab() {
 
     addRow("Description", state.metadata.description || "[no description]");
 
-    {
+    if (state.metadata.chess_clock_hours_initial == null) {
         var hours = state.metadata.deadline_hours || 168;
         var style = "";
         if (hours <= 1*24) {
@@ -3690,6 +3690,12 @@ function updateInfoTab() {
             style = "color: #f00";
         }
         addRow("Move timer", seconds_to_pretty_time((hours) * 3600));
+    } else {
+        var hours = state.current_chess_clock_hours;
+        addRow("Chess clock", seconds_to_pretty_time((hours) * 3600)
+               + " (" + seconds_to_pretty_time((state.metadata.chess_clock_hours_initial) * 3600) +
+               " + " + seconds_to_pretty_time((state.metadata.chess_clock_hours_per_round) * 3600) + " per round), grace period " +
+              seconds_to_pretty_time((state.metadata.chess_clock_grace_period) * 3600))
     }
 
     // Time taken by each player
@@ -3697,15 +3703,20 @@ function updateInfoTab() {
         metadata.active_times[0] &&
         metadata.active_times[0].game) {
         var list = new Element("table", { "class": "time-taken-table"});
-        var grace_period = [0, 12, 24, 72];
+        var grace_period = [0, 8, 12, 24, 72];
 
         var header = new Element("tr").insert(new Element("td"));
         list.insert(header);
         grace_period.each(function (grace) {
             var label = seconds_to_pretty_time(grace * 3600);
-            if  (!grace) { label = "No grace period"; }
+            var style = "";
+            if (!grace) { label = "No grace period"; }
 
-            header.insert(new Element("td").updateText(label));
+            if (grace == state.metadata.chess_clock_grace_period) {
+                style = "font-weight: bold";
+            } 
+
+            header.insert(new Element("td", {style: style}).updateText(label));
         });
 
         metadata.active_times.each(function (record) {
@@ -3715,6 +3726,7 @@ function updateInfoTab() {
             row.insert(new Element("td").insert(link));
 
             grace_period.each(function (grace) {
+                var style = "";
                 var field = "active_seconds_" + grace + "h";
                 if (!grace) { field = "active_seconds" }
                 var value_seconds = record[field];
@@ -3722,7 +3734,10 @@ function updateInfoTab() {
                 if (value_seconds) {
                     value_pretty = seconds_to_pretty_time(value_seconds, 'hour');
                 }
-                row.insert(new Element("td").insert(value_pretty));
+                if (grace == state.metadata.chess_clock_grace_period) {
+                    style = "font-weight: bold";
+                } 
+                row.insert(new Element("td", {style: style}).insert(value_pretty));
             });
 
             list.insert(row);

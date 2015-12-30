@@ -92,7 +92,7 @@ sub get_game_metadata {
     my ($dbh, $id) = @_;
 
     my ($rows) =
-        $dbh->selectall_arrayref("select extract(epoch from now() - last_update) as time_since_update, game.description, finished, aborted, game_options, player_count, wanted_player_count, base_map as map_variant, game_options.deadline_hours, game_options.minimum_rating, game_options.maximum_rating, admin_user, game.exclude_from_stats from game left join game_options on game.id=game_options.game where game.id=? group by last_update, game.description, finished, aborted, game_options, player_count, wanted_player_count, base_map, game_options.deadline_hours, game_options.minimum_rating, game_options.maximum_rating, admin_user, exclude_from_stats",
+        $dbh->selectall_arrayref("select extract(epoch from now() - last_update) as time_since_update, game.description, finished, aborted, game_options, player_count, wanted_player_count, base_map as map_variant, game_options.deadline_hours, game_options.minimum_rating, game_options.maximum_rating, game_options.chess_clock_hours_initial, game_options.chess_clock_hours_per_round, game_options.chess_clock_grace_period, admin_user, game.exclude_from_stats from game left join game_options on game.id=game_options.game where game.id=?",
                                  { Slice => {} },
                                  $id);
 
@@ -195,7 +195,7 @@ sub get_open_game_list {
     my ($dbh) = @_;
 
     my $games = $dbh->selectall_arrayref(
-        "select game.id, game.player_count, game.wanted_player_count, game.description, array(select player from game_player where game_player.game=game.id) as players, game.game_options, game_options.minimum_rating, game_options.maximum_rating, game_options.deadline_hours, game.base_map as map_variant from game left join game_options on game.id=game_options.game where game.wanted_player_count is not null and game.player_count != game.wanted_player_count and not game.finished",
+        "select game.id, game.player_count, game.wanted_player_count, game.description, array(select player from game_player where game_player.game=game.id) as players, game.game_options, game_options.minimum_rating, game_options.maximum_rating, game_options.deadline_hours, game_options.chess_clock_hours_initial, game_options.chess_clock_hours_per_round, game_options.chess_clock_grace_period, game.base_map as map_variant from game left join game_options on game.id=game_options.game where game.wanted_player_count is not null and game.player_count != game.wanted_player_count and not game.finished",
         { Slice => {} }
         );
 

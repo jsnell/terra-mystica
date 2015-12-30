@@ -1,5 +1,10 @@
 {
     "news": [
+        { "date": "2015-12-30",
+          "title": "Chess clock",
+          "description": "An alternate method for limiting the time taken for games is now available. The 'chess clock' method limits the total amount of time taken by a player for all their moves (with a certain initial amount of time, and some extra added each round).",
+          "type": "change"
+        },
         { "date": "2015-11-18",
           "title": "A rating system for asymmetric multiplayer games",
           "description": "A detailed look at the rating system used on this site. How does it work, why does it work like that, and could it be better? In fact, what does 'better' even mean when we talk about ratings, and how should rating systems be evaluated?",

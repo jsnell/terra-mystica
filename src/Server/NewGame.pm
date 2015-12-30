@@ -49,6 +49,14 @@ sub error {
     die "$_[0]\n"
 }
 
+sub param_in_range {
+    my ($q, $param, $min, $max) = @_;
+    my $value = $q->param($param);
+    return (defined $value and
+            $value >= $min and
+            $value <= $max);
+}
+
 method make_game($dbh, $q, $username) {
 
     my $gameid = $q->param('gameid');
@@ -91,12 +99,29 @@ method make_game($dbh, $q, $username) {
         error "Invalid game type '$game_type'";
     }
 
-    my $deadline_hours = $q->param('deadline-hours');
-    if (!defined $deadline_hours or
-        $deadline_hours =~ /\D/ or
-        $deadline_hours < 12 or
-        $deadline_hours > 24*14) {
-        error "Invalid value for the move timer (expected between 12 hours and 2 weeks)";
+    my $time_limit = $q->param('timelimit-method');
+    my ($deadline_hours, $chess_clock_hours_initial,
+        $chess_clock_hours_per_round, $chess_clock_grace_period);
+    if ($time_limit eq 'deadline') {
+        if (!param_in_range $q, 'deadline-hours', 12, 24*14) {
+            error "Invalid value for per-move timer (expected between 8 hours and 2 weeks)";
+        }
+        $deadline_hours = $q->param('deadline-hours');
+    } elsif ($time_limit eq 'chess-clock') {
+        if (!param_in_range $q, 'chess-clock-hours-initial', 48, 720) {
+            error "Invalid value for initial chess clock value (expected between 2 days and 30 days";
+        }
+        if (!param_in_range $q, 'chess-clock-hours-per-round', 0, 120) {
+            error "Invalid value for initial chess clock value (expected between 0 hours and 5 days)";
+        }
+        if (!param_in_range $q, 'chess-clock-grace-period', 8, 24) {
+            error "Invalid value for initial chess clock value (expected between 8 hours and 1 day)";
+        }
+        $chess_clock_hours_initial = $q->param('chess-clock-hours-initial');
+        $chess_clock_hours_per_round = $q->param('chess-clock-hours-per-round');
+        $chess_clock_grace_period = $q->param('chess-clock-grace-period');
+    } else {
+        error "Invalid value for time-limit method (expected deadline or move-timer)";
     }
 
     my %rating = ();
@@ -148,19 +173,23 @@ method make_game($dbh, $q, $username) {
 
         my $description = $q->param('description');
         if ($description) {
-            $dbh->do("update game set description=? where id=?",
+            $dbh->do("update game set description=?, current_chess_clock_hours=? where id=?",
                      {},
                      $description,
+                     $chess_clock_hours_initial,
                      $gameid);
         }
 
-        $dbh->do("insert into game_options (game, description, minimum_rating, maximum_rating, deadline_hours) values (?, ?, ?, ?, ?)",
+        $dbh->do("insert into game_options (game, description, minimum_rating, maximum_rating, deadline_hours, chess_clock_hours_initial, chess_clock_hours_per_round, chess_clock_grace_period) values (?, ?, ?, ?, ?, ?, ?, ?)",
                  {},
                  $gameid,
                  $description,
                  $rating{'min-rating'},
                  $rating{'max-rating'},
-                 $deadline_hours);
+                 $deadline_hours,
+                 $chess_clock_hours_initial,
+                 $chess_clock_hours_per_round,
+                 $chess_clock_grace_period);
         
         if ($game_type eq 'private') {
             notify_game_started $dbh, {
