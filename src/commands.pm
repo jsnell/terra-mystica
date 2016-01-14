@@ -67,6 +67,10 @@ sub command_adjust_resources {
             $checked = 1;
             delete $faction->{CULTS_ON_SAME_TRACK};
         }
+    } elsif ($faction->{LOSE_CULT}) {
+        unless ($game{options}{'loose-lose-cult'}) {
+            die "Must lose $faction->{LOSE_CULT} cult steps first\n";
+        }
     }
 
     if ($type =~ /^FAV/) {
@@ -1352,6 +1356,7 @@ sub command {
             loose-adjust-resource
             loose-dig
             loose-engineer-bridge
+            loose-lose-cult
             loose-multi-spade
             loose-bridge-adjacency 
             maintain-player-order

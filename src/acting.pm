@@ -596,11 +596,11 @@ method detect_incomplete_turn($faction) {
     }
 
     if ($faction->{LOSE_CULT}) {
-        $incomplete = 1;
         $self->require_action($faction, {
             type => 'lose-cult',
             amount => $faction->{LOSE_CULT}
         });
+        return 1;
     }
 
     if ($faction->{FREE_TP}) {
@@ -628,6 +628,7 @@ method detect_incomplete_turn($faction) {
             type => 'cult',
             amount => $faction->{CULT}, 
         });
+        return 1;
     }
 
     if ($faction->{GAIN_FAVOR}) {
