@@ -1385,7 +1385,7 @@ sub command {
             username => $3,
         });
         check_player_count;
-    } elsif ($command =~ /^order ([\w,]+)$/i) {
+    } elsif ($command =~ /^order (\S+)$/i) {
         die "$faction_name can't force player order\n" if $faction_name;
         my $i = 0;
         my %usernames = map { ($_, $i++) } split /,/, lc $1;
