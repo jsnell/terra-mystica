@@ -144,6 +144,7 @@ func setup_faction($game, $faction_name, $player, $email) {
     $faction->{start_player} = 1 if !$acting->faction_count();
     $faction->{income_taken} = 0;
     $game->{acting}->register_faction($faction);
+    $faction->{start_order} = $acting->faction_count();
 }
 
 1;

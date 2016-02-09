@@ -54,8 +54,10 @@ sub set_game_roles {
 
     my $pi = 0;
     my @player_roles = map {
-        { name => "player".++$pi,
+        ++$pi;
+        { name => "player$pi",
           username => $_->{username},
+          start_order => $pi,
           email => $_->{email} }
     } @{$game->{players}};
     shift @player_roles for 1..(values %{$game->{factions}});
@@ -73,13 +75,6 @@ sub set_game_roles {
                 $_->{rank} = $pos;
             }
             $prev = $_;
-        }
-    }
-
-    {
-        my $pos = 0;
-        for (@{$game->{order}}) {
-            $game->{factions}{$_}{start_order} = ++$pos;
         }
     }
 

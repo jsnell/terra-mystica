@@ -1537,6 +1537,7 @@ sub command {
             name => "nofaction$1",
             display => 'No Faction',
             dummy => 1,
+            start_order => $1,
             start_player => ($game{acting}->faction_count() ? 0 : 1),
         };
         $game{acting}->register_faction($dummy_faction);
