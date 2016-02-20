@@ -120,6 +120,15 @@ sub command_adjust_resources {
 
     adjust_resource $faction, $type, $delta, $source;
 
+    # If you decline the Nomad or Witch SH power, the extra restrictions
+    # the terraform / build would have need to be removed as well.
+    if ($type eq 'FREE_TF' and $faction->{$type} == 0) {
+        delete $faction->{TF_NEED_HEX_ADJACENCY};
+    }
+    if ($type eq 'FREE_D' and $faction->{$type} == 0) {
+        delete $faction->{TELEPORT_NO_TF};
+    }
+
     # Small hack: always remove the notifier for a cultist special cult
     # increase. Needs to be done like this, since we don't want + / - to
     # count as full actions.
