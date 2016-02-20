@@ -1105,7 +1105,7 @@ sub command_randomize {
 }
 
 sub command_start_planning {
-    my $faction = shift;
+    my ($faction, $from_ui) = @_;
     
     $game{planning} = 1;
     $faction->{planning} = 1;
@@ -1116,7 +1116,13 @@ sub command_start_planning {
         $game{ledger}->finish_row();
         if ($faction->{income_taken} == 1) {
             if ($faction->{SPADE}) {
-                die "Must spend spades received from cult before next move.\n"
+                if ($from_ui) {
+                    $game{ledger}->finish_row();
+                    $game{ledger}->start_new_row($faction);
+                    return;
+                } else {
+                    die "Must spend spades received from cult before next move.\n"
+                }
             }
             command_income undef, 'other';
         } elsif ($faction->{income_taken} == 0) {
@@ -1506,7 +1512,7 @@ sub command {
             $game{acting}->dismiss_action($faction, 'unlock-terrain');
         }
     } elsif ($command =~ /^start_planning$/i) {
-        command_start_planning $assert_faction->();
+        command_start_planning $assert_faction->(), 1;
     } elsif ($command =~ /^map (.*)/i) {
         die "$faction_name can't switch game map\n" if $faction_name;
         if ($1 eq 'original') {
