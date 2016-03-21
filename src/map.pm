@@ -248,7 +248,7 @@ sub check_reachable {
         if ($faction->{TELEPORT_TO} eq $where) {
             return ({}, {});
         } else {
-            die "Can't use tunnel / carpet flight multiple times in one round\n"
+            die "Can't use tunnel / carpet flight multiple times in one turn\n"
         }
     }
 
