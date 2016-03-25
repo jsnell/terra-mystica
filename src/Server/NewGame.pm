@@ -75,7 +75,7 @@ method make_game($dbh, $q, $username) {
     my $game_type = $q->param("game-type");
     my @players = ();
     my $player_count = undef;
-    my %blacklist = map { ($_ => 1) } qw();
+    my %blacklist = map { ($_ => 1) } qw(silent);
 
     if ($game_type eq 'private') {
         if ($blacklist{$username}) {
