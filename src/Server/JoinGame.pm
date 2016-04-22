@@ -50,6 +50,15 @@ sub joingame {
         }
     }
 
+    {
+        my ($games_waiting) = $dbh->selectrow_array("select count(*) from game_role join game on game.id=game_role.game where faction_player=? and action_required=true and not (game.finished or game.aborted)",
+                                                    {},
+                                                    $username);
+        if ($games_waiting > 4) {
+            die "It's your turn in a lot of games right now. Please make moves in those games before joining new ones.\n";
+        }
+    }
+
     $dbh->do("insert into game_player (game, player, sort_key, index) values (?, ?, ?, ?)",
              {},
              $read_id,
