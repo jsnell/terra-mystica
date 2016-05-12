@@ -124,6 +124,9 @@ function showMap() {
         var rows = str.split('.').map(function (row) {
             return row.split('').join(',');
         });
+        if (rows[rows.length - 1] != "") {
+            rows.push("");
+        }
         state = {
             mapdata: rows.join(";\n")
         };
