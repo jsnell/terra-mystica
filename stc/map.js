@@ -48,12 +48,16 @@ function previewMap() {
             if (state.error.length) {
                 $("map").hide();
                 $("error").innerHTML = state.error.join("<br>");
+                document.location.hash = '';
             } else {
                 $("map").show();
                 updateMapId(state.mapid, state.saved);
                 drawMap();
                 $("map-data").value = state.mapdata;
                 allowSave();
+                document.location.hash = state.mapdata.gsub(',', '').
+                    gsub(/[ \t\n\r]/, '').
+                    gsub(';', '.');
             }
         }
     });
@@ -115,6 +119,21 @@ function showMap() {
     var mapid = document.location.pathname.sub(/\/map(edit)?\//, '');
     if (mapid) {
         viewMap(mapid);
+    } else if (document.location.hash != '') {
+        var str = document.location.hash.gsub('#', '');
+        var rows = str.split('.').map(function (row) {
+            return row.split('').join(',');
+        });
+        state = {
+            mapdata: rows.join(";\n")
+        };
+        if ($("map-data")) {
+            $("map-data").value = state.mapdata;
+        }
+        previewMap();
+        // document.location.hash = state.mapdata.gsub(',', '').
+        //     gsub(/[ \t\n\r]/, '').
+        //     gsub(';', '.');
     }
 }
 
