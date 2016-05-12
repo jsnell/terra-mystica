@@ -418,7 +418,11 @@ sub command_leech {
     my $faction_name = $faction->{name};
     my $ledger = $game{ledger};
 
-    my $actual_pw = gain_power $faction, $pw;
+    my $actual_pw = $pw;
+    if ($actual_pw > $faction->{VP}) {
+        $actual_pw = $faction->{VP} + 1;
+    }
+    $actual_pw = gain_power $faction, $actual_pw;
     my $vp = $actual_pw - 1;
 
     my $found_leech_record = 0;
