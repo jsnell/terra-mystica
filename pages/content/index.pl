@@ -8,9 +8,9 @@
 
 __DATA__
 
-<div class="motd" style="display: none">
-    Season 12 of the Terra Mystica tournament will start on April 1st.
-    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/1544777">BGG thread</a>.
+<div class="motd" style="display: block">
+    Season 13 of the Terra Mystica tournament will start on June 1st.
+    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/1578126/signup-season-13-now-open">BGG thread</a>.
 </div>
 
 <h4>Your Active / Recently Finished Games</h4>
