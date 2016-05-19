@@ -283,7 +283,7 @@ sub get_game_list_by_pattern {
     my ($dbh, $ids) = @_;
 
     my $res = $dbh->selectall_arrayref(
-        "select id, finished, aborted, round, turn, array_agg(game_role.faction) as factions, array_agg(game_role.faction_player) as usernames, array_agg(game_role.rank) as ranks, array_agg(game_role.vp) as vps, array_agg(game_role.dropped) as dropped, (extract(epoch from now() - game.last_update)) as seconds_since_update, array_agg(game_active_time.active_seconds_12h) as time_taken_seconds from game join game_role on game.id=game_role.game left join game_active_time on game_active_time.game=game.id and game_active_time.player=game_role.faction_player where id like ? group by id, finished, aborted, last_update, round order by id limit 1000",
+        "select id, finished, aborted, round, turn, array_agg(game_role.faction) as factions, array_agg(game_role.faction_player) as usernames, array_agg(game_role.rank) as ranks, array_agg(game_role.vp) as vps, array_agg(game_role.dropped) as dropped, (extract(epoch from now() - game.last_update)) as seconds_since_update, array_agg(game_active_time.active_seconds_12h) as time_taken_seconds from game join game_role on game.id=game_role.game left join game_active_time on game_active_time.game=game.id and game_active_time.player=game_role.faction_player where id like ? group by id, finished, aborted, last_update, round order by id limit 2000",
         { Slice => {} },
         $ids);
 
