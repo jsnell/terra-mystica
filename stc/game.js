@@ -3390,7 +3390,7 @@ function addConvertToMovePicker(picker, faction) {
         }
     });
 
-    type.insert({"top": new Element("option", {"value": "-"}).updateText("-")});
+    type.insert({"top": new Element("option", {"selected": true, "value": "-"}).updateText("-")});
 
     var amount = makeSelectWithOptions(["-"]);
 
