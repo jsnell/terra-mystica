@@ -80,13 +80,10 @@ A note on <b>home terrain</b>: The concept of home terrain only applies to the o
 <li> Have no spade conversion ability, can never gain or use spades, nor transform terrain in any other way.
 <li> Can only start from areas next to a river space, can only build dwellings into areas reachable through river movement.
 <li> When gaining priests through any means, can either unlock new terrain types or get a priest into the treasury.
+<li> <b>official rule change</b>: Have to pay 1 coin when they unlock a new terrain on their wheel (starting terrain is free), 2 coins, if it is another player's home terrain.
 <li> SH costs 6c+4w, produces 2pw and allows the Riverwalkers to immediately place 2 bridges.
 <li> SA costs 6c+4w.
-<li id='rwv4'>
-    <b>Riverwalkers v4</b>: Riverwalkers have to pay 2 coins when they
-unlock a new terrain on their wheel (starting terrain is free), 3
-coins, if it is another player's home terrain.
- </ul>
+</ul>
 
 <h4 id=shapeshifters>Shapeshifters</h4>
 
@@ -94,25 +91,10 @@ coins, if it is another player's home terrain.
 <li> Start with 4/4/0 power, 1/1/0/0 on cults
 <li> Can not upgrade digging beyond the initial 3w to one spade level.
 <li> If anyone leeches power from a Shapeshifter build / upgrade, the Shapeshifters gain a power token straight to bowl 3.
+<li> <b>official rule change</b>: The Shapeshifters have to pay one VP for every power token they receive using their faction special ability.
 <li> If at least one player was eligible to leech from the Shapeshifters and all players decline, the Shapeshifters instead gain 1pw.
-<li> SH costs 6c+3w, produces 4pw and allows the Shapeshifters to switch their home terrain (can't switch to the home terrain of another faction). Switch home terrain is a full action, and costs either 3pw or 3 power tokens. Each terrain swtich generates 2vp.
+<li> SH costs 6c+3w, produces 4pw and allows the Shapeshifters to switch their home terrain (can't switch to the home terrain of another faction). Switch home terrain is a full action, and costs either <strike>3pw or 3 power tokens</strike> 5pw or 5 power tokens. <strike>Each terrain switch generates 2vp.</strike>.
 <li> SA costs 6c+4w.
-<li id='ssv2'>
-    <b>Shapeshifters v2</b>: The Shapeshifters SH ability can only be
-    used as many times as there are players in the game. They also
-    have to pay one VP for every power token they receive using their
-    faction special ability.
-<li id='ssv3'>
-    <b>Shapeshifters v3</b>: The Shapeshifters SH ability can only be
-    used as many times as there are opponents in the game. They also
-    have to pay one VP for every power token they receive using their
-    faction special ability.
-<li id='ssv4'>
-    <b>Shapeshifters v4</b>: The cost the Shapeshifter SH power has been
-    increased to 4 power / 4 power tokens, and using the power no
-    longer generates any victory points. They also
-    have to pay one VP for every power token they receive using their
-    faction special ability.
 </ul>
 <div style="height: 1000px">
 </div>
