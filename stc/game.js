@@ -2261,6 +2261,12 @@ function addFactionInput(parent, record, index) {
 
             cell.insert(new Element("br"));
         });
+        var resign = new Element("button").updateText("Resign");
+        resign.onclick = function() {
+            appendCommand("resign\n");
+        };
+        cell1.insert(new Element("hr"));
+        cell1.insert(resign);
         parent.insert(div);
     }
     if (record.type == "pick-color") {
