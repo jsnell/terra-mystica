@@ -33,5 +33,15 @@ fetchChangelog(function(news) {
     showChangelog(news, $("news"), "News", { "change": true, "blog": true },
                   10 * 86400)
 });
-
 </script>
+
+<div class="motd" style="display: block">
+A new community created map will be made available for playtesting soon.
+The general concept is to gather data for a specific map version for a
+couple of months, and revise it based on feedback and game results.
+
+<p>
+See the <a href="https://boardgamegeek.com/thread/1603489/">BGG thread</a>
+for the latest map revision, and take part in the discussion before the
+version to be used for the first playtest iteration is finalized.
+</div>
