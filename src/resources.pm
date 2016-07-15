@@ -208,6 +208,11 @@ sub maybe_gain_power_from_cult {
             return;
         }
 
+        if ($game{acting}->should_wait_for_cultists($cult) and
+            $faction->{name} ne 'cultists') {
+            die "Must wait for cultist decision before advancing to level 10 in $cult. (Use the \"wait\" command).\n";
+        }
+        
         adjust_resource $faction, 'KEY', -1;
         adjust_resource $faction, 'PW', 3;
         # Block others from this space

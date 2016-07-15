@@ -123,6 +123,40 @@ method clear_empty_actions() {
     $self->action_required([grep { $_ ne '' } $self->action_required_elements()]);
 }
 
+method should_wait_for_cultists($cult) {
+    my $cult_count = 0;
+    my %leech_ids = ();
+
+    if ($self->game()->{options}{'loose-cultist-ordering'}) {
+        return 0;
+    }
+
+    if (!exists $self->factions()->{cultists}) {
+        return 0;
+    }
+    my $cultists = $self->factions()->{cultists};
+    return 0 if !$cultists->{KEY};
+        
+    for (@{$self->action_required()}) {
+        my $faction = ($_->{faction} // '');
+        my $from_faction = ($_->{from_faction} // '');
+        my $type = $_->{type};
+        if (($faction eq 'cultists' and $type eq 'cult')) {
+            $cult_count++;
+        } elsif ($from_faction eq 'cultists' and $type eq 'leech') {
+            if (!$cultists->{leech_cult_gained}{$_->{leech_id}}) {
+                $leech_ids{$_->{leech_id}} = 1;
+            }
+        }
+    }
+
+    my $max_advance = $cult_count + keys %leech_ids;
+    if ($cultists->{$cult} + $max_advance >= 10) {
+        return 1;
+    }
+    return 0
+}
+
 ## Dealing with factions and the setup phase
 
 method setup_action($faction, $kind) {
