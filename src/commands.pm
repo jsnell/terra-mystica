@@ -1373,6 +1373,7 @@ sub command {
             fire-and-ice-factions/volcano
             email-notify
             loose-adjust-resource
+            loose-cultist-ordering
             loose-dig
             loose-engineer-bridge
             loose-lose-cult
