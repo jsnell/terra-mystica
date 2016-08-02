@@ -3698,9 +3698,9 @@ function updateInfoTab() {
         addRow("Move timer", seconds_to_pretty_time((hours) * 3600));
     } else {
         var hours = state.current_chess_clock_hours;
-        addRow("Chess clock", seconds_to_pretty_time((hours) * 3600)
+        addRow("Chess clock", seconds_to_pretty_time((hours) * 3600, 'hour')
                + " (" + seconds_to_pretty_time((state.metadata.chess_clock_hours_initial) * 3600) +
-               " + " + seconds_to_pretty_time((state.metadata.chess_clock_hours_per_round) * 3600) + " per round), grace period " +
+               " + " + seconds_to_pretty_time((state.metadata.chess_clock_hours_per_round) * 3600, 'hour') + " per round), grace period " +
               seconds_to_pretty_time((state.metadata.chess_clock_grace_period) * 3600))
     }
 
