@@ -150,20 +150,28 @@ table {
 canvas#map {
     border-style: none;
     border-width: 1px;
+    height: 500px;
+    width: 800px;
 }
 canvas#cults {
     border-style: none;
     border-width: 1px;
+    height: 500px;
+    width: 250px;
 }
 
 canvas.action {
     float: left;
+    height: 85px;
+    width: 50px;
 }
 
 canvas.colorcycle {
     float: left;
     margin: 0px;
     padding: 6px;
+    width: 90px;
+    height: 80px;
 }
 
 div#error {

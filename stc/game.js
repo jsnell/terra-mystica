@@ -367,6 +367,7 @@ function drawMap() {
     if (canvas.getContext) {
         canvas.width = canvas.width;
         var ctx = canvas.getContext("2d");
+        ctx.scale(2, 2);
 
         ctx.save();
         state.bridges.each(function(bridge, index) {
@@ -425,6 +426,9 @@ function drawCults() {
 
         var width = cult_width;
         var height = 500;
+
+        ctx.save();
+        ctx.scale(2, 2);        
 
         for (var j = 0; j < 4; ++j) {
             var cult = cults[j];
@@ -499,7 +503,6 @@ function drawCults() {
             ctx.restore();
         };
 
-        ctx.save();
         ctx.beginPath();
         ctx.strokeStyle = "#000";
         ctx.lineWidth = 1;
@@ -543,6 +546,7 @@ function drawActiveCultBorder(cult) {
         ctx.beginPath();
 
         ctx.save();
+        ctx.scale(2, 2);
         ctx.strokeStyle = "#000";
         ctx.lineWidth = 4;
         path();
@@ -550,6 +554,7 @@ function drawActiveCultBorder(cult) {
         ctx.restore();
 
         ctx.save();
+        ctx.scale(2, 2);
         ctx.strokeStyle = colors.activeUI;
         ctx.lineWidth = 3;
         path();
@@ -621,6 +626,7 @@ function renderAction(canvas, name, key, border_color) {
     var ctx = canvas.getContext("2d");
 
     ctx.save();
+    ctx.scale(2, 2);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.translate(2, 2);
 
@@ -776,7 +782,7 @@ function cultClass(name) {
 
 function insertAction(parent, name, key) {
     var container = new Element('canvas', {
-        'id': 'action/' + key, 'class': 'action', 'width': 50, 'height': 85});
+        'id': 'action/' + key, 'class': 'action', 'width': 100, 'height': 170});
     parent.insert(container);
     var canvas = parent.childElements().last();
     renderAction(canvas, name, key, '#000');
@@ -967,7 +973,7 @@ function renderColorCycle(faction, parent) {
     var secondaryColor = faction.secondary_color;
 
     parent.insert(new Element('canvas', {
-        'class': 'colorcycle', 'width': 90, 'height': 80}));
+        'class': 'colorcycle', 'width': 180, 'height': 160}));
     var canvas = parent.childElements().last();
     var startColor = secondaryColor || primaryColor;
 
@@ -978,6 +984,7 @@ function renderColorCycle(faction, parent) {
     var ctx = canvas.getContext("2d");
 
     ctx.save()
+    ctx.scale(2, 2);
     ctx.translate(40, 41);
 
     var base = cycle.indexOf(startColor);
@@ -3850,13 +3857,13 @@ function init(root) {
       <tr> \
         <td> \
           <div id="map-container"> \
-            <canvas id="map" width="800" height="500"> \
+            <canvas id="map" width="1600" height="1000"> \
               Browser not supported. \
             </canvas> \
           </div> \
         <td> \
           <div id="cult-container"> \
-            <canvas id="cults" width="250" height="500"> \
+            <canvas id="cults" width="500" height="1000"> \
               Browser not supported. \
             </canvas> \
           </div> \
