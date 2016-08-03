@@ -1,5 +1,10 @@
 {
     "news": [
+        { "date": "2016-08-03",
+          "title": "New map, Loon Lakes v1.3",
+          "description": "A <a href='http://terra-devel.snellman.net/map/b8a54c8e8ea3f50867297da35be5c01b9a6791d2'>new map (Loon Lakes v1.3)</a> is available for initial playtesting. Discussion on anything related to the map will happen on the <a href='https://boardgamegeek.com/thread/1603489/loon-lakes-map-name-subject-change'>map's BGG thread</a>. Please report back on your experiences after playing a few games.",
+          "type": "change"
+        },
         { "date": "2015-12-30",
           "title": "Chess clock",
           "description": "An alternate method for limiting the time taken for games is now available. The 'chess clock' method limits the total amount of time taken by a player for all their moves (with a certain initial amount of time, and some extra added each round).",

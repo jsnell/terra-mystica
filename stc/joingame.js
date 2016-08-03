@@ -88,6 +88,7 @@ function showOpenGames(games) {
                 var labels = {
                     "95a66999127893f5925a5f591d54f8bcb9a670e6" : "Fire & Ice, Side 1",
                     "be8f6ebf549404d015547152d5f2a1906ae8dd90" : "Fire & Ice, Side 2",
+                    "b8a54c8e8ea3f50867297da35be5c01b9a6791d2" : "Loon Lakes v1.3",
                 };
                 var label = labels[game.map_variant] || "Alternate";
                 var div = new Element("div");
