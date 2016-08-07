@@ -25,7 +25,7 @@ sub faction_vp_error_by_map {
         my $res = shift;
         return $res->{base_map} &&
             $res->{base_map} eq $map;
-    };
+    },  {include_unranked => 1 };
 
     my %diffs = ();
     my %counts = ();

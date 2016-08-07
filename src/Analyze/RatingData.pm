@@ -103,12 +103,12 @@ sub handle_game {
 }
 
 sub read_rating_data {
-    my ($dbh, $filter) = @_;
+    my ($dbh, $filter, $params) = @_;
     my @output = ();
     my %players = ();
     my %factions = ();
 
-    my %results = get_finished_game_results $dbh, '';
+    my %results = get_finished_game_results $dbh, '', %{$params};
     my %games = ();
     my %faction_count = ();
 

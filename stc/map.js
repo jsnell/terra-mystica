@@ -187,7 +187,7 @@ function drawFactionInfo() {
     header.insert(new Element("td", { colspan: 3 }).updateText("VP delta"));
     table.insert(header);
     $H(state.vpstats).sortBy(function (data) {
-        return data[1].mean;
+        return -data[1].mean;
     }).each(function (elem) {
         var faction = elem.key;
         var stats = elem.value;
