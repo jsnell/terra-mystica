@@ -175,7 +175,7 @@ function drawGamesPlayed() {
 }
 
 function drawFactionInfo() {
-    var table = $("faction-info");
+    var table = $("faction-info-finished");
 
     if (!table) {
         return;
@@ -198,6 +198,48 @@ function drawFactionInfo() {
         tr.insert(new Element("td", { style: "text-align: right" } ).updateText(Math.round(stats.mean)));
         tr.insert(new Element("td").updateText("\u00B1"));
         tr.insert(new Element("td").updateText(Math.round(stats.sterr)));
+
+        table.insert(tr);
+    });
+
+    var games_played = {};
+    console.log(games_played);
+
+    state.games.each(function (game) {
+        var count = game.factions.length;
+        game.factions.each(function (faction_info) {
+            if (faction_info == null) {
+                return;
+            }
+            var faction_name = faction_info.split(/ /)[0];
+            if (!games_played[faction_name]) {
+                games_played[faction_name] = { 'all': 0, '3': 0, '4': 0, '5': 0 };
+            }
+            games_played[faction_name]['all']++;
+            games_played[faction_name][count]++;
+        });
+    });    
+    table = $("faction-info-started");
+    header = new Element("tr");
+    header.insert(new Element("td").updateText("Faction"));
+    header.insert(new Element("td").updateText("Total"));
+    header.insert(new Element("td").updateText("3p"));
+    header.insert(new Element("td").updateText("4p"));
+    header.insert(new Element("td").updateText("5p"));
+    table.insert(header);
+
+    $H(games_played).sortBy(function (elem) {
+        return -elem.value.all;
+    }).each(function (elem) {
+        var faction = elem.key;
+        var counts = elem.value;
+
+        var tr = new Element("tr");
+        tr.insert(factionTableCell(faction));
+        tr.insert(new Element("td").updateText(counts.all));
+        tr.insert(new Element("td").updateText(counts[3]));
+        tr.insert(new Element("td").updateText(counts[4]));
+        tr.insert(new Element("td").updateText(counts[5]));
 
         table.insert(tr);
     });

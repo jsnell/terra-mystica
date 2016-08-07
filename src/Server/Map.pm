@@ -138,7 +138,7 @@ func view($dbh, $id, $res, $map_only) {
     $res->{'mapid'} = $id;
 
     if (!$map_only) {
-        my $game_ids = $dbh->selectall_arrayref("select id, round, finished, array (select faction || ' ' || vp from game_role where game=game.id order by vp desc) as factions from game where base_map=? and not aborted order by finished, round, id",
+        my $game_ids = $dbh->selectall_arrayref("select id, round, finished, array (select faction || ' ' || vp from game_role where game=game.id order by vp desc) as factions from game where base_map=? and player_count > 2 and not aborted order by finished, round, id",
                                                 { Slice => {} },
                                                 $id);
 

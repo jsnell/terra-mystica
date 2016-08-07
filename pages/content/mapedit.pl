@@ -31,16 +31,25 @@ __DATA__
   <button id="preview" onclick="javascript:previewMap()">Preview</button>
 </div>
 
-<h4>Games</h4>
-<table id="games-played" class="gamelist"></table>
 
-<h4>Faction Info</h4>
+<h4>Faction Info (finished) </h4>
 
 <p>
     Deviation from expected score, based on performance of other
     players, and adjusted for estimated player skill.
 </p>
 
-<table id="faction-info" class="gamelist"></table>
+<table id="faction-info-finished" class="gamelist"></table>
+
+<h4>Faction Info (started) </h4>
+
+<p>
+    Frequency of faction being picked by player count.
+</p>
+
+<table id="faction-info-started" class="gamelist"></table>
 
 <script>showMap();</script>
+
+<h4>Games</h4>
+<table id="games-played" class="gamelist"></table>
