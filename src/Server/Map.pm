@@ -137,6 +137,10 @@ func view($dbh, $id, $res, $map_only) {
     $res->{'mapdata'} = convert_to_lodev($map_str);
     $res->{'mapid'} = $id;
 
+    if ($id ne 'b8a54c8e8ea3f50867297da35be5c01b9a6791d2') {
+        $map_only = 1;
+    }
+    
     if (!$map_only) {
         my $game_ids = $dbh->selectall_arrayref("select id, round, finished, array (select faction || ' ' || vp from game_role where game=game.id order by vp desc) as factions from game where base_map=? and player_count > 2 and not aborted order by finished, round, id",
                                                 { Slice => {} },
