@@ -60,7 +60,7 @@ sub faction_vp_error_by_map {
         ($_, {
             count => $count,
             mean => $stat->mean(),
-            sterr => $stat->standard_deviation() / sqrt($count / 2.0),
+            sterr => $stat->standard_deviation() / sqrt($count),
          });
     } keys %diffs;
 
