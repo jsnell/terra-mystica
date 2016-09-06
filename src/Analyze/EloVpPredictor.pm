@@ -39,6 +39,7 @@ sub faction_vp_error_by_map {
         my $a_faction = $record->{a}{faction};
         my $b_faction = $record->{b}{faction};
 
+        next if $record->{a}{dropped} or $record->{b}{dropped};
         next if !$a_elo or !$b_elo;
 
         my $d_vp = $a_vp - $b_vp;
