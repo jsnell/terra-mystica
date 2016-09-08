@@ -35,13 +35,7 @@ fetchChangelog(function(news) {
 });
 </script>
 
-<div class="motd" style="display: none">
-A new community created map will be made available for playtesting soon.
-The general concept is to gather data for a specific map version for a
-couple of months, and revise it based on feedback and game results.
-
-<p>
-See the <a href="https://boardgamegeek.com/thread/1603489/">BGG thread</a>
-for the latest map revision, and take part in the discussion before the
-version to be used for the first playtest iteration is finalized.
+<div class="motd" style="display: block">
+The <a href="https://boardgamegeek.com/article/23645673#23645673">discussion
+is open</a> for a new revision of Loon Lakes.
 </div>
