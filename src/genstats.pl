@@ -184,6 +184,13 @@ my $dbh = get_db_connection;
 my %results = get_finished_game_results $dbh, '', (id_pattern => $ARGV[0]);
 my %games = ();
 
+my @exclude_factions = qw(riverwalkers
+                          riverwalkers_v4
+                          shapeshifters
+                          shapeshifters_v2
+                          shapeshifters_v3
+                          shapeshifters_v4);
+
 for (@{$results{results}}) {
     next if $_->{dropped};
     next if !defined $_->{vp};
@@ -205,7 +212,13 @@ for (@{$results{results}}) {
     $games{$_->{game}}{last_update} = $_->{last_update};
 }
 
-for (sort { $a->{last_update} cmp $b->{last_update} } values %games) {
+GAMES: for (sort { $a->{last_update} cmp $b->{last_update} } values %games) {
+    for my $f (@exclude_factions) {
+        if (exists $_->{factions}{$f}) {
+            next GAMES;
+        }
+    }
+
     handle_game $_;
 }
 

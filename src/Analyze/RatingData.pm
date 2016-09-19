@@ -111,6 +111,12 @@ sub read_rating_data {
     my %results = get_finished_game_results $dbh, '', %{$params};
     my %games = ();
     my %faction_count = ();
+    my @exclude_factions = qw(riverwalkers
+                              riverwalkers_v4
+                              shapeshifters
+                              shapeshifters_v2
+                              shapeshifters_v3
+                              shapeshifters_v4);
 
     for (@{$results{results}}) {
         next if $filter and !$filter->($_);
@@ -142,6 +148,11 @@ sub read_rating_data {
         #         $ok = 0 if $faction_count{$_} < 50;
         #     }
         # }
+        for my $f (@exclude_factions) {
+            if (exists $_->{factions}{$f}) {
+                $ok = 0;
+            }
+        }
 
         if ($ok) {
             handle_game $_, \@output, \%players, \%factions;
