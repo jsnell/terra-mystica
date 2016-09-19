@@ -8,9 +8,9 @@
 
 __DATA__
 
-<div class="motd" style="display: none">
-    Season 13 of the Terra Mystica tournament will start on June 1st.
-    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/1578126/signup-season-13-now-open">BGG thread</a>.
+<div class="motd" style="display: block">
+    Season 15 of the Terra Mystica tournament will start on October 1st.
+    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/1639446/signup-season-15-4p-tm-tour-has-started">BGG thread</a>.
 </div>
 
 <h4>Your Active / Recently Finished Games</h4>
@@ -35,7 +35,7 @@ fetchChangelog(function(news) {
 });
 </script>
 
-<div class="motd" style="display: block">
+<div class="motd" style="display: none">
 The <a href="https://boardgamegeek.com/article/23645673#23645673">discussion
 is open</a> for a new revision of Loon Lakes.
 </div>
