@@ -8,7 +8,7 @@
 
 __DATA__
 
-<div class="motd" style="display: block">
+<div class="motd" style="display: none">
     Season 15 of the Terra Mystica tournament will start on October 1st.
     Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/1639446/signup-season-15-4p-tm-tour-has-started">BGG thread</a>.
 </div>
@@ -36,6 +36,10 @@ fetchChangelog(function(news) {
 </script>
 
 <div class="motd" style="display: none">
-The <a href="https://boardgamegeek.com/article/23645673#23645673">discussion
-is open</a> for a new revision of Loon Lakes.
+If you've played any games on the Loon Lakes 1.3, please consider filling in
+the <a href='https://goo.gl/forms/W4cO8qCZKUoIvfdo1'>feedback form</a>
+used to guide development. Possible changes to the next version are
+currently being <a href="https://boardgamegeek.com/article/23645673#23645673">discussed</a>.
+</ul>
+
 </div>
