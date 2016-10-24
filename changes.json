@@ -1,8 +1,13 @@
 {
     "news": [
+        { "date": "2016-10-24",
+          "title": "New map, Loon Lakes v1.5",
+          "description": "<a href='http://terra.snellman.net/map/c07f36f9e050992d2daf6d44af2bc51dca719c46'>Loon Lakes v1.5</a> has replaced the previous v1.3 for playtesting. Discussion on anything related to the map will happen on the <a href='https://boardgamegeek.com/thread/1603489/loon-lakes-map-name-subject-change'>map's BGG thread</a>. Please report back on your experiences after playing a few games. <b>Note: games on playtest maps will be unranked, and not affect the rating of any players</b>.",
+          "type": "change"
+        },
         { "date": "2016-08-03",
           "title": "New map, Loon Lakes v1.3",
-          "description": "A <a href='http://terra-devel.snellman.net/map/b8a54c8e8ea3f50867297da35be5c01b9a6791d2'>new map (Loon Lakes v1.3)</a> is available for initial playtesting. Discussion on anything related to the map will happen on the <a href='https://boardgamegeek.com/thread/1603489/loon-lakes-map-name-subject-change'>map's BGG thread</a>. Please report back on your experiences after playing a few games. <b>Note: games on playtest maps will be unranked, and not affect the rating of any players</b>.",
+          "description": "A <a href='http://terra.snellman.net/map/b8a54c8e8ea3f50867297da35be5c01b9a6791d2'>new map (Loon Lakes v1.3)</a> is available for initial playtesting. Discussion on anything related to the map will happen on the <a href='https://boardgamegeek.com/thread/1603489/loon-lakes-map-name-subject-change'>map's BGG thread</a>. Please report back on your experiences after playing a few games. <b>Note: games on playtest maps will be unranked, and not affect the rating of any players</b>.",
           "type": "change"
         },
         { "date": "2015-12-30",
