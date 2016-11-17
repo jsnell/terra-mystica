@@ -3,6 +3,14 @@
 #+EMAIL: jsnell@iki.fi
 #+STYLE: <link rel="stylesheet" type="text/css" href="/stc/org.css" />
 
+* Questions
+
+Do you have questions that this document doesn't answer? A good place
+to ask is the [[http://boardgamegeek.com/article/11807989][PBF moderator help / questions]]
+thread on BGG. There are a lot people who know how to use the
+moderator, so there's a good chance you'll get an answer faster than
+by contacting me directly.
+
 * Bug Reports
 
 Is something not working correctly, or in the way you expect? Please
@@ -19,14 +27,6 @@ of the following cases:
 - "My town isn't being recognized. It has sufficient power, 3 buildings, and I have built a Sanctuary". Many people overlook the rule that the Sanctuary only applies to the town it is in, not globally.
 - "I am playing the Cultists, and did not get any reward at all for building / upgrading next to other players". Many people overlook the rule that the Cultist special power only applies if there's at least one player who could receive power. Opponents who are already at full power can't leech power, and thus don't count.
 - "I am playing the Alchemists and have an SH. I did not get my 2 power per spade from the SH special power". You almost certainly did get the power, and are just misinterpreting the ledger. Ignore the power delta in the ledger, and look at the exact token distribution before and after the move, and you'll see that the the results are correct. Note that for spades received from the cult tracks, the power income from the spade will be grouped together with the other income from that turn.
-
-* Questions
-
-Do you have questions that this document doesn't answer? A good place
-to ask is the [[http://boardgamegeek.com/article/11807989][PBF moderator help / questions]]
-thread on BGG. There are a lot people who know how to use the
-moderator, so there's a good chance you'll get an answer faster than
-by contacting me directly.
 
 * Playing the Game
 

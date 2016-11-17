@@ -9,8 +9,8 @@
 __DATA__
 
 <div class="motd" style="display: none">
-    Season 15 of the Terra Mystica tournament will start on October 1st.
-    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/1639446/signup-season-15-4p-tm-tour-has-started">BGG thread</a>.
+    Season 16 of the Terra Mystica tournament will start on December 1st.
+    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/1674178/tm-tournament-season-16">BGG thread</a>.
 </div>
 
 <h4>Your Active / Recently Finished Games</h4>
