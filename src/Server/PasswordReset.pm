@@ -77,7 +77,7 @@ method request_reset($q, $dbh) {
         };
         my $token = insert_to_validate $dbh, $data;
 
-        my $url = sprintf "http://terra.snellman.net/app/reset/validate/%s", $token;
+        my $url = sprintf "https://terra.snellman.net/app/reset/validate/%s", $token;
 
         my $smtp = Net::SMTP->new('localhost', ( Debug => 0 ));
 

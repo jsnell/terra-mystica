@@ -371,7 +371,7 @@ Example:
 ** Making a New Game
 
 To create a new game, you'll need to be logged in. After that, you'll
-be able to create a game from the [[http://terra.snellman.net/newgame/][New Game]] page. The system supports
+be able to create a game from the [[https://terra.snellman.net/newgame/][New Game]] page. The system supports
 two types of games, public and private. Additionally you can select
 which [[options]] to include in the game.
 
@@ -544,15 +544,15 @@ automatic IP ban. Instead use one of the following sources for game or
 result information:
 
 - Just the results for a specific month or day:
-  http://terra.snellman.net/app/results/v2/yyyy/mm or
-  http://terra.snellman.net/app/results/v2/yyyy/mm/dd
+  https://terra.snellman.net/app/results/v2/yyyy/mm or
+  https://terra.snellman.net/app/results/v2/yyyy/mm/dd
   (replace yyyy/mm/dd with the actual year/month/day you want results
   for).
 - More detailed per-game data, grouped by month:
-  http://terra.snellman.net/data/events/ with a format that's
-  described here http://terra.snellman.net/data/events/README
+  https://terra.snellman.net/data/events/ with a format that's
+  described here https://terra.snellman.net/data/events/README
 - Latest player / faction ratings:
-  http://terra.snellman.net/data/ratings.json
+  https://terra.snellman.net/data/ratings.json
 
 ** Ads
 

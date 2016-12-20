@@ -11,7 +11,7 @@ use DB::EditLink;
 use Game::Constants;
 use Net::SMTP;
 
-my $domain = "http://terra.snellman.net";
+my $domain = "https://terra.snellman.net";
 
 sub notify_by_email {
     my ($game, $email, $subject, $body) = @_;

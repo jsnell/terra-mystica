@@ -3651,7 +3651,7 @@ function updateInfoTab() {
     };
 
     {
-        var url = "http://terra.snellman.net/game/" + TM.params.game;
+        var url = "https://terra.snellman.net/game/" + TM.params.game;
         addRow("Public Link",
                new Element("a", { href: url }).updateText(url));
     }
