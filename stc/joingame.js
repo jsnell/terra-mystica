@@ -85,12 +85,7 @@ function showOpenGames(games) {
             }
 
             if (game.map_variant) {
-                var labels = {
-                    "95a66999127893f5925a5f591d54f8bcb9a670e6" : "Fire & Ice, Side 1",
-                    "be8f6ebf549404d015547152d5f2a1906ae8dd90" : "Fire & Ice, Side 2",
-                    "c07f36f9e050992d2daf6d44af2bc51dca719c46" : "Loon Lakes v1.5",
-                };
-                var label = labels[game.map_variant] || "Alternate";
+                var label = mapNamesById[game.map_variant] || "Alternate";
                 var div = new Element("div");
                 div.insert(new Element("span").update("map "));
                 div.insert(new Element("a", {href:"/map/" + game.map_variant}).updateText(label));

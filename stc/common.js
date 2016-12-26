@@ -406,3 +406,33 @@ var factionColor = {
     dragonlords: 'volcano',
 };
 
+var mapNamesById =  {
+    '126fe960806d587c78546b30f1a90853b1ada468': 'Original',
+    '95a66999127893f5925a5f591d54f8bcb9a670e6': "Fire & Ice Side 1",
+    'be8f6ebf549404d015547152d5f2a1906ae8dd90': "Fire & Ice Side 2",
+    'b8a54c8e8ea3f50867297da35be5c01b9a6791d2': "Loon Lakes v1.3",
+    'c07f36f9e050992d2daf6d44af2bc51dca719c46': "Loon Lakes v1.5",
+};
+
+var factionPrettyName = {
+    chaosmagicians: 'Chaos Magicians',
+    giants: 'Giants',
+    nomads: 'Nomads',
+    fakirs: 'Fakirs',
+    halflings: 'Halflings',
+    cultists: 'Cultists',
+    alchemists: 'Alchemists',
+    darklings: 'Darklings',
+    swarmlings: 'Swarmlings',
+    mermaids: 'Mermaids',
+    witches: 'Witches',
+    auren: 'Auren',
+    dwarves: 'Dwarves',
+    engineers: 'Engineers',
+    icemaidens: 'Ice Maidens',
+    yetis: 'Yetis',
+    acolytes: 'Acolytes',
+    dragonlords: 'Dragonlords',
+    riverwalkers_v5: 'Riverwalkers',
+    shapeshifters_v5: 'Shapeshifters',
+};
