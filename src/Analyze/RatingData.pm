@@ -156,12 +156,15 @@ sub read_rating_data {
 
         if ($ok) {
             handle_game $_, \@output, \%players, \%factions;
+        } else {
+            delete $games{$_->{id}};
         }
     }
 
     return {
         players => \%players,
         factions => \%factions,
+        games => \%games,
         results => \@output 
     };
 }
