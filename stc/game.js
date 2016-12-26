@@ -284,7 +284,14 @@ function drawHex(ctx, elem) {
     makeMapHexPath(ctx, hex);
 
     ctx.save();
-    ctx.fillStyle = bgcolors[hex.color];
+    var contrast;
+    if (hex.forceColor) {
+        ctx.fillStyle = hex.forceColor;
+        contrast = '#000';
+    } else {
+        ctx.fillStyle = bgcolors[hex.color];
+        contrast = contrastColor[hex.color];
+    }
     ctx.fill();
     ctx.restore();
 
@@ -305,10 +312,16 @@ function drawHex(ctx, elem) {
         drawStronghold(ctx, hex);
     } else if (hex.building == 'SA') {
         drawSanctuary(ctx, hex);
+    } else if (hex.label) {
+        ctx.save();
+        ctx.strokeStyle = contrast;
+        ctx.textAlign = 'center';
+        drawText(ctx, hex.label, loc[0], loc[1], "12px Verdana");
+        ctx.restore();
     }
 
     ctx.save();
-    ctx.strokeStyle = contrastColor[hex.color];
+    ctx.strokeStyle = contrast;
     ctx.textAlign = 'center';
     drawText(ctx, id, loc[0], loc[1] + 25,
              hex.town ? "bold 12px Verdana" : "12px Verdana");

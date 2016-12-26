@@ -169,6 +169,7 @@ sub deploy_cgi {
 sub deploy_stc {
     mkdir "$target/stc";
     for my $f (qw(alias.js
+                  buildstats.js
                   common.js
                   debug.js
                   edit.js
@@ -204,6 +205,7 @@ sub deploy_data {
     for my $f (qw(pages/content/about.pl
                   pages/content/alias.pl
                   pages/content/blog.pl
+                  pages/content/buildstats.pl
                   pages/content/changes.pl
                   pages/content/edit.pl
                   pages/content/game.pl
