@@ -67,7 +67,11 @@ method request_registration($q, $dbh) {
     }
 
     if (!@error) {
-        my $salt = en_base64 random_bytes 16;
+        my $random = Bytes::Random::Secure->new(
+            Bits        => 512,
+            NonBlocking => 1,
+        );
+        my $salt = en_base64 $random->bytes(16);
         my $hashed_password = bcrypt($password, 
                                      '$2a$08$'.$salt);
 

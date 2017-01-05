@@ -9,9 +9,14 @@ use JSON;
 sub insert_to_validate {
     my ($dbh, $payload) = @_;
 
-    my $token = random_string_from('ABCDEFGHIJKLMNOPQRSTUVXYZ'.
-                                   'abcdefghijklmnopqrstuvxyz'.
-                                   '0123456789', 16); 
+    my $random = Bytes::Random::Secure->new(
+        Bits        => 512,
+        NonBlocking => 1,
+    );
+    my $token = $random->string_from('ABCDEFGHIJKLMNOPQRSTUVXYZ'.
+                                     'abcdefghijklmnopqrstuvxyz'.
+                                     '0123456789',
+                                     16); 
 
     $dbh->do(
         "insert into to_validate (token, payload) values (?, ?)",
