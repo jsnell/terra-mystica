@@ -9,7 +9,7 @@ use Exporter::Easy (EXPORT => [ 'save',
                                 'verify_and_save',
                                 'evaluate_and_save' ]);
 
-use Digest::SHA1 qw(sha1_hex);
+use Digest::SHA qw(sha1_hex);
 
 use DB::Game;
 use DB::IndexGame;

@@ -3,7 +3,7 @@ use Exporter::Easy (EXPORT => [ 'generate_page' ]);
 
 use strict;
 
-use Digest::SHA1 qw(sha1_hex);
+use Digest::SHA qw(sha1_hex);
 use File::Slurp qw(read_file);
 use JSON;
 use Text::Template;

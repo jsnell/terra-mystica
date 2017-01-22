@@ -2,7 +2,7 @@ use strict;
 
 package Server::Map;
 
-use Digest::SHA1 qw(sha1_hex);
+use Digest::SHA qw(sha1_hex);
 use Moose;
 use Method::Signatures::Simple;
 

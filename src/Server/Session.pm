@@ -4,7 +4,7 @@ use Exporter::Easy (EXPORT => [ 'session_token',
                                 'ensure_csrf_cookie',
                                 'verify_csrf_cookie_or_die']);
 
-use Digest::SHA1 qw(sha1_hex);
+use Digest::SHA qw(sha1_hex);
 use Crypt::Eksblowfish::Bcrypt qw(en_base64);
 
 use DB::Secret;

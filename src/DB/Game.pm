@@ -23,7 +23,7 @@ use Exporter::Easy (
 use strict;
 
 use DBI;
-use Digest::SHA1 qw(sha1_hex);
+use Digest::SHA qw(sha1_hex);
 
 use DB::EditLink;
 use Util::NaturalCmp;

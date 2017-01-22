@@ -7,7 +7,7 @@ use Exporter::Easy (EXPORT => [ 'encrypt_validation_token',
 
 use Crypt::CBC;
 use Crypt::Eksblowfish::Bcrypt qw(en_base64 de_base64);
-use Digest::SHA1 qw(sha1_base64);
+use Digest::SHA qw(sha1_base64);
 
 sub decrypt_validation_token {
     my ($secret, $token) = @_;

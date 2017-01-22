@@ -9,7 +9,7 @@ use Method::Signatures::Simple;
 
 extends 'Server::Server';
 
-use Digest::SHA1 qw(sha1_hex);
+use Digest::SHA qw(sha1_hex);
 
 use DB::Chat;
 use DB::Connection;

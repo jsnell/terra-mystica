@@ -2,7 +2,7 @@ package terra_mystica;
 
 use strict;
 
-use Digest::SHA1 qw(sha1);
+use Digest::SHA qw(sha1);
 use Math::Random::MT;
 
 use Game::Constants;
