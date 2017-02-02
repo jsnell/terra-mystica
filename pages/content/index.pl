@@ -8,7 +8,7 @@
 
 __DATA__
 
-<div class="motd" style="display: block">
+<div class="motd" style="display: none">
     Season 17 of the Terra Mystica tournament will start on February 1st.
     Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/1709993/tm-tour-season-17-signup-open">BGG thread</a>.
 </div>
