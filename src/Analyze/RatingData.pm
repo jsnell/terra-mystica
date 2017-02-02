@@ -136,6 +136,7 @@ sub read_rating_data {
         $games{$_->{game}}{factions}{$_->{faction}} = $_;
         $games{$_->{game}}{id} = $_->{game};
         $games{$_->{game}}{last_update} = $_->{last_update};
+        $games{$_->{game}}{base_map} = $_->{base_map};
         $faction_count{$_->{faction}}++;
     }
 
