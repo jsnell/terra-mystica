@@ -1428,8 +1428,15 @@ sub command {
     } elsif ($command =~ /^wait$/i) {
         ($assert_faction->())->{waiting} = 1;
     } elsif ($command =~ /^done$/i) {
-        ($assert_faction->())->{allowed_sub_actions} = {};
-        ($assert_faction->())->{allowed_actions} = 0;
+        my $faction = $assert_faction->();
+        if ($game{options}{'loose-done'}) {
+            $faction->{allowed_actions} = 0;
+        } else {
+            if ($faction->{allowed_actions} != 0) {
+                die "$faction->{name} must take an action\n";
+            }
+        }
+        $faction->{allowed_sub_actions} = {};
     } elsif ($command =~ /^pick-color (\w+)$/i) {
         my $faction = $assert_faction->();
         if (!$faction->{PICK_COLOR}) {
