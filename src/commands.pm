@@ -1379,6 +1379,7 @@ sub command {
             loose-lose-cult
             loose-multi-spade
             loose-bridge-adjacency 
+            loose-done
             maintain-player-order
             manual-fav5
             shapeshifter-fix-playtest-v1
