@@ -1,5 +1,10 @@
 {
     "news": [
+        { "date": "2017-02-19",
+          "title": "New map, Loon Lakes v1.6",
+          "description": "<a href='https://terra.snellman.net/map/fdb13a13cd48b7a3c3525f27e4628ff6905aa5b1'>Loon Lakes v1.6</a> has replaced the previous v1.5 for playtesting. Depending on feedback and results, we expect either v1.5 or v1.6 to be declared as the final design.",
+          "type": "change"
+        },
         { "date": "2016-10-24",
           "title": "New map, Loon Lakes v1.5",
           "description": "<a href='https://terra.snellman.net/map/c07f36f9e050992d2daf6d44af2bc51dca719c46'>Loon Lakes v1.5</a> has replaced the previous v1.3 for playtesting. Discussion on anything related to the map will happen on the <a href='https://boardgamegeek.com/thread/1603489/loon-lakes-map-name-subject-change'>map's BGG thread</a>. Please report back on your experiences after playing a few games. <b>Note: games on playtest maps will be unranked, and not affect the rating of any players</b>.",
