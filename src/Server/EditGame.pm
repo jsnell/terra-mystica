@@ -77,6 +77,11 @@ method check_user_is_not_deadbeat($dbh, $read_id, $username) {
             die "Sorry, you're no longer allowed to admin this game\n"
         }
     }
+
+    my %blacklist = map { ($_ => 1) } qw(deedeebyrd);
+    if ($blacklist{$username}) {
+        die "Sorry, admin functionality disabled due to abuse.\n";
+    }
 }
 
 method edit_content($dbh, $q, $read_id, $write_id, $username) {
