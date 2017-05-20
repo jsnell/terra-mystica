@@ -9,8 +9,8 @@
 __DATA__
 
 <div class="motd" style="display: none">
-    Season 18 of the Terra Mystica tournament will start on April 1st.
-    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/1746914/tm-tour-season-18-signup-now-open">BGG thread</a>.
+    Season 19 of the Terra Mystica tournament will start on June 1st.
+    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/1782105/tm-tour-season-19-sign-open">BGG thread</a>.
 </div>
 
 <h4>Your Active / Recently Finished Games</h4>
