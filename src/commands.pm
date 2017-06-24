@@ -252,6 +252,7 @@ sub command_build {
     detect_towns_from $faction, $where;
 
     $game{events}->faction_event($faction, 'build:D', 1);
+    $game{events}->location_event($faction, $where);
 }
 
 sub command_upgrade {

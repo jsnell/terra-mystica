@@ -11,6 +11,9 @@ has 'faction' => (is => 'rw',
 
 has 'global' => (is => 'rw',
                   default => sub { {} });
+
+has 'location' => (is => 'rw',
+                   default => sub { {} });
                   
 method faction_event($faction, $event, $count) {
     if (!defined $count) {
@@ -18,9 +21,19 @@ method faction_event($faction, $event, $count) {
     }
 
     for my $name ('all', $faction->{name}) {
-        for my $round ('all', $self->game()->{round}) {
-            $self->faction()->{$name}{$event}{round}{$round} += $count;
-        }
+        my $round = $self->game()->{round};
+        my $turn = $self->game()->{turn};
+        $self->faction()->{$name}{$event}{round}{$round} += $count;
+        $self->faction()->{$name}{$event}{round}{all} += $count;
+        $self->faction()->{$name}{$event}{turn}{$round}{$turn} += $count;
+    }
+}
+
+method location_event($faction, $location) {
+    for my $name ($faction->{name}) {
+        my $round = $self->game()->{round};
+        push @{$self->location()->{$name}{round}{$round}}, $location;
+        push @{$self->location()->{$name}{round}{all}}, $location;
     }
 }
 
@@ -33,6 +46,7 @@ method global_event($event, $count) {
 method data() {
     return { 
         faction => $self->faction(),
+        location => $self->location(),
         global => $self->global()
     }
 }
