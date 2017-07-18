@@ -1052,6 +1052,7 @@ sub add_final_scoring {
         die "Unknown final scoring type: $scoring\n";
     }
     $game{ledger}->add_comment("Added final scoring tile: $scoring");
+    $game{events}->global_event("scoring-$scoring", 1);
 }
 
 sub add_faction_variant {
