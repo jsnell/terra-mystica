@@ -103,7 +103,7 @@ sub create_game {
     }
 
     my $unranked = 1;
-    if ($map_variant =~ /^(|95a66999127893f5925a5f591d54f8bcb9a670e6|be8f6ebf549404d015547152d5f2a1906ae8dd90)$/) {
+    if ($map_variant =~ /^(|95a66999127893f5925a5f591d54f8bcb9a670e6|be8f6ebf549404d015547152d5f2a1906ae8dd90|fdb13a13cd48b7a3c3525f27e4628ff6905aa5b1)$/) {
         $unranked = 0
     }
 

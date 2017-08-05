@@ -1,5 +1,10 @@
 {
     "news": [
+        { "date": "2017-08-05",
+          "title": "Loon Lakes playtest over",
+          "description": "The playtesting for the Loon Lakes map is over, with <a href='https://terra.snellman.net/map/fdb13a13cd48b7a3c3525f27e4628ff6905aa5b1'>v1.6</a> being the final version of the map. New games on that map version will no longer count as unranked; they will affect player ratings and.",
+          "type": "change"
+        },
         { "date": "2017-02-19",
           "title": "New map, Loon Lakes v1.6",
           "description": "<a href='https://terra.snellman.net/map/fdb13a13cd48b7a3c3525f27e4628ff6905aa5b1'>Loon Lakes v1.6</a> has replaced the previous v1.5 for playtesting. Depending on feedback and results, we expect either v1.5 or v1.6 to be declared as the final design.",
