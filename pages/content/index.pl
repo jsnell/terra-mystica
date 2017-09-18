@@ -8,9 +8,9 @@
 
 __DATA__
 
-<div class="motd" style="display: none">
-    Season 20 of the Terra Mystica tournament will start on August 1st.
-    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/1813715/tm-tour-season-20-signup-open-games-aug-1">BGG thread</a>.
+<div class="motd" style="display: block">
+    Season 21 of the Terra Mystica tournament will start on October 1st.
+    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/1849182/">BGG thread</a>.
 </div>
 
 <h4>Your Active / Recently Finished Games</h4>
