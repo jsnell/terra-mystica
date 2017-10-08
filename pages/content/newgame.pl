@@ -64,13 +64,15 @@ The options are described in more detail in the
 <option value="95a66999127893f5925a5f591d54f8bcb9a670e6">Fire & Ice, Side 1</option>
 <option value="be8f6ebf549404d015547152d5f2a1906ae8dd90">Fire & Ice, Side 2</option>
 <option value="fdb13a13cd48b7a3c3525f27e4628ff6905aa5b1">Loon Lakes v1.6</option>
+<option value="224736500d20520f195970eb0fd4c41df040c08c">Fjords v1.0</option>
         </select>
       <td>
         <p>
           <a href="/map/126fe960806d587c78546b30f1a90853b1ada468" target="_blank">Original</a><br>
           <a href="/map/95a66999127893f5925a5f591d54f8bcb9a670e6" target="_blank">Side 1</a><br>
           <a href="/map/be8f6ebf549404d015547152d5f2a1906ae8dd90" target="_blank">Side 2</a><br>
-          <a href="/map/fdb13a13cd48b7a3c3525f27e4628ff6905aa5b1" target="_blank">Loon Lakes v1.6</a>
+          <a href="/map/fdb13a13cd48b7a3c3525f27e4628ff6905aa5b1" target="_blank">Loon Lakes v1.6</a><br>
+          <a href="/map/224736500d20520f195970eb0fd4c41df040c08c" target="_blank">Fjords v1.0</a>
         </p>
     </tr>
 

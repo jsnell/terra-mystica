@@ -413,6 +413,7 @@ var mapNamesById =  {
     'b8a54c8e8ea3f50867297da35be5c01b9a6791d2': "Loon Lakes v1.3",
     'c07f36f9e050992d2daf6d44af2bc51dca719c46': "Loon Lakes v1.5",
     'fdb13a13cd48b7a3c3525f27e4628ff6905aa5b1': "Loon Lakes v1.6",
+    '224736500d20520f195970eb0fd4c41df040c08c': "Fjords v1.0",
 };
 
 var factionPrettyName = {

@@ -137,9 +137,7 @@ func view($dbh, $id, $res, $map_only) {
     $res->{'mapdata'} = convert_to_lodev($map_str);
     $res->{'mapid'} = $id;
 
-    if ($id ne 'b8a54c8e8ea3f50867297da35be5c01b9a6791d2' and
-        $id ne 'c07f36f9e050992d2daf6d44af2bc51dca719c46' and
-        $id ne 'fdb13a13cd48b7a3c3525f27e4628ff6905aa5b1') {
+    if ($id ne '224736500d20520f195970eb0fd4c41df040c08c') {
         $map_only = 1;
     }
     

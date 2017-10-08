@@ -1,5 +1,10 @@
 {
     "news": [
+        { "date": "2017-10-08",
+          "title": "New map, Fjords v1.0",
+          "description": "<a href='https://terra.snellman.net/map/224736500d20520f195970eb0fd4c41df040c08c'>Fjords v1.0</a> is available for playtesting. Discussion on anything related to the map will happen on the <a href='https://boardgamegeek.com/thread/1750509/fjords'>map's BGG thread</a>. Please report back on your experiences after playing a few games. <b>Note: games on playtest maps will be unranked, and not affect the rating of any players</b>.",
+          "type": "change"
+        },
         { "date": "2017-08-05",
           "title": "Loon Lakes playtest over",
           "description": "The playtesting for the Loon Lakes map is over, with <a href='https://terra.snellman.net/map/fdb13a13cd48b7a3c3525f27e4628ff6905aa5b1'>v1.6</a> being the final version of the map. New games on that map version will no longer count as unranked; they will affect player ratings and show up in the statistics.",
