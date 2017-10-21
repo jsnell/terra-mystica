@@ -198,6 +198,20 @@ div#action_required {
     max-width: 1045px;
 }
 
+div#next_game {
+    background-color: #eec;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
+    border-style: solid;
+    border-width: 1px;
+    max-width: 1045px;
+}
+
+div#next_game:empty {
+    display: none;
+}
+
 table.income-table {
     border-spacing: 0px;
     margin-top: 10px;
@@ -646,6 +660,14 @@ pre.example {
     }
 
     div#action_required button {
+        font-size: 100%;
+    }
+
+    div#next_game {
+        font-size: 300%;
+    }
+
+    div#next_game button {
         font-size: 100%;
     }
 

@@ -1727,6 +1727,20 @@ function addCultClickHandler(title, cult, funs) {
     drawActiveCultBorder(cult);
 }
 
+function currentPlayerShouldMove() {
+    var ret = false;
+    if (currentFaction) {
+        state.action_required.each(function(record, index) {
+            if (record.faction == currentFaction ||
+                record.player_index == currentFaction) {
+                ret = true;
+            }
+        });
+    }
+
+    return ret;
+}
+
 function drawActionRequired() {
     var parent = $("action_required");
 
@@ -3647,6 +3661,19 @@ function addConnectToMovePicker(picker, faction) {
     return row;
 }
 
+function clearNextGameNotification() {
+    $("next_game").hide();    
+}
+
+function showNextGameNotification() {
+    if (!currentFaction ||
+        currentPlayerShouldMove()) {
+        $("next_game").hide();
+    } else {
+        $("next_game").show();
+    }
+}
+
 function updateInfoTab() {
     var tab = $('info_entry');
     var metadata = state.metadata;
@@ -3818,6 +3845,8 @@ function draw(n) {
     if (state.history_view > 0) {
         $("root").style.backgroundColor = "#ffeedd";
     }
+
+    showNextGameNotification();
 }
 
 function failed() {
@@ -3892,6 +3921,7 @@ function init(root) {
     <pre id="preview_commands"></pre> \
     <div id="error"></div> \
     <div id="action_required"></div> \
+    <div id="next_game"></div> \
     <div id="data_entry"></div> \
     <div id="factions"></div> \
     <table id="ledger"> \
