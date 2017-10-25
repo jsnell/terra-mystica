@@ -170,8 +170,8 @@ function showActiveGames(games, div, mode, status) {
         var button = new Element("button").updateText("Go to game");
         button.onclick = link.onclick;
         $("next_game").insert(button);
-        setTitle();
     }
+    setTitle();
 }
 
 function findNextGame(games) {
