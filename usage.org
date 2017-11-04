@@ -11,6 +11,10 @@ thread on BGG. There are a lot people who know how to use the
 moderator, so there's a good chance you'll get an answer faster than
 by contacting me directly.
 
+For questions about the tournament, check the [[http://tmtour.org/#/faq][FAQ]] on the tournament
+website first and with the [[http://tmtour.org/#/contact][tournament admin]] only if your question
+isn't answered there.
+
 * Bug Reports
 
 Is something not working correctly, or in the way you expect? Please
