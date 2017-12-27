@@ -2663,6 +2663,12 @@ function addUndoToMovePicker(picker, faction) {
         if (state.action_required[0] &&
             state.action_required[0].faction != faction.name &&
             !faction.waiting &&
+            // Hack. For some reason a lot of people react to digging
+            // with too many cubes by pressing "wait" rather than
+            // fixing the error. This puts the game into a stuck
+            // state: after the "wait" is acted on, the player can't
+            // undo past the wait. Admin intervention is required.
+            !faction.SPADE &&
             state.action_required.some(function (record) {
                 return record.faction == faction.name;
             })) {
