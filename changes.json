@@ -1,5 +1,10 @@
 {
     "news": [
+        { "date": "2018-01-11",
+          "title": "New map, Fjords v2.0",
+          "description": "<a href='https://terra.snellman.net/map/54919e13090127079e7cc3540ad0065311f2ecd7'>Fjords v2.0</a> is available for playtesting. Discussion on anything related to the map will happen on the <a href='https://boardgamegeek.com/thread/1750509/fjords'>map's BGG thread</a>. Please report back on your experiences after playing a few games. <b>Note: games on playtest maps will be unranked, and not affect the rating of any players</b>.",
+          "type": "change"
+        },
         { "date": "2017-10-08",
           "title": "New map, Fjords v1.0",
           "description": "<a href='https://terra.snellman.net/map/224736500d20520f195970eb0fd4c41df040c08c'>Fjords v1.0</a> is available for playtesting. Discussion on anything related to the map will happen on the <a href='https://boardgamegeek.com/thread/1750509/fjords'>map's BGG thread</a>. Please report back on your experiences after playing a few games. <b>Note: games on playtest maps will be unranked, and not affect the rating of any players</b>.",
