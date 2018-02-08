@@ -125,7 +125,7 @@ sub notification_text_for_game_start {
 
     my $subject = "Terra Mystica PBEM ($game->{name}) - game started";
     my $body = "
-Game $game->{name} has been start with the following players:
+Game $game->{name} has been started with the following players:
 
 $order
 
