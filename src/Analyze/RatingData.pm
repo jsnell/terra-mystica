@@ -7,8 +7,15 @@ use strict;
 
 use DB::Game;
 
+sub faction_key {
+    my ($faction, $map) = @_;
+    $map //= '126fe960806d587c78546b30f1a90853b1ada468';
+
+    return "$faction $map";
+}
+
 sub handle_game {
-    my ($res, $output, $players, $factions) = @_;
+    my ($res, $output, $players, $factions, $maps) = @_;
 
     my $faction_count = keys %{$res->{factions}};
     return if $faction_count < 3;
@@ -78,7 +85,8 @@ sub handle_game {
         $f->{id_hash} //= 'unknown';
         $f->{username} //= "unregistered-$f->{id_hash}";
         # $f->{faction} .= "_$faction_count";
-        $factions->{$f->{faction}}{games}++;
+        $f->{fkey} = faction_key $f->{faction}, $f->{base_map};
+        $factions->{$f->{fkey}}{games}++;
         $players->{$f->{id_hash}}{username} = $f->{username};
         $players->{$f->{id_hash}}{games}++;
     }
@@ -91,10 +99,23 @@ sub handle_game {
             next if $f1->{id_hash} eq 'unknown';
             next if $f2->{id_hash} eq 'unknown';
             my $record = {
-                a => { username => $f1->{username}, id_hash => $f1->{id_hash}, faction => $f1->{faction}, vp => $f1->{vp}, dropped => $f1->{dropped} },
-                b => { username => $f2->{username}, id_hash => $f2->{id_hash}, faction => $f2->{faction}, vp => $f2->{vp}, dropped => $f2->{dropped}},
+                a => {
+                    username => $f1->{username},
+                    id_hash => $f1->{id_hash},
+                    faction => $f1->{faction},
+                    fkey => $f1->{fkey},
+                    vp => $f1->{vp},
+                    dropped => $f1->{dropped}
+                },
+                b => {
+                    username => $f2->{username},
+                    id_hash => $f2->{id_hash},
+                    faction => $f2->{faction},
+                    fkey => $f2->{fkey},
+                    vp => $f2->{vp},
+                    dropped => $f2->{dropped}
+                },
                 last_update => $res->{last_update},
-                base_map => $f1->{base_map},
                 id => $res->{id},
             };
             push @{$output}, $record;

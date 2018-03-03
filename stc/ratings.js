@@ -1,9 +1,7 @@
 var state = null;
 var id = document.location.pathname;
 
-function showRatings(kind) {
-    var table = $(kind + "-ratings");
-
+function showRatings(kind, table, data) {
     var header = new Element("tr");
     if (kind == "player") {
         header.insert(new Element("td").updateText("Rank"));
@@ -18,7 +16,7 @@ function showRatings(kind) {
 
     var rank = 1;
 
-    $H(state[kind + "s"]).sortBy(function (a) { return -a.value.score } ).each(function(elem) {
+    $H(data).sortBy(function (a) { return -a.value.score } ).each(function(elem) {
         var value = elem.value;
         var row = new Element("tr");
         if (kind == "player") {
@@ -70,14 +68,23 @@ function showLinks(id) {
     $(id + "-show-link").style.display = "none";
 }
 
+function showFactionRatingsByMap(map) {
+    showRatings("faction",
+                $("faction-ratings-" + map),
+                state["factions_by_map"][map]);
+}
+
 function loadRatings() {
     new Ajax.Request("/data/ratings.json", {
         method:"get",
         onSuccess: function(transport){
             state = transport.responseText.evalJSON();
             try {
-                showRatings("player");
-                showRatings("faction");
+                showRatings("player", $("player-ratings"), state["players"]);
+                showFactionRatingsByMap("126fe960806d587c78546b30f1a90853b1ada468");
+                showFactionRatingsByMap("95a66999127893f5925a5f591d54f8bcb9a670e6");
+                showFactionRatingsByMap("be8f6ebf549404d015547152d5f2a1906ae8dd90");
+                showFactionRatingsByMap("fdb13a13cd48b7a3c3525f27e4628ff6905aa5b1");
                 $("timestamp").innerHTML = "Last updated: " + state.timestamp;
             } catch (e) {
                 handleException(e);

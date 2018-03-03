@@ -44,11 +44,13 @@ sub init_players {
 }
 
 sub init_factions {
-    my ($factions) = @_;
+    my ($factions, $factions_by_map) = @_;
 
-    for my $faction_name (keys %{$factions}) {
-        $factions->{$faction_name}{name} = $faction_name;
-        $factions->{$faction_name}{score} = 1000;
+    for my $fkey (keys %{$factions}) {
+        my $record = $factions->{$fkey};
+        ($record->{name}, $record->{base_map}) = split / /, $fkey;
+        $record->{score} = 1000;
+        $factions_by_map->{$record->{base_map}}{$fkey} = $record;
     }
 }
 
@@ -72,8 +74,8 @@ sub iterate_results {
             }
         }
 
-        my $f1 = $factions->{$res->{a}{faction}};
-        my $f2 = $factions->{$res->{b}{faction}};
+        my $f1 = $factions->{$res->{a}{fkey}};
+        my $f2 = $factions->{$res->{b}{fkey}};
 
         my $q1 = $f1->{score} // 1000;
         my $q2 = $f2->{score} // 1000;
@@ -129,6 +131,7 @@ sub compute_elo {
     my ($rating_data, $settings) = @_;
     my %players = %{$rating_data->{players}};
     my %factions = %{$rating_data->{factions}};
+    my %factions_by_map = ();
     my @matches = @{$rating_data->{results}};
 
     $settings ||= {};
@@ -140,7 +143,7 @@ sub compute_elo {
     }
 
     init_players \%players;
-    init_factions \%factions;
+    init_factions \%factions, \%factions_by_map;
 
     for (1..$settings->{iters}) {
         iterate_results \@matches, \%players, \%factions, $_, $settings;
@@ -160,7 +163,8 @@ sub compute_elo {
                 $_->{username} !~ /unregistered-/;
             } values %players,
         },
-        factions => \%factions
+        factions => \%factions,
+        factions_by_map => \%factions_by_map,
     };
 }
 
