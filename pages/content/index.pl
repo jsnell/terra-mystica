@@ -8,9 +8,9 @@
 
 __DATA__
 
-<div class="motd" style="display: none">
-    Season 23 of the Terra Mystica tournament will start on February 1st.
-    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/1921899/">BGG thread</a>.
+<div class="motd" style="display: block">
+    Season 24 of the Terra Mystica tournament will start on April 1st.
+    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/1959475/">BGG thread</a>.
 </div>
 
 <h4>Your Active / Recently Finished Games</h4>
