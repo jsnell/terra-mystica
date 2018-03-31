@@ -2280,7 +2280,7 @@ function addFactionInput(parent, record, index) {
                         return;
                     }
                     var label = factionPrettyName[faction];
-                    if (state.vp_setup[faction]) {
+                    if (state.vp_setup && state.vp_setup[faction]) {
                         label += " [" + state.vp_setup[faction] + " vp]";
                     }
                     var button = new Element("button").updateText(label);
