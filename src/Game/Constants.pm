@@ -364,5 +364,30 @@ Readonly our %final_scoring => (
     }
 );
 
+Readonly our %vp_setups => (
+    original_2017 => {
+        darklings => 15,
+        cultists => 16,
+        engineers => 16,
+        chaosmagicians => 19,
+        mermaids => 19,
+        nomads => 19,
+        witches => 19,
+        dwarves => 20,
+        halflings => 20,
+        icemaidens => 20,
+        riverwalkers => 21,
+        shapeshifters => 22,
+        swarmlings => 22,
+        yetis => 22,
+        acolytes => 23,
+        dragonlords => 24,
+        giants => 25,
+        alchemists => 27,
+        auren => 27,
+        fakirs => 33,
+    }
+);
+
 1;
 

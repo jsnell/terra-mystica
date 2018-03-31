@@ -1306,6 +1306,8 @@ sub command {
         $ledger->start_new_row($faction);
         $game{ledger}->add_command("setup");
         $ledger->finish_row();
+
+        $game{events}->faction_event($faction, "vp", $faction->{VP});
     } elsif ($command =~ /delete (\w+)$/i) {
         my $name = uc $1;
 

@@ -61,6 +61,7 @@ The options are described in more detail in the
       <td>
         <select name="map-variant" id="map-variant" onchange="javascript:newGameValidate()">
 <option value="">Original</option>
+<option value="91645cdb135773c2a7a50e5ca9cb18af54c664c4">Original [2017 vp]</option>
 <option value="95a66999127893f5925a5f591d54f8bcb9a670e6">Fire & Ice, Side 1</option>
 <option value="be8f6ebf549404d015547152d5f2a1906ae8dd90">Fire & Ice, Side 2</option>
 <option value="fdb13a13cd48b7a3c3525f27e4628ff6905aa5b1">Loon Lakes v1.6</option>
@@ -69,6 +70,7 @@ The options are described in more detail in the
       <td>
         <p>
           <a href="/map/126fe960806d587c78546b30f1a90853b1ada468" target="_blank">Original</a><br>
+          <a href="/map/91645cdb135773c2a7a50e5ca9cb18af54c664c4" target="_blank">Original [2017 vp]</a><br>
           <a href="/map/95a66999127893f5925a5f591d54f8bcb9a670e6" target="_blank">Side 1</a><br>
           <a href="/map/be8f6ebf549404d015547152d5f2a1906ae8dd90" target="_blank">Side 2</a><br>
           <a href="/map/fdb13a13cd48b7a3c3525f27e4628ff6905aa5b1" target="_blank">Loon Lakes v1.6</a><br>

@@ -408,6 +408,7 @@ var factionColor = {
 
 var mapNamesById =  {
     '126fe960806d587c78546b30f1a90853b1ada468': 'Original',
+    '91645cdb135773c2a7a50e5ca9cb18af54c664c4': 'Original [2017 vp]',
     '95a66999127893f5925a5f591d54f8bcb9a670e6': "Fire & Ice Side 1",
     'be8f6ebf549404d015547152d5f2a1906ae8dd90': "Fire & Ice Side 2",
     'b8a54c8e8ea3f50867297da35be5c01b9a6791d2': "Loon Lakes v1.3",

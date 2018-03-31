@@ -11,6 +11,7 @@ extends 'Server::Server';
 use Analyze::EloVpPredictor;
 use DB::Connection qw(get_db_connection);
 use DB::Game;
+use Game::Constants;
 use map;
 use Server::Security;
 use Server::Session;
@@ -129,7 +130,7 @@ func save($dbh, $mapdata, $res, $username) {
 }
 
 func view($dbh, $id, $res, $map_only) {
-    my ($map_str) = $dbh->selectrow_array("select terrain from map_variant where id=?", {}, $id);
+    my ($map_str, $vp_variant) = $dbh->selectrow_array("select terrain, vp_variant from map_variant where id=?", {}, $id);
     my $base_map = [ split /\s+/, $map_str ];
     my $map = terra_mystica::setup_map $base_map;
 
@@ -150,6 +151,10 @@ func view($dbh, $id, $res, $map_only) {
         $res->{'games'} = $game_ids;
 
         $res->{'vpstats'} = faction_vp_error_by_map $dbh, $id;
+    }
+
+    if ($vp_variant) {
+        $res->{vp_setup} = $Game::Constants::vp_setups{$vp_variant};
     }
 }
 

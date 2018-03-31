@@ -1,5 +1,10 @@
 {
     "news": [
+        { "date": "2018-03-31",
+          "title": "Added map VP variants",
+          "description": "Add support for the official 2017 starting VP variant. The variant shows up as a new map, <a href='https://terra-devel.snellman.net/map/91645cdb135773c2a7a50e5ca9cb18af54c664c4'>Original [2017 vp]</a>, when creating or joining a game. It will also be considered as a distinct map for all forms of statistics.",
+          "type": "change"
+        },
         { "date": "2018-01-11",
           "title": "New map, Fjords v2.0",
           "description": "<a href='https://terra.snellman.net/map/54919e13090127079e7cc3540ad0065311f2ecd7'>Fjords v2.0</a> is available for playtesting. Discussion on anything related to the map will happen on the <a href='https://boardgamegeek.com/thread/1750509/fjords'>map's BGG thread</a>. Please report back on your experiences after playing a few games. <b>Note: games on playtest maps will be unranked, and not affect the rating of any players</b>.",

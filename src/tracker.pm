@@ -140,7 +140,7 @@ sub finalize {
             $hex->{town} = 1;
         }
     }
-    
+
     # Gross, but still needed
     for my $key (keys %{$game{cults}}) {
         $map{$key} = $game{cults}{$key};
@@ -160,7 +160,7 @@ sub finalize {
 sub evaluate_game {
     my $data = shift;
     my $faction_info = $data->{faction_info};
-    my $metadata = $data->{metadata};
+    my $metadata = $data->{metadata};    
 
     local %game = (
         # How many players the game should have. Note that this can be
@@ -195,6 +195,10 @@ sub evaluate_game {
         });
     $game{events} = Game::Events->new({game => \%game});
 
+    if (defined $game{metadata}{vp_variant}) {
+        $game{vp_setup} = $Game::Constants::vp_setups{
+            $game{metadata}{vp_variant}};
+    }
 
     local %map = %{setup_map $game{base_map}};
 
@@ -272,6 +276,7 @@ sub evaluate_game {
         events => $game{events}->data(),
         preview_warnings => $game{preview_warnings},
         current_chess_clock_hours => $game{current_chess_clock_hours},
+        vp_setup => $game{vp_setup},
         available_factions => {
             map({ ($_, 1) }
                 keys %faction_setups,

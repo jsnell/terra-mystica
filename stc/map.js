@@ -18,6 +18,7 @@ function viewMap(mapid) {
                 $("map").show();
                 updateMapId(state.mapid, true);
                 drawMap();
+                drawFactionVP();
                 drawGamesPlayed();
                 drawFactionInfo();
                 if ($("map-data")) {
@@ -138,6 +139,36 @@ function showMap() {
         //     gsub(/[ \t\n\r]/, '').
         //     gsub(';', '.');
     }
+}
+
+function drawFactionVP() {
+    var table = $("faction-vp");
+
+    if (!table) {
+        return;
+    }
+
+    if (!state.vp_setup) {
+        return;
+    }
+
+    var header = new Element("tr");
+    header.insert(new Element("td").updateText("Faction"));
+    header.insert(new Element("td").updateText("Starting VP"));
+    table.insert(header);
+    $H(state.vp_setup).sortBy(function (record) {
+        return -record[1];
+    }).each(function (record) {
+        var faction = record[0];
+        var vp = record[1];
+
+        var tr = new Element("tr");
+        var faction_cell = factionTableCell(faction);
+        faction_cell.updateText(faction);
+        tr.insert(faction_cell);
+        tr.insert(new Element("td").updateText(vp));
+        table.insert(tr);
+    });    
 }
 
 function drawGamesPlayed() {

@@ -21,4 +21,6 @@ __DATA__
   </canvas>
 </div>
 
+<table id="faction-vp" class="gamelist"></table>
+
 <script>showMap();</script>
