@@ -437,6 +437,8 @@ var factionPrettyName = {
     yetis: 'Yetis',
     acolytes: 'Acolytes',
     dragonlords: 'Dragonlords',
+    riverwalkers: 'Riverwalkers',
+    shapeshifters: 'Shapeshifters',
     riverwalkers_v5: 'Riverwalkers',
     shapeshifters_v5: 'Shapeshifters',
 };
