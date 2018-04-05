@@ -36,6 +36,7 @@ __DATA__
   <select id="settings-map" onchange="showStats()">
     <option value="any" selected="true">Any
     <option value="126fe960806d587c78546b30f1a90853b1ada468">Original
+    <option value="91645cdb135773c2a7a50e5ca9cb18af54c664c4">Original [2017 vp]
     <option value="95a66999127893f5925a5f591d54f8bcb9a670e6">Fire &amp; Ice Side 1
     <option value="be8f6ebf549404d015547152d5f2a1906ae8dd90">Fire &amp; Ice Side 2
     <option value="fdb13a13cd48b7a3c3525f27e4628ff6905aa5b1">Loon Lakes v1.6
