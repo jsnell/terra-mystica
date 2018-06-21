@@ -16,6 +16,7 @@ use Server::Session;
 use Server::Server;
 use Util::CryptUtil;
 use Util::PasswordQuality;
+use Util::SiteConfig;
 
 extends 'Server::Server';
 
@@ -77,17 +78,17 @@ method request_reset($q, $dbh) {
         };
         my $token = insert_to_validate $dbh, $data;
 
-        my $url = sprintf "https://terra.snellman.net/app/reset/validate/%s", $token;
+        my $url = sprintf "https://$config{domain}/app/reset/validate/%s", $token;
 
         my $smtp = Net::SMTP->new('localhost', ( Debug => 0 ));
 
-        $smtp->mail("www-data\@terra.snellman.net");
+        $smtp->mail("www-data\@$config{email_domain}");
         if (!$smtp->to($email)) {
             push @error, "Invalid email address";
         } else {
             $smtp->data();
             $smtp->datasend("To: $email\n");
-            $smtp->datasend("From: noreply+registration\@terra.snellman.net\n");
+            $smtp->datasend("From: noreply+registration\@$config{email_domain}\n");
             $smtp->datasend("Subject: Password reset for Terra Mystica\n");
             $smtp->datasend("\n");
             $smtp->datasend("Username: $username\n");

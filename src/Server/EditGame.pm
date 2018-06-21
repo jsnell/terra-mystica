@@ -16,6 +16,7 @@ use DB::Connection;
 use DB::EditLink;
 use DB::Game;
 use Server::Session;
+use Util::SiteConfig;
 
 has 'mode' => (is => 'ro', required => 1);
 
@@ -62,7 +63,7 @@ method check_user_is_admin($dbh, $read_id, $username) {
                                              $read_id);
 
     if ($username ne $game_admin and
-        $username ne 'jsnell') {
+        $username ne $config{site_admin_username}) {
         die "Sorry, it appears you're not the game admin.\n"
     }
 }
@@ -78,7 +79,7 @@ method check_user_is_not_deadbeat($dbh, $read_id, $username) {
         }
     }
 
-    my %blacklist = map { ($_ => 1) } qw(deedeebyrd);
+    my %blacklist = map { ($_ => 1) } @{$config{blacklist}};
     if ($blacklist{$username}) {
         die "Sorry, admin functionality disabled due to abuse.\n";
     }
@@ -97,7 +98,7 @@ method edit_content($dbh, $q, $read_id, $write_id, $username) {
     };
 
     # Development hack
-    if ($username eq 'jsnell') {
+    if ($username eq $config{site_admin_username}) {
         for my $faction (values %{$res->{factions}}) {
             $faction->{edit_link} = edit_link_for_faction $dbh, $write_id, $faction->{name};
         }

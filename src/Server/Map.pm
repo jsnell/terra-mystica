@@ -16,6 +16,7 @@ use map;
 use Server::Security;
 use Server::Session;
 use tracker;
+use Util::SiteConfig;
 
 has 'mode' => (is => 'ro', required => 1);
 
@@ -113,7 +114,7 @@ func map_exists($dbh, $id) {
 }
 
 func save($dbh, $mapdata, $res, $username) {
-    if ($username ne 'jsnell' and $username ne 'nan') {
+    if ($username ne $config{site_admin_username} and $username ne 'nan') {
         die "Sorry, creating new maps isn't allowed\n"
     }
 

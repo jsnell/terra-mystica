@@ -15,6 +15,7 @@ use DB::Secret;
 use DB::Validation;
 use Server::Session;
 use Util::CryptUtil;
+use Util::SiteConfig;
 
 has 'mode' => (is => 'ro', required => 1);
 
@@ -60,17 +61,17 @@ method request_alias($q, $dbh) {
         };
         my $token = insert_to_validate $dbh, $data;
 
-        my $url = sprintf "https://terra.snellman.net/app/alias/validate/%s", $token;
+        my $url = sprintf "https://$config{domain}/app/alias/validate/%s", $token;
 
         my $smtp = Net::SMTP->new('localhost', ( Debug => 0 ));
 
-        $smtp->mail("www-data\@terra.snellman.net");
+        $smtp->mail("www-data\@$config{email_domain}");
         if (!$smtp->to($email)) {
             push @error, "Invalid email address";
         } else {
             $smtp->data();
             $smtp->datasend("To: $email\n");
-            $smtp->datasend("From: noreply+alias\@terra.snellman.net\n");
+            $smtp->datasend("From: noreply+alias\@$config{email_domain}\n");
             $smtp->datasend("Subject: Email alias validation for Terra Mystica\n");
             $smtp->datasend("\n");
             $smtp->datasend("To validate this email as an alias, use the following link:\n");
