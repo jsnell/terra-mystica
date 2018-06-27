@@ -18,6 +18,7 @@ use DB::Validation;
 use Server::Session;
 use Util::CryptUtil;
 use Util::PasswordQuality;
+use Util::SiteConfig;
 
 has 'mode' => (is => 'ro', required => 1);
 
@@ -82,17 +83,17 @@ method request_registration($q, $dbh) {
         };
         my $token = insert_to_validate $dbh, $data;
 
-        my $url = sprintf "https://terra.snellman.net/app/register/validate/%s", $token;
+        my $url = sprintf "https://$config{domain}/app/register/validate/%s", $token;
 
         my $smtp = Net::SMTP->new('localhost', ( Debug => 0 ));
 
-        $smtp->mail("www-data\@terra.snellman.net");
+        $smtp->mail("www-data\@$config{email_domain}");
         if (!$smtp->to($email)) {
             push @error, "Invalid email address";
         } else {
             $smtp->data();
             $smtp->datasend("To: $email\n");
-            $smtp->datasend("From: noreply+registration\@terra.snellman.net\n");
+            $smtp->datasend("From: noreply+registration\@$config{email_domain}\n");
             $smtp->datasend("Subject: Account activation for Terra Mystica\n");
             $smtp->datasend("\n");
             $smtp->datasend("To activate your account, use the following link:\n");

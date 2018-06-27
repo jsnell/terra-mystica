@@ -14,6 +14,7 @@ use DB::Secret;
 use Email::Notify;
 use Server::Security;
 use Server::Session;
+use Util::SiteConfig;
 
 sub verify_key {
     my ($dbh, $id, $faction_key, $faction_name) = @_;
@@ -53,7 +54,7 @@ sub handle {
     my %res = ( error => [] );
     my $prevalidated = 0;
 
-    if ($faction_name eq '' and $username eq 'jsnell') {
+    if ($faction_name eq '' and $username eq $config{site_admin_username}) {
         $faction_name = 'site-admin';
         $prevalidated = 1;
     }
