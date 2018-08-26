@@ -140,7 +140,8 @@ func view($dbh, $id, $res, $map_only) {
     $res->{'mapid'} = $id;
 
     if ($id ne '224736500d20520f195970eb0fd4c41df040c08c' and
-        $id ne '54919e13090127079e7cc3540ad0065311f2ecd7') {
+        $id ne '54919e13090127079e7cc3540ad0065311f2ecd7' and 
+        $id ne '2afadc63f4d81e850b7c16fb21a1dcd29658c392') {
         $map_only = 1;
     }
     
