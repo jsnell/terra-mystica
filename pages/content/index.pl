@@ -9,8 +9,8 @@
 __DATA__
 
 <div class="motd" style="display: none">
-    Season 26 of the Terra Mystica tournament will start on August 1st.
-    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/2027687/signup-season-26-tm-tour">BGG thread</a>.
+    Season 27 of the Terra Mystica tournament will start on October 1st.
+    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/2060551/signup-season-27-tm-tour">BGG thread</a>.
 </div>
 
 <h4>Your Active / Recently Finished Games</h4>
