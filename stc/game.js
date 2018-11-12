@@ -1177,7 +1177,25 @@ function drawFaction(name) {
     var container = new Element('div', { 'class': 'faction-board' });
     var info_link = '';
     if (faction.faction_board_id) {
-        info_link = 'http://www.terra-mystica-spiel.de/en/voelker.php?show=' + faction.faction_board_id;
+        // faction.faction_board_id is a proxy for "is the faction a part of
+        // the base game". gaming-strategy.com only lists info about the base
+        // factions.
+        var factionStrategyBase = 'http://www.gaming-strategy.com/board-games/terra-mystica/faction-strategy/'
+        switch(faction.name.toLowerCase()) {
+          case 'alchemists':
+            info_link = factionStrategyBase + 'faction-strategy-alchemists/'
+            break;
+          case 'auren':
+            info_link = factionStrategyBase + 'faction-strategy-auren/'
+            break;
+          case 'chaos magicians':
+            info_link = factionStrategyBase + 'chaos-magicians/'
+            break;
+          default:
+            // The rest of the faction links are defined in a standard way
+            // and do not contain any spaces.
+            info_link = factionStrategyBase + faction.name.toLowerCase()
+        }
     } else {
         info_link = '/factioninfo/#' + faction.name;
     }
