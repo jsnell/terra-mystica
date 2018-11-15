@@ -1177,7 +1177,7 @@ function drawFaction(name) {
     var container = new Element('div', { 'class': 'faction-board' });
     var info_link = '';
     if (faction.faction_board_id) {
-        info_link = 'http://www.terra-mystica-spiel.de/en/voelker.php?show=' + faction.faction_board_id;
+        info_link = 'http://terra.snellman.net/stc/boards/' + faction.name + '.jpg';
     } else {
         info_link = '/factioninfo/#' + faction.name;
     }
