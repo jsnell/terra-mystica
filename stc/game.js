@@ -970,9 +970,11 @@ function makeBoard(color, title, info_link, klass, style) {
     });
     heading.insert(title);
     if (info_link) {
-        heading.insert(new Element('a', { href: info_link,
-                                          target: '_blank',
-                                          style: 'float: right; color: ' + fgcolor }).updateText('[info]'));
+        var elem = new Element('a', { href: info_link,
+                                      target: '_blank',
+                                      style: 'float: right; color: ' + fgcolor }
+                              ).updateText('[info]')
+        heading.insert(elem);
     }
     board.insert(heading);
 
