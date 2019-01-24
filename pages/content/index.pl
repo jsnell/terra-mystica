@@ -9,8 +9,8 @@
 __DATA__
 
 <div class="motd" style="display: none">
-    Season 28 of the Terra Mystica tournament will start on December 1st.
-    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/2098887/signup-now-season-28-tm-tour">BGG thread</a>.
+    Season 30 of the Terra Mystica tournament will start on April 1st.
+    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/2170687/sign-season-30-tm-tour">BGG thread</a>.
 </div>
 
 <h4>Your Active / Recently Finished Games</h4>
