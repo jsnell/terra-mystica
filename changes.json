@@ -1,5 +1,10 @@
 {
     "news": [
+        { "date": "2019-06-17",
+          "title": "Fjords playtest over",
+          "description": "The playtesting for the Fjords map is over. New games on Fjords v2.1 will no longer count as unranked; they will affect player ratings and show up in the statistics.",
+          "type": "change"
+        },
         { "date": "2018-08-26",
           "title": "New map, Fjords v2.1",
           "description": "<a href='https://terra.snellman.net/map/2afadc63f4d81e850b7c16fb21a1dcd29658c392'>Fjords v2.1</a> is available for playtesting, with just one hex swap compared to v2.0. Discussion on anything related to the map will happen on the <a href='https://boardgamegeek.com/thread/1750509/fjords'>map's BGG thread</a>. Please report back on your experiences after playing a few games. <b>Note: games on playtest maps will be unranked, and not affect the rating of any players</b>.",
