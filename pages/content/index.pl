@@ -9,8 +9,8 @@
 __DATA__
 
 <div class="motd" style="display: none">
-    Season 31 of the Terra Mystica tournament will start on June 1st.
-    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/2206980/sign-season-31-tm-tour">BGG thread</a>.
+    Season 32 of the Terra Mystica tournament will start on August 1st.
+    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/2240156/season-32-terra-mystica-tournament">BGG thread</a>.
 </div>
 
 <h4>Your Active / Recently Finished Games</h4>
