@@ -344,6 +344,8 @@ sub command_send {
 
     gain $faction, $gain;
 
+    $game{events}->faction_event($faction, "send:$cult", 1);
+
     adjust_resource $faction, "P", -1;
 }
 
