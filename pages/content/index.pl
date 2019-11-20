@@ -9,8 +9,11 @@
 __DATA__
 
 <div class="motd" style="display: none">
-    Season 33 of the Terra Mystica tournament will start on October 1st.
-    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/2280301/season-33-terra-mystica-tournament">BGG thread</a>.
+    Season 35 of the Terra Mystica tournament will start on February 1st.
+    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/2352270/season-35-terra-mystica-tournament">BGG thread</a>.
+
+    Please note that season 35 introduces tighter settings for the
+    chess clock.
 </div>
 
 <h4>Your Active / Recently Finished Games</h4>
