@@ -8,7 +8,7 @@
 __DATA__
 <p>
   This is an unofficial automated moderator tool
-  for <a href="http://www.terra-mystica-spiel.de/en/index.php">Terra
+  for <a href="https://boardgamegeek.com/boardgame/120677/terra-mystica">Terra
   Mystica</a>, a game by Helge Ostertag and Jens
   Dr&ouml;gem&uuml;ller published by Feuerland Spiele.
 </p>
