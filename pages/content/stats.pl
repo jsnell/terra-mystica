@@ -40,6 +40,7 @@ __DATA__
     <option value="95a66999127893f5925a5f591d54f8bcb9a670e6">Fire &amp; Ice Side 1
     <option value="be8f6ebf549404d015547152d5f2a1906ae8dd90">Fire &amp; Ice Side 2
     <option value="fdb13a13cd48b7a3c3525f27e4628ff6905aa5b1">Loon Lakes v1.6
+    <option value="2afadc63f4d81e850b7c16fb21a1dcd29658c392">Fjords v2.1
   </select>
 </div>
 
