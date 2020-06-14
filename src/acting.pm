@@ -180,7 +180,8 @@ method register_faction($faction) {
     push @setup_order, reverse @setup_order;
     push @setup_order, ['nomads', 'dwelling'] if $self->factions()->{nomads};
 
-    if ($self->factions()->{chaosmagicians}) {
+    if ($self->factions()->{chaosmagicians} and
+        !$self->factions()->{chaosmagicians}{dropped}) {
         push @setup_order, ['chaosmagicians', 'dwelling'];
     }
     push @setup_order, map { [ $_, 'bonus'] } reverse @order;
