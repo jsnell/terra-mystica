@@ -178,7 +178,10 @@ method register_faction($faction) {
         $_ ne 'chaosmagicians';
     } @order;
     push @setup_order, reverse @setup_order;
-    push @setup_order, ['nomads', 'dwelling'] if $self->factions()->{nomads};
+    if ($self->factions()->{nomads} and
+        !$self->factions()->{nomads}{dropped}) {
+        push @setup_order, ['nomads', 'dwelling']
+    }
 
     if ($self->factions()->{chaosmagicians} and
         !$self->factions()->{chaosmagicians}{dropped}) {
