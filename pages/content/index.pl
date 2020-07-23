@@ -9,8 +9,8 @@
 __DATA__
 
 <div class="motd" style="display: none">
-    Season 37 of the Terra Mystica tournament will start on June 1st.
-    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/2431268/season-37-terra-mystica-tournament">BGG thread</a>.
+    Season 38 of the Terra Mystica tournament will start on August 1st.
+    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/2471059/season-38-terra-mystica-tournament">BGG thread</a>.
 </div>
 
 <h4>Your Active / Recently Finished Games</h4>
