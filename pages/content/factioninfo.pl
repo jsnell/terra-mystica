@@ -16,7 +16,7 @@ the faction boards + a short summary of other special aspects of the
 faction.
 For exact information on the ice and volcano terrain types and on the
 details of the faction special powers, please read the
-<a href="http://boardgamegeek.com/filepage/105387/english-rule-book">Fire & Ice rulebook</a>. 
+<a href="http://boardgamegeek.com/filepage/105387/english-rule-book">Fire & Ice rulebook</a>.
 
 <p>
 A note on <b>home terrain</b>: The concept of home terrain only applies to the original 14 factions from the base game and the shapeshifters. The other 5 expansion factions have a starting terrain but no home terrain.
@@ -67,7 +67,7 @@ A note on <b>home terrain</b>: The concept of home terrain only applies to the o
 <li> Permanently remove power tokens (from any bowl) to transform. 2 tokens if transforming from another player's home terrain to a volcano, 1 token if transforming from some other color.
 <li> SH costs 8c+4w, produces 2pw, and gives an instant one-time production of as many power tokens as there are players (tokens go into bowl 1).
 <li> SA costs 8c+4w.
-<li> If the Dragon Masters gain a spade from somewhere, they'll gain a power token into bowl 1 instead.
+<li> If the Dragonlords gain a spade from somewhere, they'll gain a power token into bowl 1 instead.
 </ul>
 
 <h4 id=riverwalkers>Riverwalkers</h4>
