@@ -1401,6 +1401,7 @@ sub command {
             shipping-bonus
             temple-scoring-tile
             fire-and-ice-final-scoring
+			merchants-features
 			merchants-final-scoring
             fire-and-ice-factions
             fire-and-ice-factions/ice
