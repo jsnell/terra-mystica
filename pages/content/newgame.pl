@@ -36,8 +36,14 @@ the letters A-Z and a-z and the digits 0-9.
         <input name="game-options" type="checkbox" id="option-mini-expansion-1" value="mini-expansion-1"></input><label for="option-mini-expansion-1">Mini Expansion #1 (town tiles)</label><br>
         <input name="game-options" type="checkbox" id="option-shipping-bonus" value="shipping-bonus"></input><label for="option-shipping-bonus">Shipping bonus tile (Spielbox 6/2013)</label><br>
         <input name="game-options" type="checkbox" id="option-temple-scoring-tile" value="temple-scoring-tile"></input><label for="option-temple-scoring-tile">Temple round scoring tile (2015 mini expansion)</label><br>
-        <input name="game-options" type="checkbox" id="option-fire-and-ice-final-scoring" value="fire-and-ice-final-scoring"></input><label for="option-fire-and-ice-final-scoring">Extra final scoring tile (Fire &amp; Ice expansion)</label><br>
-        <input name="game-options" type="checkbox" id="option-variable-turn-order" value="variable-turn-order"></input><label for="option-variable-turn-order">Turn order determined by passing order (Fire &amp; Ice expansion)</label><br>
+        
+        <input type="checkbox" id="option-extra-final-scoring-tiles" onchange="javascript:newGameValidate()" value="extra-final-scoring"></input><label for="option-extra-final-scoring-tiles">Extra final scoring tile (random selection of one tile from checked options below):</label><br>
+        <div style="padding-left: 2em">
+          <input name="game-options" type="checkbox" id="option-extra-final-scoring-tiles/fire_and_ice" value="fire-and-ice-final-scoring"></input><label for="option-fire-and-ice-final-scoring-tiles">Fire & Ice expansion final scoring tiles</label><br>
+          <input name="game-options" type="checkbox" id="option-extra-final-scoring-tiles/merchants" value="merchants-final-scoring"></input><label for="option-merchants-final-scoring-tile">Merchants of the Seas expansion final scoring tile</label><br>
+        </div>
+		
+		<input name="game-options" type="checkbox" id="option-variable-turn-order" value="variable-turn-order"></input><label for="option-variable-turn-order">Turn order determined by passing order (Fire &amp; Ice expansion)</label><br>
 
         <input type="checkbox" id="option-fire-and-ice-factions" onchange="javascript:newGameValidate()"></input><label for="option-fire-and-ice-factions">Fire &amp; Ice expansion factions</label><br>
         <div style="padding-left: 2em">
@@ -45,6 +51,9 @@ the letters A-Z and a-z and the digits 0-9.
           <input name="game-options" type="checkbox" id="option-fire-and-ice-factions/variable_v5" onchange="javascript:newGameValidate()" value="fire-and-ice-factions/variable_v5" checked></input><label for="option-fire-and-ice-factions/variable_v5">Variable factions (please note the <a href='https://boardgamegeek.com/thread/1456706/official-change-rules'>official rules change</a>)</label><br>
           <input name="game-options" type="checkbox" id="option-fire-and-ice-factions/volcano" onchange="javascript:newGameValidate()" value="fire-and-ice-factions/volcano" checked></input><label for="option-fire-and-ice-factions/volcano">Volcano factions</label><br>
         </div>
+		
+		<input name="game-options" type="checkbox" id="option-merchants-features" value="merchants-features"></input><label for="option-merchants-features">include all Merchants of the Seas expansion features</label><br>
+		<input name="game-options" type="checkbox" id="option-merchants-focus" value="merchants-focus"></input><label for="option-merchants-focus">use more bonus tiles from Merchants of the Seas expansion (guarantee at least 2 bonus tiles from Merchants of the Seas expansion)</label><br>
 
         <br>
         <input name="game-options" type="checkbox" id="option-email-notify" value="email-notify" onchange="javascript:newGameValidate()" checked></input><label id="option-email-notify-label" for="option-email-notify">Automatic email notifications</label><br>

@@ -409,6 +409,12 @@ sub compute_network_size {
     }
 }
 
+# Given a faction, retrieve its total of trade markers spent.
+sub compute_markers {	
+	my $faction = shift;
+	$faction->{'trade-markers'} = 15 - $faction->{TM}
+}
+
 # The terraforming color wheel.
 my @colors = qw(yellow brown black blue green gray red);
 my %color_cycle = map { ($colors[$_], $_) } 0..$#colors;

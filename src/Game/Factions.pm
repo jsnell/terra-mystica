@@ -42,6 +42,13 @@ func initialize_faction($game, $faction_name) {
     $faction->{P1} ||= 0;
     $faction->{P2} ||= 0;
     $faction->{P3} ||= 0;
+	
+	# NEW TRADE MARKERS
+	if ($game{options}{'merchants-features'}) {
+		$faction->{TM} ||= 15;
+	} else {
+		$faction->{TM} ||= 0;
+	}
 
     my $initial_vp = 20;
     if (defined $game->{vp_setup}{$faction_name}) {

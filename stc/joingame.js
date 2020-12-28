@@ -105,12 +105,14 @@ function showOpenGames(games) {
                 "mini-expansion-1": "Mini Expansion (town tiles)",
                 "shipping-bonus": "Shipping bonus tile (Spielbox 6/2013)",
                 "temple-scoring-tile": "Temple round scoring tile (2015 mini expansion)",
-                "fire-and-ice-final-scoring": "Extra final scoring tile",
+                "fire-and-ice-final-scoring": "Fire & Ice expansion final scoring tiles",
+				"merchants-final-scoring": "Merchants of the Seas expansion final scoring tile",
                 "variable-turn-order": "Turn order determined by passing order",
                 "fire-and-ice-factions/ice": "Ice factions",
                 "fire-and-ice-factions/variable_v4": "Variable factions (<a href='/factioninfo/'>playtest</a> v4)",
                 "fire-and-ice-factions/variable_v5": "Variable factions (with <a href='https://boardgamegeek.com/thread/1456706/official-change-rules'>official rules change</a>)",
                 "fire-and-ice-factions/volcano": "Volcano factions",
+				"merchants-features": "Merchants of the Seas expansion features",
             };
 
             if (game.game_options) {

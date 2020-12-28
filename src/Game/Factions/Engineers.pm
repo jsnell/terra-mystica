@@ -4,7 +4,8 @@ use strict;
 use Readonly;
 
 Readonly our $engineers => {
-    C => 10, W => 2, P1 => 3, P2 => 9, color => 'gray',
+    C => 10, W => 2, P1 => 3, P2 => 9,
+	color => 'gray',
     display => "Engineers",
     faction_board_id => 8,
     ship => { 

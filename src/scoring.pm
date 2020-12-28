@@ -78,6 +78,11 @@ sub score_type_rankings {
 sub score_final {
     compute_network_size $_ for $game{acting}->factions_in_order();
 
+	# NEW MERCHANT FINAL SCORING
+	if ($game{final_scoring}{'trade-markers'}) { # If Merchants final scoring has been selected, compute this
+		compute_markers $_ for $game{acting}->factions_in_order();
+	}
+
     for my $type (sort keys %{$game{final_scoring}}) {
         my @points = @{$game{final_scoring}{$type}{points}};
         if ($type eq 'cults') {

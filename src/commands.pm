@@ -1106,17 +1106,49 @@ sub command_randomize {
         ++$i;
     }
 
-    if ($game{options}{'fire-and-ice-final-scoring'}) {
-        my @scoring_types = grep {
-            $final_scoring{$_}->{option} and
+	# NEW FINAL SCORING
+	if ($game{options}{'extra-final-scoring'}) {
+		my @scoring_types = grep {
+            $final_scoring{$_}->{option}
+        } keys %final_scoring;
+		
+		if ($game{options}{'fire-and-ice-final-scoring'}) {
+		  my @fire_and_ice_scoring_types = grep {
             $final_scoring{$_}->{option} eq 'fire-and-ice-final-scoring'
-        } sort { $a cmp $b } keys %final_scoring;
+		  } keys %final_scoring;
+		  
+		  push(@scoring_types, @fire_and_ice_scoring_types)
+		}
+		
+		if ($game{options}{'merchants-final-scoring'}) {
+		  my @merchants_scoring_types = grep {
+            $final_scoring{$_}->{option} eq 'merchants-final-scoring'
+		  } keys %final_scoring;
+		  
+		  push(@scoring_types, @merchants_scoring_types)
+		}
+		
+		@scoring_types = sort { $a cmp $b } @scoring_types;
+
         if ($version ne 'v1') {
             @scoring_types = mt_shuffle $rand, @scoring_types;
         }
         my $scoring = shift @scoring_types;
         add_final_scoring $scoring;
     }
+
+	# OLD FINAL SCORING
+    # if ($game{options}{'fire-and-ice-final-scoring'}) {
+        # my @scoring_types = grep {
+            # $final_scoring{$_}->{option} and
+            # $final_scoring{$_}->{option} eq 'fire-and-ice-final-scoring'
+        # } sort { $a cmp $b } keys %final_scoring;
+        # if ($version ne 'v1') {
+            # @scoring_types = mt_shuffle $rand, @scoring_types;
+        # }
+        # my $scoring = shift @scoring_types;
+        # add_final_scoring $scoring;
+    # }
 
     $game{acting}->players([@players]);
 }
@@ -1369,6 +1401,7 @@ sub command {
             shipping-bonus
             temple-scoring-tile
             fire-and-ice-final-scoring
+			merchants-final-scoring
             fire-and-ice-factions
             fire-and-ice-factions/ice
             fire-and-ice-factions/variable

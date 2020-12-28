@@ -48,6 +48,8 @@ Readonly our %resource_aliases => (
     WORKERS => 'W',
     COIN => 'C',
     COINS => 'C',
+	MARKER => 'TM',
+	MARKERS => 'TM',
 );
 
 ## Tiles
@@ -357,6 +359,12 @@ Readonly our %final_scoring => (
         option => 'fire-and-ice-final-scoring',
         points => [18, 12, 6],
         label => 'clusters',
+    },
+	'trade-markers' => {
+        description => "Most trade markers placed during the game.",
+        option => 'merchants-final-scoring',
+        points => [18, 12, 6],
+        label => 'trades',
     },
     'cults' => {
         description => "Position on each cult",

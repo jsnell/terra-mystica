@@ -86,6 +86,19 @@ function newGameValidate() {
         $("option-fire-and-ice-factions/" + type).disabled =
             !$("option-fire-and-ice-factions").checked;
     });
+	
+	if (!$("option-merchants-features").checked) {
+		$("option-extra-final-scoring-tiles/merchants").disabled = true
+		$("option-merchants-focus").disabled = true
+	} else {
+		$("option-extra-final-scoring-tiles/merchants").disabled = false
+		$("option-merchants-focus").disabled = false
+	}
+	
+	['fire_and_ice', 'merchants'].each(function (type) {
+        $("option-extra-final-scoring-tiles/" + type).disabled =
+            !$("option-extra-final-scoring-tiles").checked;
+    });
 
     $H(validateHighlights).each(function (elem) {
         $(elem.key).style.backgroundColor = elem.value;
