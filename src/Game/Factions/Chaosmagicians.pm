@@ -40,5 +40,8 @@ Readonly our $chaosmagicians => {
         SA => { advance_cost => { W => 4, C => 8 },
                 advance_gain => [ { GAIN_FAVOR => 2 } ],
                 income => { P => [ 0, 1 ] } },
+		SY => { advance_cost => { },
+				advance_gain => [ { } ],
+                income => { } },
     }
 };

@@ -42,13 +42,6 @@ func initialize_faction($game, $faction_name) {
     $faction->{P1} ||= 0;
     $faction->{P2} ||= 0;
     $faction->{P3} ||= 0;
-	
-	# NEW TRADE MARKERS
-	if ($game{options}{'merchants-features'}) {
-		$faction->{TM} ||= 15;
-	} else {
-		$faction->{TM} ||= 0;
-	}
 
     my $initial_vp = 20;
     if (defined $game->{vp_setup}{$faction_name}) {
@@ -102,6 +95,26 @@ func initialize_faction($game, $faction_name) {
         }
     }
     $faction->{exchange_rates} = { %base_exchange_rates };
+
+	# MERCHANTS OF THE SEAS SPECIFIC SETTINGS
+	if ($game{options}{'merchants-features'}) {
+		$faction->{TM} ||= 15;
+		$faction->{MAX_TM} ||= 15;
+		
+		if $faction_name == "dwarves" || $faction_name == "fakirs" {
+			$faction->{MERCHANT} ||= 0;
+			$faction->{MAX_MERCHANT} ||= 3;
+			$buildings->{SE}{max_level} = 1;
+		} else {
+			$faction->{SHIP} ||= 0;
+			$faction->{MAX_SHIP} ||= 3;
+			$buildings->{SY}{max_level} = 1;
+		}
+
+		if $faction_name == "auren" {
+			$faction->{KEY} = 1;
+		}
+	}
 
     return $faction;
 }

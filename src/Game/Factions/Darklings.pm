@@ -34,5 +34,8 @@ Readonly our $darklings => {
                 income => { PW => [ 0, 2 ] } },
         SA => { advance_cost => { W => 4, C => 10 },
                 income => { P => [ 0, 2 ] } },
+		SY => { advance_cost => { },
+				advance_gain => [ { } ],
+                income => { } },
     }
 };

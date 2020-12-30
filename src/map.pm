@@ -412,7 +412,7 @@ sub compute_network_size {
 # Given a faction, retrieve its total of trade markers spent.
 sub compute_markers {	
 	my $faction = shift;
-	$faction->{'trade-markers'} = 15 - $faction->{TM}
+	$faction->{'trade-markers'} = $faction->{MAX_TM} - $faction->{TM}
 }
 
 # The terraforming color wheel.

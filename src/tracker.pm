@@ -179,6 +179,7 @@ sub evaluate_game {
         pool => undef,
         cults => setup_cults,
         bridges => [],
+		canals => [],
         score_tiles => [],
         preview_warnings => [],
         metadata => $metadata,
@@ -198,6 +199,11 @@ sub evaluate_game {
     if (defined $game{metadata}{vp_variant}) {
         $game{vp_setup} = $Game::Constants::vp_setups{
             $game{metadata}{vp_variant}};
+    }
+	
+	if (defined $game{metadata}{canal_info}) {
+        $game{canal_setup} = $Game::Constants::canal_setups{
+            $game{metadata}{canal_info}};
     }
 
     local %map = %{setup_map $game{base_map}};
@@ -250,6 +256,7 @@ sub evaluate_game {
         factions => $game{acting}->factions(),
         pool => $game{pool},
         bridges => $game{bridges},
+		canals => $game{canals},
         ledger => $game{ledger}->flush(),
         error => \@error,
         towns => { map({$_, $tiles{$_}} grep { /^TW/ } keys %tiles ) },

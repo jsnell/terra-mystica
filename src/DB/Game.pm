@@ -99,9 +99,10 @@ sub get_game_metadata {
     my $res = $rows->[0];
 
     if ($res->{map_variant}) {        
-        my ($map_str, $vp_variant) = $dbh->selectrow_array("select terrain, vp_variant from map_variant where id=?", {}, $res->{map_variant});
+        my ($map_str, $vp_variant, $canal_info) = $dbh->selectrow_array("select terrain, vp_variant, canal_info from map_variant where id=?", {}, $res->{map_variant});
         $res->{base_map} = [ split /\s+/, $map_str ];
         $res->{vp_variant} = $vp_variant;
+		$res->{canal_info} = $canal_info;
     }
 
     $res->{active_times} = 

@@ -27,7 +27,8 @@ create table to_validate (
 create table map_variant (
     id text primary key,
     terrain text not null,
-    vp_variant text
+    vp_variant text,
+	canal_info text
 );
 
 create table game (

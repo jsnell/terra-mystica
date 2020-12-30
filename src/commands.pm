@@ -749,6 +749,12 @@ sub command_bridge {
     $game{events}->faction_event($faction, 'bridge', 1);
 }
 
+sub command_canal {
+	my ($from, $to, $allow_illegal) = @_;
+	
+	push @{$game{canals}}, {from => $from, to => $to, color => "purple"};
+}
+
 sub find_bonus_to_discard {
     my ($faction, $bon) = @_;
 
@@ -1312,6 +1318,9 @@ sub command {
         command_dig $assert_active_faction->(), $1;
     } elsif ($command =~ /^bridge (\w+):(\w+)( allow_illegal)?$/i) {
         command_bridge $assert_active_faction->(), uc $1, uc $2, $3;
+	} elsif ($command =~ /^canal (\w+):(\w+)( allow_illegal)?$/i) {
+		die "$faction_name can't build canals\n" if $faction_name;
+        command_canal uc $1, uc $2, $3;
     } elsif ($command =~ /^connect (\w+):(\w+)(?::(\w+))?$/i) {
         command_connect $assert_active_faction->(), uc $1, uc $2, uc($3 // '');
     } elsif ($command =~ /^connect (r\d+)?$/i) {

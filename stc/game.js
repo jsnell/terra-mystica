@@ -386,6 +386,11 @@ function drawMap() {
         state.bridges.each(function(bridge, index) {
             drawBridge(ctx, bridge.from, bridge.to, bridge.color);
         });
+		
+		// INSERT CANALS HERE, WILL NOT DRAW IF NONE PRESENT (JUST LIKE BRIDGES)
+		state.canals.each(function(canal, index) {
+			drawBridge(ctx, canal.from, canal.to, canal.color);
+		});
 
         $H(state.map).each(function(hex, index) { drawHex(ctx, hex) });
         ctx.restore();

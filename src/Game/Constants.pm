@@ -28,6 +28,8 @@ Readonly our %building_strength => (
     TE => 2,
     SH => 3,
     SA => 3,
+	SY => 3,
+	SE => 3,
 );
 
 Readonly our %building_aliases => (
@@ -36,6 +38,8 @@ Readonly our %building_aliases => (
     TEMPLE => 'TE',
     STRONGHOLD => 'SH',
     SANCTUARY => 'SA',
+	SHIPYARD => 'SY',
+	STOREHOUSE => 'SE',
 );
 
 ## Resources
@@ -50,6 +54,10 @@ Readonly our %resource_aliases => (
     COINS => 'C',
 	MARKER => 'TM',
 	MARKERS => 'TM',
+	SHIP => 'SP',
+	SHIPS => 'SP',
+	MERCHANT => 'MT',
+	MERCHANTS => 'MT',
 );
 
 ## Tiles
@@ -394,7 +402,36 @@ Readonly our %vp_setups => (
         alchemists => 27,
         auren => 27,
         fakirs => 33,
-    }
+    },
+	
+	original_2017_v2 => {
+		darklings => 15,
+        cultists => 15,
+        engineers => 15,
+        chaosmagicians => 20,
+        mermaids => 20,
+        nomads => 20,
+        witches => 20,
+        dwarves => 20,
+        halflings => 20,
+        icemaidens => 20,
+        riverwalkers => 20,
+        shapeshifters => 20,
+        swarmlings => 20,
+        yetis => 20,
+        acolytes => 25,
+        dragonlords => 20,
+        giants => 30,
+        alchemists => 25,
+        auren => 25,
+        fakirs => 30,
+	},
+);
+
+Readonly our %canal_setups => (
+    original_2017_v2 => [
+        'D4:F4'
+    ],
 );
 
 1;

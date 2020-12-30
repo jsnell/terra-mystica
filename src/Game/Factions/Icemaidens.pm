@@ -40,6 +40,9 @@ Readonly our $icemaidens => {
                 income => { PW => [ 0, 4 ] } },
         SA => { advance_cost => { W => 4, C => 6 },
                 income => { P => [ 0, 1 ] } },
+		SY => { advance_cost => { },
+				advance_gain => [ { } ],
+                income => { } },
     }
 };
 

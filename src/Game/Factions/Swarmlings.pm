@@ -40,5 +40,8 @@ Readonly our $swarmlings => {
                 income => { PW => [ 0, 4 ] } },
         SA => { advance_cost => { W => 5, C => 8 },
                 income => { P => [ 0, 2 ] } },
+		SY => { advance_cost => { },
+				advance_gain => [ { } ],
+                income => { } },
     }
 };

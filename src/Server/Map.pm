@@ -30,6 +30,7 @@ method handle($q, $id) {
     my $res = {
         error => [],
         bridges => [],
+		canals => [],
     };
 
     if ($self->mode() eq 'view') {
