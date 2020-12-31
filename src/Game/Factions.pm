@@ -103,11 +103,13 @@ func initialize_faction($game, $faction_name) {
 		
 		if $faction_name == "dwarves" || $faction_name == "fakirs" {
 			$faction->{MERCHANT} ||= 0;
-			$faction->{MAX_MERCHANT} ||= 3;
-			$buildings->{SE}{max_level} = 1;
+			$faction->{MAX_MR} ||= 3;
+			$faction->{STOREHOUSE_COUNT} ||= 1;
+			$buildings->{MK}{max_level} = 1;
 		} else {
 			$faction->{SHIP} ||= 0;
-			$faction->{MAX_SHIP} ||= 3;
+			$faction->{MAX_SP} ||= 3;
+			$faction->{DOCK_COUNT} ||= 1;
 			$buildings->{SY}{max_level} = 1;
 		}
 

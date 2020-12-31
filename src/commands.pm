@@ -255,6 +255,70 @@ sub command_build {
     $game{events}->location_event($faction, $where);
 }
 
+
+sub command_dock {
+    my ($faction, $where) = @_;
+    my $faction_name = $faction->{name};
+
+    my $type = 'D';
+    my $color = $faction->{color};
+
+    die "Unknown location '$where'\n" if !$map{$where};
+	
+	die "Can't place dock inland for $faction->{name}.\n" if 
+		keys %{$map{$where}{range}{1}} <= 1;
+	
+	die "$where has wrong color ($color vs $map{$where}{color})\n" if
+        $map{$where}{color} ne $color;
+		
+	my $existing_type = $map{$where}{building};
+		
+	if ($existing_type ne $type) {
+        die "$where contains $existing_type, wanted $type\n"
+    }
+	
+	if (!$game{round}) {
+        $game{acting}->setup_action($faction_name, 'dock');
+        $game{ledger}->force_finish_row(1);
+    }
+	
+	$map{$where}{dock} = 1;
+	$faction->{DOCK_COUNT}--;
+	
+	$game{events}->faction_event($faction, 'dock', 1);
+    $game{events}->location_event($faction, $where);
+}
+
+sub command_storehouse {
+    my ($faction, $where) = @_;
+    my $faction_name = $faction->{name};
+
+    my $type = 'D';
+    my $color = $faction->{color};
+
+    die "Unknown location '$where'\n" if !$map{$where};
+	
+	die "$where has wrong color ($color vs $map{$where}{color})\n" if
+        $map{$where}{color} ne $color;
+		
+	my $existing_type = $map{$where}{building};
+		
+	if ($existing_type ne $type) {
+        die "$where contains $existing_type, wanted $type\n"
+    }
+	
+	if (!$game{round}) {
+        $game{acting}->setup_action($faction_name, 'storehouse');
+        $game{ledger}->force_finish_row(1);
+    }
+	
+	$map{$where}{storehouse} = 1;
+	$faction->{STOREHOUSE_COUNT}--;
+	
+	$game{events}->faction_event($faction, 'storehouse', 1);
+    $game{events}->location_event($faction, $where);
+}
+
 sub command_upgrade {
     my ($faction, $where, $type) = @_;
 
@@ -1282,6 +1346,12 @@ sub command {
             $game{acting}->advance_state('initial-dwellings');
         }
         command_build $assert_active_faction->(), uc $1;
+	} elsif ($command =~ /^dock (\w+)$/i) {
+		die "$faction has already placed its dock" if $faction->{DOCK_COUNT} == 0
+		command_dock $assert_active_faction->(), uc $1;
+	} elsif ($command =~ /^storehouse (\w+)$/i) {
+		die "$faction has already placed its storehouse" if $faction->{STOREHOUSE_COUNT} == 0
+		command_storehouse $assert_active_faction->(), uc $1;
     } elsif ($command =~ /^upgrade (\w+) to ([\w ]+)$/i) {
         die "Can't upgrade in setup phase\n" if !$game{round};
         command_upgrade $assert_active_faction->(), uc $1, alias_building uc $2;

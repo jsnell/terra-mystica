@@ -21,6 +21,8 @@ sub setup_pool {
         P => 1000,
         VP => 1000,
 		TM => 1000,
+		SP => 1000,
+		MR => 1000,
 
         # Power
         P1 => 10000,
@@ -60,6 +62,8 @@ sub setup_pool {
         ALLOW_SHAPESHIFT => 100,
         GAIN_P3_FOR_VP => 10000,
         carpet_range => 3,
+		MAX_MR => 10000,
+		MAX_SP => 10000,
     };
 
     $game{pool}{"ACT$_"}++ for 1..6;
@@ -92,6 +96,12 @@ Readonly my %resource_aliases => (
     WORKERS => 'W',
     COIN => 'C',
     COINS => 'C',
+	MARKER => 'TM',
+	MARKERS => 'TM',
+	SHIP => 'SP',
+	SHIPS => 'SP',
+	MERCHANT => 'MR',
+	MERCHANTS => 'MR',
 );
 
 sub alias_resource {

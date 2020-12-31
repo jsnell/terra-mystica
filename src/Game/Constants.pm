@@ -29,7 +29,7 @@ Readonly our %building_strength => (
     SH => 3,
     SA => 3,
 	SY => 3,
-	SE => 3,
+	MK => 3,
 );
 
 Readonly our %building_aliases => (
@@ -39,7 +39,7 @@ Readonly our %building_aliases => (
     STRONGHOLD => 'SH',
     SANCTUARY => 'SA',
 	SHIPYARD => 'SY',
-	STOREHOUSE => 'SE',
+	MARKET => 'MK',
 );
 
 ## Resources
@@ -56,8 +56,8 @@ Readonly our %resource_aliases => (
 	MARKERS => 'TM',
 	SHIP => 'SP',
 	SHIPS => 'SP',
-	MERCHANT => 'MT',
-	MERCHANTS => 'MT',
+	MERCHANT => 'MR',
+	MERCHANTS => 'MR',
 );
 
 ## Tiles

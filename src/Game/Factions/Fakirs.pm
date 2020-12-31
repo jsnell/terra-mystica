@@ -42,7 +42,7 @@ Readonly our $fakirs => {
                 income => { P => [ 0, 1 ] } },
         SA => { advance_cost => { W => 4, C => 6 },
                 income => { P => [ 0, 1 ] } },
-		SE => { advance_cost => { W => 4, C => 6 },
+		MK => { advance_cost => { W => 4, C => 6 },
 				advance_gain => [ { SP => 1, ACTM => 1, GAIN_SHIP => 1 } ],
                 income => { SP => 1 } },
     }

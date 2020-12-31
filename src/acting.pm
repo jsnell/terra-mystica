@@ -78,6 +78,9 @@ has 'game' => (is => 'rw');
 # their move.
 has 'full_turn_played' => (is => 'rw', default => 0);
 
+# Data structure for the map 
+has 'map' => (is => 'rw');
+
 ## Tracking what each player needs to do
 
 method action_required_count() {
@@ -187,6 +190,12 @@ method register_faction($faction) {
         !$self->factions()->{chaosmagicians}{dropped}) {
         push @setup_order, ['chaosmagicians', 'dwelling'];
     }
+	
+	# IF this is a MOTS game, add the dock/storehouse placement phase
+	if ($self->game()->{options}{'merchants-features'}) {
+		push @setup_order, map ( $_ ne 'fakirs' and $_ ne 'dwarves' ? [ $_, 'dock'] : [ $_, 'storehouse'] } @order;
+	}
+
     push @setup_order, map { [ $_, 'bonus'] } reverse @order;
 
     $self->setup_order([@setup_order]);
@@ -341,6 +350,11 @@ method what_next() {
     if ($self->state() eq 'initial-dwellings') {
         $self->in_initial_dwellings();
     }
+	
+	# NEW FOR MOTS : PLACE DOCKS OR MARKETS AS REQUIRED
+	if ($self->state() eq 'initial-dock') {
+		$self->in_initial_dock();
+	}
 
     if ($self->state() eq 'initial-bonus') {
         $self->in_initial_bonus();
@@ -466,8 +480,12 @@ method in_initial_dwellings() {
 
     return if !$record;
 
-    if ($record->[1] eq 'bonus') {
-        $self->state('initial-bonus');
+	# No need to check for MOTS features here, as it will just 
+	# proceed normally if it is not
+	if ($record->[1] eq 'dock' or $record->[1] eq 'storehouse') {
+		$self->state('initial-dock');
+	} elsif ($record->[1] eq 'bonus') {
+		$self->state('initial-bonus');
     } else {
         my $faction_name = $record->[0];
         $self->replace_all_actions(
@@ -476,6 +494,40 @@ method in_initial_dwellings() {
                 faction => $faction_name,
             });
         $self->allow_build($self->factions()->{$faction_name});
+    }
+}
+
+method in_initial_dock() {
+	my $record = $self->setup_order()->[0];
+
+	if ($record->[1] eq 'bonus') {
+		$self->state('initial-bonus');
+    } else {
+        my $faction_name = $record->[0];
+		my $action_type = $record->[1] eq 'dock' ? 'dock' : 'storehouse'
+		
+		if ($action_type eq 'dock') {
+			# Get initial dwelling placements -- maybe there is a better way? 
+			my $riverside_dwellings = 0
+			for (keys %map) {
+				my $loc = $_;
+				
+				if ($map{$loc}{color} eq $faction->{color} and $map{$loc}{building}) {
+					if (keys %{$map{$loc}{range}{1}} > 1) {
+						$riverside_dwellings++;
+					}
+				}
+			}
+			# This should skip the dock placement for this faction if there are no
+			# riverside dwellings
+			return if $riverside_dwellings == 0;
+		}
+		
+        $self->replace_all_actions(
+            {
+                type => $action_type,
+                faction => $faction_name,
+            });
     }
 }
 
