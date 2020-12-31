@@ -39,6 +39,7 @@ Readonly our $riverwalkers_v5 => {
         BON1 => { forbid => 1 },
         ACT5 => { forbid => 1 },
         ACT6 => { forbid => 1 },
+		ACTP => { cost => { W => 1, C => 2 }, gain => { SP => 1 } },
     },
     # no explicit dig action
     buildings => {
@@ -58,9 +59,9 @@ Readonly our $riverwalkers_v5 => {
                 income => { PW => [ 0, 2 ] } },
         SA => { advance_cost => { W => 4, C => 6 },
                 income => { P => [ 0, 1 ] } },
-		SY => { advance_cost => { },
-				advance_gain => [ { } ],
-                income => { } },
+		SY => { advance_cost => { W => 4, C => 6 },
+				advance_gain => [ { ACTP => 1, SP => 1 } ],
+                income => { SP => 1 } },
     }
 };
 

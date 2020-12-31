@@ -32,6 +32,9 @@ Readonly our $shapeshifters_v5 => {
         cost => [ { W => 3 } ],
         gain => [ { SPADE => 1 } ],
     },
+	action => {
+		ACTP => { cost => { W => 1, C => 2 }, gain => { SP => 1 } },
+    },
     buildings => {
         D => { advance_cost => { W => 1, C => 2 },
                income => { W => [ 1, 2, 3, 4, 5, 6, 7, 8, 8 ] } },
@@ -45,9 +48,9 @@ Readonly our $shapeshifters_v5 => {
                 income => { PW => [ 0, 4 ] } },
         SA => { advance_cost => { W => 4, C => 6 },
                 income => { P => [ 0, 1 ] } },
-		SY => { advance_cost => { },
-				advance_gain => [ { } ],
-                income => { } },
+		SY => { advance_cost => { W => 4, C => 6 },
+				advance_gain => [ { ACTP => 1, SP => 1, GAIN_SHIP => 1, PICK_COLOR => 1 } ],
+                income => { SP => 1 } },
     }
 };
 

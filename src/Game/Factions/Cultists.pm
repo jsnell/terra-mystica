@@ -30,6 +30,9 @@ Readonly our $cultists => {
         advance_gain => [ { VP => 6 },
                           { VP => 6 } ],
     },
+	action => {
+		ACTP => { cost => { W => 1, C => 2 }, gain => { SP => 1 } },
+    },
     buildings => {
         D => { advance_cost => { W => 1, C => 2 },
                income => { W => [ 1, 2, 3, 4, 5, 6, 7, 8, 8 ] } },
@@ -43,8 +46,8 @@ Readonly our $cultists => {
                 income => { PW => [ 0, 2 ] } },
         SA => { advance_cost => { W => 4, C => 8 },
                 income => { P => [ 0, 1 ] } },
-		SY => { advance_cost => { },
-				advance_gain => [ { } ],
-                income => { } },
+		SY => { advance_cost => { W => 4, C => 6 },
+				advance_gain => [ { ACTP => 1, GAIN_SHIP => 1 } ],
+                income => { SP => 1 } },
     }
 };

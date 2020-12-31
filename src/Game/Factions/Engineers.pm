@@ -22,6 +22,9 @@ Readonly our $engineers => {
         advance_gain => [ { VP => 6 },
                           { VP => 6 } ],
     },
+	action => {
+		ACTP => { cost => { W => 1, C => 1 }, gain => { SP => 1 } },
+    },
     ACTE => 1,
     buildings => {
         D => { advance_cost => { W => 1, C => 1 },
@@ -36,8 +39,8 @@ Readonly our $engineers => {
                 income => { PW => [ 0, 2 ] } },
         SA => { advance_cost => { W => 3, C => 6 },
                 income => { P => [ 0, 1 ] } },
-		SY => { advance_cost => { },
-				advance_gain => [ { } ],
-                income => { } },
+		SY => { advance_cost => { W => 3, C => 6 },
+				advance_gain => [ { ACTP => 1, SP => 1 } ],
+                income => { SP => 1 } },
     }
 };

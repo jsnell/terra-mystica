@@ -27,6 +27,9 @@ Readonly our $swarmlings => {
         mode => 'gain',
         map(("TW$_", { W => 3 }), 1..8),
     },
+	action => {
+		ACTP => { cost => { W => 2, C => 2 }, gain => { SP => 1 } },
+    },
     buildings => {
         D => { advance_cost => { W => 2, C => 3 },
                income => { W => [ 2, 3, 4, 5, 6, 7, 8, 9, 9 ] } },
@@ -40,8 +43,8 @@ Readonly our $swarmlings => {
                 income => { PW => [ 0, 4 ] } },
         SA => { advance_cost => { W => 5, C => 8 },
                 income => { P => [ 0, 2 ] } },
-		SY => { advance_cost => { },
-				advance_gain => [ { } ],
-                income => { } },
+		SY => { advance_cost => { W => 5, C => 8 },
+				advance_gain => [ { ACTP => 1, SP => 1, GAIN_SHIP => 1 } ],
+                income => { SP => 1 } },
     }
 };

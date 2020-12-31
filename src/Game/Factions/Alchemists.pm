@@ -22,6 +22,9 @@ Readonly our $alchemists => {
         advance_gain => [ { VP => 6 },
                           { VP => 6 } ],
     },
+	action => {
+		ACTP => { cost => { W => 1, C => 1 }, gain => { SP => 1 } },
+    },
     special => {
         SPADE => { PW => 2 },
         enable_if => { SH => 1 },
@@ -44,9 +47,9 @@ Readonly our $alchemists => {
                 income => { C => [ 0, 6 ] } },
         SA => { advance_cost => { W => 4, C => 6 },
                 income => { P => [ 0, 1 ] } },
-		SY => { advance_cost => { },
-				advance_gain => [ { } ],
-                income => { } },
+		SY => { advance_cost => { W => 4, C => 6 },
+				advance_gain => [ { SP => 1 } ],
+                income => { SP => 1 } },
     }
 };
 

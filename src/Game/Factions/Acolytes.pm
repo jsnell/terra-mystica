@@ -31,6 +31,7 @@ Readonly our $acolytes => {
         BON1 => { subaction => { } },
         ACT5 => { subaction => { } },
         ACT6 => { subaction => { } },
+		ACTP => { cost => { W => 1, C => 2 }, gain => { SP => 1 } },
     },
     volcano_effect => {
         not_home => { LOSE_CULT => 3 },
@@ -49,6 +50,9 @@ Readonly our $acolytes => {
                 income => { PW => [ 0, 2 ] } },
         SA => { advance_cost => { W => 4, C => 8 },
                 income => { P => [ 0, 1 ] } },
+		SY => { advance_cost => { W => 4, C => 6 },
+				advance_gain => [ { ACTP => 1, SP => 1, GAIN_SHIP => 1 } ],
+                income => { SP => 1 } },
     }};
 
 Readonly our $acolytes_playtest_v1 => {
@@ -92,9 +96,6 @@ Readonly our $acolytes_playtest_v1 => {
                 income => { PW => [ 0, 2 ] } },
         SA => { advance_cost => { W => 4, C => 8 },
                 income => { P => [ 0, 1 ] } },
-		SY => { advance_cost => { },
-				advance_gain => [ { } ],
-                income => { } },
     }
 };
 

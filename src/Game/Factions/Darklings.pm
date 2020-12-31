@@ -21,6 +21,9 @@ Readonly our $darklings => {
         cost => [ { P => 1 } ],
         gain => [ { SPADE => 1, VP => 2 } ],
     },
+	action => {
+		ACTP => { cost => { W => 1, C => 2 }, gain => { SP => 1 } },
+    },
     buildings => {
         D => { advance_cost => { W => 1, C => 2 },
                income => { W => [ 1, 2, 3, 4, 5, 6, 7, 8, 8 ] } },
@@ -34,8 +37,8 @@ Readonly our $darklings => {
                 income => { PW => [ 0, 2 ] } },
         SA => { advance_cost => { W => 4, C => 10 },
                 income => { P => [ 0, 2 ] } },
-		SY => { advance_cost => { },
-				advance_gain => [ { } ],
-                income => { } },
+		SY => { advance_cost => { W => 4, C => 6 },
+				advance_gain => [ { ACTP => 1, GAIN_SHIP => 1 } ],
+                income => { SP => 1 } },
     }
 };
