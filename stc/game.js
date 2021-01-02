@@ -63,6 +63,16 @@ function fillBuilding(ctx, hex) {
     ctx.stroke();
 }
 
+function fillBuildingLight(ctx, hex) {
+    ctx.fillStyle = lightColors[hex.color];
+    ctx.fill();
+
+    
+    ctx.strokeStyle = contrastColor[hex.color];
+    ctx.lineWidth = 2;
+    ctx.stroke();
+}
+
 function drawDwelling(ctx, hex) {
     var loc = hexCenter(hex.row, hex.col);
 
@@ -154,6 +164,23 @@ function drawSanctuary(ctx, hex) {
     ctx.closePath();
     
     fillBuilding(ctx, hex);
+
+    ctx.restore();
+}
+
+function drawDock(ctx, hex) {
+	var loc = hexCenter(hex.row, hex.col);
+	var size = 18;
+	ctx.save();
+
+    ctx.beginPath();
+	ctx.moveTo(loc[0] - size, loc[1] - size);
+    ctx.lineTo(loc[0] - size, loc[1] + size);
+    ctx.lineTo(loc[0] + size, loc[1] + size);
+    ctx.lineTo(loc[0] + size, loc[1] - size);
+	ctx.closePath();
+	
+	fillBuildingLight(ctx, hex);
 
     ctx.restore();
 }
@@ -301,6 +328,15 @@ function drawHex(ctx, elem) {
     makeMapHexPath(ctx, hex);
     ctx.stroke();
     ctx.restore();
+	
+	// Should draw dock & storehouse before the building, so the latter
+	// superimposes on the former.  Also icon for dock & storehouse is 
+	// equivalent : large square with slightly lighter color
+	if (hex.dock) {
+		drawDock(ctx, hex);
+	} else if (hex.storehouse) {
+		drawDock(ctx, hex);
+	}
 
     if (hex.building == 'D') {
         drawDwelling(ctx, hex);
@@ -387,12 +423,14 @@ function drawMap() {
             drawBridge(ctx, bridge.from, bridge.to, bridge.color);
         });
 		
+        $H(state.map).each(function(hex, index) { drawHex(ctx, hex) });
+		
 		// INSERT CANALS HERE, WILL NOT DRAW IF NONE PRESENT (JUST LIKE BRIDGES)
+		// Probably want canals to superimpose on the hexes after they are all
+		// drawn since they will go over top of land hexes
 		state.canals.each(function(canal, index) {
 			drawBridge(ctx, canal.from, canal.to, canal.color);
 		});
-
-        $H(state.map).each(function(hex, index) { drawHex(ctx, hex) });
         ctx.restore();
     }
 }
@@ -1837,6 +1875,10 @@ function drawActionRequired() {
             }
         } else if (record.type == 'dwelling') {
             pretty_text = 'should place a dwelling (choose option or click on map)';
+		} else if (record.type == 'dock') {
+			pretty_text = 'should place a dock (choose option or click on map)';
+		} else if (record.type == 'storehouse') {
+			pretty_text = 'should place a storehouse (choose option or click on map)';
         } else if (record.type == 'upgrade') {
             pretty_text = 'may place a free #{to_building} upgrade (choose option or click on map)'.interpolate(record);
         } else if (record.type == 'bonus') {
@@ -2424,6 +2466,86 @@ function addFactionInput(parent, record, index) {
 
         parent.insert(div);
     }
+	if (record.type == "dock") { 
+		var div = new Element("div", { "id": "leech-" + index + "-1",
+									   "style": "padding-left: 2em" });
+		$H(state.map).sortBy(naturalSortKey).each(function(elem) {
+			var hex = elem.value;
+
+			if (hex.row == null) {
+				return;
+			}
+
+			if (hex.color != faction.color &&
+				hex.color != faction.secondary_color) {
+				return;
+			}
+			
+			if (!hex.building) {
+				return;
+			}
+			
+			// Test if hex is one of the ones in record.locations
+			if (record.locations.includes(hex.row.concat(hex.col))) {
+				var button = new Element("button").updateText(elem.key);
+				button.onclick = function() {
+					$("leech-" + index + "-1").style.display = "none";
+					appendCommand("dock #{key}\n".interpolate(elem));
+				};
+				addMapClickHandler("Dock", elem.key, {
+					"DK": {
+						"fun": function (loc) {
+							appendAndPreview("dock " + loc);
+						},
+						"label": "free"
+					}
+				});
+				div.insert(button);
+			}
+		});
+		
+		parent.insert(div);
+	}
+	if (record.type == "storehouse") {
+		var div = new Element("div", { "id": "leech-" + index + "-1",
+							  "style": "padding-left: 2em" });
+		$H(state.map).sortBy(naturalSortKey).each(function(elem) {
+			var hex = elem.value;
+
+			if (hex.row == null) {
+				return;
+			}
+
+			if (hex.color != faction.color &&
+				hex.color != faction.secondary_color) {
+				return;
+			}
+			
+			if (!hex.building) {
+				return;
+			}
+			
+			// Test if hex is one of the ones in record.locations
+			if (record.locations.includes(hex.row.concat(hex.col))) {
+				var button = new Element("button").updateText(elem.key);
+				button.onclick = function() {
+					$("leech-" + index + "-1").style.display = "none";
+					appendCommand("storehouse #{key}\n".interpolate(elem));
+				};
+				addMapClickHandler("Storehouse", elem.key, {
+					"SE": {
+						"fun": function (loc) {
+							appendAndPreview("storehouse " + loc);
+						},
+						"label": "free"
+					}
+				});
+				div.insert(button);
+			}
+		});
+		
+		parent.insert(div);
+	}
     if (record.type == "upgrade") {
         var div = new Element("div", { "id": "leech-" + index,
                                        "style": "padding-left: 2em" });

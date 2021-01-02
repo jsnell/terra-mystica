@@ -357,6 +357,25 @@ var colors = {
     activeUI: '#8f8'
 };
 
+// Lighter colors for factions only.
+// Did not create them for : white, orange, player, activeUI
+var lightColors = {
+    red: '#e08080',
+    green: '#80a080',
+    yellow: '#e0e080',
+    brown: '#a07060',
+    blue: '#40a0f0',
+    black: '#404040',
+    white: '#ffffff',
+    gray: '#c0c0c0',
+    ice: '#d8dfff',
+    volcano: '#f0df80',
+    orange: '#f0c040',
+    player: '#c0c0c0',
+    activeUI: '#8f8'
+};
+
+
 var bgcolors = {
     red: '#f08080',
     green: '#80f080',

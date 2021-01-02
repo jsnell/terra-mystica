@@ -316,6 +316,10 @@ function drawActionRequired(state) {
             }
         } else if (record.type == 'dwelling') {
             record.pretty = 'should place a dwelling';
+		} else if (record.type == 'dock') {
+			record.pretty = 'should place a dock';
+		} else if (record.type == 'storehouse') {
+			record.pretty = 'should place a storehouse';
         } else if (record.type == 'bonus') {
             record.pretty = 'should pick a bonus tile';
         } else if (record.type == 'gameover') {

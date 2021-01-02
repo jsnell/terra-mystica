@@ -506,27 +506,30 @@ method in_initial_dock() {
         my $faction_name = $record->[0];
 		my $action_type = $record->[1] eq 'dock' ? 'dock' : 'storehouse'
 		
-		if ($action_type eq 'dock') {
-			# Get initial dwelling placements -- maybe there is a better way? 
-			my $riverside_dwellings = 0
-			for (keys %map) {
-				my $loc = $_;
-				
-				if ($map{$loc}{color} eq $faction->{color} and $map{$loc}{building}) {
-					if (keys %{$map{$loc}{range}{1}} > 1) {
-						$riverside_dwellings++;
-					}
+		# Get initial dwelling placements -- maybe there is a better way? 
+		my @riverside_dwellings;
+		my @dwellings;
+		for (keys %map) {
+			my $loc = $_;
+			
+			if ($map{$loc}{color} eq $faction->{color} and $map{$loc}{building}) {
+				if (keys %{$map{$loc}{range}{1}} > 1) {
+					push($riverside_dwellings, $loc);
 				}
+				push($dwellings, $loc);
 			}
-			# This should skip the dock placement for this faction if there are no
-			# riverside dwellings
-			return if $riverside_dwellings == 0;
+		}
+		# This should skip the dock placement for this faction if there are no
+		# riverside dwellings
+		if ($action_type eq 'dock') {
+			return if scalar @riverside_dwellings == 0;
 		}
 		
         $self->replace_all_actions(
             {
                 type => $action_type,
                 faction => $faction_name,
+				locations => $action_type eq 'dock' ? @riverside_dwellings : @dwellings
             });
     }
 }
