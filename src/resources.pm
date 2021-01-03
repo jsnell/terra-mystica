@@ -66,13 +66,25 @@ sub setup_pool {
 		MAX_SP => 10000,
     };
 
-    $game{pool}{"ACT$_"}++ for 1..6;
-
+	# Include ACT7, ACT8, ACT9 for MOTS games
+	if ($game{options}{"merchants-features"}) {
+		$game{pool}{"ACT$_"}++ for 1..9;
+	} else {
+		$game{pool}{"ACT$_"}++ for 1..6;
+	}
+		
     for (keys %tiles) {
         my $option = $tiles{$_}{option};
         if (defined $option and not defined $game{options}{$option}) {
             next;
         }
+		
+		# This is to remove tiles that would overlap while playing with MOTS
+		# (or any other future expansions too)
+		my $exclude_option = $tiles{$_}{exclude_option};
+		if (defined $exclude_option and defined $game{options}{$exclude_option}) {
+			next;
+		}
         if (/^BON/) {
             $game{pool}{$_}++;
             $game{bonus_coins}{$_}{C} = 0;

@@ -25,7 +25,7 @@ Readonly our $swarmlings => {
     },
     special => {
         mode => 'gain',
-        map(("TW$_", { W => 3 }), 1..8),
+        map(("TW$_", { W => 3 }), 1..10),
     },
 	action => {
 		ACTP => { cost => { W => 2, C => 2 }, gain => { SP => 1 } },

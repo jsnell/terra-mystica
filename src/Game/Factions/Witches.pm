@@ -8,7 +8,7 @@ Readonly our $witches => {
     AIR => 2, color => 'green',
     special => {
         mode => 'gain',
-        map(("TW$_", { VP => 5 }), 1..8),
+        map(("TW$_", { VP => 5 }), 1..10),
     },
     display => "Witches",
     faction_board_id => 14,
