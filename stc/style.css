@@ -53,8 +53,9 @@ div.faction-info {
     white-space: nowrap;
 }
 
+/* no longer necessary, and will mess up MOTS games */
 div#shared-actions {
-    height: 70px;
+    /* height: 70px; */
 }
 
 div.turn-order-block {

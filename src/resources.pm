@@ -80,11 +80,11 @@ sub setup_pool {
         }
 		
 		# This is to remove tiles that would overlap while playing with MOTS
-		# (or any other future expansions too)
 		my $exclude_option = $tiles{$_}{exclude_option};
 		if (defined $exclude_option and defined $game{options}{$exclude_option}) {
 			next;
 		}
+		
         if (/^BON/) {
             $game{pool}{$_}++;
             $game{bonus_coins}{$_}{C} = 0;

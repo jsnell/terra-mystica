@@ -770,6 +770,20 @@ function renderAction(canvas, name, key, border_color) {
             drawText(ctx, "2 spd", center, center, font);
             drawText(ctx, "-6PW", center, 60, font);
         },
+		"ACT7": function() {
+			drawText(ctx, "move", center, center - 7, font_small);
+			drawText(ctx, "ships", center, center + 7, font_small);
+			drawText(ctx, "-4PW", center, 60, font);
+		},
+		"ACT8": function() {
+			drawText(ctx, "SP", center, center, font);
+            drawText(ctx, "-4PW", center, 60, font);
+		},
+		"ACT9": function() {
+			drawText(ctx, "FAVOR", center, center, font_small);
+            drawText(ctx, "-5PW", center, 60, font);
+			drawText(ctx, "-1P", center, 68, font);
+		},
         "ACTA": function() {
             drawText(ctx, "2cult", center, center, font);
         },
@@ -801,6 +815,13 @@ function renderAction(canvas, name, key, border_color) {
         "BON2": function() {
             drawText(ctx, "cult", center, center, font);
         },
+		"BON13": function() {
+			drawText(ctx, "move", center, center - 7, font_small);
+			drawText(ctx, "ships", center, center + 7, font_small);
+		},
+		"BON14": function() {
+			drawText(ctx, "SP", center, center, font);
+		},
         "FAV6": function() {
             drawText(ctx, "cult", center, center, font);
         }
@@ -885,9 +906,28 @@ function renderTile(tile, name, record, faction, count) {
         tile.insert(row);
     });
     $H(record.special).each(function (elem, index) {
-        var row = new Element("div");       
-        row.updateText("#{value} #{key}".interpolate(elem));
+        var row = new Element("div");
+		// should just show "better_trades", not "1 better_trades"
+		if (elem.key == "better_trades") {
+			row.updateText("#{key}".interpolate(elem));
+		} else {
+			row.updateText("#{value} #{key}".interpolate(elem));
+		}
         tile.insert(row);
+    });
+	$H(record.subaction).each(function (elem, index) {
+		// display appropriate text for FAV13
+		if (elem.key == "fav13choice") {
+			var row = new Element("div");
+			row.updateText("GAIN_SHIP, W /");
+			tile.insert(row);
+			var row_two = new Element("div");
+			row_two.updateText("SEND_PRIEST, 4C");
+			tile.insert(row_two);
+		} else {
+			// should not do anything else for other tiles with subactions
+			// unless & until defined later
+		}
     });
 }
 
@@ -963,6 +1003,11 @@ function renderTreasuryTile(board, faction, name, count) {
 
     if (name.startsWith("ACT")) {
         var elem = insertAction(board, name, name);
+		// for MOTS games, necessary to set up space for ACT7-9
+		// has no visual effect otherwise
+		if (name == "ACT6") {
+			board.insert(new Element('br'));
+		}
         if (state.actions[name] &&
             state.actions[name].show_if &&
             !state.factions[faction][state.actions[name].show_if]) {

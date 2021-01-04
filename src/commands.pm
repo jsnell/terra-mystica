@@ -1145,18 +1145,47 @@ sub command_randomize {
 
     my @score_tiles = sort { natural_cmp $a, $b } keys %{$game{score_pool}};
     my @score = ();
-    do {
+	
+	# This is not an ideal implementation of round scoring tile-choosing logic,
+	# but it preserves the @score_tiles array and ultimately probably makes
+	# calculations go quicker, which is probably why just pulling out the keys
+	# for @score_tiles was chosen, instead of comparing deep copies
+    do {{
         @score = mt_shuffle $rand, @score_tiles;
-    } until $score[4] ne "SCORE1" and $score[5] ne "SCORE1";
+		@score_not_last = @score[0..4];
+		
+		next if grep( /^SCORE10/, @score_not_last ) and grep( /^SCORE14/, @score_not_last ) and grep( /^SCORE18/, @score_not_last );
+		next if grep( /^SCORE11/, @score_not_last ) and grep( /^SCORE15/, @score_not_last ) and grep( /^SCORE19/, @score_not_last );
+		next if grep( /^SCORE12/, @score_not_last ) and grep( /^SCORE16/, @score_not_last ) and grep( /^SCORE20/, @score_not_last );
+		next if grep( /^SCORE13/, @score_not_last ) and grep( /^SCORE17/, @score_not_last ) and grep( /^SCORE21/, @score_not_last );
+		
+    }} until $score[4] ne "SCORE1" and $score[5] ne "SCORE1" and	
+			 $score[4] ne "SCORE16" and $score[5] ne "SCORE16";
     handle_row_internal "", "score ".(join ",", @score[0..5]);
 
-    my @bon = mt_shuffle $rand, sort grep {
-        /^BON/
-    } keys %{$game{pool}};
-    
-    while (@bon != $game{acting}->player_count() + 3) {
-        handle_row_internal "", "delete ".(shift @bon);
-    }
+	my @bon = ();
+	
+	if ($game{options}{'merchants-focus') {
+		# Makes sure two of the MOTS bonus tile keys are at the beginning of 
+		# @bon, so that they will definitely be in play
+		my @mots_bon = mt_shuffle $rand, ("BON11", "BON12", "BON13", "BON14");
+
+		my @initial_bon = mt_shuffle $rand, sort grep {
+			/^BON/
+		} keys %{$game{pool}};
+		
+		@bon = grep { $_ ne $mots_bon[0] and $_ ne $mots_bon[1] } @initial_bon;
+		push @bon, $mots_bon[0];
+		push @bon, $mots_bon[1];
+	} else {
+		@bon = mt_shuffle $rand, sort grep {
+			/^BON/
+		} keys %{$game{pool}};
+	}
+	
+	while (@bon != $game{acting}->player_count() + 3) {
+		handle_row_internal "", "delete ".(shift @bon);
+	}
 
     my @players;
     if ($game{options}{'maintain-player-order'}) {
@@ -1481,6 +1510,7 @@ sub command {
             temple-scoring-tile
             fire-and-ice-final-scoring
 			merchants-features
+			merchants-focus
 			merchants-final-scoring
             fire-and-ice-factions
             fire-and-ice-factions/ice
