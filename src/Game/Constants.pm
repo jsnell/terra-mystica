@@ -112,6 +112,8 @@ Readonly our %actions => (
     ACTH6 => { dont_block => 1,
                cost => { PW_TOKEN => 5 },
                gain => { PICK_COLOR => 1 } },
+	ACTMV => { cost => {}, 
+			   subaction => { move => 1 } },
     BON1 => { cost => {}, gain => { SPADE => 1 },
               subaction => { dig => 1, 'transform' => 1, 'build' => 1 } },
     BON2 => { cost => {}, gain => { CULT => 1 } },

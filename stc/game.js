@@ -809,6 +809,10 @@ function renderAction(canvas, name, key, border_color) {
             drawText(ctx, ss_cost, center, 60, font);
             drawText(ctx, "tokens", center, 70, font);
         },
+		"ACTMV": function() {
+			drawText(ctx, "move", center, center - 7, font_small);
+			drawText(ctx, "ships", center, center + 7, font_small);
+		},
         "BON1": function() {
             drawText(ctx, "spd", center, center, font);
         },

@@ -1445,6 +1445,12 @@ sub command {
         $game{events}->global_event("faction-count", 1);
 
         my $faction = $game{acting}->get_faction($selected_faction);
+		
+		if ($game{options}{'merchants-features'}) {
+			# Adding the move ships special action to each faction
+			gain $faction, "ACTMV", "advance_ACTMV";
+		}
+		
         $ledger->start_new_row($faction);
         $game{ledger}->add_command("setup");
         $ledger->finish_row();
