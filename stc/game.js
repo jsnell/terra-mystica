@@ -1332,6 +1332,11 @@ function drawRealFaction(faction, board) {
         resources.insert(link);
         resources.insertTextSpan(" vp, ");
         resources.insertTextSpan("#{P1}/#{P2}/#{P3} pw".interpolate(faction));
+		
+		if (state.options['merchants-features']) {
+			resources.insertTextSpan(", #{TM} tm".interpolate(faction));
+		}
+		
         info.insert(resources);
     }
 
