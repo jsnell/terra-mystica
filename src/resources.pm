@@ -62,8 +62,6 @@ sub setup_pool {
         ALLOW_SHAPESHIFT => 100,
         GAIN_P3_FOR_VP => 10000,
         carpet_range => 3,
-		MAX_MR => 10000,
-		MAX_SP => 10000,
     };
 
 	# Include ACT7, ACT8, ACT9 for MOTS games

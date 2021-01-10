@@ -782,7 +782,7 @@ function renderAction(canvas, name, key, border_color) {
 		"ACT9": function() {
 			drawText(ctx, "FAVOR", center, center, font_small);
             drawText(ctx, "-5PW", center, 60, font);
-			drawText(ctx, "-1P", center, 68, font);
+			drawText(ctx, "-1P", center, 70, font);
 		},
         "ACTA": function() {
             drawText(ctx, "2cult", center, center, font);

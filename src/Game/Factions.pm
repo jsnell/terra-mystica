@@ -98,18 +98,17 @@ func initialize_faction($game, $faction_name) {
 
 	# MERCHANTS OF THE SEAS SPECIFIC SETTINGS
 	if ($game{options}{'merchants-features'}) {
-		$faction->{TM} ||= 15;
-		$faction->{MAX_TM} ||= 15;
+		$faction->{TM} = 15;
+		$faction->{MAX_TM} = 15;
+		$faction->{ACTMV} = 1;
 		
 		if $faction_name == "dwarves" || $faction_name == "fakirs" {
-			$faction->{MERCHANT} ||= 0;
-			$faction->{MAX_MR} ||= 3;
-			$faction->{STOREHOUSE_COUNT} ||= 1;
+			$faction->{MERCHANT_COUNT} = 3;
+			$faction->{STOREHOUSE_COUNT} = 1;
 			$buildings->{MK}{max_level} = 1;
 		} else {
-			$faction->{SHIP} ||= 0;
-			$faction->{MAX_SP} ||= 3;
-			$faction->{DOCK_COUNT} ||= 1;
+			$faction->{SHIP_COUNT} = 3;
+			$faction->{DOCK_COUNT} = 1;
 			$buildings->{SY}{max_level} = 1;
 		}
 
