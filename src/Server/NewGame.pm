@@ -33,6 +33,18 @@ method handle($q) {
         $self->output_json($out);
         return;
     }
+	
+	my @allowed_users = qw(Billay Xinehop sneak Tomasulo)
+	my @options = $q->multi_param('game-options');
+	
+	if ("merchants-features" ~~ @options && !($username ~~ @allowed_users)) {
+		my $out = {
+            error => ["User cannot start game with these options"],
+            link => "/login/#required",
+        };
+        $self->output_json($out);
+        return;
+	}
 
     eval {
         $self->make_game($dbh, $q, $username);
