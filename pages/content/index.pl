@@ -9,8 +9,8 @@
 __DATA__
 
 <div class="motd" style="display: none">
-    Season 40 of the Terra Mystica tournament will start on December 1st.
-    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>, with discussion on the <a href="https://boardgamegeek.com/thread/2545591/season-40-terra-mystica-tournament">BGG thread</a>.
+    Season 41 of the Terra Mystica tournament will start on February 1st.
+    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>
 </div>
 
 <h4>Your Active / Recently Finished Games</h4>
