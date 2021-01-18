@@ -34,10 +34,10 @@ method handle($q) {
         return;
     }
 	
-	my @allowed_users = qw(Billay Xinehop sneak Tomasulo)
+	my @allowed_admins = qw(Billay Xinehop sneak Tomasulo)
 	my @options = $q->multi_param('game-options');
 	
-	if ("merchants-features" ~~ @options && !($username ~~ @allowed_users)) {
+	if ("merchants-features" ~~ @options && !($username ~~ @allowed_admins)) {
 		my $out = {
             error => ["User cannot start game with these options"],
             link => "/login/#required",

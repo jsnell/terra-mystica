@@ -56,8 +56,8 @@ Readonly our %resource_aliases => (
 	MARKERS => 'TM',
 	SHIP => 'SP',
 	SHIPS => 'SP',
-	MERCHANT => 'MR',
-	MERCHANTS => 'MR',
+	MERCHANT => 'MC',
+	MERCHANTS => 'MC',
 );
 
 ## Tiles

@@ -22,7 +22,7 @@ sub setup_pool {
         VP => 1000,
 		TM => 1000,
 		SP => 1000,
-		MR => 1000,
+		MC => 1000,
 
         # Power
         P1 => 10000,
@@ -110,8 +110,8 @@ Readonly my %resource_aliases => (
 	MARKERS => 'TM',
 	SHIP => 'SP',
 	SHIPS => 'SP',
-	MERCHANT => 'MR',
-	MERCHANTS => 'MR',
+	MERCHANT => 'MC',
+	MERCHANTS => 'MC',
 );
 
 sub alias_resource {

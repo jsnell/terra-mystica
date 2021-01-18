@@ -514,9 +514,9 @@ method in_initial_dock() {
 			
 			if ($map{$loc}{color} eq $faction->{color} and $map{$loc}{building}) {
 				if (keys %{$map{$loc}{range}{1}} > 1) {
-					push($riverside_dwellings, $loc);
+					push(@riverside_dwellings, $loc);
 				}
-				push($dwellings, $loc);
+				push(@dwellings, $loc);
 			}
 		}
 		# This should skip the dock placement for this faction if there are no
