@@ -9,8 +9,10 @@
 __DATA__
 
 <div class="motd" style="display: none">
-    Season 41 of the Terra Mystica tournament will start on February 1st.
-    Sign ups are now open on the <a href="http://tmtour.org">tournament website</a>
+    Season 42 of the Terra Mystica tournament will start on April 1st.
+    Sign ups are now open on the
+    <a href="http://tmtour.org">tournament website</a>.
+    https://boardgamegeek.com/thread/2545591/seasons-40-49-terra-mystica-tournament
 </div>
 
 <h4>Your Active / Recently Finished Games</h4>
