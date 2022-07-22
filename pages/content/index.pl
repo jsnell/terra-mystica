@@ -9,11 +9,11 @@
 __DATA__
 
 <div class="motd" style="display: none">
-    Season 49 of the Terra Mystica tournament will start on June 1st.
+    Season 50 of the Terra Mystica tournament will start on August 1st.
     Sign ups are now open on the
     <a href="http://tmtour.org">tournament website</a>.
     The tournament can be discussed in the 
-    <a href="https://boardgamegeek.com/thread/2545591/seasons-40-49-terra-mystica-tournament">BGG thread</a>.
+    <a href="https://boardgamegeek.com/thread/2904072/seasons-50-59-terra-mystica-tournament">BGG thread</a>.
 </div>
 
 <h4>Your Active / Recently Finished Games</h4>
