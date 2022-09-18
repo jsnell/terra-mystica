@@ -9,7 +9,7 @@
 __DATA__
 
 <div class="motd" style="display: none">
-    Season 50 of the Terra Mystica tournament will start on August 1st.
+    Season 51 of the Terra Mystica tournament will start on October 1st.
     Sign ups are now open on the
     <a href="http://tmtour.org">tournament website</a>.
     The tournament can be discussed in the 
