@@ -9,7 +9,7 @@
 __DATA__
 
 <div class="motd" style="display: none">
-    Season 54 of the Terra Mystica tournament will start on April 1st.
+    Season 55 of the Terra Mystica tournament will start on June 1st.
     Sign ups are now open on the
     <a href="http://tmtour.org">tournament website</a>.
     The tournament can be discussed in the 
