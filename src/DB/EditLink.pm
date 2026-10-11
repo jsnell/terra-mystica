@@ -15,7 +15,6 @@ sub edit_link_for_faction {
     my ($game, $game_secret) = ($id =~ /(.*)_(.*)/g);
     $game_secret = pack "h*", $game_secret;
     my $cipher = Crypt::CBC->new(-key => $secret,
-                                 -blocksize => 8,
                                  -iv => $iv,
                                  -add_header => 0,
                                  -cipher => 'Blowfish');

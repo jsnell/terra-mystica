@@ -29,7 +29,6 @@ method verify_key($dbh, $read_id, $faction_name, $faction_key) {
     my ($secret, $iv) = get_secret $dbh;
 
     my $cipher = Crypt::CBC->new(-key => $secret,
-                                 -blocksize => 8,
                                  -iv => $iv,
                                  -add_header => 0,
                                  -cipher => 'Blowfish');

@@ -13,7 +13,6 @@ sub decrypt_validation_token {
     my ($secret, $token) = @_;
 
     my $cipher = Crypt::CBC->new(-key => $secret,
-                                 -blocksize => 8,
                                  -header => 'randomiv',
                                  -cipher => 'Blowfish');
     my $data = $cipher->decrypt(de_base64 $token);
