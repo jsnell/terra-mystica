@@ -16,23 +16,11 @@ use DB::EditLink;
 use DB::Game;
 use DB::IndexGame;
 use DB::SaveGame;
-use DB::Secret;
 use Email::Notify;
 use Server::Security;
 use Server::Session;
-use Util::CryptUtil;
 
 use tracker;
-
-method verify_key($dbh, $read_id, $faction_name, $faction_key) {
-    my ($secret, $iv) = get_secret $dbh;
-
-    my $cipher = shared_iv_cipher($secret, $iv);
-    my $data = $cipher->decrypt(pack "h*", $faction_key);
-    my $game_secret = unpack("h*", $data ^ $faction_name);
-
-    return "${read_id}_$game_secret";
-};
 
 sub log_game_event {
     my $entry = shift;
@@ -71,8 +59,8 @@ method handle($q) {
     if ($faction_key eq '') {
         $write_id = get_write_id_for_user $dbh, $username, $read_id, $faction_name;
     } else {
-        $write_id = $self->verify_key($dbh,
-                                      $read_id, $faction_name, $faction_key);
+        $write_id = verify_faction_key($dbh, $read_id,
+                                       $faction_name, $faction_key);
     }
 
     if ($faction_name =~ /^player/) {

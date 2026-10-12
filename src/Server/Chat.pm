@@ -9,26 +9,11 @@ extends 'Server::Server';
 
 use DB::Chat;
 use DB::Connection;
-use DB::Secret;
+use DB::EditLink;
 use Email::Notify;
 use Server::Security;
 use Server::Session;
-use Util::CryptUtil;
 use Util::SiteConfig;
-
-sub verify_key {
-    my ($dbh, $id, $faction_key, $faction_name) = @_;
-    my ($secret, $iv) = get_secret $dbh;
-
-    my $cipher = shared_iv_cipher($secret, $iv);
-    my $data = $cipher->decrypt(pack "h*", $faction_key);
-    my $game_secret = unpack("h*", $data ^ $faction_name);
-
-    my $write_id = "${id}_$game_secret";
-    my $valid = $dbh->selectrow_array("select count(*) from game where write_id=?", {}, $write_id);
-
-    die "Invalid faction key\n" if !$valid;
-};
 
 sub handle {
     my ($self, $q) = @_;
@@ -60,7 +45,7 @@ sub handle {
             if ($faction_key eq '') {
                 get_write_id_for_user $dbh, $username, $id, $faction_name;
             } else {
-                verify_key $dbh, $id, $faction_key, $faction_name;
+                verify_faction_key $dbh, $id, $faction_name, $faction_key;
             }
         }
         if (defined $add_message && $add_message =~ /\S/) {
