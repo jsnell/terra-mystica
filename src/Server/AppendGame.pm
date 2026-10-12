@@ -11,8 +11,6 @@ use Server::Server;
 
 extends 'Server::Server';
 
-use Crypt::CBC;
-
 use DB::Connection;
 use DB::EditLink;
 use DB::Game;
@@ -22,16 +20,14 @@ use DB::Secret;
 use Email::Notify;
 use Server::Security;
 use Server::Session;
+use Util::CryptUtil;
 
 use tracker;
 
 method verify_key($dbh, $read_id, $faction_name, $faction_key) {
     my ($secret, $iv) = get_secret $dbh;
 
-    my $cipher = Crypt::CBC->new(-key => $secret,
-                                 -iv => $iv,
-                                 -add_header => 0,
-                                 -cipher => 'Blowfish');
+    my $cipher = shared_iv_cipher($secret, $iv);
     my $data = $cipher->decrypt(pack "h*", $faction_key);
     my $game_secret = unpack("h*", $data ^ $faction_name);
 

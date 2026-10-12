@@ -7,23 +7,20 @@ use Server::Server;
 
 extends 'Server::Server';
 
-use Crypt::CBC;
 use DB::Chat;
 use DB::Connection;
 use DB::Secret;
 use Email::Notify;
 use Server::Security;
 use Server::Session;
+use Util::CryptUtil;
 use Util::SiteConfig;
 
 sub verify_key {
     my ($dbh, $id, $faction_key, $faction_name) = @_;
     my ($secret, $iv) = get_secret $dbh;
 
-    my $cipher = Crypt::CBC->new(-key => $secret,
-                                 -iv => $iv,
-                                 -add_header => 0,
-                                 -cipher => 'Blowfish');
+    my $cipher = shared_iv_cipher($secret, $iv);
     my $data = $cipher->decrypt(pack "h*", $faction_key);
     my $game_secret = unpack("h*", $data ^ $faction_name);
 
